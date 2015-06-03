@@ -1,0 +1,178 @@
+.packageDetails-author
+{	
+	text-overflow: ellipsis;
+	width: 700px;
+	white-space: nowrap;
+	overflow: hidden;
+	display: block; 
+	margin-bottom: 15px;	
+}
+
+
+.packageDetails-titleNotesAndAuthor {
+	margin-top: 1em;
+}
+
+.packageDetailsWidget {
+	position: relative;
+	background-color: white;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	min-height: 300px;
+	width: 98.5%;
+	border-radius: 5px;
+	overflow: hidden;
+}
+/* msg 28.10.2013*/
+.clear-left {
+	clear: left;
+}
+
+
+
+.packageDetails-leftColumn {
+	float: left; /*msg 28.10.2013*/
+	border-right: 1px dashed grey;
+	padding-left: 10px;
+	width: 73.5%;
+	height: 100%;
+}
+
+.packageDetails-resourceWidget {
+	min-height: 190px;
+	/* @msg 28.10.2013 overflow: auto; */
+}
+
+.packageDetails-resource {
+	height: 40px;
+	border-top: dashed 1px;
+}
+
+.packageDetails-resource-description {
+	width: 60%;
+	overflow: hidden;
+	display: inline-block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.packageDetails-resource-language {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.packageDetails-resource-format {
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 10px;
+}
+
+/* msg 28.10.2013*/
+.packageDetails-NewOpenBox {
+	padding-left: 10px;
+}
+
+.packageDetails-rightColumn {
+	/* position: absolute;*/
+	float: left; /*msg 28.10.2013*/
+	top: 0px;
+	right: 0px;
+	width: 25%;
+	height: 100%;
+}
+
+/*msg 28.10.2013*/
+.packageDetails-categoriesAndTags {
+	margin-top: 10px;
+}
+
+}
+.packageDetails-openBox {
+	padding-left: 10px;
+}
+
+.packageDetails-additionalInformation {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.packageDetails-appImage {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.packageDetails-additionalInformation-value {
+	min-height: 12px;
+}
+
+.packageDetails-rating {
+	padding-left: 10px;
+}
+
+.rateIt-btn {
+	margin-left: 5px;
+	margin-top: -5px;
+}
+
+.packageDetails-imgSocialInteraction {
+	width: 25px;
+	height: 25px;
+	vertical-align: middle;
+}
+
+#comments-input-box {
+	display: none;
+	width: 98.5%;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+#ratings-input-box {
+	display: none;
+	width: 98.5%;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.appImage {
+	max-width: 200px;
+}
+
+.comment-box {
+	position: relative;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	height: 100px;
+	width: 98.5%;
+	border-bottom: 1px dashed grey;
+}
+
+.table-column-1 {
+	vertical-align: top;
+	padding-top: 10px;
+	width: 100px;
+}
+
+.table-column-2 {
+	vertical-align: top;
+	padding: 10px 20px;
+	width: 518px;
+	text-align: justify;
+}
+
+.table-column-3 {
+	width: 55px;
+	vertical-align: top;
+	padding-top: 10px;
+}
+
+.lineDivider {
+	border-style: dashed;
+	border-width: 1px;
+	height: 1px;
+	width: 90%;
+	color: #000000;
+	background-color: transparent;
+	margin-left: 10px;
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules::0" NAME="item" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="whatever::#views#view.xhtml" NAME="output"
+    PATH="/views/view.xhtml" TARGET="rules:#views#view.xhtml"
+    TITLE="whatever" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#views#view.xhtml" PATH="/views/view.xhtml"
+  SHAPE="240,33,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

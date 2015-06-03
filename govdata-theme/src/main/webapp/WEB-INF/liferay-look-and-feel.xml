@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE look-and-feel PUBLIC "-//Liferay//DTD Look and Feel 6.1.0//EN" "http://www.liferay.com/dtd/liferay-look-and-feel_6_1_0.dtd">
+
+<look-and-feel>
+	<compatibility>
+		<version>6.1.0+</version>
+	</compatibility>
+	<theme id="GovData_Theme" name="GovData Theme">
+		<settings>
+			<setting configurable="true" type="checkbox" key="portlet-setup-show-borders-default" value="false" />
+		</settings>
+	</theme>
+</look-and-feel>

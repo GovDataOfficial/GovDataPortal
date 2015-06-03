@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<portlet-app version="2.0"
+	xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+	<portlet>
+		<portlet-name>de.fhg.fokus.odp.portal.manage-datasets-portlet</portlet-name>
+		<display-name>od-platform manage datasets</display-name>
+		<portlet-class>javax.portlet.faces.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/views/view.xhtml</value>
+		</init-param>
+		<init-param>
+			<name>javax.portlet.faces.autoDispatchEvents</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>javax.portlet.faces.bridgeEventHandler</name>
+			<value>de.fhg.fokus.odp.portal.managedatasets.eventhandler.ManageEventHandler</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>manage datasets</title>
+			<short-title>manage datasets</short-title>
+			<keywords>od-platform manage datasets portlets</keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+
+		<supported-processing-event>
+			<qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:metadata</qname>
+		</supported-processing-event>
+
+		<supported-publishing-event>
+			<qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:metadataAppCreated</qname>
+		</supported-publishing-event>
+
+		<!-- <supported-public-render-parameter>metadataAppCreated</supported-public-render-parameter> -->
+	</portlet>
+
+	<user-attribute>
+		<description>User Login Id</description>
+		<name>user.login.id</name>
+	</user-attribute>
+
+	<event-definition>
+		<qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:metadata</qname>
+		<value-type>de.fhg.fokus.odp.registry.model.Metadata</value-type>
+	</event-definition>
+
+	<event-definition>
+		<qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:metadataAppCreated</qname>
+		<value-type>java.lang.String</value-type>
+	</event-definition>
+
+	<!-- <public-render-parameter> -->
+	<!-- <identifier>metadataAppCreated</identifier> -->
+	<!-- <qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:metadataAppCreated</qname> -->
+	<!-- </public-render-parameter> -->
+
+</portlet-app>

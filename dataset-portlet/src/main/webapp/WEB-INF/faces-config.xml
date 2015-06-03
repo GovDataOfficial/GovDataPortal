@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+	xmlns:bridge="http://www.liferay.com/xml/ns/liferay-faces-bridge-2.0-extension"
+	version="2.1">
+
+	<application>
+		<application-extension>
+			<bridge:public-parameter-mappings>
+				<bridge:public-parameter-mapping>
+					<parameter>searchterm</parameter>
+					<model-el>#{currentQuery.searchterm}</model-el>
+				</bridge:public-parameter-mapping>
+				<!-- <bridge:public-parameter-mapping> -->
+				<!-- <parameter>searchcategory</parameter> -->
+				<!-- <model-el>#{currentQuery.searchcategory}</model-el> -->
+				<!-- </bridge:public-parameter-mapping> -->
+				<!-- <bridge:public-parameter-mapping> -->
+				<!-- <parameter>metadataAppCreated</parameter> -->
+				<!-- <model-el>#{feedback.metadataAppCreated}</model-el> -->
+				<!-- </bridge:public-parameter-mapping> -->
+			</bridge:public-parameter-mappings>
+		</application-extension>
+	</application>
+
+	<lifecycle>
+		<phase-listener>com.liferay.faces.util.lifecycle.DebugPhaseListener</phase-listener>
+		<phase-listener>com.liferay.faces.util.lifecycle.ViewScopePhaseListener</phase-listener>
+	</lifecycle>
+
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>whatever</from-outcome>
+			<to-view-id>/views/view.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+</faces-config>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<h:head>
+		<link href="#{request.contextPath}/resources/css/main.css"
+			rel="stylesheet" type="text/css" />
+	</h:head>
+	<h:body>
+		<h:form>
+			<div class="simpleSearchPane">
+
+				<h:inputText value="#{searchQuery.query}"
+					styleClass="searchInput datasets" id="searchinputDataset"
+					converter="queryConverter"
+					rendered="#{searchQuery.metadataType eq 'datensatz'}" />
+				<p:watermark for="searchinputDataset"
+					value="#{i18n['od.search.dataset']}" />
+				<h:inputText value="#{searchQuery.query}"
+					styleClass="searchInput documents" id="searchinputDocument"
+					converter="queryConverter"
+					rendered="#{searchQuery.metadataType eq 'dokument'}" />
+				<p:watermark for="searchinputDocument"
+					value="#{i18n['od.search.document']}" />
+				<h:inputText value="#{searchQuery.query}"
+					styleClass="searchInput apps" id="searchinputApp"
+					converter="queryConverter"
+					rendered="#{searchQuery.metadataType eq 'app'}" />
+				<p:watermark for="searchinputApp" value="#{i18n['od.search.app']}" />
+				<h:inputText value="#{searchQuery.query}" styleClass="searchInput"
+					id="searchinputMetadata" converter="queryConverter"
+					rendered="#{searchQuery.metadataType eq 'metadata'}" />
+				<p:watermark for="searchinputMetadata"
+					value="#{i18n['od.search.metadata']}" />
+				<h:commandButton action="#{searchQuery.submit}"
+					styleClass="btn btn-primary" id="searchinputsubmit"
+					style="width:1.2em;right: -20px !important;"
+					title="#{i18n['od.search.button.alt']}" />
+
+				<h:panelGroup layout="block" class="didyoumean" style="margin-top: 1em;"
+					rendered="#{searchQuery.query != null and (liferay.layout.friendlyURL eq '/suchen' or searchQuery.metadataType eq 'datensatz' or searchQuery.metadataType eq 'dokument' or searchQuery.metadataType eq 'app') and searchQuery.suggestions != null and searchQuery.suggestions.size() gt 0}">
+					<h:outputText styleClass="text-error lead" value="Meinten Sie: " />
+					<ui:repeat value="#{searchQuery.suggestions}"
+						varStatus="status" var="suggestion">
+						<h:commandLink id="correctword" >
+							<f:setPropertyActionListener target="#{searchQuery.query}"
+								value="#{searchQuery.suggestionconvertet}"  />
+							<h:outputText value="#{suggestion.string}" />
+						</h:commandLink>
+						<h:outputText value="&#160;" />
+					</ui:repeat>
+				</h:panelGroup>
+			</div>
+		</h:form>
+	</h:body>
+</f:view>

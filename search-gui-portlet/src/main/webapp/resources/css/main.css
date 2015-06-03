@@ -1,0 +1,19 @@
+.simpleSearchPane {
+	margin: 10px;
+	width: 100%;
+}
+
+.searchInput {
+	width: 90%;
+	margin-right: 10px;
+}
+
+.searchSubmit {
+	vertical-align:top;
+}
+
+
+.ui-autocomplete input {
+    width: 98%;
+	
+}

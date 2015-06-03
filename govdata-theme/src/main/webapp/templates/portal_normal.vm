@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+#parse ($init)
+
+<html class="#language(" lang.dir")" dir="#language("lang.dir")" lang="$w3c_language_id">
+
+<head>
+		
+	<script type="text/javascript" src="/govdata-theme/js/jquery.js"> </script> 
+	<script type="text/javascript" src="/govdata-theme/js/jquery-ui-1.9.0.custom.min.js"> </script>	
+	<script type="text/javascript" src="/govdata-theme/js/bootstrap.js"> </script> 
+	<script type="text/javascript" src="/govdata-theme/js/modernizer.js"> </script> 
+	<script type="text/javascript" src="/govdata-theme/js/jquery.flexslider-min.js"> </script> 	
+	<script type="text/javascript" src="/govdata-theme/js/jquery.cookies.js"></script>
+	
+		
+	<script type="text/javascript" src="/govdata-theme/js/socialshareprivacy.js"></script>
+	
+	<script type="text/javascript" src="/govdata-theme/js/modules/facebook.js"></script>
+	<script type="text/javascript" src="/govdata-theme/js/modules/twitter.js"></script>
+	<script type="text/javascript" src="/govdata-theme/js/modules/gplus.js"></script>
+	<script type="text/javascript" src="/govdata-theme/js/locale/de/socialshareprivacy.js"></script>
+	<script type="text/javascript" src="/govdata-theme/js/locale/de/modules/facebook.js"></script>
+	<script type="text/javascript" src="/govdata-theme/js/locale/de/modules/twitter.js"></script>
+	<script type="text/javascript" src="/govdata-theme/js/locale/de/modules/gplus.js"></script>
+	
+	<script type="text/javascript" src="/govdata-theme/js/main.js" charset="utf-8"></script>
+	
+	
+	<title>$the_title - $company_name</title>	
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="canonical" href="$themeDisplay.getPortalURL()$themeDisplay.getURLCurrent()"/>	
+	<meta name="DC.title" content="GovData.de | Das Datenportal f&uuml;r Deutschland  ">
+	<META name="robots" content="index, follow">
+    <meta name="description" content="GovData, das Datenportal für Deutschland, bietet einen einheitlichen, zentralen Zugang zu Verwaltungsdaten aus Bund, L&auml;ndern und Kommunen. ">
+	<meta name="keywords" content="GovData, OpenData, Datenlizenz Deutschland, Offene Daten, Datenportal Deutschland ">
+	<meta name="author" content="Bundesministerium des Inneren gemeinsam mit Fraunhofer FOKUS">
+	<META name="page-topic" content="Government, Verwaltung, Daten, Offene Daten, Open Data">
+	<meta property="og:title" content="$the_title - $company_name"/>
+    <meta property="og:type" content="government"/>
+    <meta property="og:url" content="$themeDisplay.getPortalURL()$themeDisplay.getURLCurrent()"/>
+    <meta property="og:image" content="/govdata-theme/images/ogpd/govdata.jpg"/>
+    <meta property="og:site_name" content="GovData.de"/>
+    <meta property="og:description" content="GovData, das Datenportal für Deutschland, bietet einen einheitlichen, zentralen Zugang zu Verwaltungsdaten aus Bund, L&auml;ndern und Kommunen."/>
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:url" content="$themeDisplay.getPortalURL()$themeDisplay.getURLCurrent()">
+    <meta name="twitter:title" content="GovData.de | Das Datenportal f&uuml;r Deutschland">
+    <meta name="twitter:description" content="GovData, das Datenportal für Deutschland, bietet einen einheitlichen, zentralen Zugang zu Verwaltungsdaten aus Bund, L&auml;ndern und Kommunen.">
+    <meta name="twitter:image" content="/govdata-theme/images/ogpd/govdata.jpg">
+
+	$theme.include($top_head_include)
+	
+	#if ( $is_signed_in ) 
+  		#css ($css_main_file)  
+ 	#end
+	 #if ( $is_signed_in && ($permissionChecker.isOmniadmin() )  )
+
+ 	#else
+ #end
+
+
+
+
+</head>
+
+<body>
+
+<div id="header">
+<div id="navbar" class="navbar-fixed-top">
+	$theme.include($body_top_include) 
+	#if ($is_signed_in) 
+		#dockbar() 
+			<style>
+				#wrapper {margin-top:100px !important;}
+			</style>	
+		#end
+<div class="navbar-inner">
+	<div id="topwrapper">
+
+			<a href="#main-content" id="skip-to-content">#language("skip-to-content")</a>
+
+			<header id="banner" role="banner">
+
+				<div id="heading">
+					<span class="site-title"> <a class="$logo_css_class"
+						href="/" title="#language("go-to") $site_name">
+							<img alt="$logo_description"
+							src="$images_folder/ogpd/govdata_logo.png" />
+					</a>
+					</span>
+
+					<h2 class="community-title">
+						<a href="$community_default_url" title="#language("go-to") $community_name">
+							<span>$community_name</span>
+						</a>
+					</h2>
+
+					<h3 class="page-title">
+						<span>$the_title</span>
+					</h3>
+					<!-- /hgroup -->
+
+					#if (!$is_signed_in) <a rel="nofollow" href="$sign_in_url" id="sign-in" class="btn btn-mini"><i class="icon-user"></i> $sign_in_text</a>
+					#else <a href="$sign_out_url" id="sign-in" class="btn btn-danger btn-mini"><i class="icon-white icon-user"></i> $sign_out_text</a>  #end
+						 #if ($update_available_url)
+					<div class="popup-alert-notice">
+						<a class="update-available" href="$update_available_url">#language("updates-are-available-for-liferay")</a>
+					</div>
+					#end
+					#if ($has_navigation) #parse
+					("$full_templates_path/navigation.vm") #end
+			</header>
+	</div>
+</div>
+</div>
+</div>
+	<div id="wrapper">
+
+			<div id="content">#if ($selectable)
+				$theme.include($content_include) #else $portletDisplay.recycle()
+
+				$portletDisplay.setTitle($the_title)
+
+				$theme.wrapPortlet("portlet.vm", $content_include) #end
+			</div>
+
+	
+	
+	<div id="ogpd_footer">
+	<div id="textbox">
+		<div class="footerinner" style="float: left;">					
+				 $footer-content  				 			
+		</div>
+		<div id="share" style="float: right;"></div>
+ 	 <div style="clear: both;"></div>
+	</div>
+
+
+
+
+</div>
+ 
+</body>
+
+$theme.include($bottom_include)
+
+</html>

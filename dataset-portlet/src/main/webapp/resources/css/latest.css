@@ -1,0 +1,61 @@
+img.smallCommentsAndRatings {
+	height: 15px;
+	width: 15px;
+}
+
+.dataset-widget {
+	position: relative;
+	background-color: white;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	min-height: 120px;
+	width: 98.5%;
+	border-radius: 5px;
+	box-shadow: 1px 1px 1px grey;
+	overflow: hidden;
+}
+
+.dataset-leftcolumn {
+	border-right: 1px dashed grey;
+	padding-left: 10px;
+	width: 72.5%;
+	height: 100%;
+	float: left;
+}
+
+.dataset-titleAndNotes {
+	height: 70%;
+}
+
+.dataset-titleAndNotes a{
+	color:rgb(119,178,56);
+}
+
+.dataset-categoriesAndAuthor {
+	height: 30%;
+}
+
+.dataset-rightcolumn {
+	width: 25%;
+	height: 100%;
+	float: left;
+}
+
+.dataset-resources {
+	padding-left: 10px;
+	height: 60%;
+}
+
+.dataset-commentsandratings {
+	padding-left: 10px;
+}
+
+.dataset-commentsandratings-box {
+	float: left;
+	text-align: center;
+	width: 50px;
+}
+
+.dataset-commentsandratings-value {
+	color:rgb(119,178,56);
+}

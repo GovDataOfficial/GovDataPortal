@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+	<groupId>de.fhg.fokus.odp</groupId>
+	<version>1.0.3</version>
+	<artifactId>opendataregistry-client</artifactId>
+   <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-bom</artifactId>
+                <version>2.3.5.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+  <dependencies>
+	  <dependency>
+	     <groupId>org.jboss.resteasy</groupId>
+	     <artifactId>resteasy-jaxrs</artifactId>
+	  </dependency>
+  	<dependency>
+  		<groupId>org.jboss.resteasy</groupId>
+  		<artifactId>jaxrs-api</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.jboss.resteasy</groupId>
+  		<artifactId>resteasy-jackson-provider</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-api</artifactId>
+  	</dependency>
+  </dependencies>
+  <repositories>
+	<repository>
+		<id>maven2-repository.jboss.org</id>
+		<name>JBoss Maven Repository</name>
+		<url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
+	</repository>
+  </repositories>
+</project>

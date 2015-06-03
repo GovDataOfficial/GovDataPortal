@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+	version="2.0">
+	<portlet>
+		<portlet-name>categories-grid-portlet</portlet-name>
+		<display-name>categories-grid-portlet</display-name>
+		<portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+		<init-param>
+            <name>contextConfigLocation</name>
+            <value>
+                /WEB-INF/springContextConfig.xml
+            </value>
+        </init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>categories-grid-portlet</title>
+			<short-title>categories-grid-portlet</short-title>
+			<keywords>categories-grid-portlet</keywords>
+		</portlet-info>
+		
+        <supported-publishing-event>
+            <qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:querydatasets</qname>
+        </supported-publishing-event>
+	</portlet>
+	
+	<event-definition>
+        <qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:querydatasets</qname>
+        <value-type>de.fhg.fokus.odp.registry.model.Query</value-type>
+    </event-definition>
+	
+</portlet-app>

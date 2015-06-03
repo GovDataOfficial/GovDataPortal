@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 6.1.0//EN"
+"http://www.liferay.com/dtd/liferay-friendly-url-routes_6_1_1.dtd">
+<routes>
+	<route>
+		<pattern>/{metadata}</pattern>
+		<implicit-parameter name="_jsfBridgeViewId">/views/details.xhtml</implicit-parameter>
+	</route>
+</routes>

@@ -1,0 +1,6 @@
+#*
+This file allows you to override and define new Velocity variables.
+*#
+
+#set ($footer-content-id = "12907")
+#set($footer-content=$journalContentUtil.getContent($group_id, $footer-content-id,null,"$locale",$theme_display))
