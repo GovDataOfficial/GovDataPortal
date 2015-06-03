@@ -34,29 +34,29 @@ Die einzelnen Java-Komponenten der Open Data Platform sind als Portlets umgesetz
 
 [opendataregistry-client](../master/opendataregistry-client): Zentrale Bibliothek, Java-API für CKAN.
 
-[categories-grid-portlet](../tree/master/categories-grid-portlet): Zeigt die Kategorien mit Pikogrammen und Anzahl der Datensätze an (Startseite)
+[categories-grid-portlet](../master/categories-grid-portlet): Zeigt die Kategorien mit Pikogrammen und Anzahl der Datensätze an (Startseite)
 
-[boxes-portlet](../../boxes-portlet): Zeigt neuste Datensätze, Dokumente und Apps (Startseite)
+[boxes-portlet](../master/boxes-portlet): Zeigt neuste Datensätze, Dokumente und Apps (Startseite)
 
-[cache-scheduler](../../cache-scheduler): Hält die zwischengespeicherten Inhalte von categories-grid-portlet und boxes-portlet aktuell.
+[cache-scheduler](../master/cache-scheduler): Hält die zwischengespeicherten Inhalte von categories-grid-portlet und boxes-portlet aktuell.
 
-[search-gui-portlet](../../search-gui-portlet): Zeigt die Suchmaske an und leitet die Anfrage per IPC an das dataset-portlet weiter.
+[search-gui-portlet](../master/search-gui-portlet): Zeigt die Suchmaske an und leitet die Anfrage per IPC an das dataset-portlet weiter.
 
 [dataset-portlet](../../dataset-portlet): Zeigt die Suchergebnis-Liste mit Filtern und die Datensatzdetailseite an, die es per opendataregistry-client von CKAN holt.
 
 [manage-datasets-portlet](../../manage-datasets-portlet): Erlaubt das erstellen und pflegen von Metadaten per Formular und opendataregistry-client.
 
-[entities](../../odp-entities): Ermöglichst das persistieren von Kommentaren zu Datensätzen durch JPA.
+[entities](../master/odp-entities): Ermöglichst das persistieren von Kommentaren zu Datensätzen durch JPA.
 
-[govdata-theme](../../govdata-theme): Oberflächengestaltung
+[govdata-theme](../master/govdata-theme): Oberflächengestaltung
 
-[rss-servlet](../../rss-servlet): Betten den CKAN-RSS-Feed ins Portal ein.
+[rss-servlet](../master/rss-servlet): Betten den CKAN-RSS-Feed ins Portal ein.
 
-[screennamevalidator-hook](../../screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
+[screennamevalidator-hook](../master/screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
 
-[language-hook](../../language-hook): Dient der Internationalisierung von Texten.
+[language-hook](../master/language-hook): Dient der Internationalisierung von Texten.
 
-[errorpages-hook](../../errorpages-hook): Zeigt angepasste Fehlerseiten an.
+[errorpages-hook](../master/errorpages-hook): Zeigt angepasste Fehlerseiten an.
 
 
 Links:
