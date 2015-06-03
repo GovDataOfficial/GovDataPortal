@@ -32,31 +32,31 @@ Die einzelnen Java-Komponenten der Open Data Platform sind als Portlets umgesetz
 
 ![Portlets](https://gitlab.fokus.fraunhofer.de/opendataplatform/govdata-ui/raw/master/doc/portlet-architecture.svg)
 
-[opendataregistry-client](../../odp-opendataregistry-client): Zentrale Bibliothek, Java-API für CKAN.
+[opendataregistry-client](../../opendataregistry-client): Zentrale Bibliothek, Java-API für CKAN.
 
-[categories-grid-portlet](../../odp-categories-grid-portlet): Zeigt die Kategorien mit Pikogrammen und Anzahl der Datensätze an (Startseite)
+[categories-grid-portlet](../../categories-grid-portlet): Zeigt die Kategorien mit Pikogrammen und Anzahl der Datensätze an (Startseite)
 
-[boxes-portlet](../../odp-boxes-portlet): Zeigt neuste Datensätze, Dokumente und Apps (Startseite)
+[boxes-portlet](../../boxes-portlet): Zeigt neuste Datensätze, Dokumente und Apps (Startseite)
 
-[cache-scheduler](../../odp-cache-scheduler): Hält die zwischengespeicherten Inhalte von categories-grid-portlet und boxes-portlet aktuell.
+[cache-scheduler](../../cache-scheduler): Hält die zwischengespeicherten Inhalte von categories-grid-portlet und boxes-portlet aktuell.
 
-[search-gui-portlet](../../odp-search-gui-portlet): Zeigt die Suchmaske an und leitet die Anfrage per IPC an das dataset-portlet weiter.
+[search-gui-portlet](../../search-gui-portlet): Zeigt die Suchmaske an und leitet die Anfrage per IPC an das dataset-portlet weiter.
 
-[dataset-portlet](../../odp-dataset-portlet): Zeigt die Suchergebnis-Liste mit Filtern und die Datensatzdetailseite an, die es per opendataregistry-client von CKAN holt.
+[dataset-portlet](../../dataset-portlet): Zeigt die Suchergebnis-Liste mit Filtern und die Datensatzdetailseite an, die es per opendataregistry-client von CKAN holt.
 
-[manage-datasets-portlet](../../odp-manage-datasets-portlet): Erlaubt das erstellen und pflegen von Metadaten per Formular und opendataregistry-client.
+[manage-datasets-portlet](../../manage-datasets-portlet): Erlaubt das erstellen und pflegen von Metadaten per Formular und opendataregistry-client.
 
 [entities](../../odp-entities): Ermöglichst das persistieren von Kommentaren zu Datensätzen durch JPA.
 
 [govdata-theme](../../govdata-theme): Oberflächengestaltung
 
-[rss-servlet](../../odp-rss-servlet): Betten den CKAN-RSS-Feed ins Portal ein.
+[rss-servlet](../../rss-servlet): Betten den CKAN-RSS-Feed ins Portal ein.
 
-[screennamevalidator-hook](../../odp-screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
+[screennamevalidator-hook](../../screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
 
-[language-hook](../../odp-language-hook): Dient der Internationalisierung von Texten.
+[language-hook](../../language-hook): Dient der Internationalisierung von Texten.
 
-[errorpages-hook](../../odp-errorpages-hook): Zeigt angepasste Fehlerseiten an.
+[errorpages-hook](../../errorpages-hook): Zeigt angepasste Fehlerseiten an.
 
 
 Links:
