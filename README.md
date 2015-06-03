@@ -68,5 +68,7 @@ Links:
 - Relevant CKAN plugins
   - [harvesting extension used at govdata.de](https://github.com/fraunhoferfokus/ckanext-govdatade)
   - [harvesting extension for CSW/ISO19115 geo metadata servers](https://github.com/fraunhoferfokus/ckanext-spatial/tree/ogpd)
+  - [harvesting extension for specific formats specified by INSPIRE](https://github.com/fraunhoferfokus/ckanext-inspire)
+  - [Geo related plugins for CKAN](https://github.com/fraunhoferfokus/ckanext-spatial)
 - [Fraunhofer FOKUS Open Data Blog](http://open-data.fokus.fraunhofer.de), esp. [on the architecture](http://open-data.fokus.fraunhofer.de/?p=1154&lang=en), 
 [on the metadata structure](http://open-data.fokus.fraunhofer.de/?p=643&lang=en), [on harvesting](http://open-data.fokus.fraunhofer.de/?p=2418&lang=en)
