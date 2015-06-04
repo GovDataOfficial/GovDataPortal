@@ -15,7 +15,7 @@ Komponenten
 
 - Als Persistenz-Komponente dient ein Datenbank-Server. CKAN arbeitet nur mit PostgreSQL zusammen, Liferay unterstützt alle vom Hibernate-Framework unterstützen Datenbanken also auch PostgreSQL.
 
-- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalog, auch Harvesting genannt. Die als CKAN-Erweiterung umgesetzten Harvester erledigen diese Aufgabe https://github.com/fraunhoferfokus-ckanext-govdatade
+- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalog, auch Harvesting genannt. Die als CKAN-Erweiterung umgesetzten Harvester erledigen diese Aufgabe https://github.com/fraunhoferfokus/ckanext-govdatade
 
 Architektur
 -----------
