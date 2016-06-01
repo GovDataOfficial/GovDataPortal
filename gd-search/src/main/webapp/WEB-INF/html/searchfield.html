@@ -1,0 +1,75 @@
+<div xmlns:th="http://www.thymeleaf.org" class="gd-search-container" th:inline="text">
+  <div th:class="${searchField.showBigHeader}? 'gd-search show-big-header' : 'gd-search show-small-header'"
+    th:style="${not searchField.showBigHeader}? ('background-image: url(' + ${searchField.backgroundImage} + ');')">
+    <div class="searchFormPlaceholder" th:unless="${searchField.showSearch}"></div>
+    <form id="searchfieldform" enctype="application/x-www-form-urlencoded"
+      th:if="${searchField.showSearch}"
+      th:action="${searchField.actionUrl}" th:object="${searchField}"
+      method="post" action="" th:attr="data-saytCompletionUrl=${searchField.saytCompletionUrl}, data-saytHintTpl=#{od.search.field.sayt.hint}">
+      <input type="hidden" th:each="param : ${searchField.passthroughParams}" th:name="${param.key}" th:value="${param.value}" />
+
+      <div th:if="${searchField.showBigHeader}" class="row gd-search-titlearea">
+        <div class="column small-12">
+          <h1 class="maintitle">[[#{od.maintitle}]]</h1>
+          <h2 class="maintitle-teaser">[[#{od.maintitle.teaser}]]</h2>
+        </div>
+      </div>
+
+      <div class="gd-search-searchbox">
+        <div class="gd-search-searchrow1">
+          <div class="gd-search-q">
+          <label for="searchfield" class="offscreen">[[#{od.search.field.title}]]</label>
+            <input autocomplete="off" type="search" id="searchfield"
+              data-dropdown="searchfield-dropdown" aria-expanded="false" aria-controls="searchfield-dropdown" class="dropdown input-search"
+              name="q" th:field="*{q}" th:placeholder="#{od.searchbox.placeholder}" th:title="#{od.search.field.title}" />
+            <span class="offscreen" aria-live="polite" role="status" id="searchfield-hint"></span>
+          </div>
+          <div class="gd-search-submit">
+            <button th:class="'button-search label-' + #{od.search}" type="submit" th:title="#{od.search}" name="submitSearch">
+              <span class="show-for-medium-up" th:text="#{od.search}"></span>
+              <span class="show-for-small-only offscreen" th:text="#{od.search}"></span>
+              <span class="show-for-small-only sbi-lupe"></span>
+            </button>
+          </div>
+        </div>
+        <div class="gd-search-searchrow2" th:if="${searchField.extendedSearchUrl != null}">
+          <a id="btnextendedsearch" th:href="${searchField.extendedSearchUrl}" class="button-mapsearch" th:text="#{od.extended_search}"></a>
+        </div>
+        <div class="gd-search-searchrow2">
+          <a id="btnmapsearch" href="/kartensuche" class="button-mapsearch" th:text="#{od.mapsearch}"></a>
+        </div>
+      </div>
+
+      <!--/* removed until we have content for the teaser-band
+      <div th:if="${searchField.showBigHeader}" class="gd-search-box-container">
+        <div class="row">
+          <div class="column small-12 medium-6">
+            <div class="gd-search-box grid-table">
+              <div class="grid-tablerow">
+                <div class="box-header">Daten finden über die Kartensuche</div>
+              </div>
+              <div class="grid-tablerow">
+                <div class="box-content">
+                  <a href="#" title="Daten finden über die Kartensuche"><div class="kartensuche-map"></div></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column small-12 medium-6">
+            <div class="gd-search-box grid-table">
+              <div class="grid-tablerow">
+                <div class="box-header">Die aktuell beliebtesten Suchbegriffe</div>
+              </div>
+              <div class="grid-tablerow">
+                <div class="box-content">
+                  <a class="sb-tag">Beispieltag</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      */-->
+    </form>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+.information-nav {
+  @extend .design-box;
+
+  .portlet-topper h1 {
+    @extend .sb-chapter-head;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    @extend .sb-chapter-sub;
+    display: block;
+
+    a {
+      display: block;
+      padding: .5em rem-calc(15);
+
+      &.selected {
+        background-color: $dark-gray;
+        color: $white;
+        font-weight: normal;
+      }
+    }
+  }
+
+  @media #{$medium-down} {
+    display: none; // we have this navigation in off-canvas menu...
+  }
+}
+
+.aui {
+  .information-nav .portlet-topper h1 {
+    padding-left: rem-calc(15);
+    padding-right: rem-calc(15);
+  }
+
+  .portlet-journal-content.article-gray-header {
+    background-color: inherit;
+    border-style: none;
+
+    section {
+      padding: 0;
+    }
+
+    .portlet-content {
+      @extend .design-box;
+      margin-bottom: rem-calc(30);
+      padding: rem-calc(15);
+    }
+  }
+}
+
+.portlet-journal-content.standalone-page {
+  background-color: inherit;
+  border-style: none;
+
+  .portlet-content {
+    @extend .design-box;
+    margin-bottom: rem-calc(30);
+    padding: rem-calc(15);
+  }
+}

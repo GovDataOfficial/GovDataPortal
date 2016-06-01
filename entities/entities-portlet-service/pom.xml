@@ -1,34 +1,41 @@
 <?xml version="1.0"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>de.fhg.fokus.odp</groupId>
-		<artifactId>entities</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>entities-portlet-service</artifactId>
-	<packaging>jar</packaging>
-	<name>entities Portlet Service</name>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.liferay.maven.plugins</groupId>
-				<artifactId>liferay-maven-plugin</artifactId>
-				<version>${liferay.version}</version>
-				<configuration>
-					<webappBaseDir>${basedir}/../entities-portlet</webappBaseDir>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<dependencies>
-		<dependency>
-			<groupId>com.liferay.portal</groupId>
-			<artifactId>portal-service</artifactId>
-			<version>${liferay.version}</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>de.fhg.fokus.odp</groupId>
+    <artifactId>entities</artifactId>
+    <version>2.3.0</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>entities-portlet-service</artifactId>
+  <packaging>jar</packaging>
+  <name>entities Portlet Service</name>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.liferay.maven.plugins</groupId>
+        <artifactId>liferay-maven-plugin</artifactId>
+        <version>${liferay.version}</version>
+        <configuration>
+          <webappBaseDir>${basedir}/../entities-portlet</webappBaseDir>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>com.liferay.portal</groupId>
+      <artifactId>portal-service</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>

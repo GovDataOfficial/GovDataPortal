@@ -1,0 +1,97 @@
+.map {
+  background-color: $kontur-gray;
+  height: 400px;
+  max-height: 60vh; // maximum 60% of viewport height
+  position: relative;
+  width: 100%;
+
+  @media #{$medium-up} {
+    height: 600px;
+  }
+}
+
+.map-helparea {
+  @media #{$small-only} {
+    margin-top: rem-calc(10);
+  }
+}
+
+.map-spaceabove {
+  @media #{$medium-up} {
+    margin-top: rem-calc(25);
+  }
+}
+
+.map-search-button-container {
+  bottom: rem-calc(5px);
+  left: 0;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+
+  .button-search {
+    white-space: nowrap;
+
+    .sbi-lupe {
+      font-size: rem-calc(20px);
+    }
+  }
+}
+
+.aui {
+  .map-search-button {
+    @extend .h2-metainfo;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, .3);
+    font-weight: bold !important;
+    float: right;
+    line-height: rem-calc(30px);
+
+    @media #{$small-only} {
+      width: 100% !important;
+    }
+
+    @media #{$medium-up} {
+      border-radius: rem-calc(5);
+      padding: rem-calc(5) rem-calc(13);
+    }
+  }
+}
+
+.locationsearch {
+  margin: rem-calc(5px) 0;
+
+  input.input-search {
+    box-shadow: 1px 1px 4px rgba($black, .5);
+  }
+
+  .yui3-aclist-item {
+    span {
+      color: darken($kontur-gray, 20%);
+    }
+  }
+}
+
+// override AUI!
+.aui.ios input.map-search-button {
+  max-width: 100% !important;
+}
+
+.center-selection-control {
+  left: .5rem;
+  top: 5rem;
+}
+
+.ol-control button {
+  background-color: rgba($dark-gray, .7);
+
+  &:hover {
+    background-color: $dark-gray;
+  }
+}
+
+// move the copyright hint at the top
+.ol-attribution.ol-logo-only {
+  bottom: auto;
+  height: 1.1em;
+  top: .4em;
+}

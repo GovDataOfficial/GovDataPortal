@@ -1,0 +1,213 @@
+@font-face {
+	font-family : 'Source Sans Pro';
+	src         : url("fonts/SourceSansPro-Regular.otf");
+}
+@font-face {
+	font-family : 'Source Sans Pro';
+	font-style  : italic;
+	src         : url("fonts/SourceSansPro-It.otf");
+}
+@font-face {
+	font-family : 'Source Sans Pro';
+	font-weight : bold;
+	src         : url("fonts/SourceSansPro-Semibold.otf");
+}
+@font-face {
+	font-family : 'Crimson Text';
+	src         : url("fonts/CrimsonText-Roman.ttf");
+}
+@font-face {
+	font-family : 'Crimson Text';
+	font-style  : italic;
+	src         : url("fonts/CrimsonText-Italic.ttf");
+}
+@font-face {
+	font-family : 'Crimson Text';
+	font-weight : bold;
+	src         : url("fonts/CrimsonText-Bold.ttf");
+}
+
+* {
+ box-sizing : border-box;
+}
+
+body, html {
+ margin           : 0;
+ font-size        : 14px;
+ background-color : #3d3d3d;
+}
+
+.gd-search {
+ padding             : 1.78571rem 0;
+ border-top          : 1px solid #ddd;
+ box-shadow          : 1px 1px 3px rgba(0,0,0,0.5);
+ background-image    : url("img/connectionmap.jpg");
+ background-position : 50% 50%;
+ background-size     : cover;
+}
+
+.gd-search-container {
+ padding-bottom : 4px;
+ overflow       : hidden;
+}
+
+.gd-search .row.gd-search-titlearea .column {
+ padding-right : 0;
+ padding-left  : 0;
+}
+
+.row {
+ width         : 100%;
+ margin-top    : 0;
+ margin-right  : auto;
+ margin-bottom : 0;
+ margin-left   : auto;
+ max-width     : 102.85714rem;
+}
+
+.column {
+ position      : relative;
+ padding-right : 1.07143rem;
+ padding-left  : 1.07143rem;
+}
+
+h1.maintitle,
+h2.maintitle-teaser {
+ display          : inline-block;
+ padding          : .14286rem 1.07143rem .28571rem;
+ color            : white;
+ font-family      : 'Source Sans Pro';
+ font-weight      : bold;
+ background-color : #3d3d3d;
+}
+
+section {
+ font-family : 'Crimson Text';
+ font-size   : 18px;
+ line-height : 24px;
+}
+
+section.row {
+ padding-top    : 1.5em;
+ padding-bottom : 1.5em;
+}
+
+section h1 {
+ margin      : 10px 0;
+ font-family : 'Source Sans Pro';
+ font-size   : 24px;
+ font-weight : normal;
+ line-height : 31px;
+}
+
+.imgheader {
+ padding          : 1em;
+ background-color : #fff;
+}
+
+.design-box {
+ padding          : 1.71429rem;
+ border-color     : #c5c5c5;
+ border-style     : solid;
+ background-color : white;
+ border-width     : 0 1px 1px 0;
+}
+
+.whitebackground {
+ background-color : #f5f5f5;
+}
+
+footer {
+ color            : white;
+ background-color : #3d3d3d;
+}
+
+footer .row {
+ height : 5rem;
+}
+
+footer ul {
+ margin  : 0;
+ padding : 0;
+}
+
+footer li {
+ display       : inline-block;
+ margin-right  : .5em;
+ margin-bottom : .5em;
+}
+
+/* bigest breakpoint */
+@media only screen and (min-width: 1025px) {
+ .gd-search .row.gd-search-titlearea {
+   padding-right : 2.14286rem;
+   padding-left  : 2.14286rem;
+ }
+ h1.maintitle {
+   margin         : .35714rem 0;
+   padding-bottom : .42857rem;
+   font-size      : 46px;
+   line-height    : 46px;
+ }
+ h2.maintitle-teaser {
+   margin         : .35714rem 0;
+   padding-bottom : .42857rem;
+   font-size      : 24px;
+   line-height    : 24px;
+ }
+ .row-margin {
+   padding-right : 1.71429rem;
+   padding-left  : 1.71429rem;
+ }
+}
+
+/* medium breakpoint */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+ h1.maintitle {
+   margin      : .14286rem 0;
+   font-size   : 32px;
+   line-height : 32px;
+ }
+ h2.maintitle-teaser {
+   margin      : .14286rem 0;
+   font-size   : 20px;
+   line-height : 20px;
+ }
+ .gd-search {
+   padding : 1.07143rem 0;
+ }
+ section {
+   font-size   : 16px;
+   line-height : 22px;
+ }
+ section h1 {
+   font-size   : 20px;
+   line-height : 26px;
+ }
+}
+
+/* smallest breakpoint */
+@media only screen and (max-width: 767px) {
+ h1.maintitle,
+ h2.maintitle-teaser {
+   display : block;
+   margin  : 0;
+ }
+ h1.maintitle {
+   font-size   : 20px;
+   line-height : 22px;
+ }
+ h2.maintitle-teaser {
+   font-size   : 16px;
+   font-weight : normal;
+   line-height : 18px;
+ }
+ section {
+   font-size   : 15px;
+   line-height : 20px;
+ }
+ section h1 {
+   font-size   : 16px;
+   line-height : 23px;
+ }
+}

@@ -19,9 +19,7 @@
 
 package de.fhg.fokus.odp.registry.model;
 
-import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface User.
  * 
@@ -63,66 +61,15 @@ public interface User {
      * @return the email
      */
     String getEmail();
+    
+    String getId();
 
     /**
-     * Gets the datasets.
-     * 
-     * @return the datasets
-     */
-    List<String> getDatasets();
-
-    /**
-     * Rate metadata.
-     * 
-     * @param metadata
-     *            the metadata
-     * @param rate
-     *            the rate
-     */
-    void rateMetadata(String metadata, int rate);
-
-    /**
-     * Checks if is owner.
-     * 
-     * @param metadata
-     *            the metadata
-     * @return true, if is owner
-     */
-    boolean isOwner(Metadata metadata);
-
-    /**
-     * Checks if is editor.
-     * 
-     * @param metadata
-     *            the metadata
-     * @return true, if is editor
-     */
-    boolean isEditor(Metadata metadata);
-
-    /**
-     * Checks for role.
-     * 
-     * @param role
-     *            the role
-     * @param metadata
-     *            the metadata
-     * @return true, if successful
-     */
-    boolean hasRole(String role, Metadata metadata);
-
-    /**
-     * Checks for role.
-     * 
-     * @param role
-     *            the role
-     * @return true, if successful
-     */
-    boolean hasRole(String role);
-
-    void updateRole(String role);
- 
-	void updateRoles(List<String> roles);
-
-    public List<String> showRoles();
+   * Checks if is creator.
+   * 
+   * @param metadata the metadata
+   * @return true, if is creator
+   */
+  boolean isCreator(Metadata metadata);
 
 }

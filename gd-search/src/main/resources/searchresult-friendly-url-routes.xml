@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 6.2.0//EN"
+  "http://www.liferay.com/dtd/liferay-friendly-url-routes_6_2_0.dtd">
+  <!-- We have to introduce MANY fallbacks, because liferay removes the trailing / before matching -->
+<routes>
+  <route>
+    <pattern>/q/{q:[^/]*}/f/{f:[^/]*}/s/{s:[^/]*}/boundingbox/{boundingbox:[^/]*}</pattern>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/f/{f:[^/]*}/s/{s:[^/]*}/boundingbox</pattern>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/f/{f:[^/]*}/s/{s:[^/]*}</pattern>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/f/{f:[^/]*}/s</pattern>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/f/{f:[^/]*}/boundingbox/{boundingbox:[^/]*}</pattern>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/f/{f:[^/]*}/boundingbox</pattern>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/s/{s:[^/]*}/boundingbox/{boundingbox:[^/]*}</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/s/{s:[^/]*}/boundingbox</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f/{f:[^/]*}/s/{s:[^/]*}/boundingbox/{boundingbox:[^/]*}</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f/{f:[^/]*}/s/{s:[^/]*}/boundingbox</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/f/{f:[^/]*}</pattern>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/f</pattern>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/s/{s:[^/]*}</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/s</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/boundingbox/{boundingbox:[^/]*}</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}/boundingbox</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f/{f:[^/]*}/s/{s:[^/]*}</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f/{f:[^/]*}/s</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f/{f:[^/]*}/boundingbox/{boundingbox:[^/]*}</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f/{f:[^/]*}/boundingbox</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/s/{s:[^/]*}/boundingbox/{boundingbox:[^/]*}</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/s/{s:[^/]*}/boundingbox</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q/{q:[^/]*}</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/q</pattern>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+    <overridden-parameter name="q"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f/{f:[^/]*}</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/f</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/s/{s:[^/]*}</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/s</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/boundingbox/{boundingbox:[^/]*}</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+  </route>
+  <route>
+    <pattern>/boundingbox</pattern>
+    <overridden-parameter name="q"></overridden-parameter>
+    <overridden-parameter name="f"></overridden-parameter>
+    <overridden-parameter name="s"></overridden-parameter>
+    <overridden-parameter name="boundingbox"></overridden-parameter>
+  </route>
+</routes>

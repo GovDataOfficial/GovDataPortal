@@ -1,0 +1,40 @@
+// Things set by AUI that we need to override, before element-specific classes override them again...
+
+// fix input color for forms:
+.aui {
+  select,
+  textarea,
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="color"],
+  .uneditable-input {
+    color: $black;
+  }
+
+  input[type="search"] {
+    height: auto;
+  }
+
+  dl, dt, dd {
+    margin: 0;
+    padding: 0;
+  }
+
+  // different fixes...
+  input[type="text"],
+  input[type="password"] {
+    height: inherit;
+    font-size: 14px;
+  }
+}

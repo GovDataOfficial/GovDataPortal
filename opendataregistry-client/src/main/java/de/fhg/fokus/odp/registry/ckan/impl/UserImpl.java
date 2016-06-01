@@ -23,11 +23,9 @@
 package de.fhg.fokus.odp.registry.ckan.impl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import de.fhg.fokus.odp.registry.ODRClient;
+import org.apache.commons.lang3.StringUtils;
+
 import de.fhg.fokus.odp.registry.ckan.json.UserBean;
 import de.fhg.fokus.odp.registry.model.Metadata;
 import de.fhg.fokus.odp.registry.model.User;
@@ -38,96 +36,64 @@ import de.fhg.fokus.odp.registry.model.User;
  */
 public class UserImpl implements User, Serializable {
 
-	/**
+  /**
      * 
      */
-	private static final long serialVersionUID = -9199121089537222860L;
+  private static final long serialVersionUID = -9199121089537222860L;
 
-	private UserBean user;
+  private UserBean user;
 
-	private transient ODRClient client;
+  public UserImpl(UserBean user)
+  {
+    this.user = user;
+  }
 
-	private List<String> datasets;
+  // @Override
+  public String getApikey()
+  {
+    return user.getApikey();
+  }
 
-	public UserImpl(UserBean user, ODRClient client) {
-		this.user = user;
-		this.client = client;
-	}
+  @Override
+  public String getName()
+  {
+    return user.getName();
+  }
 
-	// @Override
-	public String getApikey() {
-		return user.getApikey();
-	}
+  @Override
+  public String getFullname()
+  {
+    return user.getFullname();
+  }
 
-	@Override
-	public String getName() {
-		return user.getName();
-	}
+  @Override
+  public String getDisplayName()
+  {
+    return user.getDisplay_name();
+  }
 
-	@Override
-	public String getFullname() {
-		return user.getFullname();
-	}
+  @Override
+  public String getEmail()
+  {
+    return user.getEmail();
+  }
 
-	@Override
-	public String getDisplayName() {
-		return user.getDisplay_name();
-	}
+  @Override
+  public boolean isCreator(Metadata metadata)
+  {
+    return StringUtils.equals(this.user.getId(), metadata.getCreatorUserId());
+  }
+  
+  @Override
+  public String toString()
+  {
+    return user.getId() + ": " + user.getName() + " / " + user.getDisplay_name() + " / " + user.getApikey();
+  }
 
-	@Override
-	public String getEmail() {
-		return user.getEmail();
-	}
-
-	@Override
-	public List<String> getDatasets() {
-		if (datasets == null) {
-			datasets = new ArrayList<String>();
-		}
-		return datasets;
-	}
-
-	@Override
-	public void rateMetadata(String metadata, int rate) {
-		client.rateMetadata(this, metadata, rate);
-	}
-
-	@Override
-	public boolean isOwner(Metadata metadata) {
-		return getDatasets().contains(metadata.getName());
-	}
-
-	@Override
-	public boolean isEditor(Metadata metadata) {
-		return hasRole("admin", metadata);
-	}
-
-	@Override
-	public boolean hasRole(String role, Metadata metadata) {
-		List<String> roles = client.showRoles(this, metadata.getName());
-		return roles.contains(role);
-	}
-
-	@Override
-	public boolean hasRole(String role) {
-		List<String> roles = client.showRoles(this, "system");
-		return roles.contains(role);
-	}
-
-	@Override
-	public void updateRole(String role) {
-		client.updateRoles(this, "system", Collections.singletonList(role));
-	}
-
-	@Override
-	public void updateRoles(List<String> roles) {
-		client.updateRoles(this, "system", roles);
-	}
-
-	@Override
-	public List<String> showRoles() {
-		List<String> roles = client.showRoles(this, "system");
-		return roles;
-	}
+  @Override
+  public String getId()
+  {
+    return user.getId();
+  }
 
 }

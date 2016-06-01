@@ -1,0 +1,318 @@
+.portlet-blogs {
+  .separator { // we don't need that element, but we can't edit the template... so this is the fix
+    display: none;
+  }
+
+  .portlet-body {
+    margin-left: rem-calc(15);
+    margin-right: rem-calc(15);
+    max-width: $row-width;
+
+
+    @media #{$large-up} {
+      width: 66.6667%;
+      margin: rem-calc(30) auto;
+    }
+  }
+
+  // Overview-Menu: START
+  .navbar-inner {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .navbar .btn-navbar {
+    @extend .sbi-hamburger-menu;
+
+    font-family: "govdata" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: $black;
+    margin: .5rem 0;
+    text-shadow: none;
+    padding: .8rem;
+    font-size: rem-calc(22px);
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: $dark-gray;
+      color: $white;
+    }
+  }
+
+  .navbar .btn-navbar .icon-bar { // to override AUI
+    display: none;
+  }
+
+  // END: Overview-Menu
+
+  div.entry {
+    @extend .design-box;
+    margin-bottom: rem-calc(15);
+    padding: rem-calc(10) rem-calc(20) rem-calc(20);
+
+    @media #{$large-up} {
+      margin-bottom: rem-calc(30);
+    }
+  }
+
+  .entry-date {
+    @extend .h2-metainfo;
+    background-image: none;
+    color: $black;
+    font-weight: bold;
+    padding: 0 0 rem-calc(5);
+
+    &:before {
+      color: $black;
+      content: 'O';
+      speak: none;
+      font-family: 'govdata';
+      font-weight: normal;
+      padding-right: .4em;
+      vertical-align: text-bottom;
+    }
+  }
+
+  .entry-body {
+    @extend .sb-text;
+    margin-bottom: rem-calc(15);
+  }
+
+  .entry-footer {
+    @extend .h2-metainfo;
+
+    a.taglib-icon:hover .taglib-text {
+      text-decoration: none;
+    }
+
+    .taglib-icon,
+    .stats a {
+      padding: 6.5px 10px;
+      text-decoration: underline;
+
+      &:focus,
+      &:hover,
+      &:active {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .entry-author {
+    background-image: none;
+    border-right-width: 0;
+    color: $black;
+    display: inline-block;
+    float: none;
+    font-weight: normal;
+    margin: 0;
+    padding: 6.5px 10px;
+
+    &:before {
+      color: $black;
+      content: 'f';
+      speak: none;
+      font-family: 'govdata';
+      font-weight: normal;
+      padding-right: .4em;
+      vertical-align: text-top;
+    }
+  }
+
+  .taglib-flags {
+    img {
+      display: none; // we use a font-icon instead
+    }
+
+    .taglib-text {
+      position: relative;
+      margin-left: 2em;
+
+      &::before {
+        position: absolute;
+        left: -1.5em;
+        content: 'i';
+        speak: none;
+        font-family: 'govdata';
+      }
+    }
+  }
+
+  .entry-navigation {
+    @extend .row;
+    padding-left: rem-calc(15);
+    padding-right: rem-calc(15);
+    background: none;
+    border: 0;
+
+    a.previous,
+    a.next {
+      @extend .h2-metainfo;
+      background: $white;
+      padding: 6.5px 10px;
+      border-radius: rem-calc(5);
+
+      &:active,
+      &:hover,
+      &:focus {
+        background-color: $dark-gray;
+        color: $white;
+      }
+    }
+
+    span.previous,
+    span.next {
+      display: none;
+    }
+
+    a.previous {
+      &:before {
+        content: 'R';
+        speak: none;
+        font-family: 'govdata';
+        font-weight: bold;
+        padding-right: 5px;
+        vertical-align: middle;
+      }
+    }
+
+    a.next {
+      &::after {
+        content: 'B';
+        speak: none;
+        font-family: 'govdata';
+        font-weight: bold;
+        padding-left: 5px;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .stats {
+    color: $black;
+    display: inline-block;
+    float: none;
+
+    a {
+      display: inline-block;
+    }
+  }
+
+  // --- subscribe bar
+  .subscribe {
+    @extend .row;
+    padding: rem-calc(15);
+
+    a {
+      @extend .h2-metainfo;
+      padding: 6.5px 10px;
+    }
+
+  }
+
+  // --- Pagination
+  .taglib-page-iterator {
+    @extend .row;
+  }
+
+  .lfr-pagination {
+    @extend .column;
+    @extend .h2-metainfo;
+
+    @media #{$large-up} {
+      padding-left: rem-calc(30);
+      padding-right: rem-calc(30);
+    }
+
+    small {
+      font-size: 100%;
+    }
+
+    .search-results {
+      margin-left: rem-calc(15);
+    }
+
+    .dropdown-toggle .caret {
+      margin-left: 5px;
+    }
+  }
+
+  .lfr-pagination-delta-selector {
+    padding-right: rem-calc(15);
+  }
+
+  .lfr-pagination-buttons {
+    @media #{$medium-only} {
+      width: 50%;
+    }
+  }
+
+  .pager li > a:hover {
+    background-color: $dark-gray;
+  }
+
+  // --- blog details view
+  .taglib-header {
+    @extend .row;
+    border: 0;
+
+    .header-title {
+      @extend .sb-bigtitle;
+      color: $black;
+      white-space: normal;
+    }
+
+    .header-back-to a {
+      margin-top: 24px;
+      padding: 0.4em;
+    }
+  }
+}
+
+// Navigation Elements at top of the blog list
+.aui .navbar {
+  .blog-nav {
+    margin-bottom: .5em;
+    margin-top: .5em;
+  }
+  .taglib-icon {
+    padding: 6.5px 10px;
+    display: block;
+  }
+}
+
+// fix back icon next to title
+.aui .header-back-to .icon-circle-arrow-left::before {
+  content: 'D';
+  speak: none;
+  font-family: 'govdata';
+}
+
+// fix RSS icon
+.taglib-rss {
+  img {
+    display: none;
+  }
+
+  .taglib-text::before {
+    content: 'C';
+    speak: none;
+    font-family: govdata;
+    margin-right: .5em;
+  }
+}

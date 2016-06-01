@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<beans default-destroy-method="destroy" default-init-method="afterPropertiesSet"
+  xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+  <import resource="portlet-context.xml" />
+  <import resource="mvc-context.xml" />
+  <import resource="messaging-spring.xml" />
+  
+  <context:component-scan base-package="de.seitenbau.govdata.search.index,
+      de.seitenbau.govdata.search.adapter,
+      de.seitenbau.govdata.odr,
+      de.seitenbau.govdata.cache" />
+
+  <bean id="indexQueueClientFactory" class="de.seitenbau.govdata.search.index.queue.adapter.IndexQueueClientFactory" />
+  <bean id="indexQueueResource" factory-bean="indexQueueClientFactory" factory-method="createSuchindexQueueClient" />
+
+  <bean id="indexFilterBlog" class="de.seitenbau.govdata.search.index.filter.BlogFilter"/>
+  <bean id="indexFilterJournal" class="de.seitenbau.govdata.search.index.filter.JournalFilter"/>
+
+  <bean id="indexFilterProxy" class="de.seitenbau.govdata.search.index.filter.FilterProxy">
+    <property name="registeredFilter">
+      <util:map>
+        <entry key="com.liferay.portlet.blogs.model.BlogsEntry" value-ref="indexFilterBlog" />
+        <entry key="com.liferay.portlet.journal.model.JournalArticle" value-ref="indexFilterJournal" />
+      </util:map>
+    </property>
+  </bean>
+
+</beans>

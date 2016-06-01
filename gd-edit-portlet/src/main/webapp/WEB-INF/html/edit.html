@@ -1,0 +1,418 @@
+<div id="metadataEditForm" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+  <div class="row">
+    <div class="column" th:unless="${userCanEditDataset}">
+      <div class="alert alert-error" th:text="#{od.editform.accessdenied}" role="alert"></div>
+    </div>
+    <div class="column overflowscroll" th:if="${userCanEditDataset}">
+      <form id="editform" action="#" th:action="${actionUrl}" th:object="${editForm}" method="post"
+        th:attr="data-removerowdialog=#{od.editform.removerows.confirmdialog},
+                 data-deletedatasetdialog=#{od.editform.delete.confirmdialog},
+                 data-onbeforeunload=#{od.editform.unsavedchanges}">
+        <h1 th:text="#{'od.editform.title.new'}" th:if="*{isNewDataset()}"></h1>
+        <h1 th:text="#{'od.editform.title.edit'}" th:unless="*{isNewDataset()}"></h1>
+        <strong class="requiredfieldhint">[[#{'od.editform.required.fields.hint'}]]</strong>
+
+        <div th:unless="${#strings.isEmpty(message)}" role="alert" th:class="'alert ' + ${messageType}" th:text="${#messages.msg(message)}"></div>
+
+        <input type="hidden" th:field="*{name}" />
+        <table class="editdataset" role="presentation">
+          <tr th:unless="*{isNewDataset()}">
+            <th>[[#{'od.name.name'}]]</th>
+            <td>
+              <div th:text="*{name}"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <th><label id="organizationId_label" for="organizationId">[[#{'od.organization.name'}]]<span class="requiredmarker"> *</span></label></th>
+            <td>
+              <select aria-required="true" th:field="*{organizationId}" aria-labelledby="organizationId_label organizationId_error">
+                <option th:each="licence : ${organizationList}" th:value="${licence.id}" th:text="${licence.title}">
+
+                </option>
+              </select>
+              <div id="organizationId_error" class="validation-error" th:if="${#fields.hasErrors('organizationId')}" th:errors="*{organizationId}"></div>
+              <div id="organizationId_error" th:unless="${#fields.hasErrors('organizationId')}"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <th>[[#{'od.private.name'}]]</th>
+            <td class="multiboxarea">
+              <div class="checkboxitem">
+                <input class="offscreen" type="checkbox" th:field="*{private}" />
+                <label class="checkbox" th:for="${#ids.prev('private')}" th:text="#{'od.private.checkboxlabel'}"></label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <th><label id="title_label" for="title">[[#{'od.title.name'}]]<span class="requiredmarker"> *</span></label></th>
+            <td class="required-field">
+              <input type="text" aria-required="true" aria-labelledby="title_label title_error" th:field="*{title}" th:placeholder="#{'od.validation_required'}"/>
+              <div id="title_error" class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+              <div id="title_error" th:unless="${#fields.hasErrors('title')}"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <th><label id="typ_label" for="typ">[[#{'od.typ.name'}]]</label><span class="requiredmarker"> *</span></th>
+            <td>
+              <select aria-required="true" th:field="*{typ}" th:disabled="*{!isNewDataset()}" aria-labelledby="typ_label typ_error">
+                <option value="datensatz">
+                  [[#{'od.datensatz'}]]
+                </option>
+                <option value="dokument">
+                  [[#{'od.document'}]]
+                </option>
+                <option value="app">
+                  [[#{'od.app'}]]
+                </option>
+              </select>
+              <input type="hidden" th:field="*{typ}" th:unless="*{isNewDataset()}" />
+              <div id="typ_error" class="validation-error" th:if="${#fields.hasErrors('typ')}" th:errors="*{typ}"></div>
+              <div id="typ_error" th:unless="${#fields.hasErrors('typ')}"></div>
+            </td>
+          </tr>
+
+          <tr class="highfield">
+            <th><label id="notes_label" for="notes">[[#{'od.notes.name'}]]</label><span class="requiredmarker"> *</span></th>
+            <td>
+              <textarea th:field="*{notes}" aria-required="true" th:placeholder="#{'od.validation_required'}" aria-labelledby="notes_label notes_error"></textarea>
+              <div id="notes_error" class="validation-error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></div>
+              <div id="notes_error" th:unless="${#fields.hasErrors('notes')}"></div>
+            </td>
+          </tr>
+
+          <tr class="hasinnertable">
+            <th>[[#{'od.contacts.name'}]]<span class="requiredmarker"> *</span></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen" aria-labelledby="contacts_error">[[#{'od.contacts.name'}]]</legend>
+                <table class="innertable">
+                  <thead>
+                    <tr>
+                      <th>[[#{'od.role.name'}]]</th>
+                      <th>[[#{'od.name.name'}]]</th>
+                      <th>[[#{'od.email.name'}]]</th>
+                      <th>[[#{'od.url.name'}]]</th>
+                      <th>[[#{'od.address.name'}]]</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:object="${editForm.contacts['autor']}">
+                      <td class="casualheader">
+                        [[#{'od.contacts.author'}]]
+                      </td>
+                      <td class="required-field">
+                        <label id="contacts_autor_name_label" for="contacts'autor'.name" class="offscreen">[[#{'od.name.name'}]]*</label>
+                        <input type="text" aria-required="true" aria-labelledby="contacts_autor_name_label contacts_autor_name_error" th:field="*{name}" th:placeholder="#{'od.validation_required'}" />
+                        <div id="contacts_autor_name_error" class="validation-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        <div id="contacts_autor_name_error" th:unless="${#fields.hasErrors('name')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_autor_email_label" for="contacts'autor'.email" class="offscreen">[[#{'od.email.name'}]]</label>
+                        <input type="text" th:field="*{email}" aria-labelledby="contacts_autor_email_label contacts_autor_email_error"/>
+                        <div id="contacts_autor_email_error" class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        <div id="contacts_autor_email_error" th:unless="${#fields.hasErrors('email')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_autor_url_label" for="contacts'autor'.url" class="offscreen">[[#{'od.url.name'}]]</label>
+                        <input type="text" th:field="*{url}" aria-labelledby="contacts_autor_url_label contacts_autor_url_error"/>
+                        <div id="contacts_autor_url_error" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+                        <div id="contacts_autor_url_error" th:unless="${#fields.hasErrors('url')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_autor_address_label" for="contacts'autor'.address" class="offscreen">[[#{'od.address.name'}]]</label>
+                        <input type="text" th:field="*{address}" aria-labelledby="contacts_autor_address_label contacts_autor_address_error"/>
+                        <div id="contacts_autor_address_error" class="validation-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+                        <div id="contacts_autor_address_error" th:unless="${#fields.hasErrors('address')}"></div>
+                      </td>
+                    </tr>
+                    <tr th:object="${editForm.contacts['vertrieb']}">
+                      <td class="casualheader">
+                        [[#{'od.contacts.distributor'}]]
+                      </td>
+                      <td>
+                        <label id="contacts_vertrieb_name_label" for="contacts'vertrieb'.name" class="offscreen">[[#{'od.name.name'}]]</label>
+                        <input type="text" aria-labelledby="contacts_vertrieb_name_label contacts_vertrieb_name_error" th:field="*{name}"/>
+                        <div id="contacts_vertrieb_name_error" class="validation-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        <div id="contacts_vertrieb_name_error" th:unless="${#fields.hasErrors('name')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_vertrieb_email_label" for="contacts'vertrieb'.email" class="offscreen">[[#{'od.email.name'}]]</label>
+                        <input type="text" th:field="*{email}" aria-labelledby="contacts_vertrieb_email_label contacts_vertrieb_email_error"/>
+                        <div id="contacts_vertrieb_email_error" class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        <div id="contacts_vertrieb_email_error" th:unless="${#fields.hasErrors('email')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_vertrieb_url_label" for="contacts'vertrieb'.url" class="offscreen">[[#{'od.url.name'}]]</label>
+                        <input type="text" th:field="*{url}" aria-labelledby="contacts_vertrieb_url_label contacts_vertrieb_url_error"/>
+                        <div id="contacts_vertrieb_url_error" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+                        <div id="contacts_vertrieb_url_error" th:unless="${#fields.hasErrors('url')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_vertrieb_address_label" for="contacts'vertrieb'.address" class="offscreen">[[#{'od.address.name'}]]</label>
+                        <input type="text" th:field="*{address}" aria-labelledby="contacts_vertrieb_address_label contacts_vertrieb_address_error"/>
+                        <div id="contacts_vertrieb_address_error" class="validation-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+                        <div id="contacts_vertrieb_address_error" th:unless="${#fields.hasErrors('address')}"></div>
+                      </td>
+                    </tr>
+                    <tr th:object="${editForm.contacts['ansprechpartner']}">
+                      <td class="casualheader">
+                        [[#{'od.contacts.maintainer'}]]
+                      </td>
+                      <td>
+                        <label id="contacts_ansprechpartner_name_label" for="contacts'ansprechpartner'.name" class="offscreen">[[#{'od.name.name'}]]</label>
+                        <input type="text" aria-labelledby="contacts_ansprechpartner_name_label contacts_ansprechpartner_name_error" th:field="*{name}"/>
+                        <div id="contacts_ansprechpartner_name_error" class="validation-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        <div id="contacts_ansprechpartner_name_error" th:unless="${#fields.hasErrors('name')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_ansprechpartner_email_label" for="contacts'ansprechpartner'.email" class="offscreen">[[#{'od.email.name'}]]</label>
+                        <input type="text" th:field="*{email}" aria-labelledby="contacts_ansprechpartner_email_label contacts_ansprechpartner_email_error"/>
+                        <div id="contacts_ansprechpartner_email_error" class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        <div id="contacts_ansprechpartner_email_error" th:unless="${#fields.hasErrors('email')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_ansprechpartner_url_label" for="contacts'ansprechpartner'.url" class="offscreen">[[#{'od.url.name'}]]</label>
+                        <input type="text" th:field="*{url}" aria-labelledby="contacts_ansprechpartner_url_label contacts_ansprechpartner_url_error"/>
+                        <div id="contacts_ansprechpartner_url_error" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+                        <div id="contacts_ansprechpartner_url_error" th:unless="${#fields.hasErrors('url')}"></div>
+                      </td>
+                      <td>
+                        <label id="contacts_ansprechpartner_address_label" for="contacts'ansprechpartner'.address" class="offscreen">[[#{'od.address.name'}]]</label>
+                        <input type="text" th:field="*{address}" aria-labelledby="contacts_ansprechpartner_address_label contacts_ansprechpartner_address_error"/>
+                        <div id="contacts_ansprechpartner_address_error" class="validation-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+                        <div id="contacts_ansprechpartner_address_error" th:unless="${#fields.hasErrors('address')}"></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+              <div id="contacts_error" class="validation-error" th:if="${#fields.hasErrors('contacts')}" th:errors="*{contacts}"></div>
+              <div id="contacts_error" th:unless="${#fields.hasErrors('contacts')}"></div>
+              <p class="help-text">
+                [[#{'od.contacts.help'}]]
+              </p>
+            </td>
+          </tr>
+
+          <tr class="highfield">
+            <th>[[#{'od.groups.name'}]]<span class="requiredmarker"> *</span></th>
+            <td>
+              <fieldset class="multiboxarea">
+                <legend class="offscreen" aria-labelledby="categories_error">[[#{'od.groups.name'}]]*</legend>
+                <div class="checkboxitem" th:each="category : ${categoryList}">
+                  <input class="offscreen" type="checkbox" th:field="*{categories}" th:value="${category.name}" />
+                  <label class="checkbox" th:for="${#ids.prev('categories')}" th:text="${category.displayName}"></label>
+                </div>
+              </fieldset>
+              <div id="categories_error" class="validation-error" th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"></div>
+              <div id="categories_error" th:unless="${#fields.hasErrors('categories')}"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <th><label for="tags" id="tags_label">[[#{'od.tags.name'}]]</label></th>
+            <td>
+              <input type="text" th:field="*{tags}" th:placeholder="#{'od.tags.format'}" aria-labelledby="tags_label tags_error"/>
+              <div id="tags_error" class="validation-error" th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}"></div>
+              <div id="tags_error" th:unless="${#fields.hasErrors('tags')}"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <th><label id="url_label" for="url">[[#{'od.url.name'}]]</label></th>
+            <td>
+              <input type="text" th:field="*{url}" aria-labelledby="url_label url_error" />
+              <div id="url_error" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+              <div id="url_error" th:unless="${#fields.hasErrors('url')}"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <th><label for="licenseId" id="licenseId_label">[[#{'od.license.name'}]]</label><span class="requiredmarker"> *</span></th>
+            <td>
+              <select aria-required="true" th:field="*{licenseId}" aria-labelledby="licenseId_label licenseId_error">
+                <option th:each="licence : ${licenceMap}" th:value="${licence.value.name}" th:text="${licence.value.title}">
+
+                </option>
+              </select>
+              <div id="licenseId_error" class="validation-error" th:if="${#fields.hasErrors('licenseId')}" th:errors="*{licenseId}"></div>
+              <div id="licenseId_error" th:unless="${#fields.hasErrors('licenseId')}"></div>
+            </td>
+          </tr>
+
+          <tr class="hasinnertable">
+            <th>[[#{'od.dates.name'}]]<span class="requiredmarker"> *</span></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen">[[#{'od.dates.name'}]]</legend>
+                <table class="innertable field-temporal_coverage full-width">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="date-container dates-created">
+                          <label id="datesCreated_label" for="datesCreated" class="date-label">[[#{'od.dates.created.name'}]]:</label>
+                          <input aria-labelledby="datesCreated_label datesCreated_error" type="text" th:field="*{datesCreated}" aria-required="true" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}" th:title="#{'od.gdsearch.filter.date.input.title'}" />
+                        </div>
+                        <div id="datesCreated_error" class="validation-error" th:if="${#fields.hasErrors('datesCreated')}" th:errors="*{datesCreated}"></div>
+                        <div id="datesCreated_error" th:unless="${#fields.hasErrors('datesCreated')}"></div>
+                      </td>
+                      <td>
+                        <div class="date-container dates-published">
+                          <label id="datesPublished_label" for="datesPublished" class="date-label">[[#{'od.dates.published.name'}]]:</label>
+                          <input aria-labelledby="datesPublished_label datesPublished_error" type="text" th:field="*{datesPublished}" aria-required="true" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}" th:title="#{'od.gdsearch.filter.date.input.title'}" />
+                        </div>
+                        <div id="datesPublished_error" class="validation-error" th:if="${#fields.hasErrors('datesPublished')}" th:errors="*{datesPublished}"></div>
+                        <div id="datesPublished_error" th:unless="${#fields.hasErrors('datesPublished')}"></div>
+                      </td>
+                      <td>
+                        <div class="date-container dates-modified">
+                          <label id="datesModified_label" for="datesModified" class="date-label">[[#{'od.dates.modified.name'}]]:</label>
+                          <input aria-labelledby="datesModified_label datesModified_error" type="text" th:field="*{datesModified}" aria-required="true" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}" th:title="#{'od.gdsearch.filter.date.input.title'}" />
+                        </div>
+                        <div id="datesModified_error" class="validation-error" th:if="${#fields.hasErrors('datesModified')}" th:errors="*{datesModified}"></div>
+                        <div id="datesModified_error" th:unless="${#fields.hasErrors('datesModified')}"></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+            </td>
+          </tr>
+
+          <tr class="hasinnertable">
+            <th>[[#{'od.resources.name'}]]<span class="requiredmarker"> *</span></th>
+            <td>
+              <fieldset>
+                <legend aria-labelledby="resources_error" class="offscreen">[[#{'od.resources.name'}]]</legend>
+                <table class="innertable">
+                  <thead>
+                    <tr>
+                      <th>[[#{'od.url.name'}]]<span class="requiredmarker"> *</span></th>
+                      <th>[[#{'od.format.name'}]]<span class="requiredmarker"> *</span></th>
+                      <th>[[#{'od.name.name'}]]</th>
+                      <th>[[#{'od.description.name'}]]</th>
+                      <th>[[#{'od.language.name'}]]</th>
+                      <th>[[#{'od.editform.actioncolumn'}]]</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="row,rowStat : *{resources}">
+                      <td class="required-field">
+                        <label th:id="'resources' + ${rowStat.index} + '_url_label'" class="offscreen" th:for="'resources' + ${rowStat.index} + '.url'">[[#{'od.url.name'}]]</label>
+                        <input th:attr="aria-labelledby='resources' + ${rowStat.index} + '_url_label resources' + ${rowStat.index} + '_url_error'"
+                          type="text" aria-required="true" th:field="*{resources[__${rowStat.index}__].url}" th:placeholder="#{'od.validation_required'}" />
+                        <div th:id="'resources' + ${rowStat.index} + '_url_error'" class="validation-error" th:if="${#fields.hasErrors('resources[' + rowStat.index + '].url')}" th:errors="*{resources[__${rowStat.index}__].url}"></div>
+                        <div th:id="'resources' + ${rowStat.index} + '_url_error'" th:unless="${#fields.hasErrors('resources[' + rowStat.index + '].url')}"></div>
+                      </td>
+                      <td class="required-field">
+                        <label th:id="'resources' + ${rowStat.index} + '_format_label'" class="offscreen" th:for="'resources' + ${rowStat.index} + '.format'">[[#{'od.format.name'}]]</label>
+                        <input th:attr="aria-labelledby='resources' + ${rowStat.index} + '_format_label resources' + ${rowStat.index} + '_format_error'"
+                          type="text" aria-required="true" th:field="*{resources[__${rowStat.index}__].format}" th:placeholder="#{'od.validation_required'}" />
+                        <div th:id="'resources' + ${rowStat.index} + '_format_error'" class="validation-error" th:if="${#fields.hasErrors('resources[' + rowStat.index + '].format')}" th:errors="*{resources[__${rowStat.index}__].format}"></div>
+                        <div th:id="'resources' + ${rowStat.index} + '_format_error'" th:unless="${#fields.hasErrors('resources[' + rowStat.index + '].format')}"></div>
+                      </td>
+                      <td>
+                        <label th:id="'resources' + ${rowStat.index} + '_name_label'" class="offscreen" th:for="'resources' + ${rowStat.index} + '.name'">[[#{'od.name.name'}]]</label>
+                        <input th:attr="aria-labelledby='resources' + ${rowStat.index} + '_name_label resources' + ${rowStat.index} + '_name_error'"
+                          type="text" th:field="*{resources[__${rowStat.index}__].name}" />
+                        <div th:id="'resources' + ${rowStat.index} + '_name_error'" class="validation-error" th:if="${#fields.hasErrors('resources[' + rowStat.index + '].name')}" th:errors="*{resources[__${rowStat.index}__].name}"></div>
+                        <div th:id="'resources' + ${rowStat.index} + '_name_error'" th:unless="${#fields.hasErrors('resources[' + rowStat.index + '].name')}"></div>
+                      </td>
+                      <td>
+                        <label th:id="'resources' + ${rowStat.index} + '_description_label'" class="offscreen" th:for="'resources' + ${rowStat.index} + '.description'">[[#{'od.description.name'}]]</label>
+                        <input th:attr="aria-labelledby='resources' + ${rowStat.index} + '_description_label resources' + ${rowStat.index} + '_description_error'"
+                          type="text" th:field="*{resources[__${rowStat.index}__].description}" />
+                        <div th:id="'resources' + ${rowStat.index} + '_description_error'" class="validation-error" th:if="${#fields.hasErrors('resources[' + rowStat.index + '].description')}" th:errors="*{resources[__${rowStat.index}__].description}"></div>
+                        <div th:id="'resources' + ${rowStat.index} + '_description_error'" th:unless="${#fields.hasErrors('resources[' + rowStat.index + '].description')}"></div>
+                      </td>
+                      <td class="languagecolumn">
+                        <label th:id="'resources' + ${rowStat.index} + '_language_label'" class="offscreen" th:for="'resources' + ${rowStat.index} + '.language'">[[#{'od.language.name'}]]</label>
+                        <input th:attr="aria-labelledby='resources' + ${rowStat.index} + '_language_label resources' + ${rowStat.index} + '_language_error'"
+                          type="text" th:field="*{resources[__${rowStat.index}__].language}" />
+                        <div th:id="'resources' + ${rowStat.index} + '_language_error'" class="validation-error" th:if="${#fields.hasErrors('resources[' + rowStat.index + '].language')}" th:errors="*{resources[__${rowStat.index}__].language}"></div>
+                        <div th:id="'resources' + ${rowStat.index} + '_language_error'" th:unless="${#fields.hasErrors('resources[' + rowStat.index + '].language')}"></div>
+                      </td>
+                      <td class="align-right">
+                        <button th:if="${rowStat.size > 1}" type="button" name="removeRow" th:value="${rowStat.index}" class="btn buttonDeleteRow">[[#{'delete-row'}]]</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div id="resources_error" class="validation-error" th:if="${#fields.hasErrors('resources')}" th:errors="*{resources}"></div>
+                <div class="addrowbuttoncontainer">
+                  <button id="buttonAddRow" type="button" name="addRow" class="btn">[[#{'add-row'}]]</button>
+                </div>
+              </fieldset>
+            </td>
+          </tr>
+
+          <tr>
+            <th>[[#{'od.gdsearch.filter.date.title'}]]</th>
+            <td class="field-temporal_coverage">
+              <fieldset>
+                <legend class="offscreen">[[#{'od.gdsearch.filter.date.title'}]]</legend>
+                <div class="flex-container">
+                  <div class="date-from-container date-container">
+                    <label id="temporalCoverageFrom_label" th:for="*{temporalCoverageFrom}" class="date-label">[[#{'od.gdsearch.filter.date.from.label'}]]:</label>
+                    <input aria-labelledby="temporalCoverageFrom_label temporalCoverageFrom_error" type="text" th:field="*{temporalCoverageFrom}" class="filter-date-from" th:title="#{'od.gdsearch.filter.date.input.title'}" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}" />
+                    <div id="temporalCoverageFrom_error" class="validation-error" th:if="${#fields.hasErrors('temporalCoverageFrom')}" th:errors="*{temporalCoverageFrom}"></div>
+                    <div id="temporalCoverageFrom_error" th:unless="${#fields.hasErrors('temporalCoverageFrom')}"></div>
+                  </div>
+                  <div class="date-until-container date-container">
+                    <label id="temporalCoverageUntil_label" th:for="*{temporalCoverageUntil}" class="date-label">[[#{'od.gdsearch.filter.date.until.label'}]]:</label>
+                    <input aria-labelledby="temporalCoverageUntil_label temporalCoverageUntil_error" type="text" th:field="*{temporalCoverageUntil}" class="filter-date-until" th:title="#{'od.gdsearch.filter.date.input.title'}" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}" />
+                    <div id="temporalCoverageUntil_error" class="validation-error" th:if="${#fields.hasErrors('temporalCoverageUntil')}" th:errors="*{temporalCoverageUntil}"></div>
+                    <div id="temporalCoverageUntil_error" th:unless="${#fields.hasErrors('temporalCoverageUntil')}"></div>
+                  </div>
+                </div>
+              </fieldset>
+            </td>
+          </tr>
+
+          <tr class="highfield">
+            <th><label id="spatial_label" for="spatial">[[#{'od.gdsearch.filter.spatial.title'}]]</label></th>
+            <td>
+              <div class="row">
+                <div class="column small-12 large-6 large-push-6">
+                  <p th:utext="${#messages.msg('od.spatial.help', #uris.escapeFragmentId(editForm.spatial))}"></p>
+                  <pre>{
+  "type": "Polygon",
+  "coordinates": [
+    [
+      [11.598079, 51.29537],
+      [11.598079, 53.89386],
+      [6.654667, 53.89386],
+      [6.654667, 51.29537],
+      [11.598079, 51.29537]
+    ]
+  ]
+}</pre>
+                </div>
+                <div class="column small-12 large-6 large-pull-6">
+                  <textarea th:field="*{spatial}" aria-labelledby="spatial_label spatial_error"></textarea>
+                  <div id="spatial_error" class="validation-error" th:if="${#fields.hasErrors('spatial')}" th:errors="*{spatial}"></div>
+                  <div id="spatial_error" th:unless="${#fields.hasErrors('spatial')}"></div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+              <div class="flex-container">
+                <button type="submit" class="btn">[[#{'od.editform.save-button'}]]</button>
+                <button type="button" class="btn btn-danger space-left" name="deleteDataset" id="buttonDeleteDataset" th:unless="*{isNewDataset()}">[[#{'od.editform.delete-button'}]]</button>
+                <a th:unless="${#strings.isEmpty(metadataUrl)}" class="btn abort space-left" th:href="${metadataUrl}" th:text="#{cancel}"></a>
+              </div>
+            </td>
+          </tr>
+        </table>
+      <input id="additionalParameterField" type="hidden" name="additionalFieldUsedForParameters" value="" />
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div id="deleteUserArea" class="delete-user-area" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+  <div class="row" th:unless="${#strings.isEmpty(message)}">
+    <div class="column">
+      <div th:class="'alert ' + ${messageType}" th:text="${#messages.msg(message)}" role="alert"></div>
+    </div>
+  </div>
+ 
+  <div class="row" th:if="${#strings.isEmpty(message)}">
+    <div class="column" >
+      <div class="design-box design-box-padding">
+        <h1 th:text="#{'od.user.delete.title'}"></h1>
+        <th:block th:if="${#strings.isEmpty(ticketKey)}">
+          <p>[[#{'od.user.delete.generatelink.hint'}]]</p>
+          <p th:if="${isMetadataEditor}" th:text="#{'od.user.delete.generatelink.metadataEditorExtraText'}"></p>
+          <form action="#" th:action="${actionUrl}" method="post">
+            <button class="btn" type="submit" name="deletionconfirmed" value="yes" th:text="#{'od.user.delete.generatelink.buttonlabel'}"></button>
+          </form>
+        </th:block>
+        
+        <th:block th:unless="${#strings.isEmpty(ticketKey)}">
+          <p th:utext="#{'od.user.delete.finalstep.hint'}"></p>
+          <form action="#" th:action="${actionUrl}" method="post">
+            <button class="btn btn-danger" type="submit" name="ticketKey" th:value="${ticketKey}" th:text="#{'od.user.delete.finalstep.buttonlabel'}"></button>
+          </form>
+        </th:block>
+      </div>
+    </div>
+  </div>
+</div>

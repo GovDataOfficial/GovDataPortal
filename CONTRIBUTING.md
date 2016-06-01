@@ -7,8 +7,8 @@ Raise Issues
 ------------
 If you spot a bug or wish for a new feature, use GitHub Issues to report
 them. Ideally attach the issue to the corresponding component, e.g. 
-dataset-portlet. If you are unsure just file the bug in the relevant parent
-project, e.g. govdata-ui or opendata-platform.
+gd-edit-portlet. If you are unsure just file the bug in the relevant parent
+project, e.g. GovData.
 
 Submit a pull request
 ---------------------
@@ -31,6 +31,6 @@ Formatting conventions
 ----------------------
 Please make sure you edit Java code with the current formatting scheme, 
 otherwise merging becomes tricky. Use the default Eclipse Java formatting
-style with two tweaks: 140 characters per line, indent with 4 spaces instead 
-of tabs. Find a configuration file that you can load in eclipse in 
-/etc/odp-java-code-formatter.xml. [Not coding with Eclipse?](http://blogs.operationaldynamics.com/andrew/software/java-gnome/eclipse-code-format-from-command-line)
+style with two tweaks: 110 characters per line, indent with 2 spaces instead 
+of tabs. You can find the configuration file that you can load in eclipse in 
+[formatting scheme](src/eclipse/seitenbauCodeConventions.xml). [Not coding with Eclipse?](http://blogs.operationaldynamics.com/andrew/software/java-gnome/eclipse-code-format-from-command-line)

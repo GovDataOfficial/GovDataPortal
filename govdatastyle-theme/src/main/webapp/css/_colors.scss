@@ -1,0 +1,75 @@
+// colors from the styleguide
+$dark-gray: #3d3d3d;
+$light-gray: #f5f5f5;
+$kontur-gray: #c5c5c5;
+
+$data-green: #1e5a5a;
+$dokument-violett: #503278;
+$app-blue: #284664;
+$blog-red: #5a0a0a;
+
+$link-blue: #009fe3;
+$white: #fff;
+$black: #000;
+
+$deletered: #f2341f;
+
+// own colors
+$checkbox-border: darken($kontur-gray, 10%);
+
+@mixin navcolor($color) {
+  &.active > a {
+    background-color: $color;
+
+    &:focus {
+      background-color: transparent;
+      color: $dark-gray;
+    }
+  }
+
+  a::after {
+    border-top-color: $color;
+    color: $color;
+  }
+}
+
+// colors for the background of the main menu...
+#layout_3 { // Daten
+  @include navcolor($data-green);
+}
+
+#layout_6 { // Dokumente
+  @include navcolor($dokument-violett);
+}
+
+#layout_7 { // Apps
+  @include navcolor($app-blue);
+}
+
+#layout_8 { // Neues
+  @include navcolor($blog-red);
+}
+
+#layout_9 { // Bibliothek
+  @include navcolor($black);
+}
+
+
+// colors for mediatype-icons (could have been an elegant for-loop, but liferay uses OLD sass-compiler)
+.mediatype-icon {
+  &.mediatype-app {
+    background-color: $app-blue;
+  }
+  &.mediatype-article {
+    background-color: $dark-gray;
+  }
+  &.mediatype-blog {
+    background-color: $blog-red;
+  }
+  &.mediatype-datensatz {
+    background-color: $data-green;
+  }
+  &.mediatype-dokument {
+    background-color: $dokument-violett;
+  }
+}

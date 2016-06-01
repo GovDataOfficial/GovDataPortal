@@ -24,7 +24,7 @@ package de.fhg.fokus.odp.registry.ckan.impl;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.fhg.fokus.odp.registry.ckan.json.LicenceBean;
 import de.fhg.fokus.odp.registry.model.Licence;
@@ -119,13 +119,13 @@ public class LicenceImpl implements Licence, Serializable {
 
 		if (licence != null) {
 			JsonNode id = licence.get("license_id");
-			bean.setId(id != null ? id.getTextValue() : null);
+      bean.setId(id != null ? id.textValue() : null);
 
 			// just mirror the id :-(
 			bean.setTitle(bean.getId());
 
 			JsonNode url = licence.get("license_url");
-			bean.setUrl(url != null ? url.getTextValue() : null);
+      bean.setUrl(url != null ? url.textValue() : null);
 
 			// JsonNode is_free_to_use = licence.get("is_free_to_use");
 			// if (is_free_to_use != null) {
@@ -135,7 +135,7 @@ public class LicenceImpl implements Licence, Serializable {
 
 		LicenceImpl impl = new LicenceImpl(bean);
 		if (licence != null && licence.get("other") != null) {
-			impl.setOther(licence.get("other").getTextValue());
+      impl.setOther(licence.get("other").textValue());
 		}
 
 		return impl;

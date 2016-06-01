@@ -1,0 +1,77 @@
+<div xmlns:th="http://www.thymeleaf.org" class="searchext-container" th:inline="text">
+  <script type="text/javascript" th:inline="javascript">
+  var searchParameters = [[${searchExt.preparedParameters}]];
+  var categoryList = [[${searchExt.categoryList}]];
+  var licenceList = [[${searchExt.licenceList}]];
+  var sourceportalList = [[${searchExt.organizationList}]];
+  var typeList = [[${searchExt.typeList}]];
+  var formatList = [[${searchExt.formatList}]];
+  var isopenList = [[${searchExt.isopenList}]];
+  
+  var translationMap = {
+    "fields": {
+      "query": [[#{'od.datasets_simple_search'}]],
+      "temporal_coverage": [[#{'od.gdsearch.filter.date.title'}]],
+      "type": [[#{'od.gdsearch.filter.type.title'}]],
+      "isopen": [[#{'od.datasets_open_licence'}]],
+      "licence": [[#{'od.datasets_metadata_license'}]],
+      "sourceportal": [[#{'od.gdsearch.searchresult.facet.sourceportal'}]],
+      "tags": [[#{'od.datasets_metadata_tags'}]],
+      "title": [[#{'od.datasets_metadata_title'}]],
+      "author": [[#{'od.gdsearch.filter.author.title'}]],
+      "maintainer": [[#{'od.gdsearch.filter.maintainer.title'}]],
+      "notes": [[#{'od.datasets_metadata_description'}]],
+      "groups": [[#{'od.datasets_metadata_categories'}]],
+      "format": [[#{'od.datasets_metadata_format'}]]
+    },
+    "date": {
+      "placeholder": [[#{'od.gdsearch.filter.date.insertdate'}]],
+      "from": [[#{'od.gdsearch.filter.date.from.label'}]],
+      "selectfrom": [[#{'od.gdsearch.filter.date.from.title'}]],
+      "until": [[#{'od.gdsearch.filter.date.until.label'}]],
+      "selectuntil": [[#{'od.gdsearch.filter.date.until.title'}]],
+      "format": [[#{'od.gdsearch.filter.date.input.title'}]]
+    },
+    "text": {
+      "placeholder": [[#{'od.search.field.placeholder'}]]
+    },
+    "tags": {
+      "placeholder": [[#{'od.tags.format'}]]
+    },
+    "in": [[#{'od.gdsearch.search_in'}]],
+    "removefield": [[#{'od.search.field.removefield'}]],
+    "resetfieldsconfirm": [[#{'od.search.field.resetfieldsconfirm'}]]
+  };
+  </script>
+  <form th:action="${searchExt.actionUrl}" method="post" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" th:each="param : ${searchExt.passthroughParams}" th:name="${param.key}" th:value="${param.value}" />
+    <input type="hidden" th:name="${name}" th:each="name : ${searchExt.hiddenFields}" />
+    <div class="row">
+      <ul class="column small-12" id="fieldlist"></ul>
+    </div>
+    <div class="row modbutton-area">
+      <div class="column small-12 medium-9">
+        <div class="dropdown-container searchext-modbuttons">
+          <button id="addfields" type="button" data-dropdown="addFieldDropdown" aria-controls="addFieldDropdown" data-options="align:bottom"
+            aria-expanded="false" class="dropdown btn" th:text="#{'od.search.field.addfield'}"></button>
+          <ul id="addFieldDropdown" data-dropdown-content="" class="f-dropdown dropdown-canvas" aria-hidden="true"></ul>
+        </div>
+        <div class="searchext-modbuttons">
+          <button id="resetfields" type="button" class="btn" th:text="#{'od.search.field.reset'}"></button>
+        </div>
+      </div>
+      <div class="column small-12 medium-3 align-right"><button type="submit" class="btn" th:text="#{'od.search.field.submit'}"></button></div>
+    </div>
+    
+    <div class="searchext-helparea row">
+      <div class="column small-12 medium-4 large-6">
+        <h1>So benutzen Sie die erweiterte Suche</h1>
+      </div>
+      <div class="column small-12 medium-8 large-6 map-spaceabove">
+        <p>Fügen Sie Suchfelder/Filter hinzu um die Suche so präzise wie erwünscht zu gestalten.
+        Alle Suchfelder werden kombiniert angewendet, ein Datensatz muss demnach alle Kriterien erfüllen um mit der erweiterten Suche gefunden zu werden.</p>
+        <p>Sie können alle eingegebenen Felder entfernen mit dem "Suchfelder zurücksetzen"-Button oder mit dem <span class="sbi-trashcan"></span>-Symbol einzelne Zeilen entfernen.</p>
+      </div>
+    </div>
+  </form>
+</div>

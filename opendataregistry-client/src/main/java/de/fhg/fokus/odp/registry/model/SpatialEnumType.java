@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum SpatialEnumType.
  */

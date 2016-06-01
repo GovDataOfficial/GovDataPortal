@@ -25,37 +25,45 @@ import static de.fhg.fokus.odp.registry.ckan.Constants.PROPERTY_NAME_CKAN_URL;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.codehaus.jackson.JsonNode;
-import org.jboss.resteasy.client.ProxyFactory;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+@Ignore("Implement HTTP-Server-Mock")
 public class CKANClientSearchTest {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private CKANClientSearch client;
+    private CKANClientSearch ckanClientSearch;
 
     private Properties properties = new Properties();
 
-    @BeforeTest
+  @Before
     public void beforeTest() {
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
+        ResteasyClient client = new ResteasyClientBuilder().build();
         try {
             properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_FILENAME));
-            client = ProxyFactory.create(CKANClientSearch.class, (String) properties.get(PROPERTY_NAME_CKAN_URL));
+            ResteasyWebTarget target = client.target((String) properties.get(PROPERTY_NAME_CKAN_URL));
+            ckanClientSearch = target.proxy(CKANClientSearch.class);
         } catch (IOException e) {
             log.error("loading properties file", e);
-            client = ProxyFactory.create(CKANClientSearch.class, "http://localhost:5000");
+            ResteasyWebTarget target = client.target("http://localhost:5000");
+            ckanClientSearch = target.proxy(CKANClientSearch.class);
         }
     }
 
     @Test
     public void getTagCounts() {
-        JsonNode node = client.getTagCounts();
+        JsonNode node = ckanClientSearch.getTagCounts();
         log.info(node.toString());
     }
 

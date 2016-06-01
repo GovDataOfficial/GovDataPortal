@@ -19,6 +19,7 @@
 
 package de.fhg.fokus.odp.boxes;
 
+import java.io.Serializable;
 // imports
 import java.util.List;
 
@@ -43,9 +44,10 @@ import de.fhg.fokus.odp.registry.model.Application;
  */
 @ManagedBean
 @SessionScoped
-public class Apps {
+public class Apps implements Serializable {
+	private static final long serialVersionUID = 8408034296496239273L;
 
-    /** The cache name. */
+	/** The cache name. */
     private final String CACHE_NAME = "de.fhg.fokus.odp.boxes";
 
     /** The cache datasets key. */
@@ -55,7 +57,7 @@ public class Apps {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /** The maximum number of latest apps to show. */
-    private static final int maximumNumberOfApps = 4;
+    private static final int maximumNumberOfApps = 2;
 
     /** The apps. */
     private List<Application> apps;
@@ -70,12 +72,12 @@ public class Apps {
     @PostConstruct
     public void init() {
 
-        apps = (List<Application>) MultiVMPoolUtil.get(CACHE_NAME, CACHE_APPS_KEY);
+        apps = (List<Application>) MultiVMPoolUtil.getCache(CACHE_NAME).get(CACHE_APPS_KEY);
 
         if (apps == null) {
             LOG.info("Empty {} cache, fetching apps from CKAN.", CACHE_APPS_KEY);
             apps = registryClient.getLatestApps(maximumNumberOfApps);
-            MultiVMPoolUtil.put(CACHE_NAME, CACHE_APPS_KEY, apps);
+            MultiVMPoolUtil.getCache(CACHE_NAME).put(CACHE_APPS_KEY, (Serializable) apps); // safe cast: LinkedList
         }
 
     }

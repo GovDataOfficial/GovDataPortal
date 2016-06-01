@@ -1,98 +1,156 @@
 <?xml version="1.0"?>
 
 <f:view xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
-	<h:head />
-	<h:body>
-		<h:form>
-			<div class="container-fluid boxed-container-div">
-				<div class="row-fluid"
-					style="border-bottom: 1px dotted #D8D8D8; padding-bottom: 15px !important">
-					<div class="span6">
-						<h:graphicImage alt="#{i18n['od.dataset']}"
-							value="#{liferay.themeImagesURL}/govdata_metadata_types/typ_dataset.png"
-							id="graphicImage_od_dataset"
-							style="height:2.5em; margin-right:0.5em;" class="pull-left"
-							title="#{i18n['od.dataset']}" />
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets">
+  <h:head />
+  <h:body>
+    <div class="row row-margin">
+      <div class="column small-12 large-4">
+        <h2 class="boxesportlet-title">
+          <a href="/web/guest/daten/-/searchresult/s/lastmodification_desc">
+            #{i18n['od.datasets_latest_datasets']}
+            <span class="label label-inverse more-linklabel">#{i18n['od.more']}</span>
+          </a>
+        </h2>
 
-						<h4 class="noborder" style="padding-bottom: 15px">#{i18n['od.datasets_latest_datasets']}</h4>
-
-						<h:dataTable value="#{datasets.datasets}" var="dataset">
-							<h:column>
-								<h:outputLink id="outputLink_dataset_name"
-									value="/web/guest/suchen/-/details/#{dataset.name}"
-									title="#{dataset.title}">
-									<h:outputText
-										value="#{dataset.title.length() gt 60 ? dataset.title.substring(0,56).concat('...') : dataset.title}" />
-								</h:outputLink>
-							</h:column>
-						</h:dataTable>
-					</div>
-					<div class="span6"
-						style="border-left: 1px dotted; border-color: #D8D8D8; padding: 0 1em 0 1em;">
-						<h:graphicImage alt="#{i18n['od.document']}"
-							id="graphicImage_od_document"
-							value="#{liferay.themeImagesURL}/govdata_metadata_types/typ_document.png"
-							style="height:2.5em; margin-right:0.5em;" class="pull-left"
-							title="#{i18n['od.document']}" />
-
-						<h4 class="noborder" style="padding-bottom: 15px">#{i18n['od.home.recent_documents']}</h4>
-						<h:dataTable value="#{documents.documents}" var="document">
-							<h:column>
-								<h:outputLink id="outputLink_document_name"
-									value="/web/guest/suchen/-/details/#{document.name}"
-									title="#{document.title}">
-									<h:outputText
-										value="#{document.title.length() gt 60 ? document.title.substring(0,56).concat('...') : document.title}" />
-								</h:outputLink>
-							</h:column>
-						</h:dataTable>
-					</div>
-				</div>
-				<div class="row-fluid" style="padding-top: 15px !important">
-					<div class="span6">
-						<h:graphicImage alt="#{i18n['od.app']}" id="graphicImage_od_app"
-							value="#{liferay.themeImagesURL}/govdata_metadata_types/typ_app.png"
-							style="height:2.5em; margin-right:0.5em;" class="pull-left"
-							title="#{i18n['od.app']}" />
-
-						<h4 class="noborder" style="padding-bottom: 15px">#{i18n['od.home.recent_apps']}</h4>
-						<h:dataTable value="#{apps.apps}" var="app">
-							<h:column>
-								<h:outputLink id="outputLink_app_name"
-									value="/web/guest/suchen/-/details/#{app.name}"
-									title="#{app.title}">
-									<h:outputText
-										value="#{app.title.length() gt 60 ? app.title.substring(0,56).concat('...') : app.title}" />
-								</h:outputLink>
-							</h:column>
-						</h:dataTable>
-					</div>
-					<div class="span6"
-						style="border-left: 1px dotted; border-color: #D8D8D8; padding: 0 1em 0 1em;">
-						<h:graphicImage alt="#{i18n['od.blog']}" id="graphicImage_od_blog"
-							value="#{liferay.themeImagesURL}/govdata_metadata_types/typ_redaktionelle.png"
-							style="height:2.5em; margin-right:0.5em;" class="pull-left"
-							title="#{i18n['od.blog']}" />
-
-						<h4 class="noborder" style="padding-bottom: 15px">#{i18n['od.home.recent_blogs']}</h4>
-						<h:dataTable value="#{blogs.blogs}" var="blog">
-							<h:column>
-								<h:outputLink id="outputLink_blog_name"
-									value="/web/guest/neues/-/blogs/#{blog.urlTitle}"
-									title="#{blog.title}">
-									<h:outputText
-										value="#{blog.title.length() gt 60 ? blog.title.substring(0,56).concat('...') : blog.title}" />
-								</h:outputLink>
-							</h:column>
-						</h:dataTable>
-					</div>
-				</div>
-			</div>
-		</h:form>
-	</h:body>
+        <ul class="row">
+          <ui:repeat value="#{datasets.datasets}" var="dataset">
+            <li class="column small-12 medium-6 large-12">
+              <a href="/web/guest/suchen/-/details/#{dataset.name}" title="#{dataset.title}">
+                <div class="boxesportlet-box design-box">
+                  <div class="metainfo h2-metainfo">
+                    <div class="mediatype-icon mediatype-datensatz">
+                      <img src="/govdatastyle-theme/images/mediatypes/typ_datensatz_inverted.svg" alt=""/>
+                    </div>
+                    <strong>#{i18n['od.dataset']}</strong>
+                    <span>
+                      <h:outputText value="#{dataset.metadataModified}">
+                        <f:convertDateTime pattern="dd.MM.yyyy" />
+                      </h:outputText>
+                    </span>
+                  </div>
+                  
+                  <h3>#{dataset.title}</h3>
+                  <p class="boxtext h2-teaser">
+                    <h:outputText value="#{dataset.notes.length() gt 120 ? dataset.notes.substring(0,117).concat('...') : dataset.notes}" />
+                  </p>
+                  
+                  <ui:include src="category.xhtml">
+                    <ui:param name="categories" value="#{dataset.categories}" />
+                  </ui:include>
+                  
+                  <ui:include src="licence.xhtml">
+                    <ui:param name="isOpen" value="#{dataset.open}" />
+                    <ui:param name="licencetext" value="#{dataset.licence.title}" />
+                  </ui:include>
+                  
+                  <div class="goto-entry h2-metainfo">
+                    <div>#{i18n['od.goto.datensatz']}</div>
+                  </div>
+                  <div class="goto-entry-spacer"></div>
+                </div>
+              </a>
+            </li>
+          </ui:repeat>
+        </ul>
+      </div>
+      <div class="column small-12 large-4">
+        <h2 class="boxesportlet-title">
+          <a href="/web/guest/dokumente/-/searchresult/s/lastmodification_desc">
+            #{i18n['od.home.recent_documents']} 
+            <span class="label label-inverse more-linklabel">#{i18n['od.more']}</span>
+          </a>
+        </h2>
+        
+        <ul class="row">
+          <ui:repeat value="#{documents.documents}" var="document">
+            <li class="column small-12 medium-6 large-12">
+              <a href="/web/guest/suchen/-/details/#{document.name}" title="#{document.title}" class="box-title">
+                <div class="boxesportlet-box design-box">
+                  <div class="metainfo h2-metainfo">
+                    <div class="mediatype-icon mediatype-dokument">
+                      <img src="/govdatastyle-theme/images/mediatypes/typ_dokument_inverted.svg" alt=""/>
+                    </div>
+                    <strong>#{i18n['od.document']}</strong>
+                    <span>
+                      <h:outputText value="#{document.metadataModified}">
+                        <f:convertDateTime pattern="dd.MM.yyyy" />
+                      </h:outputText>
+                    </span>
+                  </div>
+                  
+                  <h3>#{document.title}</h3>
+                  <p class="boxtext h2-teaser">
+                    <h:outputText value="#{document.notes.length() gt 120 ? document.notes.substring(0,117).concat('...') : document.notes}" />
+                  </p>
+                  
+                  <ui:include src="category.xhtml">
+                    <ui:param name="categories" value="#{document.categories}" />
+                  </ui:include>
+                  
+                  <ui:include src="licence.xhtml">
+                    <ui:param name="isOpen" value="#{document.open}" />
+                    <ui:param name="licencetext" value="#{document.licence.title}" />
+                  </ui:include>
+                  
+                  <div class="goto-entry h2-metainfo">
+                    <div>#{i18n['od.goto.dokument']}</div>
+                  </div>
+                  <div class="goto-entry-spacer"></div>
+                </div>
+              </a>
+            </li>
+          </ui:repeat>
+        </ul>
+      </div>
+      <div class="column small-12 large-4">
+        <h2 class="boxesportlet-title">
+          <a  href="/web/guest/neues/">
+            #{i18n['od.home.recent_blogs']}
+            <span class="label label-inverse more-linklabel">#{i18n['od.more']}</span>
+          </a>
+        </h2>
+        
+        <ul class="row">
+          <ui:repeat value="#{blogs.blogs}" var="blog">
+            <li class="column small-12 medium-6 large-12">
+              <a href="/web/guest/neues/-/blogs/#{blog.urlTitle}" title="#{blog.title}" class="box-title">
+                <div class="boxesportlet-box design-box">
+                  <div class="metainfo h2-metainfo">
+                    <div class="mediatype-icon mediatype-blog">
+                      <img src="/govdatastyle-theme/images/mediatypes/typ_blog_inverted.svg" alt=""/>
+                    </div>
+                    <strong>#{i18n['od.blog']}</strong>
+                    <span>
+                      <h:outputText value="#{blog.displayDate}">
+                        <f:convertDateTime pattern="dd.MM.yyyy" />
+                      </h:outputText>
+                    </span>
+                  </div>
+                  
+                  <h3>#{blog.title}</h3>
+                  <p class="boxtext h2-teaser">
+                    <c:if test="#{not empty blog.description}">
+                      <h:outputText value="#{blog.description}" />
+                    </c:if>
+                    <c:if test="#{empty blog.description}">
+                      <h:outputText value="#{blog.content.length() gt 120 ? blog.content.substring(0,117).concat('...') : blog.content}" />
+                    </c:if>
+                  </p>
+                  
+                  <div class="goto-entry h2-metainfo">
+                    <div>#{i18n['od.goto.blog']}</div>
+                  </div>
+                  <div class="goto-entry-spacer"></div>
+                </div>
+              </a>
+            </li>
+          </ui:repeat>
+        </ul>
+      </div>
+    </div>
+  </h:body>
 </f:view>

@@ -1,0 +1,178 @@
+<%--
+/**
+ * Just overwrite some parts of the dockbar ... that's the Liferay's way of doing plugins. m(
+ *
+ * Here we implement the links of the top navigation bar.
+ */
+--%>
+
+<li id="topnavi-home"><a href="/"><liferay-ui:message key="od.page.start" /></a></li>
+
+<%
+boolean hasChecklistViewPermission = false;
+try {
+  Layout checklistsLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(themeDisplay.getPortletGroupId(), false, "/checklisten");
+  hasChecklistViewPermission = LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), checklistsLayout, ActionKeys.VIEW);
+} catch(Exception e) {
+  // we seem to not have that page... okay, so no link.
+}
+
+boolean canEditDatasets = false;
+try {
+  Layout editDatasetLayout = LayoutLocalServiceUtil.getFriendlyURLLayout(themeDisplay.getPortletGroupId(), false, "/bearbeiten");
+  canEditDatasets = LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), editDatasetLayout, ActionKeys.VIEW);
+} catch(Exception e) {
+  // we seem to not have that page... okay, so no link.
+}
+%>
+<c:if test="<%= hasChecklistViewPermission %>">
+  <li id="topnavi-checklists"><a href="/checklisten"><liferay-ui:message key="od.page.checklists" /></a></li>
+</c:if>
+
+<%-- BEGIN original content --%>
+<liferay-util:buffer var="userName">
+	<c:if test="<%= themeDisplay.isImpersonated() %>">
+		<b class="alert-icon icon-warning-sign"></b>
+	</c:if>
+
+	<img alt="<liferay-ui:message key="my-account" />" class="user-avatar-image" src="<%= HtmlUtil.escape(user.getPortraitURL(themeDisplay)) %>" />
+
+	<span class="user-full-name">
+		<%= HtmlUtil.escape(user.getFullName()) %>
+	</span>
+</liferay-util:buffer>
+
+<c:choose>
+	<c:when test="<%= themeDisplay.isSignedIn() %>">
+		<aui:nav-item anchorCssClass="user-avatar-link" cssClass='<%= themeDisplay.isImpersonated() ? "user-avatar impersonating-user" : "user-avatar" %>' dropdown="<%= true %>" id="userAvatar" label="<%= userName %>">
+			<c:if test="<%= themeDisplay.isImpersonated() %>">
+
+				<%
+				String impersonatingUserLabel = "you-are-impersonating-the-guest-user";
+
+				if (themeDisplay.isSignedIn()) {
+					impersonatingUserLabel = LanguageUtil.format(pageContext, "you-are-impersonating-x", new Object[] {HtmlUtil.escape(user.getFullName())});
+				}
+				%>
+
+				<div class="alert alert-info"><%= impersonatingUserLabel %></div>
+
+				<liferay-util:buffer var="leaveImpersonationLabel">
+					<liferay-ui:message key="be-yourself-again" /> (<%= HtmlUtil.escape(realUser.getFullName()) %>)
+				</liferay-util:buffer>
+
+				<aui:nav-item href="<%= PortalUtil.getLayoutURL(layout, themeDisplay, false) %>" label="<%= leaveImpersonationLabel %>" />
+
+				<%
+				Locale realUserLocale = realUser.getLocale();
+				Locale userLocale = user.getLocale();
+				%>
+
+				<c:if test="<%= !realUserLocale.equals(userLocale) %>">
+
+					<%
+					String doAsUserLanguageId = null;
+					String changeLanguageMessage = null;
+
+					if (locale.getLanguage().equals(realUserLocale.getLanguage()) && locale.getCountry().equals(realUserLocale.getCountry())) {
+						doAsUserLanguageId = userLocale.getLanguage() + "_" + userLocale.getCountry();
+						changeLanguageMessage = LanguageUtil.format(realUserLocale, "use-x's-preferred-language-(x)", new String[] {HtmlUtil.escape(user.getFullName()), userLocale.getDisplayLanguage(realUserLocale)});
+					}
+					else {
+						doAsUserLanguageId = realUserLocale.getLanguage() + "_" + realUserLocale.getCountry();
+						changeLanguageMessage = LanguageUtil.format(realUserLocale, "use-your-preferred-language-(x)", realUserLocale.getDisplayLanguage(realUserLocale));
+					}
+					%>
+
+					<aui:nav-item cssClass="current-user-language" href='<%= HttpUtil.setParameter(PortalUtil.getCurrentURL(request), "doAsUserLanguageId", doAsUserLanguageId) %>' label="<%= changeLanguageMessage %>" />
+				</c:if>
+			</c:if>
+			<c:if test="<%= userSetupComplete && Validator.isNotNull(themeDisplay.getURLMyAccount()) %>">
+
+				<%
+				List<Group> mySiteGroups = user.getMySiteGroups(new String[] {User.class.getName()}, false, QueryUtil.ALL_POS);
+
+				for (Group mySiteGroup : mySiteGroups) {
+				%>
+
+					<c:if test="<%= mySiteGroup.getPublicLayoutsPageCount() > 0 %>">
+
+						<%
+						PortletURL myProfileURL = new PortletURLImpl(request, PortletKeys.SITE_REDIRECTOR, plid, PortletRequest.ACTION_PHASE);
+
+						myProfileURL.setParameter("struts_action", "/my_sites/view");
+						myProfileURL.setParameter("groupId", String.valueOf(mySiteGroup.getGroupId()));
+						myProfileURL.setParameter("privateLayout", Boolean.FALSE.toString());
+						myProfileURL.setPortletMode(PortletMode.VIEW);
+						myProfileURL.setWindowState(WindowState.NORMAL);
+						%>
+
+						<li class="my-sites-menu public-site">
+							<a href="<%= myProfileURL.toString() %>">
+								<span class="site-name"><liferay-ui:message key="my-profile" /></span>
+
+								<span class="badge site-type"><liferay-ui:message key="public" /></span>
+							</a>
+						</li>
+					</c:if>
+
+					<c:if test="<%= mySiteGroup.getPrivateLayoutsPageCount() > 0 %>">
+
+						<%
+						PortletURL myDashboardURL = new PortletURLImpl(request, PortletKeys.SITE_REDIRECTOR, plid, PortletRequest.ACTION_PHASE);
+
+						myDashboardURL.setParameter("struts_action", "/my_sites/view");
+						myDashboardURL.setParameter("groupId", String.valueOf(mySiteGroup.getGroupId()));
+						myDashboardURL.setParameter("privateLayout", Boolean.TRUE.toString());
+						myDashboardURL.setPortletMode(PortletMode.VIEW);
+						myDashboardURL.setWindowState(WindowState.NORMAL);
+						%>
+
+						<li class="my-sites-menu private-site">
+							<a href="<%= myDashboardURL %>">
+								<span class="site-name"><liferay-ui:message key="my-dashboard" /></span>
+
+								<span class="badge site-type"><liferay-ui:message key="private" /></span>
+							</a>
+						</li>
+					</c:if>
+
+				<%
+				}
+				%>
+
+				<%
+				String myAccountURL = themeDisplay.getURLMyAccount().toString();
+
+				myAccountURL = HttpUtil.setParameter(myAccountURL, "controlPanelCategory", PortletCategoryKeys.MY);
+				%>
+
+				<aui:nav-item href="<%= myAccountURL %>" iconCssClass="sbi-eingeloggter-user" label="my-account" title="my-account" useDialog="<%= PropsValues.DOCKBAR_ADMINISTRATIVE_LINKS_SHOW_IN_POP_UP %>" />
+			</c:if>
+
+      <c:if test="<%= canEditDatasets %>">
+        <aui:nav-item href="/bearbeiten" iconCssClass="sbi-plus" label="od.page.edit" />
+        <aui:nav-item href="/web/guest/suchen/-/searchresult/f/onlyEditorMetadata%3AonlyEditorMetadata%2C" iconCssClass="sbi-my-list" label="od.page.showOwnDatasets" />
+      </c:if>
+
+			<c:if test="<%= themeDisplay.isShowSignOutIcon() %>">
+				<aui:nav-item cssClass="sign-out" href="<%= themeDisplay.getURLSignOut() %>" iconCssClass="icon-off" label="sign-out" />
+			</c:if>
+		</aui:nav-item>
+	</c:when>
+	<c:otherwise>
+
+		<%
+		Map<String, String> anchorData = new HashMap<String, String>();
+
+		anchorData.put("redirect", String.valueOf(PortalUtil.isLoginRedirectRequired(request)));
+		%>
+
+		<aui:nav-item anchorData="<%= anchorData %>" cssClass="sign-in" href="<%= themeDisplay.getURLSignIn() %>" iconCssClass="sbi-eingeloggter-user" label="sign-in-register" />
+	</c:otherwise>
+</c:choose>
+<%-- END original content --%>
+
+<li id="topnavi-faq"><a href="/web/guest/faq"><liferay-ui:message key="od.page.faq" /></a></li>
+
+<li id="topnavi-contact"><a href="/web/guest/kontakt"><liferay-ui:message key="od.page.contact" /></a></li>

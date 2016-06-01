@@ -1,0 +1,527 @@
+{
+  "help":"http://mtest3.gd.swe.seitenbau.net, localhost:5000/api/3/action/help_show?name=package_search",
+  "success":true,
+  "result":{
+    "count":256,
+    "sort":"score desc, metadata_modified desc",
+    "facets":{
+      
+    },
+    "results":[
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"9916a096-eee0-4ec1-99b8-558e4123c003",
+        "metadata_created":"2015-10-23T11:10:50.872887",
+        "metadata_modified":"2015-12-14T16:35:40.015427",
+        "title":"Harvester Rostock",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"rostock",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-rostock",
+        "url":"http://www.opendata-hro.de",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"5a533a33-c0f0-4781-9a8b-e939ab42f83e",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:03:17.314621",
+          "title":"Datenportal Rostock",
+          "name":"datenportal-rostock",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"6eb5a30d-0a39-4afd-8cfd-f1aa8b01b8a9",
+          "type":"organization",
+          "id":"5a533a33-c0f0-4781-9a8b-e939ab42f83e",
+          "approval_status":"approved"
+        },
+        "revision_id":"4ce92460-dfa8-4e9c-807f-9c726f799eba"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"f3e4d606-27dd-4b72-90a1-6304e041d7eb",
+        "metadata_created":"2015-10-23T11:11:22.552278",
+        "metadata_modified":"2015-12-14T16:35:31.616356",
+        "title":"Harvester Hamburg",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"hamburg",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-hamburg",
+        "url":"http://suche.transparenz.hamburg.de/",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"9c4b7855-ab7e-4751-87c7-469f2ffafdba",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:03:34.916292",
+          "title":"Datenportal Hamburg",
+          "name":"datenportal-hamburg",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"999fb56f-7ea5-4de9-a01b-862d3a564300",
+          "type":"organization",
+          "id":"9c4b7855-ab7e-4751-87c7-469f2ffafdba",
+          "approval_status":"approved"
+        },
+        "revision_id":"9047a21f-d158-4b89-b8fd-9d82a1980318"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"14b1e024-e0ef-4db5-b188-186546b34a86",
+        "metadata_created":"2015-10-23T11:12:03.367644",
+        "metadata_modified":"2015-12-14T16:35:23.968514",
+        "title":"Harvester Berlin",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "api_key":"4428f81a-c91d-4c45-bd87-037832efbb54",
+        "config":"{\r\n\"api_key\":\"4428f81a-c91d-4c45-bd87-037832efbb54\"\r\n}",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"berlin",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-berlin",
+        "url":"http://datenregister.berlin.de/",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"a1a3b112-e395-45d5-8447-e710bd44dcc7",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:03:44.860267",
+          "title":"Datenportal Berlin",
+          "name":"datenportal-berlin",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"ba53b525-41b5-45e7-9e4f-d9b17ed40d3c",
+          "type":"organization",
+          "id":"a1a3b112-e395-45d5-8447-e710bd44dcc7",
+          "approval_status":"approved"
+        },
+        "revision_id":"0916f29b-3679-4a5f-9d0a-5e6b2e28fdbe"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"adb5bcd7-36e6-4f33-810a-cf46a2115109",
+        "metadata_created":"2015-10-23T11:13:13.582823",
+        "metadata_modified":"2015-12-14T16:35:17.012271",
+        "title":"Harvester Rheinland-Pfalz",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"rlp",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-rheinland-pfalz",
+        "url":"http://daten.rlp.de",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"74f64a0a-f499-49ac-9067-70524fe12926",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:03:57.160064",
+          "title":"Datenportal Rheinland-Pfalz",
+          "name":"datenportal-rheinland-pfalz",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"04e1b5df-e516-42af-9c43-92130777d1ab",
+          "type":"organization",
+          "id":"74f64a0a-f499-49ac-9067-70524fe12926",
+          "approval_status":"approved"
+        },
+        "revision_id":"aa5bc66c-a6b4-4b89-b907-d3f85fd2439c"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"8dd9b1ec-6e40-4e4b-8579-5a81e7b6c8af",
+        "metadata_created":"2015-10-23T11:17:37.649399",
+        "metadata_modified":"2015-12-14T16:35:09.538308",
+        "title":"Harvester Geodateninfrastruktur",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"gdi",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-geodateninfrastruktur",
+        "url":"http://ims.geoportal.de/pygo2go/jsons_fuer_govdata.zip",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"727bf62c-6a00-4ba0-b1fb-1d22bc7fb6b8",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:05:05.871260",
+          "title":"Geodateninfrastruktur",
+          "name":"geodateninfrastruktur",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"7ef145ed-1e05-4ada-a6ac-d99e8d60a7ca",
+          "type":"organization",
+          "id":"727bf62c-6a00-4ba0-b1fb-1d22bc7fb6b8",
+          "approval_status":"approved"
+        },
+        "revision_id":"667636c2-e8ba-442c-bce8-955ef4b98f91"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"f6870aed-ce95-48e0-8c8e-9569d5962358",
+        "metadata_created":"2015-10-23T11:16:40.905738",
+        "metadata_modified":"2015-12-14T16:35:02.448484",
+        "title":"Harvester Bremen",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"bremen",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-bremen",
+        "url":"http://daten.bremen.de/sixcms/detail.php?template=export_daten_json_d",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"8cdeced6-3211-448f-ad7c-54249e0feac2",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:04:37.391098",
+          "title":"Datenportal Bremen",
+          "name":"datenportal-bremen",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"7cc68ae3-9725-4741-b084-fd6215a30a27",
+          "type":"organization",
+          "id":"8cdeced6-3211-448f-ad7c-54249e0feac2",
+          "approval_status":"approved"
+        },
+        "revision_id":"bfdf89ce-0028-4c07-a2f5-6d1275c83721"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"47d3503b-ea8f-4d85-93ba-0132a719cecb",
+        "metadata_created":"2015-10-23T11:18:25.502028",
+        "metadata_modified":"2015-12-14T16:34:55.305066",
+        "title":"Harvester Genesis Destatis",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"genesis_destatis",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-genesis-destatis",
+        "url":"https://www-genesis.destatis.de/genesisWS/opendata/ckan.zip",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"b519fb2c-cabd-4b32-a225-0b37229960a1",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:05:16.194501",
+          "title":"Genesis Destatis",
+          "name":"genesis-destatis",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"28f9f5c3-4da7-43ab-834f-5cde2af45a90",
+          "type":"organization",
+          "id":"b519fb2c-cabd-4b32-a225-0b37229960a1",
+          "approval_status":"approved"
+        },
+        "revision_id":"2d5f0b71-e2dd-40b1-9d8b-127c622b2778"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"e6d863f8-add9-4fe9-b4c3-46e281701de8",
+        "metadata_created":"2015-10-23T11:18:47.637763",
+        "metadata_modified":"2015-12-14T16:34:47.650627",
+        "title":"Harvester Regionalstatistik",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"regionalstatistik",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-regionalstatistik",
+        "url":"https://www.regionalstatistik.de/genesisws/opendata/ckan.zip",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"17062ece-6b72-4e63-8039-ee98b004529d",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:05:38.610270",
+          "title":"Regionalstatistik",
+          "name":"regionalstatistik",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"67def8c5-137a-40ec-b656-c2529448ab94",
+          "type":"organization",
+          "id":"17062ece-6b72-4e63-8039-ee98b004529d",
+          "approval_status":"approved"
+        },
+        "revision_id":"7dc205dd-4193-4513-9400-29c432c08b2a"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"927f586f-92bb-460d-8929-2970c11d8fe6",
+        "metadata_created":"2015-10-23T11:20:38.780274",
+        "metadata_modified":"2015-12-14T16:34:39.585965",
+        "title":"Harvester Bmbf",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"bmbf",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-bmbf",
+        "url":"http://www.datenportal.bmbf.de/iceproject/dump/govdata/metadatenkatalog.json",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"da6bd9d8-0a45-49c1-9a6e-f8fa3245921a",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:06:26.931810",
+          "title":"Datenportal Bundesministerium f\u00fcr Bildung und Forschung",
+          "name":"datenportal-bundesministerium-fur-bildung-und-forschung",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"e4fc3e03-31c1-4e9a-8937-f2f21aac59b8",
+          "type":"organization",
+          "id":"da6bd9d8-0a45-49c1-9a6e-f8fa3245921a",
+          "approval_status":"approved"
+        },
+        "revision_id":"c0f6417d-adca-49f0-b5de-97552bd1c6f3"
+      },
+      {
+        "relationships_as_object":[
+          
+        ],
+        "private":false,
+        "revision_timestamp":null,
+        "frequency":"DAILY",
+        "id":"612a2937-4c1b-431a-b82b-01d28c5688ed",
+        "metadata_created":"2015-10-23T11:21:14.573557",
+        "metadata_modified":"2015-12-14T16:34:31.786819",
+        "title":"Harvester BfJ",
+        "state":"active",
+        "creator_user_id":"39654738-be91-4ca2-acbb-7d03f1c50103",
+        "config":"",
+        "resources":[
+          
+        ],
+        "tags":[
+          
+        ],
+        "source_type":"bfj",
+        "tracking_summary":{
+          "total":0,
+          "recent":0
+        },
+        "groups":[
+          
+        ],
+        "relationships_as_subject":[
+          
+        ],
+        "name":"harvester-bfj",
+        "url":"https://www.bundesjustizamt.de/DE/SharedDocs/Publikationen/GovData/Metadaten/JSON_BfJ.zip?__blob=publicationFile",
+        "type":"harvest",
+        "notes":"",
+        "owner_org":"c487a9cb-3e36-4909-9068-13926ce2e123",
+        "organization":{
+          "description":"",
+          "created":"2015-10-23T13:06:39.145086",
+          "title":"Datenportal Bundesamt f\u00fcr Justiz",
+          "name":"datenportal-bundesamt-fur-justiz",
+          "is_organization":true,
+          "state":"active",
+          "image_url":"",
+          "revision_id":"f4607460-a906-482b-900a-ab87dd1a13f5",
+          "type":"organization",
+          "id":"c487a9cb-3e36-4909-9068-13926ce2e123",
+          "approval_status":"approved"
+        },
+        "revision_id":"7ac11013-e99e-4856-8b46-f72cb2c8af4c"
+      }
+    ],
+    "search_facets":{
+      
+    }
+  }
+}

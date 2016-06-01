@@ -6,6 +6,7 @@
 		<portlet-name>categories-grid-portlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
+		<css-class-wrapper>categories-grid-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>

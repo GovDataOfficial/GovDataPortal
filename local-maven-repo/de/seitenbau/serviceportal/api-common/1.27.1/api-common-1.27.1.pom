@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+
+ <artifactId>api-common</artifactId>
+ <version>1.27.1</version>
+ <packaging>jar</packaging>
+
+ <name>api-common</name>
+ <description>api-common</description>
+
+ <parent>
+  <groupId>de.seitenbau.serviceportal</groupId>
+  <artifactId>api-parent</artifactId>
+  <version>1.27.1</version>
+  <relativePath>../api-parent</relativePath>
+ </parent>
+
+ <dependencies>
+
+  <!-- sb-common -->
+  <dependency>
+   <groupId>com.seitenbau.common</groupId>
+   <artifactId>sb-common</artifactId>
+   <exclusions>
+    <exclusion>
+     <groupId>log4j</groupId>
+     <artifactId>log4j</artifactId>
+    </exclusion>
+   </exclusions>
+  </dependency>
+
+  <dependency>
+   <groupId>org.jboss.resteasy</groupId>
+   <artifactId>resteasy-client</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>org.jboss.resteasy</groupId>
+   <artifactId>resteasy-jackson2-provider</artifactId>
+  </dependency>
+
+  <dependency>
+   <groupId>org.projectlombok</groupId>
+   <artifactId>lombok</artifactId>
+  </dependency>
+
+  <!-- logging -->
+  <dependency>
+   <groupId>org.slf4j</groupId>
+   <artifactId>slf4j-api</artifactId>
+  </dependency>
+
+  <dependency>
+   <groupId>io.swagger</groupId>
+   <artifactId>swagger-annotations</artifactId>
+  </dependency>
+
+  <dependency>
+   <groupId>org.apache.commons</groupId>
+   <artifactId>commons-lang3</artifactId>
+  </dependency>
+
+ </dependencies>
+
+ <build>
+  <plugins>
+   <plugin>
+    <artifactId>maven-eclipse-plugin</artifactId>
+    <version>2.9</version>
+    <configuration>
+     <useProjectReferences>true</useProjectReferences>
+     <downloadSources>true</downloadSources>
+     <workspaceCodeStylesURL>src/eclipse/seitenbauCodeConventions.xml</workspaceCodeStylesURL>
+    </configuration>
+   </plugin>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-source-plugin</artifactId>
+    <executions>
+     <execution>
+      <phase>package</phase>
+      <goals>
+       <goal>jar-no-fork</goal>
+      </goals>
+     </execution>
+    </executions>
+   </plugin>
+   <plugin>
+    <groupId>com.seitenbau.maven.plugins</groupId>
+    <artifactId>maven-checkstyleconfig-plugin</artifactId>
+    <version>1.0.2</version>
+    <executions>
+     <execution>
+      <phase>generate-sources</phase>
+      <goals>
+       <goal>generate</goal>
+      </goals>
+      <configuration>
+       <checkstyleVersion>5</checkstyleVersion>
+      </configuration>
+     </execution>
+    </executions>
+   </plugin>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-checkstyle-plugin</artifactId>
+    <version>2.10</version>
+    <configuration>
+     <configLocation>${basedir}/target/checkstyle/sb-checks.xml</configLocation>
+    </configuration>
+   </plugin>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-resources-plugin</artifactId>
+    <version>2.6</version>
+    <configuration>
+     <encoding>${project.encoding}</encoding>
+    </configuration>
+   </plugin>
+
+   <plugin>
+    <!-- Klassen aus Message-Properties generierren -->
+    <groupId>com.seitenbau.maven.plugins</groupId>
+    <artifactId>maven-messageclass-plugin</artifactId>
+    <version>1.1.1</version>
+    <executions>
+     <execution>
+      <id>generate_errormessages</id>
+      <goals>
+       <goal>generate</goal>
+      </goals>
+      <phase>generate-sources</phase>
+      <configuration>
+       <sourceFile>
+        src/main/resources/de/seitenbau/serviceportal/rest/exception/RestErrorMessages.properties
+       </sourceFile>
+       <resourceBundle>de.seitenbau.serviceportal.rest.exception.RestErrorMessages</resourceBundle>
+       <className>RestErrorMessages</className>
+       <targetPackage>de.seitenbau.serviceportal.rest.exception</targetPackage>
+      </configuration>
+     </execution>
+    </executions>
+   </plugin>
+   <!-- add generated sources to IDE -->
+   <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>build-helper-maven-plugin</artifactId>
+    <executions>
+     <execution>
+      <phase>generate-sources</phase>
+      <goals>
+       <goal>add-source</goal>
+      </goals>
+      <id>addFoldersForGeneratedSources</id>
+      <configuration>
+       <sources>
+        <source>${project.build.directory}/generated-sources</source>
+       </sources>
+      </configuration>
+     </execution>
+    </executions>
+   </plugin>
+
+  </plugins>
+  <pluginManagement>
+   <plugins>
+    <plugin>
+     <artifactId>maven-compiler-plugin</artifactId>
+     <version>3.2</version>
+     <configuration>
+      <source>${project.build.javaVersion}</source>
+      <target>${project.build.javaVersion}</target>
+     </configuration>
+    </plugin>
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-jar-plugin</artifactId>
+     <version>2.5</version>
+    </plugin>
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-source-plugin</artifactId>
+     <version>2.4</version>
+    </plugin>
+    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven 
+     build itself. -->
+    <plugin>
+     <groupId>org.eclipse.m2e</groupId>
+     <artifactId>lifecycle-mapping</artifactId>
+     <version>1.0.0</version>
+     <configuration>
+      <lifecycleMappingMetadata>
+       <pluginExecutions>
+        <pluginExecution>
+         <pluginExecutionFilter>
+          <groupId>
+           com.seitenbau.maven.plugins
+          </groupId>
+          <artifactId>maven-checkstyleconfig-plugin</artifactId>
+          <versionRange>[1.0.2,)</versionRange>
+          <goals>
+           <goal>generate</goal>
+          </goals>
+         </pluginExecutionFilter>
+         <action>
+          <execute>
+           <runOnIncremental>false</runOnIncremental>
+          </execute>
+         </action>
+        </pluginExecution>
+        <pluginExecution>
+         <pluginExecutionFilter>
+          <groupId>com.seitenbau.maven.plugins</groupId>
+          <artifactId>
+           maven-messageclass-plugin
+          </artifactId>
+          <versionRange>[1.1.1,)</versionRange>
+          <goals>
+           <goal>generate</goal>
+          </goals>
+         </pluginExecutionFilter>
+         <action>
+          <execute>
+           <runOnIncremental>false</runOnIncremental>
+          </execute>
+         </action>
+        </pluginExecution>
+        <pluginExecution>
+         <pluginExecutionFilter>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <versionRange>[1.0,)</versionRange>
+          <goals>
+           <goal>add-source</goal>
+           <goal>add-test-source</goal>
+           <goal>add-resource</goal>
+           <goal>add-test-resource</goal>
+           <goal>maven-version</goal>
+           <goal>parse-version</goal>
+          </goals>
+         </pluginExecutionFilter>
+         <action>
+          <execute>
+           <runOnConfiguration>true</runOnConfiguration>
+           <runOnIncremental>true</runOnIncremental>
+          </execute>
+         </action>
+        </pluginExecution>
+       </pluginExecutions>
+      </lifecycleMappingMetadata>
+     </configuration>
+    </plugin>
+   </plugins>
+  </pluginManagement>
+ </build>
+
+</project>

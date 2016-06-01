@@ -1,0 +1,237 @@
+// ### migrating existing menu to fit styleguide
+
+// remove unused button
+#_145_navAccountControlsNavbarBtn {
+  display: none;
+}
+
+// remove remaining fragments of the usual menu
+
+@media #{$medium-down} {
+  #navigation {
+    display: none;
+  }
+
+  .aui .navbar-static-top .navbar-inner {
+    background: $white !important;
+    border: 0;
+    box-shadow: none !important;
+  }
+}
+
+// restyle remaining buttons
+.portlet-dockbar .navbar {
+  .navbar-inner {
+    padding: 0;
+  }
+
+  .btn-navbar {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: $black;
+    font-size: 2em;
+    line-height: rem-calc(50);
+    margin: 0;
+    padding: 0 .7em;
+    text-shadow: none;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $black;
+      color: $white;
+    }
+
+    .icon-reorder {
+      vertical-align: middle;
+
+      &::before {
+        content: 'k';
+        speak: none;
+        font-family: 'govdata';
+      }
+    }
+  }
+}
+
+// can't get rid of 980px liferay-breakpoint... to patch this, this will fill the gap
+@media #{$medium-down} {
+  .navbar .container .nav-collapse {
+    display: none;
+
+    &.open {
+      display: block;
+      height: auto;
+      overflow: visible;
+    }
+
+    .btn {
+      padding: 11px 19px;
+    }
+  }
+}
+
+
+.off-canvas-close {
+  display: block;
+  float: right;
+  font-size: 1.5em;
+  padding: 1.2rem;
+}
+
+// hide the off-canvas area if a bigger breakpoint is reached
+@media #{$large-up} {
+  .aui .right-off-canvas-menu {
+    display: none;
+  }
+}
+
+// restyle main navigation for use in off-canvas
+#off-canvas-mainmenu {
+  padding: rem-calc(15);
+
+  ul {
+    margin: 0;
+  }
+
+  .off-canvas-nav,
+  .oc-meta-menu {
+    li,
+    a {
+      display: block;
+    }
+
+    a {
+      padding: .5em 0;
+      position: relative;
+    }
+
+    li.selected:not(.dropdown) > a,
+    a:hover,
+    a:focus,
+    a:active {
+      background-color: $dark-gray;
+      color: $white;
+
+      &::before,
+      &::after {
+        background-color: $dark-gray;
+        bottom: 0;
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 15px;
+      }
+
+      &::before {
+        left: -15px;
+      }
+
+      &::after {
+        right: -15px;
+      }
+    }
+  }
+
+  .off-canvas-nav > li {
+    border-bottom: 1px solid $kontur-gray;
+
+    &:last-child {
+      border-bottom-color: $dark-gray;
+    }
+  }
+
+  .child-menu a {
+    padding-left: 1em;
+  }
+
+  .lfr-nav-child-toggle {
+    float: right;
+  }
+
+  .oc-languagechooser {
+    margin: rem-calc(5) 0 rem-calc(10);
+
+    > .buttongroup {
+      margin-right: rem-calc(10);
+    }
+  }
+
+  .oc-metamenu {
+    margin: rem-calc(10) 0;
+  }
+
+  .oc-accountinfo {
+    padding-bottom: rem-calc(10);
+  }
+
+  .oc-profile-sub {
+    display: block;
+    font-size: 14px;
+    line-height: 22px;
+    padding-left: 1em;
+  }
+
+  // folding submenu
+  .dropdown ul {
+    display: none;
+  }
+
+  .dropdown.open ul {
+    display: block;
+  }
+
+  .dropdown-toggle {
+    background: none $white;
+    border: 0;
+    display: block;
+    padding: .5em 0;
+    position: relative;
+    text-align: left;
+    width: 100%;
+
+    span::after {
+      content: '\f107';
+      speak: none;
+      float: right;
+      font-family: 'fontawesome-alloy';
+      font-size: 1.3em;
+    }
+
+    &:active,
+    &:focus,
+    &:hover {
+      background-color: $dark-gray;
+      color: $white;
+
+      &::before,
+      &::after {
+        background-color: $dark-gray;
+        bottom: 0;
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 15px;
+      }
+
+      &::before {
+        left: -15px;
+      }
+
+      &::after {
+        right: -15px;
+      }
+    }
+
+    &:focus {
+      box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 3px $link-blue;
+    }
+  }
+
+  .dropdown.open .dropdown-toggle span::after {
+    speak: none;
+    content: '\f106';
+  }
+}

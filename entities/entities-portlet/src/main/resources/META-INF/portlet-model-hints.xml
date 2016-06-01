@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="de.fhg.fokus.odp.entities.model.MetadataComment">
+		<field name="uuid" type="String" />
+		<field name="_id" type="long" />
+		<field name="userLiferayId" type="long" />
+		<field name="metadataName" type="String" />
+		<field name="text" type="String" />
+		<field name="created" type="Date" />
+	</model>
+</model-hints>

@@ -1,0 +1,25 @@
+.shariff {
+    .facebook {
+        border-color: #3b5998;
+        a {
+            background-color: #3b5998;
+            &:hover,
+            &:active,
+            &:focus {
+                color: #3b5998;
+            }
+        }
+        .fa-facebook {
+            font-size: 22px;
+        }
+        .share_count {
+            color: #183a75;
+            background-color: #99adcf;
+        }
+    }
+    .theme-white {
+        .facebook a {
+            color: #3b5998;
+        }
+    }
+}

@@ -1,0 +1,24 @@
+<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+
+  <!--/* Template for displaying the document type as icon and label */-->
+  <div th:fragment="documenttypeicon(imagepath, type, isBig)" class="metainfo h2-metainfo">
+    <div th:class="'mediatype-icon mediatype-' + ${type} + (${isBig} ? ' big' : '')">
+      <img th:src="@{${imagepath} + '/mediatypes/typ_' + ${type} + '_inverted.svg'}" alt="" />
+    </div>
+    <strong th:text="#{'od.' + ${type}}"></strong>
+  </div>
+  
+  <!--/* Template for displaying the resource icon */-->
+  <div th:fragment="resourceicon(resFormat)" th:with="resFormatUpper=${#strings.toUpperCase(resFormat)}" class="resource-icon">
+    <th:block th:with="resShort = ${#strings.length(resFormat) > 4 ? #strings.substring(resFormatUpper,0,4) : resFormatUpper}">
+      [[${resShort}]]
+    </th:block>
+  </div>
+  
+  <!--/* Template for displaying the resource icon - as DD-element */-->
+  <dd th:fragment="resourceicondd(resFormat)" th:with="resFormatUpper=${#strings.toUpperCase(resFormat)}" class="resource-icon">
+    <th:block th:with="resShort = ${#strings.length(resFormat) > 4 ? #strings.substring(resFormatUpper,0,4) : resFormatUpper}">
+      [[${resShort}]]
+    </th:block>
+  </dd>
+</div>

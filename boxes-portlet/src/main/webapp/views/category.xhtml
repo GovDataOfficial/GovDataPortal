@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets">
+
+  <dl class="categories h2-tags">
+    <dt class="hidden">#{i18n['od.groups.name']}</dt>
+    <ui:repeat value="#{categories}" var="category">
+      <dd class="boxcategory category-item">
+        <img alt="" src="/govdatastyle-theme/images/categories/icon_kat_${category.name}.svg" width="20" height="20" />
+        <div class="box-name">#{category.displayName}</div>
+      </dd>
+    </ui:repeat>
+  </dl>
+
+</ui:composition>

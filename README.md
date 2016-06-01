@@ -7,56 +7,56 @@ Die Open Data Platform integriert verschiedene Komponenten zu einer vollständig
 Komponenten
 -----------
 
-- Die Portalsoftware Liferay wird in einem Java-Application-Container wie Apache Tomcat ausgeführt. Sie implementiert den Portlet-Standard JSR 268. Die Anwendungen der Open Data Platform sind als Portlets ausgeführt, die in diesem Portal laufen.
+- Die Portalsoftware Liferay wird in einem Java-Application-Container wie Apache Tomcat ausgeführt. Sie implementiert den Portlet-Standard JSR 268. Die Anwendungen der Open Data Platform sind als Portlets implementiert, die in diesem Portal laufen.
 
-- CKAN ist ein für Offene Daten weit verbreiteter Metadaten-Katalog, mit vollständiger REST-API. Zur Anbindung an Java-Anwendungenn wurde eine Java-Client-Bibliothek für die CKAN-API entwickelt (opendataregistry-client). Derzeit (August 2013) wird nur CKAN 1.x unterstützt, die Anpassung an CKAN 2.x sollte jedoch unkompliziert sein. Grundsätzlich können auch andere Datenkataloge angeschlossen werden.
+- CKAN ist ein für Offene Daten weit verbreiteter Metadaten-Katalog, mit vollständiger REST-API. Zur Anbindung an Java-Anwendungenn wurde eine Java-Client-Bibliothek für die CKAN-API entwickelt (opendataregistry-client). Unterstützt wird CKAN 2.x. Grundsätzlich können auch andere Datenkataloge angeschlossen werden.
 
-- Typischerweise wird beiden ein Webserver wie der Apache httpd vorgeschaltet, um Http-Anfragen den Anwendungen oder statischen Dateien zuzuordnen
+- Typischerweise wird beiden ein Webserver wie der Apache httpd vorgeschaltet, um HTTP-Anfragen den Anwendungen oder statischen Dateien zuzuordnen
+
+- Elasticsearch für die Speicherung des Suchindex. Der Suchindex wird mit dem SOLR-Suchindex von CKAN synchron gehalten und von den Liferay-Portlets genutzt, um die Suchanfragen performant zu bearbeiten und die Suchergebnisliste mit den verschiedenen Filtern darzustellen. Derzeit wird Elasticsearch in Version 1.6.x unterstützt, da diese für die Long-Time-Support (LTS) Version von Ubuntu Server verfügbar ist. Für die Synchronisation der Suchindexe ist die CKAN-Erweiterung [ckanext-searchindexhook](https://github.com/GovDataOfficial/govdata/ckanext-searchindexhook) zuständig.
 
 - Als Persistenz-Komponente dient ein Datenbank-Server. CKAN arbeitet nur mit PostgreSQL zusammen, Liferay unterstützt alle vom Hibernate-Framework unterstützen Datenbanken also auch PostgreSQL.
 
-- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalog, auch Harvesting genannt. Die als CKAN-Erweiterung umgesetzten Harvester erledigen diese Aufgabe https://github.com/fraunhoferfokus/ckanext-govdatade
+- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalog, auch Harvesting genannt. Für den automatisierten Import von Daten wurden individuelle Harvester auf Basis der CKAN-Erweiterung ckanext-harvest implementiert. Diese sind in der CKAN-Erweiterung [ckanext-govdatade](https://github.com/GovDataOfficial/govdata/ckanext-govdatade) enthalten.
 
 Architektur
 -----------
 
 Grundsätzlich sind viele der Komponenten flexibel austauschbar. Ein typischer Aufbau sieht wie folgt aus:
 
-Ein Apache httpd empfängt alle Anfragen per HTTPS. Statische Dateien wie Dumps und Logs werden sofort ausgeliefert. Normale Portalanfragen werden per Reverse Proxy an einen oder bei Hochverfügbarkeit mehrere Tomcat-Prozesse weitergeleitet. CKAN wird per WSGI ebenfall in einem Apache httpd ausgeführt und bedient die HTTP-REST-Anfragen der Liferay-Anwendungen und die API-Anfragen von außenn. Sowohl Liferay als auch CKAN greif per PostgrSQL-Client auf den Datenbank-Prozess zu.
-
-![Setup](../master/doc/simple-setup.svg)
+Ein Apache httpd empfängt alle Anfragen per HTTPS. Statische Dateien wie Dumps und Logs werden sofort ausgeliefert. Normale Portalanfragen werden per Reverse Proxy an einen oder bei Hochverfügbarkeit mehrere Tomcat-Prozesse weitergeleitet. CKAN wird per WSGI ebenfalls in einem Apache httpd ausgeführt und bedient die HTTP-REST-Anfragen der Liferay-Anwendungen und die API-Anfragen von außen. Für http://www.govdata.de läuft CKAN statt mit dem Apache Modul mod_wsgi mit dem WSGI HTTP Server Gunicorn (http://gunicorn.org/), was das Python Virtual Environment besser voon dem des Betriebsystems trennt. Sowohl Liferay als auch CKAN greift per PostgrSQL-Client auf den Datenbank-Prozess zu.
 
 Diese Architektur kann sowohl auf einer einzelnen Server-Maschine als auch in einer Microservice-Umgebung umgesetzt werden, da alle Prozesse per Netzwerk miteinander kommunizieren.
 
 Die einzelnen Java-Komponenten der Open Data Platform sind als Portlets umgesetzt, d.h. lose gekoppelt und können grundsätzlich auch einzeln eingesetzt werden. Zentrale Bibliothek ist der opendataregistry-client, der den Oberflächen-Portlets eine einfach Java-API bietet, sodass nicht jedes Portlet selbst direkt mit der REST-Schnittstelle von CKAN interagieren muss.
 
-![Portlets](../master/doc/portlet-architecture.svg)
+[opendataregistry-client](opendataregistry-client): Zentrale Bibliothek, Java-API für CKAN.
 
-[opendataregistry-client](../master/opendataregistry-client): Zentrale Bibliothek, Java-API für CKAN.
+[categories-grid-portlet](categories-grid-portlet): Zeigt die Kategorien mit Icons und Anzahl der Datensätze an (Startseite)
 
-[categories-grid-portlet](../master/categories-grid-portlet): Zeigt die Kategorien mit Pikogrammen und Anzahl der Datensätze an (Startseite)
+[boxes-portlet](boxes-portlet): Zeigt neuste Datensätze, Dokumente und Apps (Startseite)
 
-[boxes-portlet](../master/boxes-portlet): Zeigt neuste Datensätze, Dokumente und Apps (Startseite)
+[cache-scheduler](cache-scheduler): Hält die zwischengespeicherten Inhalte von categories-grid-portlet und boxes-portlet aktuell.
 
-[cache-scheduler](../master/cache-scheduler): Hält die zwischengespeicherten Inhalte von categories-grid-portlet und boxes-portlet aktuell.
+[gd-search](gd-search): Zeigt die Suchmaske und die Suchergebnis-Liste mit Filtern an. Die Suchanfragen erfolgen an Elasticsearch, die die nötigen Informationen für die Darstellung der Suchergebnissliste liefert. Für die Anzeige der Datensatzdetailseite werden die Informationen per opendataregistry-client von CKAN holt. Das Portlet enthält auch einen Hook, mit dem die Liferay-Inhalte, z.B. Blog-Beiträge in den Elasticsearch-Index geschrieben werden.
 
-[search-gui-portlet](../master/search-gui-portlet): Zeigt die Suchmaske an und leitet die Anfrage per IPC an das dataset-portlet weiter.
+[gd-edit-portlet](gd-edit-portlet): Erlaubt das erstellen und pflegen von Metadaten per Formular und opendataregistry-client.
 
-[dataset-portlet](../../dataset-portlet): Zeigt die Suchergebnis-Liste mit Filtern und die Datensatzdetailseite an, die es per opendataregistry-client von CKAN holt.
+[gd-usermanage-portlet](gd-usermanage-portlet): Enthält und aktiviert die folgenden Funktionalitäten:
+- Benutzer können ihr Konto mittels Double-Opt-Out selbst löschen.
+- Bei der Eingabe von Formularen wird statt einem Captcha eine alternative Implementierung genutzt.
 
-[manage-datasets-portlet](../../manage-datasets-portlet): Erlaubt das erstellen und pflegen von Metadaten per Formular und opendataregistry-client.
+[entities](entities): Ermöglichst das persistieren von Kommentaren zu Datensätzen durch JPA.
 
-[entities](../master/odp-entities): Ermöglichst das persistieren von Kommentaren zu Datensätzen durch JPA.
+[govdatastyle-theme](govdatastyle-theme): Das Theme für das Design von http://www.govdata.de.
 
-[govdata-theme](../master/govdata-theme): Oberflächengestaltung
+[screennamevalidator-hook](screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
 
-[rss-servlet](../master/rss-servlet): Betten den CKAN-RSS-Feed ins Portal ein.
+[language-hook](language-hook): Dient der Internationalisierung von Texten.
 
-[screennamevalidator-hook](../master/screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
+[errorpages-hook](errorpages-hook): Zeigt angepasste Fehlerseiten an.
 
-[language-hook](../master/language-hook): Dient der Internationalisierung von Texten.
-
-[errorpages-hook](../master/errorpages-hook): Zeigt angepasste Fehlerseiten an.
+[Layout20-80-layouttpl](Layout20-80-layouttpl): Wird als Layout für die Seiten unter dem Bereich Informationen genutzt.
 
 
 Links:
@@ -64,11 +64,8 @@ Links:
 
 - [Installing ODP](./INSTALL.md)
 - [Contributing to ODP](./CONTRIBUTING.md)
-- [Open data metadata structure for Germany](https://github.com/fraunhoferfokus/ogd-metadata)
+- [Open data metadata structure for Germany](https://github.com/GovDataOfficial/ogd-metadata)
 - Relevant CKAN plugins
-  - [harvesting extension used at govdata.de](https://github.com/fraunhoferfokus/ckanext-govdatade)
-  - [harvesting extension for CSW/ISO19115 geo metadata servers](https://github.com/fraunhoferfokus/ckanext-spatial/tree/ogpd)
-  - [harvesting extension for specific formats specified by INSPIRE](https://github.com/fraunhoferfokus/ckanext-inspire)
-  - [Geo related plugins for CKAN](https://github.com/fraunhoferfokus/ckanext-spatial)
-- [Fraunhofer FOKUS Open Data Blog](http://open-data.fokus.fraunhofer.de), esp. [on the architecture](http://open-data.fokus.fraunhofer.de/?p=1154&lang=en), 
-[on the metadata structure](http://open-data.fokus.fraunhofer.de/?p=643&lang=en), [on harvesting](http://open-data.fokus.fraunhofer.de/?p=2418&lang=en)
+  - [harvesting extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-govdatade)
+  - [searchindex extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-searchindexhook)
+

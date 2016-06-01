@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <import resource="test-portlet-context.xml" />
+  <import resource="mvc-context.xml" />
+  
+  <context:component-scan
+    base-package="de.seitenbau.govdata.search.gui.model,
+      de.seitenbau.govdata.search.gui.common,
+      de.seitenbau.govdata.search.adapter,
+      de.seitenbau.govdata.search.index.mapper" />
+  
+  <bean class="de.seitenbau.govdata.search.gui.controller.SearchresultController" /> 
+
+</beans>

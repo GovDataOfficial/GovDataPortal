@@ -96,7 +96,7 @@ public enum SectorEnumType {
         } else if (OTHER.toField().equals(type)) {
             return OTHER;
         } else {
-            log.warn("Parsing SectorEnumType: " + type, new IllegalArgumentException(type));
+            log.debug("Parsing SectorEnumType: " + type, new IllegalArgumentException(type));
             return OTHER;
         }
     }

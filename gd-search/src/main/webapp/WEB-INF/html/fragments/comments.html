@@ -1,0 +1,38 @@
+<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+
+  <div th:fragment="commentEntry (comment, selectedMetadata)" th:inline="text"
+      th:with="isRedakteur=${selectedMetadata.currentUser.isRedakteur()},isOwner=${selectedMetadata.currentUser.isOwner(comment)}"
+      class="comment-entry row" th:attr="data-comment-id=${comment.primaryKey}">
+    <div class="column small-12 medium-4 h2-metainfo">
+      <figure>
+        <img class="avatar"
+          th:title="#{user-portrait} + ': ' + ${comment.authorFullName}"
+          th:alt="#{user-portrait} + ': ' + ${comment.authorFullName}"
+          th:src="${comment.authorPortraitUrl}"/>
+        <figcaption>
+          <div class="user-name bold" th:text="${comment.authorFullName}"></div>
+          <div th:text="${#dates.format(comment.created,'dd.MM.yyyy HH:mm')}"></div>
+        </figcaption>
+      </figure>
+      <div class="comment-controls clearfix">
+        <th:block th:if="${isRedakteur || isOwner}">
+          <button class="edit"><i class="icon-edit"></i>[[#{edit}]]</button>
+          <button class="delete"><i class="icon-trash"></i>[[#{delete}]]</button>
+        </th:block>
+      </div>
+    </div>
+    <div class="column small-12 medium-8">
+      <div class="comment-body">
+        <blockquote class="comment-text" th:text="${comment.text}"></blockquote>
+        <div th:if="${isRedakteur || isOwner}" class="comment-edit-area">
+          <textarea class="comment-textarea" th:text="${comment.text}"></textarea>
+          <div class="comment-button-row">
+            <button class="savechange btn" th:text="#{publish}"></button>
+            <button class="cancel btn" th:text="#{cancel}"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

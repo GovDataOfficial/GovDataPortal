@@ -1,0 +1,16 @@
+.shariff {
+    .mail {
+        border-color: #666;
+        a {
+            background-color: #666;
+            &:hover,
+            &:active,
+            &:focus {
+                color: #666;
+            }
+        }
+        .fa-envelope {
+            font-size: 21px;
+        }
+    }
+}

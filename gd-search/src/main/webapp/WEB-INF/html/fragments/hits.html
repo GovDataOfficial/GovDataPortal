@@ -1,0 +1,77 @@
+<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+
+  <li th:fragment="resultTile (hit, themeDisplay)" class="resultentry design-box design-box-padding">
+    <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${hit.type}, false)"></div>
+    <div class="row">
+      <div class="column small-12 medium-8 large-9">
+        <h2>
+          <a th:title="${hit.title}" th:href="${hit.linkToDetailPage}"
+            th:text="${#strings.abbreviate(hit.title, 100)}"></a>
+        </h2>
+        <p class="h2-teaser"
+          th:text="${#strings.abbreviate(hit.content, 200)}"></p>
+        <div class="h2-metainfo" th:if="${hit.ckanMetadata}">
+          <dl class="resultdetail inline-list publisher">
+            <dt>[[#{od.datasets_metadata_contact_publisher}]]: </dt>
+            <dd>[[${hit.contact}]]</dd>
+          </dl>
+          <dl class="resultdetail category-list">
+            <dt>[[#{od.datasets_metadata_category}]]: </dt>
+            <dd class="category-item" th:each="category : ${hit.categories}">
+              <img th:alt="${category.title}"
+                th:src="@{${themeDisplay.pathThemeImages} + '/categories/icon_kat_' + ${category.name} + '.svg'}"
+                width="20" height="20" />
+              <span th:text="${category.displayName}"></span>
+            </dd>
+          </dl>
+          <dl class="resultdetail inline-list">
+            <dt>[[#{od.datasets_open_licence}]]: </dt>
+            <dd class="od_usage_agreement"
+                  th:if="${hit.isOpen}"
+                  th:title="#{od.usage_agreement.free.description}">
+              <img th:alt="#{od.usage_agreement.free}"
+                   th:src="@{${themeDisplay.pathThemeImages} + '/licence/freie_nutzung.svg'}"
+                   width="20" height="20" />
+              [[#{od.usage_agreement.free}]]
+            </dd>
+            <dd class="od_usage_agreement"
+                  th:unless="${hit.isOpen}"
+                  th:title="#{od.usage_agreement.restricted.description}">
+              <img th:alt="#{od.usage_agreement.restricted}"
+                   th:src="@{${themeDisplay.pathThemeImages} + '/licence/eingeschraenkte_nutzung.svg'}"
+                   width="20" height="20" />
+              [[#{od.usage_agreement.restricted}]]
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="column small-12 medium-4 large-3">
+        <dl th:if="${hit.ckanMetadata}" class="resource-formats">
+          <dt th:text="#{od.datasets_formats}"></dt>
+          <th:block th:each="format : ${hit.differentFormatTypes}">
+            <dd th:replace="fragments/icons :: resourceicondd(${format})"></dd>
+          </th:block>
+          <dd th:if="${#lists.isEmpty(hit.differentFormatTypes)}"></dd>
+        </dl>
+        <dl class="last-modified">
+          <dt th:text="#{last-modified}"></dt>
+          <dd th:text="${#dates.format(hit.lastModified, 'dd.MM.yyyy')}"></dd>
+        </dl>
+        
+        <dl th:replace="fragments/display_widgets :: temporalCoverage(${hit.temporalCoverageFrom}, ${hit.temporalCoverageTo}, false)"></dl>
+        
+        <a th:title="#{${linkTextKey}}" th:href="${hit.linkToDetailPage}"
+          th:with="linkTextKey = 'od.goto.' + ${hit.type}" class="goto-entry h2-metainfo">
+          <div>[[#{${linkTextKey}}]] <span class="offscreen">"[[${hit.title}]]"</span></div>
+        </a>
+        <div class="goto-entry-spacer"></div>
+      </div>
+    </div>
+  </li>
+    
+  <th:block th:fragment="partialList" th:inline="text">
+    <th:block th:each="hit,iterStat : ${searchResult.hits}">
+      <div th:replace="fragments/hits :: resultTile(${hit}, ${themeDisplay})"></div>
+    </th:block>
+  </th:block>
+</div>

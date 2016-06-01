@@ -3,5 +3,5 @@
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme"%>
 <%@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet"%>
 <%@ page contentType="text/html" isELIgnored="false"%>
-<portlet:defineObjects />
+
 <liferay-theme:defineObjects />

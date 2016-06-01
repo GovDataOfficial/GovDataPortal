@@ -26,11 +26,15 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 /**
  * @author sim
@@ -38,11 +42,8 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtraBean implements Serializable {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -617566629321775708L;
+    private static final Logger log = LoggerFactory.getLogger(ExtraBean.class);
 
     private static final ObjectMapper OM = new ObjectMapper();
 
@@ -102,7 +103,15 @@ public class ExtraBean implements Serializable {
      */
     public JsonNode getValue() {
         try {
-            return OM.readTree(value);
+            // we don't check for arrays as we can't use them currently. They will be strings.
+
+            // check for object
+            if(value.startsWith("{")) {
+                return OM.readTree(value);
+            }
+
+            // we just have a bunch of characters... let's make a string.
+            return new TextNode(value);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -1,0 +1,67 @@
+.yui3-calendar-header {
+  position   : relative;
+  width      : 100%;
+  text-align : center;
+}
+
+.yui3-calendar-header-label {
+  display : inline;
+}
+
+.yui3-calendarnav-nextmonth,
+.yui3-calendarnav-prevmonth {
+  cursor : pointer;
+}
+
+.yui3-calendarnav-nextmonth::before,
+.yui3-calendarnav-prevmonth::before {
+  font-family             : "govdata" !important;
+  -webkit-font-smoothing  : antialiased;
+  -moz-osx-font-smoothing : grayscale;
+}
+
+.yui3-calendarnav-prevmonth::before {
+  content : "S";
+}
+
+.yui3-calendarnav-nextmonth::before {
+  content : "T";
+}
+
+.yui3-skin-sam .yui3-calendarnav-nextmonth,
+.yui3-skin-sam .yui3-calendarnav-prevmonth {
+  position    : absolute;
+  width       : 20px;
+  height      : 20px;
+  margin      : 0;
+  padding     : 0;
+  line-height : 20px;
+}
+
+.yui3-skin-sam .yui3-calendarnav-nextmonth:focus,
+.yui3-skin-sam .yui3-calendarnav-nextmonth:hover,
+.yui3-skin-sam .yui3-calendarnav-prevmonth:focus,
+.yui3-skin-sam .yui3-calendarnav-prevmonth:hover {
+  color            : #fff;
+  background-color : #3d3d3d;
+}
+
+.yui3-skin-sam .yui3-calendarnav-month-disabled,
+.yui3-skin-sam .yui3-calendarnav-month-disabled:hover {
+  color  : #ccc;
+  cursor : default;
+}
+
+.yui3-skin-sam .yui3-calendarnav-prevmonth {
+  left        : 0;
+  margin-left : -10px;
+}
+
+.yui3-skin-sam .yui3-calendarnav-nextmonth {
+  right        : 0;
+  margin-right : -10px;
+}
+
+#yui3-css-stamp.skin-sam-calendarnavigator {
+  display : none;
+}

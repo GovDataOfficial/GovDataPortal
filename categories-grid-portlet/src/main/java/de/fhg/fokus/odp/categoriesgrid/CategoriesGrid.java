@@ -19,40 +19,37 @@
 
 package de.fhg.fokus.odp.categoriesgrid;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.xml.namespace.QName;
+import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
 
+import de.fhg.fokus.odp.categoriesgrid.model.CategoryViewModel;
 import de.fhg.fokus.odp.registry.ODRClient;
 import de.fhg.fokus.odp.registry.ckan.Constants;
 import de.fhg.fokus.odp.registry.model.Category;
-import de.fhg.fokus.odp.registry.queries.Query;
 import de.fhg.fokus.odp.spi.OpenDataRegistry;
+import de.seitenbau.govdata.filter.FilterPathUtils;
+import de.seitenbau.govdata.filter.SearchConsts;
+import de.seitenbau.govdata.navigation.GovDataNavigation;
 
 /**
  * The class constitutes a bean that serves as a source for the categories on the categories-grid portlet.
@@ -63,6 +60,8 @@ import de.fhg.fokus.odp.spi.OpenDataRegistry;
 @RequestMapping("VIEW")
 @SessionAttributes({ "categories" })
 public class CategoriesGrid implements Serializable {
+
+    private static final Logger log = LoggerFactory.getLogger(CategoriesGrid.class);
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
@@ -84,15 +83,21 @@ public class CategoriesGrid implements Serializable {
 
     /** The log. */
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+    
+    private GovDataNavigation govDataNavigation;
 
-    /**
-     * View list default.
-     * 
-     * @return the string
-     */
     @RenderMapping
-    public String viewListDefault() {
-        return "view";
+    public String showSearchResults(
+        RenderRequest request,
+        RenderResponse response,
+        Model model) throws PortalException, SystemException
+    {
+      
+      List<Category> categories = getCategories();
+      List<CategoryViewModel> categoryViewModels = mapToCategoryViewModels(categories);
+      
+      model.addAttribute("categories", categoryViewModels);
+      return "view";
     }
 
     /**
@@ -101,10 +106,9 @@ public class CategoriesGrid implements Serializable {
      * @return the categories
      */
     @SuppressWarnings("unchecked")
-    @ModelAttribute(value = "categories")
     public List<Category> getCategories() {
 
-        List<Category> categories = (List<Category>) MultiVMPoolUtil.get(CACHE_NAME, CACHE_CATEGORIES_KEY);
+        List<Category> categories = (List<Category>) MultiVMPoolUtil.getCache(CACHE_NAME).get(CACHE_CATEGORIES_KEY);
 
         if (categories == null) {
 
@@ -125,48 +129,58 @@ public class CategoriesGrid implements Serializable {
                 }
             }
             Collections.sort(categories, new CategoriesTitleComparator());
-            MultiVMPoolUtil.put(CACHE_NAME, CACHE_CATEGORIES_KEY, categories);
+            MultiVMPoolUtil.getCache(CACHE_NAME).put(CACHE_CATEGORIES_KEY, (Serializable) categories); // safe cast: LinkedList
         }
-
+        
         return categories;
     }
-
+    
     /**
-     * Search.
-     * 
-     * @param response
-     *            the response
-     * @param request
-     *            the request
+     * Map to CategoryViewModels and add actionURLs
+     * @param categories list of ODP-categories
+     * @param renderUrl 
+     * @return list of categoryViewModels
+     * @throws PortalException 
+     * @throws SystemException 
      */
-    @ActionMapping(params = "action=categorySearch")
-    public void search(ActionResponse response, ActionRequest request) {
-        String categoryName = request.getParameter("categoryName");
+  private List<CategoryViewModel> mapToCategoryViewModels(List<Category> categories) throws SystemException
+  {
+    final String method = "mapToCategoryViewModels() : ";
+    log.trace(method + "Start");
 
-        Query query = new Query();
-        Calendar cal = Calendar.getInstance();
-        query.getCategories().add(categoryName + ":#:" + cal.getTimeInMillis());
-        response.setEvent(new QName("http://fokus.fraunhofer.de/odplatform", "querydatasets"), query);
+    List<CategoryViewModel> result = new ArrayList<>();
 
-        ThemeDisplay td = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+    String redirectUrlString = null;
+    for (Category category : categories)
+    {
+      try
+      {
+        // set current category as filter
+        String filterParam =
+            FilterPathUtils.serializeFilter(SearchConsts.FACET_GROUPS, category.getName());
+        PortletURL redirectUrl = govDataNavigation
+            .createLinkForSearchResults("suchen", "gdsearchresult", "", filterParam, "", "");
+        redirectUrlString = redirectUrl.toString();
+      }
+      catch (PortalException | IllegalArgumentException e)
+      {
+        log.warn(method + "Fehler beim Erstellen der Filter-URL für die Kategorien. Fehler: {}"
+            + e.getMessage());
+      }
 
-        String location = td.getPortalURL();
-        Layout layout = td.getLayout();
+      result.add(CategoryViewModel.builder()
+          .name(category.getName())
+          .title(category.getTitle())
+          .count(category.getCount())
+          .actionURL(redirectUrlString).build());
+    }
 
-        try {
-            if (layout.isPublicLayout()) {
-                location += td.getPathFriendlyURLPublic();
-            }
+    log.trace(method + "End");
+    return result;
 
-            location += layout.hasScopeGroup() ? layout.getScopeGroup().getFriendlyURL() : layout.getGroup().getFriendlyURL();
-            location += "/suchen";
-            response.sendRedirect(location);
-        } catch (PortalException e) {
-            LOG.error(e.getMessage());
-        } catch (SystemException e) {
-            LOG.error(e.getMessage());
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-        }
+  }
+
+    public void setGovDataNavigation(GovDataNavigation govDataNavigation) {
+      this.govDataNavigation = govDataNavigation;
     }
 }

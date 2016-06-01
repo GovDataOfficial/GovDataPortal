@@ -1,0 +1,144 @@
+.flex-list {
+  @media #{$medium-up} {
+    display: flex;
+    display: -webkit-flex;
+  }
+}
+
+.category-box {
+  display: block;
+  position: relative;
+
+  a {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  .kat-img {
+    margin: rem-calc(10);
+  }
+
+  @media #{$small-only} {
+    margin-bottom: rem-calc(4);
+
+    a {
+      padding: rem-calc(3);
+    }
+
+    .kat-img {
+      font-size: 20px;
+      left: rem-calc(3);
+      line-height: 20px;
+      position: absolute;
+      top: rem-calc(3);
+    }
+
+    div {
+      display: inline-block;
+    }
+
+  }
+
+  @media #{$medium-up} {
+    flex: 1 1 14%;
+    -webkit-flex: 1 1 14%;
+
+    a {
+      padding: rem-calc(15) rem-calc(3);
+      text-align: center;
+    }
+
+    .kat-img {
+      font-size: 35px;
+      line-height: 35px;
+    }
+  }
+
+  @media #{$large-up} {
+    a {
+      padding: rem-calc(15);
+    }
+
+    .kat-img {
+      font-size: 60px;
+      line-height: 60px;
+    }
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: $dark-gray;
+    text-decoration: none;
+
+    a {
+      color: $white;
+    }
+  }
+
+  &:focus {
+    @include focus-glow;
+  }
+
+  .category-name {
+    font-weight: bold;
+    word-break: break-word;
+
+    @media #{$small-only} {
+      display: inline;
+    }
+  }
+
+  .categoriy-data {
+    @media #{$small-only} {
+      margin-left: rem-calc(40);
+
+      .vertical-align-spacer {
+        font-size: 10px; // will center the line...
+        line-height: rem-calc(40);
+      }
+
+      .inline-block {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.categoriesPane {
+  position: relative;
+
+  ul {
+    margin: 0;
+  }
+
+  @media #{$small-only} {
+    padding: 0 15px 15px;
+  }
+
+  @media #{$medium-up} {
+    .flex-list {
+      margin-left: rem-calc(10);
+      margin-right: rem-calc(10);
+    }
+  }
+
+  @media #{$medium-only} {
+    .category-box {
+      margin: rem-calc(7);
+    }
+  }
+
+  @media #{$large-up} {
+    .category-box {
+      margin: rem-calc(14);
+    }
+  }
+}
+
+.categories-grid-portlet,
+.boxes-portlet {
+  margin-top: 1em;
+}

@@ -25,23 +25,19 @@ package de.fhg.fokus.odp.registry.ckan.json;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import de.fhg.fokus.odp.registry.ckan.impl.ResourceImpl;
-import de.fhg.fokus.odp.registry.model.Resource;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author sim
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MetadataBean implements Serializable {
 
 	/**
@@ -69,6 +65,9 @@ public class MetadataBean implements Serializable {
 
 	@JsonProperty
 	private Date metadata_modified;
+
+  @JsonProperty
+  private String creator_user_id;
 
 	@JsonProperty
 	private boolean isopen;
@@ -111,6 +110,12 @@ public class MetadataBean implements Serializable {
 
 	@JsonProperty
 	private List<GroupBean> groups;
+	
+  @JsonProperty
+  private String owner_org;
+  
+  @JsonProperty(value="private")
+  private boolean isPrivate;
 
 	/**
 	 * @return the id
@@ -187,9 +192,19 @@ public class MetadataBean implements Serializable {
 		this.maintainer_email = maintainer_email;
 	}
 
-	/**
-	 * @return the metadata_created
-	 */
+  public String getCreator_user_id()
+  {
+    return creator_user_id;
+  }
+
+  public void setCreator_user_id(String creator_user_id)
+  {
+    this.creator_user_id = creator_user_id;
+  }
+
+  /**
+   * @return the metadata_created
+   */
 	public Date getMetadata_created() {
 		return metadata_created == null ? null : (Date) metadata_created
 				.clone();
@@ -445,5 +460,25 @@ public class MetadataBean implements Serializable {
 	public void setGroups(List<GroupBean> groups) {
 		this.groups = groups;
 	}
+
+  public String getOwner_org()
+  {
+    return owner_org;
+  }
+
+  public void setOwner_org(String ownerOrg)
+  {
+    this.owner_org = ownerOrg;
+  }
+
+  public boolean isPrivate()
+  {
+    return isPrivate;
+  }
+
+  public void setPrivate(boolean isPrivate)
+  {
+    this.isPrivate = isPrivate;
+  }
 
 }

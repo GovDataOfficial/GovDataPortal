@@ -123,5 +123,12 @@ public interface Resource {
      *            the new type
      */
     public void setType(String type);
-
+    
+    /**
+     * Name of the Resource (not OGD-Standard, but CKAN supported).
+     * @return
+     */
+    public String getName();
+    
+    public void setName(String name);
 }

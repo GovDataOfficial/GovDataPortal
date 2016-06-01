@@ -1,0 +1,275 @@
+<?xml version="1.0"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+  version="2.0">
+  <portlet>
+    <portlet-name>gd-search-field</portlet-name>
+    <display-name>Search Input Field</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/searchfield-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-field-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Suchfeld</title>
+      <short-title>GovData Suchfeld</short-title>
+      <keywords>Suche</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+    <supported-public-render-parameter>q</supported-public-render-parameter>
+    <supported-public-render-parameter>f</supported-public-render-parameter>
+    <supported-public-render-parameter>s</supported-public-render-parameter>
+    <supported-public-render-parameter>start</supported-public-render-parameter>
+    <supported-public-render-parameter>end</supported-public-render-parameter>
+    <supported-public-render-parameter>boundingbox</supported-public-render-parameter>
+    <supported-public-render-parameter>metadata</supported-public-render-parameter>
+  </portlet>
+  
+  <portlet>
+    <portlet-name>gd-search-map</portlet-name>
+    <display-name>Map Search</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/searchfield-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-map-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Kartensuche</title>
+      <short-title>GovData Kartensuche</short-title>
+      <keywords>Suche Karte</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+    <supported-public-render-parameter>q</supported-public-render-parameter>
+    <supported-public-render-parameter>f</supported-public-render-parameter>
+    <supported-public-render-parameter>s</supported-public-render-parameter>
+    <supported-public-render-parameter>start</supported-public-render-parameter>
+    <supported-public-render-parameter>end</supported-public-render-parameter>
+    <supported-public-render-parameter>boundingbox</supported-public-render-parameter>
+    <supported-public-render-parameter>metadata</supported-public-render-parameter>
+  </portlet>
+  
+  <portlet>
+    <portlet-name>gd-search-ext</portlet-name>
+    <display-name>Extended Search</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-ext-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData erweiterte Suche</title>
+      <short-title>GovData erweiterte Suche</short-title>
+      <keywords>Suche Erweitert</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+    <supported-public-render-parameter>q</supported-public-render-parameter>
+    <supported-public-render-parameter>f</supported-public-render-parameter>
+    <supported-public-render-parameter>s</supported-public-render-parameter>
+    <supported-public-render-parameter>start</supported-public-render-parameter>
+    <supported-public-render-parameter>end</supported-public-render-parameter>
+    <supported-public-render-parameter>boundingbox</supported-public-render-parameter>
+    <supported-public-render-parameter>metadata</supported-public-render-parameter>
+  </portlet>
+
+  <portlet>
+    <portlet-name>gd-search-result</portlet-name>
+    <display-name>Search Result</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-result-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Suchergebnisse</title>
+      <short-title>GovData Suchergebnisse</short-title>
+      <keywords>Suche</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+    <supported-public-render-parameter>q</supported-public-render-parameter>
+    <supported-public-render-parameter>f</supported-public-render-parameter>
+    <supported-public-render-parameter>s</supported-public-render-parameter>
+    <supported-public-render-parameter>start</supported-public-render-parameter>
+    <supported-public-render-parameter>end</supported-public-render-parameter>
+    <supported-public-render-parameter>boundingbox</supported-public-render-parameter>
+    <supported-public-render-parameter>metadata</supported-public-render-parameter>
+  </portlet>
+  
+  <portlet>
+    <portlet-name>gd-search-atomfeed</portlet-name>
+    <display-name>Search Result</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-atomfeed-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Suchergebnisse als AtomFeed</title>
+      <short-title>GovData AtomFeed</short-title>
+      <keywords>Suche</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+    <supported-public-render-parameter>q</supported-public-render-parameter>
+    <supported-public-render-parameter>f</supported-public-render-parameter>
+    <supported-public-render-parameter>s</supported-public-render-parameter>
+    <supported-public-render-parameter>start</supported-public-render-parameter>
+    <supported-public-render-parameter>end</supported-public-render-parameter>
+    <supported-public-render-parameter>boundingbox</supported-public-render-parameter>
+    <supported-public-render-parameter>metadata</supported-public-render-parameter>
+  </portlet>
+
+  <portlet>
+    <portlet-name>gd-search-details</portlet-name>
+    <display-name>Metadata Detailseite</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/metadatadetails-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-details-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Metadata Detailseite</title>
+      <short-title>GovData Metadata Detailseite</short-title>
+      <keywords>Details</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+    <supported-public-render-parameter>metadata</supported-public-render-parameter>
+  </portlet>
+
+  <public-render-parameter>
+    <identifier>q</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:q</qname>
+  </public-render-parameter>
+  <public-render-parameter>
+    <identifier>f</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:f</qname>
+  </public-render-parameter>
+  <public-render-parameter>
+    <identifier>s</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:s</qname>
+  </public-render-parameter>
+  <public-render-parameter>
+    <identifier>start</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:start</qname>
+  </public-render-parameter>
+  <public-render-parameter>
+    <identifier>end</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:end</qname>
+  </public-render-parameter>
+  <public-render-parameter>
+    <identifier>boundingbox</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:boundingbox</qname>
+  </public-render-parameter>
+  <public-render-parameter>
+    <identifier>metadata</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:metadata</qname>
+  </public-render-parameter>
+
+</portlet-app>

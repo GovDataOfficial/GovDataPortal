@@ -27,18 +27,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.jboss.resteasy.client.ClientExecutor;
-import org.jboss.resteasy.client.ProxyFactory;
-import org.jboss.resteasy.client.core.executors.ApacheHttpClient4Executor;
-import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.fhg.fokus.odp.registry.solr.SOLRClient;
 import de.fhg.fokus.odp.registry.solr.SolrException;
@@ -85,12 +86,14 @@ public class SOLRClientImpl implements SOLRClient {
 	@Override
 	public void init(Properties props) {
 
-		RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
-		ClientExecutor executor = new ApacheHttpClient4Executor(
-				new DefaultHttpClient(new ThreadSafeClientConnManager()));
+    String solrurl = props.getProperty(PROPERTY_NAME_SOLR_URL);
 
-		String solrurl = props.getProperty(PROPERTY_NAME_SOLR_URL);
-		solrutil = ProxyFactory.create(SOLRClientUtil.class, solrurl, executor);
+    CloseableHttpClient httpClient =
+        HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager()).build();
+    ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpClient);
+    ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
+    ResteasyWebTarget target = client.target(solrurl);
+    solrutil = target.proxy(SOLRClientUtil.class);
 	}
 
 	/*
@@ -115,7 +118,7 @@ public class SOLRClientImpl implements SOLRClient {
 				log.debug("/spell: {}ms", System.currentTimeMillis() - start);
 				ObjectMapper mapper = new ObjectMapper();
 
-				result = mapper.readTree((String) resultStr);
+				result = mapper.readTree(resultStr);
 			} catch (JsonProcessingException je) {
 				log.error("spellingSuggestions:JsonProcessingException:"
 						+ je.getMessage());
@@ -126,7 +129,7 @@ public class SOLRClientImpl implements SOLRClient {
 			}
 			if (result != null) {
 				JsonNode collationNode = getSuggestionsResultList(result);
-				String collation = collationNode.getTextValue();
+        String collation = collationNode.textValue();
 				if (collation != null && !collation.isEmpty())
 					spellingSuggesList.add(new MString(collation));
 			}

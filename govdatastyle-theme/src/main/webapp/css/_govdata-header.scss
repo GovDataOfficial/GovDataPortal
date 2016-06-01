@@ -1,0 +1,288 @@
+$row1-height: rem-calc(50px);
+$row1-height-small: rem-calc(40px);
+$row2-height: rem-calc(19px);
+$buttons-width: rem-calc(112px);
+$buttons-width-small: rem-calc(40px); // quadratic
+$search-area-max-width: rem-calc(770);
+
+.gd-search-container {
+  padding-bottom: 4px;
+}
+
+.gd-search {
+  background-position: 50% 50%;
+  background-size: cover;
+  box-shadow: 0px 2px 2px rgba($black, .4);
+
+  @media #{$small-only} {
+    padding: 0;
+  }
+  @media #{$medium-only} {
+    padding: rem-calc(15) 0;
+  }
+  @media #{$large-up} {
+    padding: rem-calc(25) 0;
+  }
+
+  .row.gd-search-titlearea {
+    padding-left: 0;
+    padding-right: 0;
+
+    .column {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    @media #{$small-only} {
+      .maintitle,
+      .maintitle-teaser {
+        display: block;
+      }
+    }
+
+    @media #{$large-up} {
+      padding-left: $column-gutter;
+      padding-right: $column-gutter;
+    }
+  }
+}
+
+.gd-search-searchbox {
+  margin: 0 auto;
+  max-width: $search-area-max-width;
+  width: 100%;
+}
+
+.max-width-as-searchbox {
+  max-width: $search-area-max-width;
+}
+
+.gd-search-searchrow1,
+.gd-search-searchrow2 {
+  button,
+  .button-mapsearch {
+    box-shadow: 1px 1px 4px rgba($black, .5);
+  }
+}
+
+.gd-search-searchrow1 {
+  height: $row1-height;
+  position: relative;
+
+  @media #{$small-only} {
+    height: $row1-height-small;
+  }
+}
+
+.aui {
+  .gd-search {
+    form {
+      margin: 0;
+    }
+
+    .button-search,
+    .button-mapsearch {
+      width: $buttons-width;
+    }
+
+    .button-search {
+      .sbi-lupe {
+        font-size: 1.7em;
+      }
+
+      @media #{$small-only} {
+        width: $buttons-width-small;
+      }
+    }
+
+    .input-search {
+      height: $row1-height;
+      border-width: 2px;
+
+      @media #{$small-only} {
+        height: $row1-height-small;
+      }
+    }
+
+    .gd-search-searchrow2 {
+      margin-top: 3px;
+      text-align: right;
+
+      .button-search
+      .button-mapsearch {
+        font-size: 12px;
+        font-weight: bold;
+        //height: $row2-height;
+        height: 24px;
+        //line-height: $row2-height;
+        line-height: 24px;
+      }
+    }
+  }
+
+  .gd-search-q {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: $buttons-width;
+    top: 0;
+
+    @media #{$small-only} {
+      right: $buttons-width-small;
+    }
+  }
+
+  .gd-search-submit {
+    .button-search,
+    .button-mapsearch {
+      border-radius: 0;
+      height: $row1-height;
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      @media #{$small-only} {
+        height: $row1-height-small;
+      }
+    }
+  }
+
+  .button-mapsearch {
+    display: inline-block;
+    text-align: center;
+  }
+}
+
+.gd-search-box-container {
+  background-color: rgba($black, .5);
+
+  @media #{$large-up} {
+    padding: 0 rem-calc(15);
+  }
+
+  .column {
+    @media #{$small-only} {
+      padding-left: 0;
+      padding-right: 0;
+
+      // margin only between infoboxes, not above the first
+      &:not(:first-child) {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .gd-search-box {
+    @extend .sb-chapter-sub;
+    background-color: rgba($black, .3);
+    background-image: none;
+    color: $white;
+    font-weight: bold;
+    overflow: hidden;
+    width: 100%;
+
+    @media #{$small-only} {
+      height: 130px;
+      padding: rem-calc(5);
+    }
+    @media #{$medium-only} {
+      height: 150px;
+      padding: rem-calc(10);
+    }
+    @media #{$large-up} {
+      height: 200px;
+      padding: rem-calc(10);
+    }
+
+    .box-header {
+      display: table-cell;
+
+      @media #{$small-only} {
+        padding-bottom: rem-calc(5);
+      }
+      @media #{$medium-only} {
+        padding-bottom: rem-calc(15);
+      }
+      @media #{$large-up} {
+        padding-bottom: rem-calc(20);
+      }
+    }
+
+    .box-content {
+      display: table-cell;
+      height: 100%;
+    }
+  }
+}
+
+.kartensuche-map {
+  background-image: url('$stylepath/images/teaserband_map.png');
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100%;
+  width: 100%;
+}
+
+
+// conditional styling (big / small header?)
+.show-big-header {
+  background-image: url($stylepath + '/images/datavisuals/connectionmap.jpg');
+
+  .gd-search-searchbox {
+    @media #{$small-only} {
+      padding: 30px 15px 20px;
+    }
+    @media #{$medium-only} {
+      padding: 55px 15px 45px;
+    }
+    @media #{$large-up} {
+      padding: 120px 15px 50px;
+    }
+  }
+}
+
+.show-small-header {
+  @media #{$small-only} {
+    padding: rem-calc(15) 0;
+  }
+  @media #{$medium-only} {
+    padding: rem-calc(25) 0;
+  }
+  @media #{$large-up} {
+    padding: rem-calc(35) 0;
+  }
+
+  .gd-search-searchrow1,
+  .gd-search-searchrow2 {
+    margin-left: rem-calc(15);
+    margin-right: rem-calc(15);
+  }
+}
+
+.searchFormPlaceholder {
+  height: rem-calc(90);
+}
+
+// autocomplete
+.yui3-skin-sam {
+  .yui3-aclist-content {
+    margin: 0;
+    position: relative;
+  }
+
+  .yui3-aclist-item {
+    padding: .5em;
+
+    &:hover,
+    &:focus,
+    &.yui3-aclist-item-active {
+      background-color: $dark-gray;
+      color: $white;
+    }
+  }
+
+  .yui3-aclist-list {
+    margin: 0;
+  }
+}

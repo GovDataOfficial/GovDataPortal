@@ -3,22 +3,21 @@
  *
  * This file is part of Open Data Platform.
  *
- * Open Data Platform is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * Open Data Plaform is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * Open Data Platform is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU Affero General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.
+ * 
+ * Open Data Plaform is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
-
- * You should have received a copy of the GNU Affero General Public License
- * along with Open Data Platform.  If not, see <http://www.gnu.org/licenses/agpl-3.0>.
+ * 
+ * You should have received a copy of the GNU Affero General Public License along with Open Data
+ * Platform. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
  */
 
 package de.fhg.fokus.odp.boxes;
 
+import java.io.Serializable;
 // imports
 import java.util.List;
 
@@ -33,9 +32,11 @@ import org.slf4j.LoggerFactory;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 
 import de.fhg.fokus.odp.registry.model.Dataset;
+import de.seitenbau.govdata.clean.StringCleaner;
 
 /**
- * The class constitutes a bean that serves as a source for the latest datasets on the start page boxes.
+ * The class constitutes a bean that serves as a source for the latest datasets on the start page
+ * boxes.
  * 
  * @author Nikolay Tcholtchev, Fraunhofer FOKUS
  * @author Benjamin Dittwald, Fraunhofer FOKUS
@@ -43,70 +44,90 @@ import de.fhg.fokus.odp.registry.model.Dataset;
  */
 @ManagedBean
 @SessionScoped
-public class Datasets {
+public class Datasets implements Serializable
+{
+  private static final long serialVersionUID = 2779218730850295343L;
 
-    /** The cache name. */
-    private final String CACHE_NAME = "de.fhg.fokus.odp.boxes";
+  /** The cache name. */
+  private final String CACHE_NAME = "de.fhg.fokus.odp.boxes";
 
-    /** The cache datasets key. */
-    private final String CACHE_DATASETS_KEY = "datasets";
+  /** The cache datasets key. */
+  private final String CACHE_DATASETS_KEY = "datasets";
 
-    /** The log. */
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+  /** The log. */
+  private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    /** The maximum number of the latest datasets to show. */
-    private final int maximumNumberOfDatasets = 4;
+  /** The maximum number of the latest datasets to show. */
+  private final int maximumNumberOfDatasets = 2;
 
-    /** The datasets. */
-    private List<Dataset> datasets;
+  /** The datasets. */
+  private List<Dataset> datasets;
 
-    /** The registry client. */
-    @ManagedProperty("#{registryClient}")
-    private RegistryClient registryClient;
+  /** The registry client. */
+  @ManagedProperty("#{registryClient}")
+  private RegistryClient registryClient;
 
-    /**
-     * An init method for the bean.
-     */
-    @SuppressWarnings("unchecked")
-    @PostConstruct
-    public void init() {
+  /**
+   * An init method for the bean.
+   */
+  @SuppressWarnings("unchecked")
+  @PostConstruct
+  public void init()
+  {
 
-        datasets = (List<Dataset>) MultiVMPoolUtil.get(CACHE_NAME, CACHE_DATASETS_KEY);
+    datasets = (List<Dataset>) MultiVMPoolUtil.getCache(CACHE_NAME).get(CACHE_DATASETS_KEY);
 
-        if (datasets == null) {
-            LOG.info("Empty {} cache, fetching datasets from CKAN.", CACHE_DATASETS_KEY);
-            datasets = registryClient.getLatestDatasets(maximumNumberOfDatasets);
-            MultiVMPoolUtil.put(CACHE_NAME, CACHE_DATASETS_KEY, datasets);
-        }
+    if (datasets == null)
+    {
+      LOG.info("Empty {} cache, fetching datasets from CKAN.", CACHE_DATASETS_KEY);
+      datasets = getLatestDatasets(maximumNumberOfDatasets);
+      // safe cast: LinkedList
+      MultiVMPoolUtil.getCache(CACHE_NAME).put(CACHE_DATASETS_KEY, (Serializable) datasets);
     }
+  }
 
-    /**
-     * Gets the datasets.
-     * 
-     * @return the datasets.
-     */
-    public List<Dataset> getDatasets() {
-        return datasets;
+  private List<Dataset> getLatestDatasets(int maximumNumberOfDatasets)
+  {
+    List<Dataset> datasets = registryClient.getLatestDatasets(maximumNumberOfDatasets);
+    if (datasets != null)
+    {
+      for (Dataset dataset : datasets)
+      {
+        String notes = dataset.getNotes();
+        dataset.setNotes(StringCleaner.trimAndFilterString(notes));
+      }
     }
+    return datasets;
+  }
 
-    /**
-     * Sets the datasets.
-     * 
-     * @param datasets
-     *            the datasets.
-     */
-    public void setCategories(List<Dataset> datasets) {
-        this.datasets = datasets;
-    }
+  /**
+   * Gets the datasets.
+   * 
+   * @return the datasets.
+   */
+  public List<Dataset> getDatasets()
+  {
+    return datasets;
+  }
 
-    /**
-     * Sets the registry client.
-     * 
-     * @param registryClient
-     *            the registryClient to set
-     */
-    public void setRegistryClient(RegistryClient registryClient) {
-        this.registryClient = registryClient;
-    }
+  /**
+   * Sets the datasets.
+   * 
+   * @param datasets the datasets.
+   */
+  public void setCategories(List<Dataset> datasets)
+  {
+    this.datasets = datasets;
+  }
+
+  /**
+   * Sets the registry client.
+   * 
+   * @param registryClient the registryClient to set
+   */
+  public void setRegistryClient(RegistryClient registryClient)
+  {
+    this.registryClient = registryClient;
+  }
 
 }

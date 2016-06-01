@@ -21,7 +21,7 @@ package de.fhg.fokus.odp.registry.ckan.impl;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.fhg.fokus.odp.registry.ckan.ODRClientImpl;
 import de.fhg.fokus.odp.registry.ckan.json.ResourceBean;
@@ -118,4 +118,16 @@ public class ResourceImpl implements Resource, Serializable {
 	public JsonNode write() {
 		return ODRClientImpl.convert(resource);
 	}
+
+  @Override
+  public String getName()
+  {
+    return resource.getName();
+  }
+
+  @Override
+  public void setName(String name)
+  {
+    resource.setName(name);
+  }
 }

@@ -1,0 +1,555 @@
+.design-box {
+  background-color: $white;
+  border-color: $kontur-gray;
+  border-style: solid;
+  border-width: 0 1px 1px 0;
+}
+
+.design-box-padding {
+  padding: rem-calc(15);
+
+  @media #{$large-up} {
+    padding: rem-calc(24);
+  }
+}
+
+.column .design-box-padding:not(:last-child) {
+  margin-bottom: rem-calc(30);
+}
+
+// Style for the webcontent-box used on pages
+.aui .portlet-journal-content {
+  @extend .design-box;
+  border-width: 0 0 1px;
+
+  .portlet-topper h1 {
+    padding: 0;
+  }
+
+  > section {
+    margin: 0 auto;
+    max-width: rem-calc(1440 - 1);
+    padding: rem-calc(1) rem-calc(15) rem-calc(25);
+    width: 100%;
+
+    @media #{$large-up} {
+      padding: rem-calc(1) rem-calc(30) rem-calc(25);
+    }
+  }
+}
+
+// and for editing web-content
+.aui .article-form-edit {
+  margin: 0 auto;
+  max-width: rem-calc(1440 - 1);
+  padding: rem-calc(1) rem-calc(15) rem-calc(25);
+  width: 100%;
+
+  @media #{$large-up} {
+    padding: rem-calc(1) rem-calc(30) rem-calc(25);
+  }
+
+  .button-holder button {
+    margin-top: .3em;
+  }
+}
+
+h3.header-title {
+  padding: .25em;
+}
+
+// Action-Button used e.g. in Webcontent
+.aui a.action-button {
+  @extend .h2-metainfo;
+  background-color: $dark-gray;
+  border: 1px solid $dark-gray;
+  border-radius: rem-calc(5);
+  color: $white;
+  display: inline-block;
+  font-weight: bold;
+  padding: rem-calc(12) rem-calc(30);
+  text-decoration: none;
+
+  &:active,
+  &:hover,
+  &:focus {
+    background-color: $white;
+    color: $dark-gray;
+  }
+
+  &:focus {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 3px $link-blue;
+  }
+}
+
+
+// the tag-element
+.aui .sb-tag {
+  @extend .h2-metainfo;
+  background-color: $white;
+  border: 1px solid $dark-gray;
+  border-radius: rem-calc(5);
+  color: $dark-gray;
+  margin: rem-calc(5);
+  padding: rem-calc(3) rem-calc(6);
+  text-decoration: none;
+
+  &:active,
+  &:hover,
+  &:focus {
+    background-color: $dark-gray;
+    border-color: $white;
+    color: $white;
+    text-decoration: none;
+  }
+
+  &:focus {
+    @include focus-glow;
+  }
+}
+
+.aui .btn {
+  @extend .h2-metainfo;
+  background: $dark-gray;
+  border: 1px solid $dark-gray;
+  border-radius: rem-calc(5);
+  box-shadow: none;
+  color: $white;
+  font-weight: bold;
+  padding: .6em 2em;
+  text-decoration: none;
+  text-shadow: none;
+
+  &:active,
+  &:disabled,
+  &:hover,
+  &:focus {
+    background-color: $white;
+    color: $dark-gray;
+  }
+
+  &:focus {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 3px $link-blue;
+  }
+
+  &.square {
+    padding: .6em;
+  }
+}
+
+.aui .btn-danger {
+  background-color: $deletered;
+  border: 1px solid $deletered;
+
+  &:active,
+  &:disabled,
+  &:hover,
+  &:focus {
+    color: $deletered;
+  }
+}
+
+.aui .iconlink {
+  background-color: $dark-gray;
+  border: 1px solid $dark-gray;
+  border-radius: 4px;
+  display: inline-block;
+  margin-left: .6em;
+  position: relative;
+  top: -.1em;
+
+  img {
+    box-sizing: content-box;
+    padding: .2em;
+    width: .7em;
+  }
+
+  &:hover {
+    background-color: $white;
+
+    img {
+      -moz-filter: invert(1);
+      -ms-filter: invert(1);
+      -o-filter: invert(1);
+      -webkit-filter: invert(1);
+      filter: invert(1);
+    }
+  }
+}
+
+.aui .feedicon-article {
+  font-size: 1.1em;
+  line-height: 0.6em;
+  top: -0.4em;
+  margin-left: 0.3em;
+}
+
+// more buttonstyles for links...
+.buttongroup {
+  .linkbutton:first-child {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+  }
+
+  .linkbutton:last-child {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+}
+
+.linkbutton {
+  @extend .h2-metainfo;
+  border: 1px solid $dark-gray;
+  display: inline-block;
+  font-weight: bold;
+  padding: .3em 1em;
+
+  &.selected {
+    background-color: $dark-gray;
+    color: $white;
+
+    &:hover {
+      background-color: $white;
+      color: $dark-gray;
+    }
+  }
+
+  &.rounded {
+    border-radius: 4px;
+  }
+}
+
+// off-canvas
+.off-canvas-inner-wrap { // innerwrap for off-canvas menu
+  position: relative;
+  top: 0;
+}
+
+.off-canvas-container {
+  .design-box {
+    border: 0;
+  }
+}
+
+// link to dataset
+.goto-entry {
+  border-radius: rem-calc(3);
+  bottom: rem-calc(10);
+  padding: rem-calc(5);
+  position: absolute;
+  right: rem-calc(10);
+
+  @media #{$large-up} {
+    bottom: rem-calc(19);
+    right: rem-calc(19);
+  }
+
+  div {
+    font-weight: bold;
+    line-height: rem-calc(30);
+    margin-right: rem-calc(38);
+    position: relative;
+
+    &::after {
+      content: 'd';
+      speak: none;
+      font-family: 'govdata';
+      font-size: rem-calc(30px);
+      font-weight: normal;
+      line-height: rem-calc(30px);
+      position: absolute;
+      right: rem-calc(-38px);
+      top: 0;
+    }
+  }
+}
+
+.goto-entry-spacer {
+  height: rem-calc(40px);
+}
+
+.boxesportlet-box .goto-entry-spacer {
+  height: rem-calc(40px);
+}
+
+// dropdown for filter/sort selection on mobile
+.mobile-dropdown select {
+  @extend .h2-metainfo;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url($stylepath + '/images/select-arrow-down.png') no-repeat right center $dark-gray;
+  border: 0;
+  border-radius: 0;
+  box-shadow: 1px 1px 1px $kontur-gray;
+  color: $white;
+  font-weight: bold;
+  padding: .7em .5em;
+  width: 100%;
+}
+
+// special case for searchdetails... where we only need this box to be on the right on mobile displays
+.floatcontainer-right {
+  float: right !important;
+}
+
+.share-borderbox {
+  border-top: 1px solid $kontur-gray;
+  border-bottom: 1px solid $kontur-gray;
+  padding: 1em 0;
+  margin: 0 1em 3em;
+
+  @media #{$large-up} {
+    margin: 0 rem-calc(30) 3em;
+  }
+}
+
+.share-container {
+  @media #{$medium-up} {
+    float: right;
+  }
+
+  .shariff {
+    @media #{$medium-up} {
+      float: right;
+    }
+  }
+
+  .share-label {
+    @extend .h2-metainfo;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 35px;
+    margin-right: 2em;
+    vertical-align: middle;
+  }
+}
+
+.offscreen {
+  display: inline;
+  height: 1px;
+  left: -10000px;
+  overflow: hidden;
+  position: absolute;
+  top: auto;
+  width: 1px;
+}
+
+// category style
+.aui .categories {
+  margin: 0 0 5px;
+  padding: 0;
+
+  .category-item {
+    margin: 5px 0;
+  }
+}
+
+// external links
+.portlet-journal-content,
+.portlet-blogs .entry-body,
+.link-to-source,
+.searchdetails .h2-teaser {
+  a[href]::after {
+    content: ' h';
+    speak: none;
+    font-family: 'govdata';
+    font-size: 80%;
+    font-weight: normal;
+    display: inline-block;
+    padding: 0 .4em;
+  }
+
+  a[href^="/"],
+  a[href^="#"],
+  a[href^="javascript:"],
+  a[href^="https://govdata"],
+  a[href^="https://www.govdata"],
+  a[href^="http://localhost"], //TODO: Remove localhost, gd.swe... for production....
+  a[href^="https://localhost"],
+  a[href*="gd.swe.seitenbau.net"] {
+    &::after {
+      display: none;
+    }
+  }
+
+}
+
+// styles for semantic markup
+.aui {
+  .inline-list {
+    dt,
+    dd {
+      display: inline;
+    }
+  }
+
+  .flat-list {
+    margin: 0;
+
+    li {
+      display: block;
+    }
+  }
+}
+
+// style for dropdowns
+.dropdown-canvas:not(:empty) {
+  background-color: $white;
+  border: 1px solid $dark-gray;
+  margin: 0;
+
+  li {
+    box-sizing: content-box;
+    display: block;
+    position: relative;
+  }
+
+  a {
+    display: block;
+  }
+}
+
+.f-dropdown {
+  left: -99999px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+
+  &.open {
+    z-index: 89;
+  }
+}
+
+.flex-container {
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+}
+
+.overflowscroll {
+  overflow: auto;
+}
+
+// --- rating stars
+.aui .rating-element,
+.rating-content .icon-star,
+.rating-content .icon-star-empty {
+  background: none;
+  border: 0;
+  font-size: rem-calc(22px);
+  padding: .1em;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $black;
+    background: inherit;
+  }
+}
+
+.rating-area .rating-element, // to have more priority...
+.rating-element {
+  &.active {
+    color: $black;
+    @extend .sbi-sterne-bewertung-full;
+  }
+
+  &.sbi-sterne-bewertung,
+  &.sbi-sterne-bewertung-full {
+    &::before {
+      font-size: rem-calc(20px);
+      line-height: rem-calc(20px);
+      padding: 0;
+    }
+  }
+}
+
+.rating-mean {
+  @extend .filterresultcount;
+  margin-left: auto;
+}
+
+.aui .rating-area {
+  margin-top: rem-calc(5);
+
+  & > span {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+.details-rating,
+.rating-area {
+  @extend .flex-container;
+}
+
+.aui .taglib-ratings.stars {
+  overflow: hidden;
+
+  .liferay-rating-vote,
+  .liferay-rating-score {
+    display: inline-block;
+    float: none;
+    margin: .5rem rem-calc(15px) 0 0;
+    padding: 0;
+  }
+
+  .rating-content,
+  .rating-label {
+    //margin: .1em;
+  }
+}
+
+// buttons for search actions
+.aui {
+  .button-search,
+  .button-mapsearch {
+    @extend .h2-metainfo;
+    background-color: $dark-gray;
+    background-image: none;
+    border: 0;
+    color: $white;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 0;
+
+    &:focus,
+    &:hover,
+    &:active {
+      background-color: $white;
+      color: $dark-gray;
+    }
+  }
+
+  .button-mapsearch {
+    font-size: 12px;
+    line-height: 24px;
+  }
+
+  .button-search .sbi-lupe {
+    font-weight: normal;
+  }
+
+  input.input-search { // must be this specific, because AUI must be overruled
+    @extend .h2-metainfo;
+    background-image: none;
+    border-radius: 0;
+    border: 1px solid $dark-gray;
+    box-sizing: border-box;
+    color: $black;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+    margin: 0;
+    max-width: 100% !important; // AUI cost me 2h of my life to find this ios-specific "enhancement"... grml.
+    padding: 4px 16px;
+    width: 100%;
+    -webkit-appearance: none;
+
+    &:focus {
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $link-blue;
+      border-color: $link-blue;
+    }
+  }
+}

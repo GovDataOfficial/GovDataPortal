@@ -26,13 +26,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.fhg.fokus.odp.registry.ckan.ODRClientImpl;
 import de.fhg.fokus.odp.registry.ckan.json.ContactBean;
 import de.fhg.fokus.odp.registry.model.Contact;
 import de.fhg.fokus.odp.registry.model.RoleEnumType;
-import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
 import de.fhg.fokus.odp.registry.model.exception.UnknownRoleException;
 
 /**
@@ -64,7 +63,7 @@ public class ContactImpl implements Contact, Serializable {
 
     @Override
     public RoleEnumType getRole() throws UnknownRoleException {
-    	String role = contact.getRole();    	
+        String role = contact.getRole();
         return RoleEnumType.fromField(role);
     }
 
@@ -114,9 +113,23 @@ public class ContactImpl implements Contact, Serializable {
         }
         return contactList;
     }
+    
+    public String toString() {
+      try
+      {
+        return "{name: «" +this.getName() + "», email: «" + this.getEmail() + "», role: «" + this.getRole() + "»}";
+      }
+      catch (UnknownRoleException e)
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return null;
+    }
 
-	public JsonNode write() {
-		return ODRClientImpl.convert(contact);
-	}
+  public JsonNode write()
+  {
+    return ODRClientImpl.convert(contact);
+  }
 
 }

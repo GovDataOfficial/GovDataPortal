@@ -19,6 +19,7 @@
 
 package de.fhg.fokus.odp.boxes;
 
+import java.io.Serializable;
 // imports
 import java.util.List;
 import java.util.Properties;
@@ -35,7 +36,6 @@ import de.fhg.fokus.odp.registry.ODRClient;
 import de.fhg.fokus.odp.registry.model.Application;
 import de.fhg.fokus.odp.registry.model.Dataset;
 import de.fhg.fokus.odp.registry.model.Document;
-import de.fhg.fokus.odp.registry.model.Tag;
 import de.fhg.fokus.odp.registry.queries.Query;
 import de.fhg.fokus.odp.registry.queries.QueryResult;
 import de.fhg.fokus.odp.spi.OpenDataRegistry;
@@ -47,9 +47,10 @@ import de.fhg.fokus.odp.spi.OpenDataRegistry;
  */
 @ManagedBean
 @SessionScoped
-public class RegistryClient {
+public class RegistryClient implements Serializable {
+	private static final long serialVersionUID = 705645042441128266L;
 
-    private final static Logger log = LoggerFactory.getLogger(RegistryClient.class);
+	private final static Logger log = LoggerFactory.getLogger(RegistryClient.class);
 
     /** The name of the configuration property for the authentication key. */
     private static final String PROP_NAME_AUTHORIZATION_KEY = "authenticationKey";
@@ -69,74 +70,6 @@ public class RegistryClient {
         props.setProperty("ckan.authorization.key", PropsUtil.get(PROP_NAME_AUTHORIZATION_KEY));
         props.setProperty("ckan.url", PropsUtil.get(PROP_NAME_CKAN_URL));
         clientInstance.init(props);
-    }
-
-    /**
-     * Method for sorting the list of tags.
-     * 
-     * @param tagsList
-     *            the list of the tags.
-     * @param numberOfTags
-     *            the numberOfTags to take from the beginning of the list.
-     * @return an array with the corresponding number of tags sorted according to their counts.
-     */
-    private Tag[] sortMostPopularTags(List<Tag> tagsList, int numberOfTags) {
-
-        // the variable to return
-        Tag[] toreturn = new Tag[numberOfTags];
-
-        // a help array to sort the tags
-        long[] countsArray = new long[numberOfTags];
-        // iterate over the list
-        for (int i = 0; i < tagsList.size(); i++) {
-            // get the number of counts for the current tag
-            long count = tagsList.get(i).getCount();
-
-            // search for the position of the current tag in the sorted list
-            int j;
-            for (j = countsArray.length - 1; j >= 0; j--) {
-                if (countsArray[j] >= count) {
-                    break;
-                }
-            }
-
-            // if the current tag should NOT be taken into the sorted list
-            // because its count is too small
-            if (j == countsArray.length - 1) {
-                continue;
-            }
-
-            // if the current tag belongs to the list
-            // --> then insert it at the belonging position
-            for (int k = numberOfTags - 1; k > j + 1; k--) {
-                toreturn[k] = toreturn[k - 1];
-                countsArray[k] = countsArray[k - 1];
-            }
-            countsArray[j + 1] = count;
-            toreturn[j + 1] = tagsList.get(i);
-        }
-
-        return toreturn;
-
-    }
-
-    /**
-     * The method returns the most popular tags.
-     * 
-     * @param numberOfTags
-     *            the number of most popular tags to return.
-     * 
-     * @return a list with the most popular tags or null if anything has gone wrong.
-     */
-    public Tag[] getMostPopularTags(int numberOfTags) {
-
-        // get the list with the tag counts
-        long start = System.currentTimeMillis();
-        List<Tag> tagsList = clientInstance.getTagCounts();
-        log.debug("getTagCounts duration: {} ms", System.currentTimeMillis() - start);
-
-        // return the result
-        return sortMostPopularTags(tagsList, numberOfTags);
     }
 
     /**

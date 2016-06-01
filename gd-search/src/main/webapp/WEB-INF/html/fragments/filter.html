@@ -1,0 +1,37 @@
+<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+
+  <ul th:fragment="typeFilter(typeFilterList)" class="document-type-list show-for-medium-up"><!--
+ --><th:block th:each="filterModel : ${typeFilterList}"><!--
+   --><th:block th:with="selectedClass=${filterModel.active ? ' selected' : ''},allClass=${(#strings.equals(filterModel.name, 'all') ? ' document-type-all' : '')}"><!--
+   --><li th:class="'document-type-item' + ${allClass} + ' no-results'"
+        th:if="${filterModel.docCount == 0}">
+        [[#{'od.gdsearch.searchresult.filter.label.' + ${filterModel.name}}]] <span th:text="${filterModel.docCount}"></span></li><!--
+   --><li th:class="${(#strings.equals(filterModel.name, 'all') ? 'type-all-container' : '')}"
+        th:if="${filterModel.docCount > 0}">
+        <a th:class="'document-type-item' + ${allClass} + ${selectedClass}"
+          th:href="@{${filterModel.actionURL}}" th:attr="aria-selected=${filterModel.active ? 'true' : 'false'}">
+          [[#{'od.gdsearch.searchresult.filter.label.' + ${filterModel.name}}]] <span th:text="${filterModel.docCount}"></span>
+        </a>
+      </li><!--
+   --></th:block><!--
+ --></th:block><!--
+--></ul>
+
+  <dl th:fragment="facetFilter(facetList, facetName, groupTitle, hideMoreThanFive)" class="filtergroup">
+    <dt class="filtergroup-title" th:text="${groupTitle}"></dt>
+    <dd th:each="filterModel, iterStat : ${facetList}">
+      <a th:href="${filterModel.actionURL}"
+        th:if="${filterModel.docCount} != 0"
+        th:title="'Filter ' + ${filterModel.name} + ' aktivieren'"
+        th:class="'checkboxrow' + (${filterModel.active} ? ' checked' : '') + (${hideMoreThanFive} and ${iterStat.count} gt 5 ? ' show-more-hidden' : '')">
+        <div class="checkbox" th:text="${filterModel.active} ? 'a' : ''"></div>
+        <span class="offscreen" th:if="${filterModel.active}">(ausgewählt)</span>
+        <div class="filtername" th:text="${filterModel.displayName}"></div>
+        <div class="filterresultcount" th:if="${filterModel.docCount} > 0">[[${filterModel.docCount}]]</div>
+      </a>
+    </dd>
+    <dd th:if="${hideMoreThanFive} and ${#lists.size(facetList)} gt 5">
+      <a href="#" class="show-more-button">[[#{'od.gdsearch.searchresult.filter.showmore'}]]</a>
+    </dd> 
+  </dl>
+</div>

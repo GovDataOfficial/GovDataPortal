@@ -10,7 +10,7 @@
 			<scheduler-event-listener-class>de.fhg.fokus.odp.cache.scheduler.CacheScheduler</scheduler-event-listener-class>
 			<trigger>
 				<cron>
-					<cron-trigger-value>0 0 0 * * ?</cron-trigger-value>
+					<cron-trigger-value>0 0 * * * ?</cron-trigger-value>
 				</cron>
 			</trigger>
 		</scheduler-entry>

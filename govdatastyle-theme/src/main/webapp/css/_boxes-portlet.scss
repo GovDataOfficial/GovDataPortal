@@ -1,0 +1,74 @@
+@import 'liferayvars';
+
+.aui h2.boxesportlet-title {
+  font-weight: bold;
+
+  a {
+    &:focus,
+    &:active,
+    &:hover {
+      background-color: transparent;
+      color: $black;
+
+      .more-linklabel {
+        background-color: $white;
+        color: $dark-gray;
+      }
+    }
+  }
+}
+
+.aui .more-linklabel {
+  background-color: $dark-gray;
+  border: 1px solid $dark-gray;
+  font-size: 14px;
+  line-height: 18px;
+  margin-left: rem-calc(15);
+  vertical-align: middle;
+}
+
+.boxesportlet-box {
+  color: $black;
+  margin-bottom: rem-calc(30);
+  padding: rem-calc(15);
+  position: relative;
+
+  &:hover h2,
+  &:hover .goto-entry {
+    text-decoration: underline;
+  }
+}
+
+.boxtext {
+  margin-bottom: 20px;
+}
+
+.boxcategory,
+.boxlicence {
+  position: relative;
+
+  img {
+    left: 0;
+    margin-right: .5em;
+    position: absolute;
+    top: 0;
+  }
+
+  .box-name {
+    margin-left: rem-calc(31);
+  }
+}
+
+.boxlicence {
+  margin: 5px 0;
+}
+
+.boxes-portlet {
+  ul.row {
+    display: block;
+  }
+
+  li.column {
+    display: block;
+  }
+}

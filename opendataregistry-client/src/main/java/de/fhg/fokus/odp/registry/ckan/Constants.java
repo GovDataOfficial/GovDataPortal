@@ -62,10 +62,10 @@ public interface Constants {
 	static final String JSON_FIELD_LICENCE = "terms_of_use";
 
 	/** The Constant JSON_FIELD_COVERAGEFROM. */
-	static final String JSON_FIELD_COVERAGEFROM = "temporal_coverage_from";
+  static final String JSON_FIELD_COVERAGEFROM = "temporal_coverage_from";
 
 	/** The Constant JSON_FIELD_COVERAGETO. */
-	static final String JSON_FIELD_COVERAGETO = "temporal_coverage_to";
+  static final String JSON_FIELD_COVERAGETO = "temporal_coverage_to";
 
 	static final String JSON_FIELD_SECTOR = "sector";
 
@@ -93,10 +93,5 @@ public interface Constants {
 	static final String JSON_FIELD_ALL_FIELDS = "all_fields";
 
 	static final String JSON_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
-
-	static final String[] dateFormats = { "yyyy-MM-dd HH:mm:ss",
-			"yyyy-MM-dd HH:mm:ssZ", "yyyy-MM-dd HH:mm:ss Z",
-			"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ssZ", "yyyy-MM-dd",
-			"dd.MM.yyyy" };
 
 }

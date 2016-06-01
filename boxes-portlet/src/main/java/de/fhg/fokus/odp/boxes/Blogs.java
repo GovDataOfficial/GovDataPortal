@@ -19,11 +19,11 @@
 
 package de.fhg.fokus.odp.boxes;
 
+import java.io.Serializable;
 // imports
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -38,100 +38,116 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 
+import de.seitenbau.govdata.clean.StringCleaner;
+
 /**
- * The class constitutes a bean that serves as a source for the latest blogs on
- * the start page boxes.
+ * The class constitutes a bean that serves as a source for the latest blogs on the start page
+ * boxes.
  * 
  * @author Majid Salehi, Fraunhofer FOKUS
- * 
+ * @author rnoerenberg
  * 
  */
 @ManagedBean
 @SessionScoped
-public class Blogs {
+public class Blogs implements Serializable {
+  private static final long serialVersionUID = 5336951701667722369L;
 
-	/** The cache name. */
-	private final String CACHE_NAME = "de.fhg.fokus.odp.boxes";
+  /** The cache name. */
+  private final String CACHE_NAME = "de.fhg.fokus.odp.boxes";
 
-	/** The cache datasets key. */
-	private final String CACHE_BLOGS_KEY = "blogs";
+  /** The cache datasets key. */
+  private final String CACHE_BLOGS_KEY = "blogs";
 
-	/** The log. */
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
+  /** The log. */
+  private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-	/** The maximum number of latest blogs to show. */
-	private static final int maximumNumberOfBlogs = 4;
+  /** The maximum number of latest blogs to show. */
+  private static final int maximumNumberOfBlogs = 2;
 
-	/** The blogs. */
-	private List<BlogsEntry> blogs;
+  /** The blogs. */
+  private List<BlogsEntry> blogs;
 
-	/**
-	 * An init method for the bean.
-	 */
-	@SuppressWarnings("unchecked")
-	@PostConstruct
-	public void init() {
+  /**
+   * An init method for the bean.
+   */
+  @SuppressWarnings("unchecked")
+  @PostConstruct
+  public void init()
+  {
 
-		blogs = (List<BlogsEntry>) MultiVMPoolUtil.get(CACHE_NAME,
-				CACHE_BLOGS_KEY);
+    blogs = (List<BlogsEntry>) MultiVMPoolUtil.getCache(CACHE_NAME).get(CACHE_BLOGS_KEY);
 
-		if (blogs == null) {
-			LOG.info("Empty {} cache, fetching blogs from liferay.",
-					CACHE_BLOGS_KEY);
-			blogs = getLatestBlogs(maximumNumberOfBlogs);
-			MultiVMPoolUtil.put(CACHE_NAME, CACHE_BLOGS_KEY, blogs);
-		}
+    if (blogs == null)
+    {
+      LOG.info("Empty {} cache, fetching blogs from liferay.",
+          CACHE_BLOGS_KEY);
+      blogs = getLatestBlogs(maximumNumberOfBlogs);
+      // safe cast: LinkedList
+      MultiVMPoolUtil.getCache(CACHE_NAME).put(CACHE_BLOGS_KEY, (Serializable) blogs);
+    }
 
-	}
+  }
 
-	private List<BlogsEntry> getLatestBlogs(int maximumnumberofblogs) {
+  private List<BlogsEntry> getLatestBlogs(int maximumnumberofblogs)
+  {
+    try
+    {
+      blogs = new ArrayList<BlogsEntry>();
+      // Getting the total blogs
+      int count = BlogsEntryLocalServiceUtil.getBlogsEntriesCount();
+      List<BlogsEntry> blogsList = BlogsEntryLocalServiceUtil.getBlogsEntries(0, count);
+      // Adding the non draft blogs in list
+      for (BlogsEntry blogsEntry : blogsList)
+      {
+        if (!blogsEntry.isDraft() && !blogsEntry.isInTrash())
+        {
+          // strip content of html-tags
+          String content = blogsEntry.getContent();
+          blogsEntry.setContent(StringCleaner.trimAndFilterString(content));
+          
+          blogs.add(blogsEntry);
+        }
+      }
 
-		try {
-			List<BlogsEntry> list = new ArrayList();
-			blogs = new ArrayList();
-			// Getting the total blogs
-			int count = BlogsEntryLocalServiceUtil.getBlogsEntriesCount();
-			List<BlogsEntry> blogsList = BlogsEntryLocalServiceUtil
-					.getBlogsEntries(0, count);
-			// Adding the non draft blogs in list
-			for (BlogsEntry blogsEntry : blogsList) { 
-				if (!blogsEntry.isDraft()) 
-					blogs.add(blogsEntry); 																					
-			}
+      Collections.sort(blogs, new Comparator<BlogsEntry>()
+      {
+        @Override
+        public int compare(BlogsEntry a, BlogsEntry b)
+        {
+          return -(a.getCreateDate().compareTo(b.getCreateDate()));
+        }
+      });
 
-			Collections.sort(blogs, new Comparator<BlogsEntry>() {
-				public int compare(BlogsEntry a, BlogsEntry b) {
-					return -(a.getCreateDate().compareTo(b.getCreateDate()));
-				}
-			});
-			
-			if (blogs.size() > maximumnumberofblogs)
-				blogs = blogs.subList(0, maximumnumberofblogs);
+      if (blogs.size() > maximumnumberofblogs)
+        blogs = new ArrayList<BlogsEntry>(blogs.subList(0, maximumnumberofblogs));
+    }
+    catch (SystemException e)
+    {
+      LOG.error("Fehler beim Lesen der Blogeinträge.", e);
+    }
 
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
+    return blogs;
+  }
 
-		return blogs;
-	}
+  /**
+   * Gets the blogs.
+   * 
+   * @return the blogs.
+   */
+  public List<BlogsEntry> getBlogs()
+  {
+    return blogs;
+  }
 
-	/**
-	 * Gets the blogs.
-	 * 
-	 * @return the blogs.
-	 */
-	public List<BlogsEntry> getBlogs() {
-		return blogs;
-	}
-
-	/**
-	 * Sets the blogs.
-	 * 
-	 * @param blogs
-	 *            the blogs.
-	 */
-	public void setBlogs(List<BlogsEntry> blogs) {
-		this.blogs = blogs;
-	}
+  /**
+   * Sets the blogs.
+   * 
+   * @param blogs the blogs.
+   */
+  public void setBlogs(List<BlogsEntry> blogs)
+  {
+    this.blogs = blogs;
+  }
 
 }

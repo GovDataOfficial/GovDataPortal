@@ -1,0 +1,118 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.seitenbau.serviceportal</groupId>
+  <artifactId>serviceportal-common</artifactId>
+  <version>1.27.1</version>
+  <packaging>jar</packaging>
+
+  <name>serviceportal-common</name>
+
+  <properties>
+    <serviceportal.version>1.27.1</serviceportal.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.7</java.version>
+    <project.source.version>1.7</project.source.version>
+    <project.target.version>1.7</project.target.version>
+    <project.build.javaVersion>1.7</project.build.javaVersion>
+
+    <dozer.version>5.5.1</dozer.version>
+    <commons-lang.version>3.3.2</commons-lang.version>
+    <serviceportal-testing.version>${serviceportal.version}</serviceportal-testing.version>
+    <lombok.version>1.16.0</lombok.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.dozer</groupId>
+      <artifactId>dozer</artifactId>
+      <version>${dozer.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.jms</groupId>
+      <artifactId>jms</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20151123</version>
+    </dependency>
+
+
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>1.7.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <source>${project.build.javaVersion}</source>
+          <target>${project.build.javaVersion}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <useProjectReferences>true</useProjectReferences>
+          <downloadSources>true</downloadSources>
+          <workspaceCodeStylesURL>src/eclipse/seitenbauCodeConventions.xml</workspaceCodeStylesURL>
+          <eclipseProjectDir>..</eclipseProjectDir>  <!-- Hack, damit eclipse:eclipse auch für pom Projekte eine .project Datei schreibt -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

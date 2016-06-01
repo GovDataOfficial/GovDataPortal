@@ -16,7 +16,16 @@
 	<bean
 		class="org.springframework.web.portlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
-	<bean class="de.fhg.fokus.odp.categoriesgrid.CategoriesGrid" />
+	<bean class="de.fhg.fokus.odp.categoriesgrid.CategoriesGrid">
+    <property name="govDataNavigation" ref="govDataNavigation" />
+  </bean>
+  
+  <bean id="govDataNavigation" class="de.seitenbau.govdata.navigation.GovDataNavigation">
+    <property name="liferayNavigation">
+      <bean class="de.seitenbau.govdata.navigation.LiferayNavigation" />
+    </property>
+  </bean>
+  
 
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

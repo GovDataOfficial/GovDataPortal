@@ -1,0 +1,293 @@
+#fieldlist {
+  @extend .column;
+  list-style: none;
+  margin: 0;
+}
+
+.field.row {
+  margin-bottom: 1.5em;
+}
+
+.fieldcontentarea {
+  align-items: flex-start;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+
+  > div {
+    // try to be as wide as possible
+    -webkit-flex-basis: 100%;
+    -ms-flex-basis: 100%;
+    flex-basis: 100%;
+  }
+}
+
+.aui {
+  .fieldtypelabel,
+  .fieldcontentarea input,
+  .fieldcontentarea select {
+    color: $dark-gray;
+    font-family: 'Source Sans Pro';
+    font-size: 16px;
+    font-weight: bold;
+    height: inherit;
+    line-height: 22px;
+    margin: 0;
+    max-width: 100% !important;
+    padding: 13px 16px;
+    width: 100%;
+  }
+
+  .fieldcontentarea select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url($stylepath + '/images/select-arrow-down-gray.png') no-repeat right center $dark-gray;
+    width: 100%;
+  }
+
+  .fieldcontentarea input,
+  .fieldcontentarea select {
+    background-color: $white;
+    border: 1px solid $kontur-gray;
+    box-shadow: 1px 1px 1px $kontur-gray;
+  }
+
+  .remove-field {
+    background: none;
+    background-image: none;
+    border: 0;
+    box-sizing: content-box;
+    line-height: 50px;
+    margin: 0 0 0 16px;
+    padding: 0;
+    width: 50px;
+
+    &::before {
+      content: 'U';
+      speak: none;
+      font-family: 'govdata';
+      font-size: 16px;
+    }
+
+    &:active,
+    &:focus,
+    &:hover {
+      background-color: $dark-gray;
+      color: $white;
+    }
+  }
+}
+
+.searchext-container {
+  .dropdown-container {
+    position: relative;
+  }
+
+  .dropdown.btn {
+    border-radius: 0;
+
+    &::after {
+      content: 'e';
+      speak: none;
+      font-family: 'govdata';
+      line-height: 1;
+      margin-left: .3em;
+      position: relative;
+      top: 3px;
+    }
+  }
+
+  .dropdown-canvas {
+    width: 100%;
+    @media #{$medium-up} {
+      width: 200%;
+    }
+
+    li {
+      display: inline-block;
+      width: 100%;
+      @media #{$medium-up} {
+        width: 50%;
+      }
+    }
+
+    button {
+      background: none;
+      background-image: none;
+      border: 0;
+      padding: .5em;
+      width: 100%;
+
+      &:active,
+      &:hover,
+      &:focus {
+        background-color: $dark-gray;
+        color: $white;
+      }
+
+      &:focus {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 3px $link-blue;
+      }
+    }
+  }
+}
+
+.aui .multiboxarea .checkboxitem label {
+  display: block;
+  margin: 0;
+}
+
+.multiboxarea {
+  padding: 1em 0;
+
+  .checkboxitem {
+    span {
+      cursor: pointer;
+    }
+  }
+
+  label {
+    padding: .3em;
+  }
+
+  label::before {
+    background-color: $white;
+    border: 1px solid $checkbox-border;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px $kontur-gray;
+    content: ' ';
+    speak: none;
+    display: inline-block;
+    font-family: 'govdata';
+    font-size: 1em;
+    height: 20px;
+    line-height: 18px;
+    margin-right: .5em;
+    min-height: 20px;
+    min-width: 20px;
+    padding-left: .2em;
+    vertical-align: top;
+    width: 20px;
+  }
+
+  input[type=checkbox] { // special case when we actually use checkboxes as checkboxes
+    &:checked ~ label::before {
+      background-color: $dark-gray;
+      border-color: $dark-gray;
+      box-shadow: none;
+      color: $white;
+      content: 'a';
+      speak: none;
+    }
+
+    &:focus,
+    &:hover,
+    &:active {
+      & ~ label {
+        background-color: $dark-gray;
+        color: $white;
+      }
+
+      & ~ label::before {
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// field specific designs
+.field-groups {
+  @media #{$large-up} {
+    .checkboxitem {
+      display: inline-block;
+      width: (99% / 2);
+    }
+  }
+}
+
+.field-format {
+  .checkboxitem {
+    display: inline-block;
+    width: (99% / 2);
+  }
+
+  @media #{$medium-only} {
+    .checkboxitem {
+      width: (99% / 4);
+    }
+  }
+
+  @media #{$large-up} {
+    .checkboxitem {
+      width: (99% / 6);
+    }
+  }
+}
+
+.aui .field-temporal_coverage {
+  .date-container input {
+    width: 100%;
+    padding: 13px 50px;
+    background: url($stylepath + '/images/input-calendar.png') no-repeat right center $white;
+  }
+
+  .flex-container {
+    @media #{$small-only} {
+      flex-direction: column;
+    }
+  }
+
+  .date-container {
+    position: relative;
+    width: 45%;
+
+    @media #{$small-only} {
+      width: 100%;
+    }
+  }
+
+  .date-from-container {
+    @media #{$small-only} {
+      margin-bottom: 1em;
+    }
+  }
+
+  .date-until-container {
+    @media #{$medium-up} {
+      margin-left: auto;
+    }
+  }
+
+  .date-label {
+    color: $dark-gray;
+    font-family: 'Source Sans Pro';
+    font-size: 16px;
+    font-weight: bold;
+    left: 0;
+    line-height: 22px;
+    padding: 14px 0 0 14px;
+    position: absolute;
+    top: 0;
+  }
+}
+
+.searchext-helparea {
+  margin-top: 2em;
+
+  @media #{$large-up} {
+    padding: 0 rem-calc(15);
+  }
+}
+
+.modbutton-area,
+#fieldlist .row {
+  @media #{$large-up} {
+    padding: 0 rem-calc(15);
+  }
+}
+
+.searchext-modbuttons {
+  @media #{$medium-up} {
+    display: inline-block;
+  }
+}

@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS
+ * Copyright (c) 2015 SEITENBAU GmbH
  *
  * This file is part of Open Data Platform.
  *
@@ -25,13 +26,20 @@ import java.util.List;
 
 import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Metadata.
  * 
  * @author sim
+ * @author rnoerenberg
  */
-public interface Metadata extends Serializable {
+public interface Metadata extends Serializable
+{
+  /**
+   * Gets the id.
+   * 
+   * @return the id
+   */
+  String getId();
 
 	/**
 	 * Gets the author.
@@ -172,7 +180,7 @@ public interface Metadata extends Serializable {
 	 * @throws OpenDataRegistryException
 	 *             the open data registry exception
 	 */
-	Contact getContact(RoleEnumType role) throws OpenDataRegistryException;
+	Contact getContact(RoleEnumType role);
 
 	/**
 	 * New contact.
@@ -226,6 +234,13 @@ public interface Metadata extends Serializable {
 	 * @return the metadata_modified
 	 */
 	Date getMetadataModified();
+
+  /**
+   * Gets the creator_user_id.
+   * 
+   * @return the creator_user_id
+   */
+  String getCreatorUserId();
 
 	/**
 	 * Sets the licence.
@@ -508,4 +523,35 @@ public interface Metadata extends Serializable {
 	String getSpatialReferenceText();
 
 	void setSpatialDataValue(String value);
+
+  public enum State
+  {
+    ACTIVE("active"),
+
+    DELETED("deleted");
+
+    private String value;
+
+    private State(String value)
+    {
+      this.value = value;
+    }
+
+    public String getValue()
+    {
+      return this.value;
+    }
+  }
+
+  void setType(MetadataEnumType type);
+
+  void setCreated(Date date);
+  
+  String getOwnerOrg();
+
+  void setOwnerOrg(String ownerOrg);
+  
+  boolean isPrivate();
+  
+  void setPrivate(boolean isPrivate);
 }

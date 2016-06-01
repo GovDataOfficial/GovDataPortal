@@ -1,0 +1,8 @@
+{
+  "help": "http://keh.gd.swe.seitenbau.net, localhost:5000/api/3/action/help_show?name=rating_create",
+  "success": true,
+  "result": {
+    "rating average": 3,
+    "rating count": 1
+  }
+}

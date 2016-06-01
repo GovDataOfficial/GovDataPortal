@@ -1,0 +1,13 @@
+.shariff {
+    .diaspora {
+        border-color: #333;
+        a {
+            background-color: #333;
+            &:hover,
+            &:active,
+            &:focus {
+                color: #333;
+            }
+        }
+    }
+}

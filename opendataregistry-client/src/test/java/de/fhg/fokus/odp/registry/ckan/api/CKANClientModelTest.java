@@ -25,55 +25,64 @@ import static de.fhg.fokus.odp.registry.ckan.Constants.PROPERTY_NAME_CKAN_URL;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.codehaus.jackson.JsonNode;
-import org.jboss.resteasy.client.ProxyFactory;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+@Ignore("Implement HTTP-Server-Mock")
 public class CKANClientModelTest {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private CKANClientModel client;
+    private CKANClientModel ckanClientModel;
 
     private final Properties properties = new Properties();
 
-    @BeforeTest
+  @Before
     public void beforeTest() {
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
+        ResteasyClient client = new ResteasyClientBuilder().build();
         try {
-            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_FILENAME));
-            client = ProxyFactory.create(CKANClientModel.class, (String) properties.get(PROPERTY_NAME_CKAN_URL));
+            properties.load(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_FILENAME));
+            ResteasyWebTarget target = client.target((String) properties.get(PROPERTY_NAME_CKAN_URL));
+            ckanClientModel = target.proxy(CKANClientModel.class);
         } catch (IOException e) {
             log.error("loading properties file", e);
-            client = ProxyFactory.create(CKANClientModel.class, "http://localhost:5000");
+            ResteasyWebTarget target = client.target("http://localhost:5000");
+            ckanClientModel = target.proxy(CKANClientModel.class);
         }
     }
 
     @Test
     public void getGeneric() {
-        JsonNode node = client.getGenericModel("dataset");
+        JsonNode node = ckanClientModel.getGenericModel("dataset");
         log.info(node.toString());
     }
 
     @Test
     public void getTags() {
-        JsonNode node = client.getTags();
+        JsonNode node = ckanClientModel.getTags();
         log.info(node.toString());
     }
 
     @Test
     public void getGroups() {
-        JsonNode node = client.getGroups();
+        JsonNode node = ckanClientModel.getGroups();
         assert (node.isArray());
 
         for (JsonNode rev : node) {
             assert (rev.isTextual());
-            log.info("group: {}", rev.getTextValue());
+            log.info("group: {}", rev.textValue());
         }
 
         log.info("received {} groups", node.size());
@@ -81,27 +90,27 @@ public class CKANClientModelTest {
 
     @Test
     public void getGroup() {
-        JsonNode node = client.getGroup("70d83689-c55d-4953-965e-623c0f8bcefd");
+        JsonNode node = ckanClientModel.getGroup("70d83689-c55d-4953-965e-623c0f8bcefd");
         log.info("group: {}", node.toString());
     }
 
     @Test
     public void getRating() {
-        JsonNode node = client.getRatings();
+        JsonNode node = ckanClientModel.getRatings();
         log.info("rating: {}", node.toString());
     }
 
     @Test
     public void getDataset() {
-        JsonNode node = client.getDataset("abfallbeseitigung_berlin_2007-2008");
+        JsonNode node = ckanClientModel.getDataset("", "abfallbeseitigung_berlin_2007-2008");
         log.info("dataset: {}", node.toString());
         JsonNode count = node.get("ratings_count");
         if (count != null && count.isNumber()) {
-            log.info("ratings count: {}", count.getNumberValue().intValue());
+            log.info("ratings count: {}", count.numberValue().intValue());
         }
         JsonNode average = node.get("ratings_average");
         if (average != null && average.isDouble()) {
-            log.info("ratings average: {}", average.getDoubleValue());
+            log.info("ratings average: {}", average.doubleValue());
         }
         JsonNode extras = node.get("extras");
         log.info("extras: {}", extras.toString());

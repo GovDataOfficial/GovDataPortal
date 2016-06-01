@@ -1,0 +1,13 @@
+.delete-user-area {
+  .column {
+    @media #{$large-up} {
+      margin: 2em 0;
+      padding-left: rem-calc(30);
+      padding-right: rem-calc(30);
+    }
+  }
+
+  .alert {
+    margin: 0;
+  }
+}

@@ -1,0 +1,11 @@
+<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+
+ <dl th:fragment="temporalCoverage(dateFrom, dateTo, inline)" th:class="(${inline} ? 'inline-list ' : '') + 'temporal-coverage'">
+  <dt>[[#{od.datasets_metadata_period}]]:</dt>
+  <dd>
+   <span th:text="${#dates.format(dateFrom, 'dd.MM.yyyy')}" th:if="${dateFrom != null}" id="metadata_temporalCoverageFrom" th:title="#{od.metadata.period.tooltip}"></span>
+   - <span th:text="${#dates.format(dateTo, 'dd.MM.yyyy')}" th:if="${dateTo != null}" id="metadata_temporalCoverageTo" th:title="#{od.metadata.period.tooltip}"></span>
+  </dd>
+ </dl>
+
+</div>

@@ -1,0 +1,32 @@
+<div xmlns:th="http://www.thymeleaf.org" class="searchmap-container" th:inline="text">
+  <form th:action="${searchMap.actionUrl}" method="post" th:object="${searchMap}" enctype="application/x-www-form-urlencoded">
+   <input type="hidden" name="boundingbox" th:field="*{boundingbox}" id="boundingbox" />
+   <input type="hidden" name="q" th:field="*{q}" />
+   <input type="hidden" name="f" th:field="*{f}" />
+   <input type="hidden" name="s" th:field="*{s}" />
+   <input type="hidden" name="start" th:field="*{start}"/>
+   <input type="hidden" name="end" th:field="*{end}"/>
+   <div id="map" class="map" th:attr="data-use-osm=${searchMap.useOsm}, data-tile-url=${searchMap.tileUrl}, data-geocoding-url=${searchMap.geocodingUrl}">
+     <div class="map-search-button-container row">
+       <div class="column small-12 medium-8 large-6 locationsearch">
+         <label class="offscreen" for="locationsearchinput" th:text="#{'od.mapsearch.locationsearch.input.placeholder'}"></label>
+         <input type="search" id="locationsearchinput" class="input-search" th:placeholder="#{'od.mapsearch.locationsearch.input.placeholder'}"/>
+       </div>
+       <div class="column small-12 medium-4">
+         <input type="submit" class="map-search-button button-search hide-for-large-up" th:value="#{od.search.field.submit}" />
+       </div>
+     </div>
+   </div>
+   
+   <div class="map-helparea row">
+     <div class="column small-12 medium-4 large-4">
+       <h1 th:text="#{od.mapsearch.infoheader}"></h1>
+     </div>
+     <div class="column small-12 medium-8 large-4 map-spaceabove" th:utext="#{'od.mapsearch.infotext'}">
+     </div>
+     <div class="column large-4 show-for-large-up map-spaceabove">
+       <input type="submit" class="map-search-button button-search" th:value="#{od.search.field.submit}" />
+     </div>
+   </div>
+  </form>
+</div>

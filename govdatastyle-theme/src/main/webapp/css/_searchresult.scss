@@ -1,0 +1,570 @@
+#contentPane {
+  margin-top: rem-calc(15);
+
+  @media #{$large-up} {
+    margin-top: rem-calc(30);
+  }
+
+  form {
+    margin: 0;
+  }
+}
+
+.typefilterarea {
+  margin-bottom: rem-calc(15);
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.aui .hitscount {
+  min-height: 2em;
+  padding-top: rem-calc(9px);
+
+  @media #{$small-only} {
+    font-size: 24px;
+  }
+}
+
+.suggestions {
+  margin-bottom: .5em;
+
+  a {
+    font-weight: bold;
+  }
+}
+
+.aui .filterarea-title {
+  margin-bottom: 1em;
+  margin-top: .6em;
+}
+
+.aui .filtergroup-title {
+  padding: .5em;
+}
+
+.filterarea .reset-button {
+  border-top: 1px solid $dark-gray;
+  margin-top: 1.5em;
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.reset-button-spacer {
+  height: 4em;
+}
+
+.aui .off-canvas-container .more-linklabel {
+  @media #{$small-only} {
+    margin-left: 0;
+    margin-top: 1em;
+  }
+}
+
+.aui .off-canvas-container .reset-button .more-linklabel {
+  margin-top: 0em;
+}
+
+#filterarea-container .more-linklabel {
+  float: right;
+  margin-left: 0;
+}
+
+.aui .filtergroup {
+  margin-bottom: 1em;
+
+  .checkboxrow {
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    padding: .5em;
+
+    .checkbox {
+      background-color: $white;
+      border: 1px solid $checkbox-border;
+      border-radius: 3px;
+      box-shadow: 0 1px 1px $kontur-gray;
+      display: inline-block;
+      font-family: 'govdata';
+      font-size: 1em;
+      height: 20px;
+      line-height: 18px;
+      margin-right: .5em;
+      min-height: 20px;
+      min-width: 20px;
+      padding-left: .2em;
+      vertical-align: top;
+      width: 20px;
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      .checkbox {
+        box-shadow: none;
+      }
+    }
+
+    input[type=checkbox] { // special case when we actually use checkboxes as checkboxes
+      display: none;
+
+      &:checked + label {
+        background-color: $dark-gray;
+        border-color: $dark-gray;
+        box-shadow: none;
+        color: $white;
+
+        &::before {
+          content: 'a';
+          speak: none;
+        }
+      }
+    }
+
+    &.checked {
+      .checkbox {
+        background-color: $dark-gray;
+        border-color: $dark-gray;
+        box-shadow: none;
+        color: $white;
+      }
+    }
+
+    &.disabled .checkbox {
+      background-color: lighten($kontur-gray, 15%);
+      border-color: lighten($kontur-gray, 5%);
+      box-shadow: none;
+    }
+
+    .filtername {
+      -webkit-flex-grow: 2;
+      -ms-flex-grow: 2;
+      flex-grow: 2;
+    }
+  }
+}
+
+.filtergroup {
+  dd {
+    @extend .h2-metainfo;
+  }
+
+  &.show-hidden-rows {
+    .show-more-hidden {
+      display: -webkit-flex !important;
+      display: -ms-flex !important;
+      display: flex !important;
+    }
+  }
+
+  .show-more-hidden:not(.checked) {
+    display: none;
+  }
+
+  .show-more-button {
+    display: block;
+    padding: .5em .5em .5em 2.6em;
+    text-decoration: underline;
+  }
+}
+
+.filterresultcount {
+  border: 1px solid $kontur-gray;
+  border-radius: 1em;
+  float: right;
+  height: rem-calc(23px);
+  padding: .1em .9em .1em .8em;
+}
+
+.spatial-filter {
+  position: relative;
+
+  dd {
+    display: inline-block;
+    float: right;
+    padding: .5em;
+  }
+
+  .filtergroup-title {
+    display: inline-block;
+  }
+
+  .spatial-edit-link {
+    padding: .5em;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
+  }
+}
+
+.aui {
+  .date-filter-area {
+    align-items: flex-end;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-flex-grow: 10;
+    -ms-flex-grow: 10;
+    flex-grow: 10;
+
+    input[type=text] {
+      width: 100%;
+      margin-bottom: 0px;
+    }
+
+    .checkbox {
+      margin-bottom: .4rem;
+    }
+  }
+  .date-filter-separator {
+    -webkit-flex-grow: 1;
+    -ms-flex-grow: 1;
+    flex-grow: 1;
+    width: 2rem;
+  }
+
+  .right-aligned-link {
+    padding-right: .5em;
+    text-align: right;
+  }
+
+  .date-filter-apply-link {
+    background: $white;
+    border: 0;
+    font-family: 'Source Sans Pro';
+    font-size: 14px;
+    left: .5em;
+    line-height: 20px;
+    padding: .5em;
+    position: relative;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $dark-gray;
+      color: $white;
+      text-decoration: none;
+    }
+  }
+}
+
+.document-type-list {
+  @extend .h2-metainfo;
+  font-weight: bold;
+
+  li {
+    display: inline-block;
+
+    &:first-child > a {
+      border-bottom-left-radius: 3px;
+      border-top-left-radius: 3px;
+    }
+
+    &:last-child {
+      & > a,
+      &.no-results {
+        border-bottom-right-radius: 3px;
+        border-top-right-radius: 3px;
+      }
+    }
+  }
+
+  .document-type-item {
+    background: $white;
+    border-color: $kontur-gray;
+    border-style: solid;
+    border-width: 1px 1px 1px 0;
+    display: inline-block;
+    line-height: rem-calc(23px);
+    padding: .65em .8em;
+  }
+
+  a.document-type-item:hover {
+    border-color: $dark-gray;
+  }
+
+  span {
+    @extend .filterresultcount;
+    display: none;
+    margin-left: .7em;
+
+    @media only screen and (min-width:1200px) {
+      display: inline;
+    }
+  }
+
+  .document-type-all {
+    border-left-width: 1px;
+    border-right-width: 0;
+    padding-left: 1.2em;
+    position: relative;
+
+    &::before,
+    &::after {
+      content: ' ';
+      height: rem-calc(21px);
+      pointer-events: none;
+      position: absolute;
+      right: rem-calc(-10px);
+      width: rem-calc(10px);
+    }
+
+    &::before {
+      background: transparent linear-gradient(66deg, $white 45%, $kontur-gray 50%, rgba(0, 0, 0, 0) 55%) no-repeat scroll 0% 0%;
+      top: 0;
+    }
+
+    &::after {
+      background: transparent linear-gradient(-66deg, rgba(0, 0, 0, 0) 45%, $kontur-gray 50%, $white 55%) no-repeat scroll 0% 0%;
+      bottom: -1px;
+    }
+
+    &:hover,
+    &.selected {
+      &::before {
+        background: transparent linear-gradient(66deg, $dark-gray 50%, rgba(0, 0, 0, 0) 55%) no-repeat scroll 0% 0%;
+      }
+
+      &::after {
+        background: transparent linear-gradient(-66deg, rgba(0, 0, 0, 0) 50%, $dark-gray 55%) no-repeat scroll 0% 0%;
+      }
+    }
+  }
+
+  .type-all-container + li > a,
+  .type-all-container + li.no-results {
+    padding-left: 1.4em;
+  }
+
+  .no-results {
+    color: $kontur-gray;
+  }
+
+  .selected {
+    background-color: $dark-gray;
+    border-color: $dark-gray;
+    color: $white;
+    outline: 5px solid transparent;
+  }
+}
+
+.filter-tags {
+  @extend .h2-metainfo;
+  margin-top: 1em;
+
+  .filter-tag {
+    background: $white;
+    border: 1px solid $kontur-gray;
+    border-radius: 6px;
+    display: inline-block;
+    margin: 3px;
+    padding: .1em .5em;
+    //white-space: nowrap; // removed: makes labels un-removable on small devices
+  }
+
+  .filter-tag-remove {
+    margin-left: .2em;
+    padding: 0 .3em;
+  }
+}
+
+.sortby {
+  @extend .h2-metainfo;
+  float: right;
+  margin-top: 1em;
+  position: relative;
+
+  .dropdown {
+    padding: .5em;
+
+    &::after {
+      content: "e";
+      speak: none;
+      margin-left: .3em;
+      font-family: "govdata" !important;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+      top: 3px;
+    }
+  }
+
+  .sort-dropdown-canvas {
+    border-top-width: 0;
+    font-weight: bold;
+    float: right;
+
+    a {
+      padding: .7em;
+      padding-left: 2em;
+    }
+
+    .sbi-check::before {
+      font-size: 12px;
+      left: 7px;
+      line-height: 20px;
+      position: absolute;
+    }
+  }
+
+  .sort-active-label {
+    font-weight: bold;;
+    margin-left: 1.2em;
+  }
+}
+
+
+// results...
+.resultentry {
+  margin-bottom: rem-calc(15);
+  position: relative;
+
+  @media #{$large-up} {
+    margin-bottom: rem-calc(30);
+  }
+
+  h2 {
+    margin-top: 5px;
+  }
+
+  .column {
+    position: static;
+  }
+
+  .h2-teaser {
+    word-wrap: break-word;
+  }
+
+  .h2-teaser,
+  .resource-formats,
+  .last-modified {
+    margin-bottom: 1em;
+  }
+
+  .resultdetail {
+    padding: .5em 0;
+  }
+
+  .categories > * {
+    display: inline-block;
+    margin-right: 1em;
+  }
+
+  .category-list > * {
+    margin: 5px 0;
+  }
+
+  .resource-icon {
+    display: inline-block;
+    float: none;
+    margin: 0 .07em .4em 0;
+  }
+}
+
+.searchresults-more {
+  margin: rem-calc(10) 0;
+  text-align: center;
+  padding: rem-calc(20) 0;
+}
+
+// off-canvas
+.open-filter-menu-medium {
+  @extend .h2-metainfo;
+  background: none $white;
+  border-color: $kontur-gray;
+  border-style: solid;
+  border-width: 1px 0 1px 1px;
+  box-shadow: 2px 2px 2px $kontur-gray;
+  display: inline-block;
+  float: right;
+  font-weight: bold;
+  left: 15px;
+  padding: .7em 1.2em .7em 1.5em;
+  position: relative;
+}
+
+.aui a.open-filter-menu-small {
+  @extend .h2-metainfo;
+  background: none $white;
+  box-shadow: 1px 1px 1px $kontur-gray;
+  display: block;
+  font-weight: bold;
+  padding: .7em 1.2em .7em .7em;
+  width: 100%;
+
+  span {
+    display: inline-block; // fix upscaling in iOS when in landscape-mode...
+  }
+}
+
+.filter-tags-title {
+  display: inline-block; // fix upscaling in iOS when in landscape-mode...
+}
+
+.open-filter-menu-small,
+.open-filter-menu-medium {
+  .sbi-hamburger-menu {
+    font-size: 1.4em;
+    padding-left: 3.5em;
+    vertical-align: middle;
+  }
+}
+
+.aui a.active-filters {
+  background-color: $dark-gray;
+  color: $white;
+}
+
+.aui .empty-search .label {
+  border: 1px solid $dark-gray;
+  font-family: 'Source Sans Pro';
+  font-size: 14px;
+  line-height: 18px;
+  margin-right: rem-calc(15);
+  vertical-align: middle;
+  text-decoration: none;
+
+  &:hover {
+    background-color: $white;
+    color: $dark-gray;
+  }
+}
+
+.extsearchbutton {
+  flex-grow: 2;
+  position: relative;
+  text-align: right;
+  top: -2px;
+
+  @media #{$medium-up} {
+    top: 3px;
+  }
+
+  @media #{$small-only} {
+    .btn {
+      display: inline-block;
+      width: auto;
+    }
+  }
+}
+
+.newdatasetbutton {
+  text-align: right;
+
+  .btn {
+    padding: 4px 12px;
+  }
+}
+
+.searchdetails a.action-button {
+  float: right;
+  padding: .5em 1em;
+}

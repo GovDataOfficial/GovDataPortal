@@ -22,13 +22,14 @@ package de.fhg.fokus.odp.registry.ckan.api;
 import java.util.Date;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public interface CKANClientModel {
 
@@ -70,7 +71,8 @@ public interface CKANClientModel {
     @GET
     @Path("/api/2/rest/dataset/{dataset}")
     @Produces("application/json")
-    public JsonNode getDataset(@PathParam("dataset") String dataset);
+    public JsonNode getDataset(@HeaderParam("Authorization") String authenticationKey,
+        @PathParam("dataset") String dataset);
 
     @GET
     @Path("/api/2/rest/tag")

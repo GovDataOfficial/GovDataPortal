@@ -1,0 +1,18 @@
+#portlet_verify-email-address {
+  @extend .design-box;
+  @extend .design-box-padding;
+
+  margin: rem-calc(15);
+  max-width: $row-width;
+
+  @media #{$large-only} {
+    margin-left: rem-calc(30);
+    margin-right: rem-calc(30);
+  }
+
+  @media #{$xlarge-up} {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: $row-width - rem-calc(60);
+  }
+}

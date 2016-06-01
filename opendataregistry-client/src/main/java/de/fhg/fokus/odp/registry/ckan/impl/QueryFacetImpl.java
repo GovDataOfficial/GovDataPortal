@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.fhg.fokus.odp.registry.ckan.ODRClientImpl;
 import de.fhg.fokus.odp.registry.ckan.json.FacetItemBean;
@@ -73,7 +73,7 @@ public class QueryFacetImpl implements QueryFacet, Serializable {
     public static Map<String, QueryFacet> read(JsonNode result) {
         Map<String, QueryFacet> facets = new HashMap<String, QueryFacet>();
         if (result != null) {
-            Iterator<Entry<String, JsonNode>> it = result.getFields();
+            Iterator<Entry<String, JsonNode>> it = result.fields();
             while (it.hasNext()) {
                 Entry<String, JsonNode> entry = it.next();
                 JsonNode value = entry.getValue();

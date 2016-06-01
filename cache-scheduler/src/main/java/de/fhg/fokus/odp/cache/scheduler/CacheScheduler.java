@@ -42,6 +42,8 @@ public class CacheScheduler implements MessageListener {
 
     /** The cache name boxes. */
     private final String CACHE_NAME_BOXES = "de.fhg.fokus.odp.boxes";
+    
+    private final String CACHE_FORMAT_KEY = "format";
 
     /*
      * (non-Javadoc)
@@ -52,10 +54,13 @@ public class CacheScheduler implements MessageListener {
     public void receive(Message message) throws MessageListenerException {
 
         LOG.info("Clearing cache: {}", CACHE_NAME_BOXES);
-        MultiVMPoolUtil.clear(CACHE_NAME_BOXES);
+        MultiVMPoolUtil.getCache(CACHE_NAME_BOXES).removeAll();
 
         LOG.info("Clearing cache: {}", CACHE_NAME_CATEGORIES_GRID);
-        MultiVMPoolUtil.clear(CACHE_NAME_CATEGORIES_GRID);
+        MultiVMPoolUtil.getCache(CACHE_NAME_CATEGORIES_GRID).removeAll();
+        
+        LOG.info("Clearing cache: {}", CACHE_FORMAT_KEY);
+        MultiVMPoolUtil.getCache(CACHE_FORMAT_KEY).removeAll();
 
     }
 

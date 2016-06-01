@@ -1,0 +1,203 @@
+.searchdetails {
+  .column {
+    margin-bottom: rem-calc(15);
+
+    @media #{$large-up} {
+      margin-bottom: rem-calc(30);
+    }
+  }
+
+  .h2-teaser {
+    margin-bottom: 1em;
+    word-wrap: break-word;
+  }
+
+  .space-bottom {
+    margin-bottom: 1.2em;
+  }
+
+  .iconlink {
+    font-size: 20px;
+    vertical-align: top;
+  }
+
+  .link-to-source {
+    margin-bottom: 1em;
+  }
+
+  .alert {
+    margin: .5em 0 0;
+    padding: .5em 1em;
+  }
+
+  .alert strong {
+    font-weight: normal;
+  }
+
+  .alert-icon-resource {
+    margin-right: .5em;
+    width: rem-calc(20px);
+  }
+}
+
+.resource-item {
+  border-bottom: 1px solid $kontur-gray;
+  display: block;
+  padding: .5em 0;
+
+  .resource-title {
+    box-sizing: content-box;
+    overflow: hidden;
+    padding-right: 1em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ckan-title {
+    box-sizing: content-box;
+    overflow: hidden;
+    padding-right: 1em;
+  }
+
+  &:hover {
+    .resource-icon::after {
+      color: $white;
+    }
+  }
+}
+
+.resource-icon {
+  background-color: $dark-gray;
+  border-radius: 4px;
+  color: $white;
+  float: right;
+  padding: 0 .5em;
+  position: relative;
+  text-align: center;
+  width: 3.7em;
+}
+
+.resource-list,
+.ckan-link {
+  .resource-icon {
+    margin-right: 1.2em;
+
+    &::after {
+      color: $dark-gray;
+      content: 'B';
+      speak: none;
+      font-family: 'govdata';
+      font-size: .9em;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      font-weight: bold;
+      position: absolute;
+      right: -1em;
+      top: 0;
+    }
+  }
+}
+
+.ckan-link .resource-item {
+  word-break: break-all;
+}
+
+.taglist > * {
+  display: inline;
+
+  &:not(:last-child) span::after {
+    content: ', ';
+  }
+}
+
+.searchdetails-infobox {
+  [class^='sbi-']:before,
+  [class*=' sbi-']:before {
+    font-size: rem-calc(18px);
+    line-height: rem-calc(18px);
+    padding: .3em;
+    vertical-align: text-top;
+  }
+
+  .licence span::before {
+    line-height: rem-calc(14px);
+  }
+
+  .categories > * {
+    margin: rem-calc(5) 0;
+  }
+}
+
+.details-rating {
+  float: right;
+}
+
+// ### Comments
+.aui .comment-textarea {
+  border: 1px solid $kontur-gray;
+  border-radius: 0;
+  box-shadow: none;
+  margin-bottom: rem-calc(20);
+  margin-top: rem-calc(15);
+  min-height: 7em;
+  padding: 1em;
+  width: 100%;
+}
+
+.comment-button-row {
+  margin-bottom: rem-calc(15);
+  text-align: right;
+}
+
+.comment-entry {
+  .avatar {
+    border-radius: 50%;
+    float: left;
+    height: 50px;
+    margin-right: 1em;
+    width: 50px;
+  }
+
+  .user-name {
+    margin-top: 5px;
+  }
+}
+
+.comment-controls {
+  clear: both;
+  padding: rem-calc(10) 0;
+
+  .edit,
+  .delete {
+    background: none;
+    background-image: none;
+    border: 0;
+
+    i {
+      margin-right: 5px;
+    }
+  }
+}
+
+.comment-edit-area {
+  display: none;
+}
+
+.show-no-comments {
+  display: none;
+}
+
+.no-comments {
+  .show-no-comments {
+    display: block;
+  }
+
+  .hide-no-comments {
+    display: none;
+  }
+}
+
+.section-margin-top {
+  margin-top: 1em;
+}
+// error box

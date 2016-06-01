@@ -19,8 +19,7 @@
 
 package de.fhg.fokus.odp.registry.ckan;
 
-import static de.fhg.fokus.odp.registry.ckan.Constants.*;
-
+import static de.fhg.fokus.odp.registry.ckan.Constants.OPEN_DATA_PROVIDER_NAME;
 import de.fhg.fokus.odp.registry.ODRClient;
 import de.fhg.fokus.odp.spi.OpenDataRegistry;
 

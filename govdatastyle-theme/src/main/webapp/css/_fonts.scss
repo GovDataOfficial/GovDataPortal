@@ -1,0 +1,346 @@
+// Source Sans
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('/govdatastyle-theme/css/fonts/SourceSansPro-Regular.otf?t=' + $timestamp);
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('/govdatastyle-theme/css/fonts/SourceSansPro-It.otf?t=' + $timestamp);
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('/govdatastyle-theme/css/fonts/SourceSansPro-Semibold.otf?t=' + $timestamp);
+  font-weight: bold;
+}
+
+// Crimson Text
+@font-face {
+  font-family: 'Crimson Text';
+  src: url('/govdatastyle-theme/css/fonts/CrimsonText-Roman.ttf?t=' + $timestamp);
+}
+@font-face {
+  font-family: 'Crimson Text';
+  src: url('/govdatastyle-theme/css/fonts/CrimsonText-Italic.ttf?t=' + $timestamp);
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Crimson Text';
+  src: url('/govdatastyle-theme/css/fonts/CrimsonText-Bold.ttf?t=' + $timestamp);
+  font-weight: bold;
+}
+
+
+// Font-Styles
+.aui h1,
+.sb-bigtitle {
+  font-family: 'Source Sans Pro';
+  font-weight: bold;
+  margin: 20px 0;
+
+  @media #{$small-only} {
+    font-size: 18px;
+    line-height: 24px;
+    margin: 0 0 10px;
+  }
+  @media #{$medium-only} {
+    font-size: 28px;
+    line-height: 34px;
+  }
+  @media #{$large-up} {
+    font-size: 36px;
+    line-height: 42px;
+  }
+}
+
+.h1-teaser {
+  font-family: 'Crimson Text';
+
+  @media #{$small-only} {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  @media #{$medium-only} {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  @media #{$large-up} {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.aui {
+  h2,
+  h1.emptyresultstitle,
+  .boxesportlet-box h3 {
+    font-family: 'Source Sans Pro';
+    font-weight: normal;
+
+    @media #{$small-only} {
+      font-size: 16px;
+      line-height: 23px;
+    }
+    @media #{$medium-only} {
+      font-size: 20px;
+      line-height: 26px;
+    }
+    @media #{$large-up} {
+      font-size: 24px;
+      line-height: 31px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  h1.emptyresultstitle {
+    color: $dark-gray;
+    font-weight: bold;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .section-title {
+    font-family: 'Source Sans Pro';
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+.h2-teaser {
+  font-family: 'Crimson Text';
+
+  @media #{$small-only} {
+    font-size: 15px;
+    line-height: 20px;
+  }
+  @media #{$medium-only} {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  @media #{$large-up} {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.h2-tags {
+  font-family: 'Source Sans Pro';
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.h2-metainfo {
+  font-family: 'Source Sans Pro';
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.aui h3,
+.sb-chapter-head {
+  font-family: 'Source Sans Pro';
+  font-weight: normal;
+
+  @media #{$small-only} {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  @media #{$medium-only} {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  @media #{$large-up} {
+    font-size: 22px;
+    line-height: 28px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
+
+.sb-chapter-sub {
+  font-family: 'Source Sans Pro';
+
+  @media #{$small-only} {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  @media #{$medium-only} {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  @media #{$large-up} {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+.aui {
+  h4, h5, h6 {
+    font-family: 'Source Sans Pro';
+  }
+
+  h4 {
+    margin: rem-calc(10) 0 0;
+    line-height: 24px;
+  }
+}
+
+.aui p,
+.journal-content-article,
+.sb-text {
+  font-family: 'Crimson Text';
+
+  @media #{$small-only} {
+    font-size: 15px;
+    line-height: 20px;
+  }
+  @media #{$medium-only} {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  @media #{$large-up} {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  li { // fix for very broken aui-style...
+    line-height: initial;
+  }
+}
+
+// Used in gd-search
+.aui h1.maintitle {
+  background-color: $dark-gray;
+  color: $white;
+  display: inline-block;
+  font-family: 'Source Sans Pro';
+  font-weight: bold;
+  padding: rem-calc(2) rem-calc(15) rem-calc(4);
+
+  @media #{$small-only} {
+    font-size: 20px;
+    line-height: 22px;
+    margin: 0;
+  }
+  @media #{$medium-only} {
+    font-size: 32px;
+    line-height: 32px;
+    margin: rem-calc(2) 0;
+  }
+  @media #{$large-up} {
+    font-size: 46px;
+    line-height: 46px;
+    margin: rem-calc(5) 0;
+    padding-bottom: rem-calc(6);
+  }
+}
+
+.aui h2.maintitle-teaser {
+  background-color: $dark-gray;
+  color: $white;
+  display: inline-block;
+  font-family: 'Source Sans Pro';
+  font-weight: bold;
+  padding: rem-calc(2) rem-calc(15) rem-calc(4);
+
+  @media #{$small-only} {
+    font-size: 16px;
+    line-height: 18px;
+    margin: 0;
+    font-weight: normal;
+  }
+  @media #{$medium-only} {
+    font-size: 20px;
+    line-height: 20px;
+    margin: rem-calc(2) 0;
+  }
+  @media #{$large-up} {
+    font-size: 24px;
+    line-height: 24px;
+    margin: rem-calc(5) 0;
+    padding-bottom: rem-calc(6);
+  }
+}
+
+// --- searchresults
+.aui .hitscount {
+  font-family: 'Source Sans Pro';
+  font-size: rem-calc(28);
+  font-weight: bold;
+  line-height: rem-calc(28);
+  margin: 0;
+}
+
+.filterresultcount {
+  font-family: 'Source Sans Pro';
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.aui .filterarea-title,
+.more-linklabel {
+  font-family: 'Source Sans Pro';
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 24px;
+}
+
+.filtergroup-title {
+  font-family: 'Source Sans Pro';
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 22px;
+  text-transform: uppercase;
+}
+
+#searchresult-container {
+  font-family: 'Source Sans Pro';
+  font-size: 16px;
+  line-height: 22px;
+}
+
+// -- off-canvas-menu
+#off-canvas-mainmenu {
+  font-family: 'Source Sans Pro';
+  font-size: 16px;
+  line-height: 22px;
+
+  button {
+    font-family: 'Source Sans Pro';
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .child-menu li,
+  .oc-meta-menu {
+    font-size: 14px;
+    line-height: 18px;
+  }
+}
+
+// dataset comments
+.comment-controls {
+  .edit,
+  .delete {
+    font-family: 'Source Sans Pro';
+    font-size: 14px;
+    line-height: 18px;
+  }
+}
+
+// searchfield dropdown
+.autocomplete-dropdown-canvas {
+  font-family: 'Source Sans Pro';
+  font-size: 16px;
+  line-height: 22px;
+}

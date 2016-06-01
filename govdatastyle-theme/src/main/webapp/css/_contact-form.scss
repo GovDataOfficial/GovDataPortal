@@ -1,0 +1,66 @@
+.web-form-portlet {
+  .portlet-content {
+    @extend .design-box;
+    @extend .design-box-padding;
+  }
+
+  .portlet {
+    padding-left: rem-calc(15);
+    padding-right: rem-calc(15);
+    margin-bottom: rem-calc(30);
+
+    @media #{$large-up} {
+      padding-left: rem-calc(30);
+      padding-right: rem-calc(30);
+    }
+  }
+
+  .alert-error {
+    margin-bottom: 5px;
+    margin-top: 20px;
+
+    .icon-arrow-down {
+      padding-right: .5em;
+    }
+  }
+
+  // hide first error message
+  .portlet-body > .alert-error {
+    display: none;
+  }
+
+  // fixes for captcha error message
+  .taglib-captcha {
+    padding-top: 3em;
+    position: relative;
+
+    .form-validator-stack {
+      background-color: #FEE5E2;
+      border: 1px solid #FCACA5;
+      border-radius: 2px;
+      color: #B50303;
+      left: 0;
+      padding: 8px 35px 8px 14px;
+      position: absolute;
+      top: 0;
+    }
+  }
+
+}
+
+.aui .web-form-portlet .portlet-topper h1 {
+  padding: 0;
+}
+
+.form-field-required {
+  .control-label::after {
+    color: $red;
+    content: ' *';
+    speak: none;
+  }
+}
+
+.taglib-captcha .label-required {
+  color: $red;
+  text-transform: lowercase;
+}

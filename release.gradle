@@ -1,0 +1,45 @@
+buildscript {
+	repositories {
+		maven { url "http://maven2.seitenbau.net/artifactory/gradle" }
+		mavenLocal()
+	}
+  dependencies { classpath 'com.seitenbau.ploy:ploy-plugins-gradle:0.6.0.862' }
+}
+
+apply plugin: 'scm-tag-continuous'
+apply plugin: 'scm-tag-release'
+apply plugin: 'ploy-package'
+apply plugin: 'ploy-deploy' 
+
+import com.seitenbau.ploy.packager.PackageArtifacts 
+
+artifactDeploy {
+	type        = "scp"
+	ployId      = "swe.bmi.govdata:portal" 
+} 
+
+/* how to process read/Write the version numbers */
+tagger { 
+  scm="git"
+}
+
+task packageInstallerBundle(type:PackageArtifacts ) {
+  // configs
+  copyCfg("packaging/src/main/resources/","portal-ext.properties")
+
+  // wars
+  copyPkg("packaging/target","*.deb")
+  
+  // ansible
+  copyAnsible( "packaging/src/ansible") {
+    environment("govdata-prod") {
+      folder("packaging/src/main/resources/")
+    }
+  }
+  // search history export script
+  copy("scripts/searchhistory/" , "ansible/files/govdata-prod/scripts/searchhistory/", "*.txt")
+  copy("scripts/searchhistory/" , "ansible/files/govdata-prod/scripts/searchhistory/", "*.py")
+  copy("scripts/searchhistory/requirements/" , "ansible/files/govdata-prod/scripts/searchhistory/requirements/")
+}
+
+ 

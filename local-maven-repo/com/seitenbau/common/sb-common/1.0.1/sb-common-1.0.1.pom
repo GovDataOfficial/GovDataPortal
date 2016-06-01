@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.seitenbau.common</groupId>
+    <artifactId>sb-common-parent</artifactId>
+    <version>1.0.9</version>
+  </parent>
+  <groupId>com.seitenbau.common</groupId>
+  <artifactId>sb-common</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0.1</version>
+  <name>Seitenbau Common Library</name>
+
+  <scm>
+    <connection>scm:svn:https://svn1.seitenbau.net/entwicklung/java/seitenbau/common/sb-common/tags/sb-common-1.0.1</connection>
+  </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <!-- Klassen aus Message-Properties generierren -->
+        <groupId>com.seitenbau.maven.plugins</groupId>
+        <artifactId>maven-messageclass-plugin</artifactId>
+        <version>1.1.0</version>
+        <executions>
+          <execution>
+            <id>generate_commonmessages</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <sourceFile>src/main/resources/com/seitenbau/common/messages/CommonMessages.properties</sourceFile>
+              <resourceBundle>com.seitenbau.common.messages.CommonMessages</resourceBundle>
+              <className>CommonMessages</className>
+              <targetPackage>com.seitenbau.common.messages</targetPackage>
+            </configuration>
+          </execution>
+          <execution>
+          <id>generate_testcommonmessages</id>
+          <goals>
+            <goal>generate</goal>
+          </goals>
+          <configuration>
+            <sourceFile>src/test/resources/messages/TestMessages.properties</sourceFile>
+            <resourceBundle>messages.TestMessages</resourceBundle>
+            <generatedSourcesDir>${project.build.directory}/generated-test-sources</generatedSourcesDir>
+            <className>TestCommonMessages</className>
+            <targetPackage>com.seitenbau.common.messages</targetPackage>
+          </configuration>
+        </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <!-- Docchecker -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-docck-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <version>1.0-beta-2</version>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <transformationSets>
+            <transformationSet>
+              <dir>src/site/resources/schema</dir>
+              <stylesheet>src/site/xsl/xsd2html.xsl</stylesheet>
+              <outputDir>target/site/schema</outputDir>
+              <includes>
+                <include>*.xsd</include>
+              </includes>
+              <fileMappers>
+                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                  <targetExtension>.html</targetExtension>
+                </fileMapper>
+              </fileMappers>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>      
+  <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.16</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
