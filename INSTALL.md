@@ -16,7 +16,7 @@ too, but we have never seen it done.
 - Oracle Java 8 ([download Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html))
 - Python 2.7 ([Python docs](http://www.python.org/getit/))
 - Maven 3.1 ([Maven site](http://maven.apache.org/download.cgi))
-- CKAN 2.3.x ([CKAN installation](http://docs.ckan.org/en/ckan-2.3.4/maintaining/installing/install-from-source.html)]), follow the ([Apache mod_wsgi instructions](http://docs.ckan.org/en/latest/maintaining/installing/deployment.html))
+- CKAN 2.x ([CKAN installation](http://docs.ckan.org/en/latest/maintaining/installing/install-from-source.html)]), follow the ([Apache mod_wsgi instructions](http://docs.ckan.org/en/latest/maintaining/installing/deployment.html))
 - Liferay 6.2.x ([Download site](http://www.liferay.com/de/downloads/liferay-portal/available-releases)) bundled with an application container, e.g. Tomcat for an easy start
 - Elasticsearch 1.6.x follow the ([Elasticsearch installation guide](https://www.elastic.co/guide/en/elasticsearch/reference/1.6/setup-repositories.html))
 - ActiveMQ ([ActiveMQ Getting started](http://activemq.apache.org/getting-started.html))
@@ -39,17 +39,17 @@ Assuming you have an installed and reachable CKAN 2.3 installation.
 
 - Note the admin API key, Liferay will be using this one to authenticate against CKAN (portal-ext.properties)
 
-- Define the file *deutschland.json* with the licenses used by the German Open Data Portals. The file is available at [ogd-metadata](https://github.com/GovDataOfficial/ogd-metadata/blob/master/lizenzen/deutschland.json). This can be configured in the ckan configuration file *production.ini*, e.g.
+- Define the file *deutschland.json* with the licenses used by the German Open Data Portals. The file is available at [ogd-metadata](https://github.com/GovDataOfficial/OGD-1.1/blob/master/lizenzen/deutschland.json). This can be configured in the ckan configuration file *production.ini*, e.g.
 
   - directly to the remote url
 
-    licenses_group_url = https://raw.githubusercontent.com/GovDataOfficial/ogd-metadata/master/lizenzen/deutschland.json
+    licenses_group_url = https://raw.githubusercontent.com/GovDataOfficial/OGD-1.1/master/lizenzen/deutschland.json
 
   - or to a local copy of the file
 
     licenses_group_url = file:///usr/lib/ogd-metadata/lizenzen/deutschland.json
 
-- Create some categories (CKAN calls them "groups"). The ogd conform groups can be easily created by the CKAN command *groupadder* in the CKAN extension [ckanext-govdatade](https://github.com/GovDataOfficial/govdata/ckanext-govdatade).
+- Create some categories (CKAN calls them "groups"). The ogd conform groups can be easily created by the CKAN command *groupadder* in the CKAN extension [ckanext-govdatade](https://github.com/GovDataOfficial/ckanext-govdatade).
 
 - Create some datasets
 
@@ -146,7 +146,7 @@ Build and deploy
 ----------------
 Clone the main project:
 
-    git clone https://github.com/GovDataOfficial/GovData.git govdata-portal
+    git clone https://github.com/GovDataOfficial/GovDataPortal.git govdata-portal
     cd govdata-portal
 
 Build the portlets with Maven:

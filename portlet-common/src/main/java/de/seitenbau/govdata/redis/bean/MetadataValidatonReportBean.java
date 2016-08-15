@@ -1,13 +1,12 @@
 package de.seitenbau.govdata.redis.bean;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
-
-import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 /**
  * Eine Klasse, die einen Eintrag für die Reports eines Metadatensatzes in der Redis-Datenbank
@@ -38,7 +37,4 @@ public class MetadataValidatonReportBean implements Serializable
 
   @JsonProperty
   private String id;
-
-  @JsonProperty
-  private List<List<String>> schema;
 }

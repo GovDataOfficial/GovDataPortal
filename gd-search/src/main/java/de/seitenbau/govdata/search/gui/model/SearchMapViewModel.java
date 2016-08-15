@@ -27,6 +27,7 @@ public class SearchMapViewModel
   private boolean useOsm;
   private String tileUrl;
   private String geocodingUrl;
+  private String credits;
   
   
 }

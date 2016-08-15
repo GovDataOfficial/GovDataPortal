@@ -6,7 +6,8 @@
    <input type="hidden" name="s" th:field="*{s}" />
    <input type="hidden" name="start" th:field="*{start}"/>
    <input type="hidden" name="end" th:field="*{end}"/>
-   <div id="map" class="map" th:attr="data-use-osm=${searchMap.useOsm}, data-tile-url=${searchMap.tileUrl}, data-geocoding-url=${searchMap.geocodingUrl}">
+   <div id="map" class="map"
+     th:attr="data-use-osm=${searchMap.useOsm}, data-tile-url=${searchMap.tileUrl}, data-geocoding-url=${searchMap.geocodingUrl}, data-credits=${searchMap.credits}">
      <div class="map-search-button-container row">
        <div class="column small-12 medium-8 large-6 locationsearch">
          <label class="offscreen" for="locationsearchinput" th:text="#{'od.mapsearch.locationsearch.input.placeholder'}"></label>

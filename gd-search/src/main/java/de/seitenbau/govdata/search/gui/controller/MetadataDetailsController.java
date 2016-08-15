@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,8 +20,6 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowStateException;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -71,6 +70,7 @@ import de.seitenbau.govdata.redis.adapter.RedisClientAdapter;
 import de.seitenbau.govdata.redis.util.RedisReportUtil;
 import de.seitenbau.govdata.search.common.NotificationMailSender;
 import de.seitenbau.govdata.search.common.NotificationMailSender.EventType;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller for the metadata details page.
@@ -122,6 +122,8 @@ public class MetadataDetailsController extends BaseServiceImpl
   private static final String MODEL_KEY_CANEDIT = "userCanEditDataset";
 
   private static final String MODEL_KEY_EDITDATASETURL = "editDatasetUrl";
+
+  private static final String MODEL_KEY_SHOW_BROKEN_LINKS_HINT = "showBrokenLinksHint";
   
   @Inject
   private RegistryClient registryClient;
@@ -161,14 +163,19 @@ public class MetadataDetailsController extends BaseServiceImpl
     }
 
     ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+    PortletPreferences portletPreferences = request.getPreferences();
     
     // CurrentUser
     User liferayUser = PortalUtil.getUser(request);
     CurrentUser currentUser = findOrCreateCurrentUser(liferayUser);
     
     // Metadata
+    boolean showBrokenLinksHint =
+        GetterUtil.getBoolean(portletPreferences.getValue("showBrokenLinksHint", StringPool.TRUE));
+    
     SelectedMetadata selectedMetadata =
-        createMetadata(metadataIdOrName, themeDisplay, currentUser.getCkanUser());
+        createMetadata(metadataIdOrName, themeDisplay, currentUser.getCkanUser(), showBrokenLinksHint);
+    
     PortletURL actionUrl = response.createActionURL();
     selectedMetadata.setActionUrl(actionUrl.toString());
     selectedMetadata.setCurrentUser(currentUser);
@@ -227,7 +234,6 @@ public class MetadataDetailsController extends BaseServiceImpl
     model.addAttribute("loginurl", loginURL);
 
     // get configuration for portlet
-    PortletPreferences portletPreferences = request.getPreferences();
     boolean ratingsEnabled =
         GetterUtil.getBoolean(portletPreferences.getValue("ratingsEnabled", StringPool.TRUE));
     boolean commentsEnabled =
@@ -557,7 +563,8 @@ public class MetadataDetailsController extends BaseServiceImpl
   }
 
   private SelectedMetadata createMetadata(
-      String metadataIdOrName, ThemeDisplay themeDisplay, de.fhg.fokus.odp.registry.model.User ckanuser)
+      String metadataIdOrName, ThemeDisplay themeDisplay, de.fhg.fokus.odp.registry.model.User ckanuser,
+      boolean showBrokenLinkHint)
   {
     final String method = "createMetadata() : ";
     log.trace(method + "Start");
@@ -594,8 +601,13 @@ public class MetadataDetailsController extends BaseServiceImpl
       result.setComments(wrapComments(comments, themeDisplay));
 
       // read unavailable resource links
-      result.setNotAvailableResourceLinks(
-          RedisReportUtil.readUnavailableResourceLinks(metadata.getId(), redisClientAdapter));
+      if(showBrokenLinkHint) {
+        result.setNotAvailableResourceLinks(
+            RedisReportUtil.readUnavailableResourceLinks(metadata.getId(), redisClientAdapter));
+      } else {
+        result.setNotAvailableResourceLinks(new HashSet<String>());
+      }
+      
       log.debug(method + "SelectedMetadata created!");
     }
     else

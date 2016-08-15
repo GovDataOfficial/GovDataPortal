@@ -108,7 +108,7 @@ public class CategoryImpl implements Category, Serializable {
 
     @Override
     public int getCount() {
-        return Integer.parseInt(group.getPackages());
+        return Integer.parseInt(group.getPackageCount());
     }
 
     @Override

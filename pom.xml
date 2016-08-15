@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>2.3.0</version>
+  <version>2.4.1</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -16,10 +16,10 @@
   </scm>
 
   <properties>
-    <liferay.version>6.2.3</liferay.version>
+    <liferay.version>6.2.5</liferay.version>
     <liferay.faces.version>3.2.5-ga6</liferay.faces.version>
     <liferay.deploy.dir>/opt/app/portal-liferay/liferay-home/deploy</liferay.deploy.dir>
-    <liferay.maven.plugin.version>6.2.2</liferay.maven.plugin.version>
+    <liferay.maven.plugin.version>6.2.5</liferay.maven.plugin.version>
     <junit.version>4.12</junit.version>
     <assertj.version>1.7.1</assertj.version>
     <portlet-api.version>2.0</portlet-api.version>
@@ -201,12 +201,18 @@
   <modules>
     <module>odp-common</module>
     <module>portlet-common</module>
+    <!-- <module>dataset-portlet</module> --><!-- TODO : Projekt komplett entfernen -->
     <module>entities</module>
     <module>language-hook</module>
+    <!-- <module>manage-datasets-portlet</module> --><!-- Wird später eventuell noch benötigt -->
+    <!-- <module>search-gui-portlet</module> --><!-- TODO : Projekt komplett entfernen -->
+    <!-- <module>properties-hook</module> --><!-- TODO : Projekt komplett entfernen -->
     <module>opendataregistry-client</module>
+    <!-- <module>govdata-theme</module> --><!-- TODO : Projekt komplett entfernen -->
     <module>govdatastyle-theme</module>
     <module>boxes-portlet</module>
     <module>screennamevalidator-hook</module>
+    <!-- <module>rss-servlet</module> --><!-- TODO : Projekt komplett entfernen -->
     <module>categories-grid-portlet</module>
     <module>cache-scheduler</module>
     <module>errorpages-hook</module>
@@ -444,12 +450,6 @@
     </dependencies>
   </dependencyManagement>
   <repositories>
-    <repository>
-      <id>local maven repo</id>
-      <name>Local Project Repository for Maven</name>
-      <layout>default</layout>
-      <url>file://${basedir}/../local-maven-repo</url>
-    </repository>
     <repository>
       <id>maven2-repository.dev.java.net</id>
       <name>Java.net Repository for Maven</name>

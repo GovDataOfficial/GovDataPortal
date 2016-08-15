@@ -57,7 +57,7 @@ public class GroupBean implements Serializable {
     private String description;
 
     @JsonProperty
-    private String packages;
+    private String package_count;
 
     @JsonProperty
     private String approval_status;
@@ -107,16 +107,18 @@ public class GroupBean implements Serializable {
     /**
      * @return the count
      */
-    public String getPackages() {
-        return packages;
+    public String getPackageCount()
+    {
+      return package_count;
     }
 
     /**
      * @param count
      *            the count to set
      */
-    public void setPackages(String packages) {
-        this.packages = packages;
+    public void setPackageCount(String package_count)
+    {
+      this.package_count = package_count;
     }
 
     /**

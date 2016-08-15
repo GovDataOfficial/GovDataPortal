@@ -89,9 +89,12 @@
   }
 }
 
-// move the copyright hint at the top
-.ol-attribution.ol-logo-only {
-  bottom: auto;
-  height: 1.1em;
-  top: .4em;
+// move the copyright hint to the top
+.ol-attribution {
+  &.ol-uncollapsible {
+    height: inherit;
+    top: 0;
+    bottom: auto;
+    border-top-left-radius: 0;
+  }
 }
