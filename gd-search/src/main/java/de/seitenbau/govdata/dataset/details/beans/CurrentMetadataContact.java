@@ -1,7 +1,4 @@
 package de.seitenbau.govdata.dataset.details.beans;
-
-import java.util.List;
-
 /**
  * Copyright (c) 2012, 2015 Fraunhofer Institute FOKUS
  *
@@ -19,11 +16,7 @@ import java.util.List;
  * Platform. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
  */
 
-/**
- * CurrentMetadataContact.
- * 
- * @author bdi,msg
- */
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,44 +24,52 @@ import org.slf4j.LoggerFactory;
 import de.fhg.fokus.odp.registry.model.Contact;
 import de.fhg.fokus.odp.registry.model.Metadata;
 import de.fhg.fokus.odp.registry.model.RoleEnumType;
-import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
 import de.fhg.fokus.odp.registry.model.exception.UnknownRoleException;
 
 /**
- * The Class ODRClientImpl.
+ * CurrentMetadataContact.
  * 
- * @author msg
+ * @author bdi,msg
  */
 public class CurrentMetadataContact
 {
 
   private static final String EMPTY_STRING = "";
 
-  public String name = EMPTY_STRING;
+  private String name = EMPTY_STRING;
 
-  public String email = EMPTY_STRING;
+  private String email = EMPTY_STRING;
 
-  private static final Logger log = LoggerFactory.getLogger(CurrentMetadataContact.class);
+  private static final Logger logger = LoggerFactory.getLogger(CurrentMetadataContact.class);
 
-  // this is the order in which the contact is searched. The first available is taken.
-  private final static RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.AUTHOR, RoleEnumType.PUBLISHER, RoleEnumType.MAINTAINER};
-
-  public static boolean isNullOrEmpty(String s)
-  {
-    return s == null || s.length() == 0;
-  }
+  /** this is the order in which the contact is searched. The first available is taken. */
+  private final RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.AUTHOR, RoleEnumType.PUBLISHER,
+      RoleEnumType.MAINTAINER};
   
-  public CurrentMetadataContact(List<Contact> contacts, String author, String author_email) {
+  /**
+   * Konstruktur mit einer Liste der Kontakte und Defaultwerten.
+   * 
+   * @param contacts die Liste der Kontakte.
+   * @param author der Defaultwert für den Autor.
+   * @param authorEmail der Defaultwert für die E-Mail des Autors.
+   */
+  public CurrentMetadataContact(List<Contact> contacts, String author, String authorEmail)
+  {
     try
     {
-      findContact(contacts, author, author_email);
+      findContact(contacts, author, authorEmail);
     }
-    catch (OpenDataRegistryException | UnknownRoleException e)
+    catch (UnknownRoleException e)
     {
-      log.error("Error while processing metadata contact: ", e);
+      logger.debug("Error while processing metadata contact: {}", e.getMessage());
     }
   }
   
+  /**
+   * Konstruktur mit einem Parameter {@link Metadata}.
+   * 
+   * @param metadata das {@link Metadata}-Objekt, aus dem die Kontakte gelesen werden sollen.
+   */
   public CurrentMetadataContact(Metadata metadata)
   {
     try
@@ -78,14 +79,15 @@ public class CurrentMetadataContact
        findContact(metadata.getContacts(), metadata.getAuthor(), null);
       }
     }
-    catch (OpenDataRegistryException | UnknownRoleException e)
+    catch (UnknownRoleException e)
     {
-      log.error("Error while processing metadata contact: ", e);
+      logger.debug("Error while processing metadata contact: {}", e.getMessage());
     }
   }
   
   private void findContact(List<Contact> contacts, String author, String authorEmail)
-      throws OpenDataRegistryException, UnknownRoleException {
+      throws UnknownRoleException
+  {
     for (RoleEnumType role : roles)
     {
       if (tryFetchContact(contacts, author, authorEmail, role))
@@ -95,11 +97,14 @@ public class CurrentMetadataContact
     }
   }
 
-  private boolean tryFetchContact(List<Contact> contacts, String author, String authorEmail, RoleEnumType role)
-      throws OpenDataRegistryException, UnknownRoleException
+  private boolean tryFetchContact(
+      List<Contact> contacts, String author, String authorEmail, RoleEnumType role)
+      throws UnknownRoleException
   {
-    for(Contact contact : contacts) {
-      if(contact.getRole() == role) {
+    for (Contact contact : contacts)
+    {
+      if (contact.getRole() == role)
+      {
         // consider special case: The author of metadata has priority
         if (role == RoleEnumType.AUTHOR && !isNullOrEmpty(author))
         {
@@ -116,6 +121,11 @@ public class CurrentMetadataContact
     }
     
     return false;
+  }
+
+  private static boolean isNullOrEmpty(String s)
+  {
+    return s == null || s.length() == 0;
   }
 
   @Override

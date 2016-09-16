@@ -461,13 +461,6 @@ function initMap() {
       }
     }
     
-    
-    // make dropdown appear above inputfield on small screens
-    var autocompleteAlign = ['tl', 'bl'];
-    if(document.documentElement.clientWidth < 767) {
-      autocompleteAlign = ['bl', 'tl'];
-    }
-    
     Y.one('#locationsearchinput').plug(Y.Plugin.AutoComplete, {
       source: mapconfig.geocodingUrl,
       // Action on selecting an item
@@ -481,11 +474,6 @@ function initMap() {
 
           map.getView().fit(feature.getGeometry(), map.getSize(), {'padding': [100,100,100,100]});
         }
-      },
-      
-      align: {
-        node  : '#locationsearchinput',
-        points: autocompleteAlign
       },
 
       // Only consume actual list of features

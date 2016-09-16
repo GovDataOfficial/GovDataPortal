@@ -29,7 +29,7 @@ import de.seitenbau.govdata.search.index.model.ResourceDto;
 @Component
 public class SearchHitMapper
 {
-  private static final Logger log = LoggerFactory.getLogger(SearchHitMapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(SearchHitMapper.class);
   
   private static final ObjectMapper OM = new ObjectMapper();
 
@@ -38,11 +38,17 @@ public class SearchHitMapper
 
   private static final String TEMPORAL_COVERAGE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
+  /**
+   * Mappt ein Elasticsearch-Objekt {@link SearchHit} zu einem Datenobjekt {@link HitDto}.
+   * 
+   * @param searchHit das zu mappende Elasticsearch-Objekt.
+   * @return das gemappte Datenobjekt.
+   */
   @SuppressWarnings("unchecked")
   public HitDto mapToHitDto(SearchHit searchHit)
   {
     final String method = "mapToHitDto() : ";
-    log.trace(method + "Start");
+    logger.trace(method + "Start");
 
     Map<String, Object> data = searchHit.getSource();
     Map<String, Object> metadata = (Map<String, Object>) data.get("metadata");
@@ -62,12 +68,14 @@ public class SearchHitMapper
     
     String temporalCoverageFrom = getFieldValueString(metadata, "temporal_coverage_from", null);
     Date temporalCoverageFromDate = null;
-    if(temporalCoverageFrom != null) {
+    if (temporalCoverageFrom != null)
+    {
       temporalCoverageFromDate = DateUtil.parseDateString(temporalCoverageFrom, TEMPORAL_COVERAGE_PATTERN);
     }
     String temporalCoverageTo = getFieldValueString(metadata, "temporal_coverage_to", null);
     Date temporalCoverageToDate = null;
-    if(temporalCoverageTo != null) {
+    if (temporalCoverageTo != null)
+    {
       temporalCoverageToDate = DateUtil.parseDateString(temporalCoverageTo, TEMPORAL_COVERAGE_PATTERN);
     }
     
@@ -96,7 +104,7 @@ public class SearchHitMapper
         .resources(extractResources(metadata.get("resources")))
         .build();
 
-    log.trace(method + "End");
+    logger.trace(method + "End");
     return mappedHit;
   }
 
@@ -104,7 +112,7 @@ public class SearchHitMapper
   {
     // highest priority: author
     String author = getFieldValueString(metadata, "author", null);
-    String author_email = getFieldValueString(metadata, "author_email", null);
+    String authorEmail = getFieldValueString(metadata, "author_email", null);
     
     // backup: maintainer
     String maintainer = getFieldValueString(metadata, "maintainer", null);
@@ -114,21 +122,25 @@ public class SearchHitMapper
     List<Contact> contactsFromHit = getContactsFromHit(metadata);
     
     // add publisher and maintainer from ckan-data (like MetadataImpl does)
-    if(!hasRoleInContacts(contactsFromHit, RoleEnumType.PUBLISHER) && StringUtils.isNotEmpty(author)) {
-      contactsFromHit.add(createContact(author, author_email, RoleEnumType.PUBLISHER));
+    if (!hasRoleInContacts(contactsFromHit, RoleEnumType.PUBLISHER) && StringUtils.isNotEmpty(author))
+    {
+      contactsFromHit.add(createContact(author, authorEmail, RoleEnumType.PUBLISHER));
     }
     
-    if(!hasRoleInContacts(contactsFromHit, RoleEnumType.MAINTAINER) && StringUtils.isNotEmpty(maintainer)) {
+    if (!hasRoleInContacts(contactsFromHit, RoleEnumType.MAINTAINER) && StringUtils.isNotEmpty(maintainer))
+    {
       contactsFromHit.add(createContact(maintainer, maintainerEmail, RoleEnumType.MAINTAINER));
     }
    
     // use the same code as details-view for determining the contact
-    CurrentMetadataContact currentMetadataContact = new CurrentMetadataContact(contactsFromHit, author, author_email);
+    CurrentMetadataContact currentMetadataContact =
+        new CurrentMetadataContact(contactsFromHit, author, authorEmail);
     
     return new String[] {currentMetadataContact.getName(), currentMetadataContact.getEmail()};
   }
   
-  private ContactImpl createContact(String name, String email, RoleEnumType role) {
+  private ContactImpl createContact(String name, String email, RoleEnumType role)
+  {
     ContactBean bean = new ContactBean();
     bean.setRole(role.toField());
     bean.setName(name);
@@ -136,21 +148,28 @@ public class SearchHitMapper
     return new ContactImpl(bean);
   }
   
-  private boolean hasRoleInContacts(List<Contact> contactsList, RoleEnumType role) {
-    try {
-      for(Contact c : contactsList) {
-        if(c.getRole() == role) {
+  private boolean hasRoleInContacts(List<Contact> contactsList, RoleEnumType role)
+  {
+    try
+    {
+      for (Contact c : contactsList)
+      {
+        if (c.getRole() == role)
+        {
           return true;
         }
       }
       return false;
-    } catch (UnknownRoleException e) {
-      log.error("Unknown role: " + role.getDisplayName());
+    }
+    catch (UnknownRoleException e)
+    {
+      logger.debug("Unknown role: " + role.getDisplayName());
       return false;
     }
   }
   
-  private List<Contact> getContactsFromHit(Map<String, Object> metadata) {
+  private List<Contact> getContactsFromHit(Map<String, Object> metadata)
+  {
     String contactJSON = null;
     List<Contact> contactsList = new ArrayList<Contact>();
 
@@ -158,20 +177,27 @@ public class SearchHitMapper
     @SuppressWarnings("unchecked") // because elasticSearch will always return that structure
     List<HashMap<String, String>> extras = (ArrayList<HashMap<String, String>>) metadata.get("extras");
     
-    if(extras != null) {
-      for(HashMap<String, String> extra : extras ) {
-        if(StringUtils.equals(extra.get("key"), "contacts")) {
+    if (extras != null)
+    {
+      for (HashMap<String, String> extra : extras)
+      {
+        if (StringUtils.equals(extra.get("key"), "contacts"))
+        {
           contactJSON = extra.get("value");
           break; // found contact, no need to go further
         }
       }
     }
     
-    if(contactJSON != null) {
-      try {
+    if (contactJSON != null)
+    {
+      try
+      {
         contactsList = ContactImpl.read(OM.readTree(contactJSON));
-      } catch (IOException e) {
-        log.error("failed parsing extras->contacts in " + metadata.get("id"));
+      }
+      catch (IOException e)
+      {
+        logger.error("failed parsing extras->contacts in " + metadata.get("id"));
         e.printStackTrace();
       }
     }
