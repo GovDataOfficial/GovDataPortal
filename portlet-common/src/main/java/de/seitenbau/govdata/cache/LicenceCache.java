@@ -6,62 +6,105 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import de.fhg.fokus.odp.registry.model.Licence;
 import de.seitenbau.govdata.comparator.LicencesTitleComparator;
 
+/**
+ * Liefert die gecachte Liste der Lizenzen.
+ * 
+ * @author rnoerenberg
+ */
 @Slf4j
 @Repository
 public class LicenceCache extends BaseRegistryClientCache
 {
-  private List<Licence> licences = null;
-
   private Map<String, Licence> licenceMap = null;
 
   private List<Licence> licenceMapSortedByTitle = null;
 
+  /**
+   * Initialisiert die Klasse mit individuellen Parametern.
+   */
+  @PostConstruct
+  public void init()
+  {
+    setMaxCacheTimeHours(12);
+  }
+
+  /**
+   * Gibt die Lizenzen in einer Map zurück. Der Key der Map ist der Name der Lizenzen.
+   * 
+   * @return die Map mit den Lizenzen.
+   */
   public Map<String, Licence> getLicenceMap()
   {
-    // fill internal cache if not initialized
-    if (licenceMap == null)
+    final String method = "getLicenceMap() : ";
+    log.trace(method + "Start");
+
+    // fill internal cache if not initialized or cache expired
+    if (licenceMap == null || isCacheExpired())
     {
       licenceMap = new HashMap<>();
 
-      for (Licence licence : getLicences())
+      List<Licence> licencesTemp = getLicences();
+      if (CollectionUtils.isNotEmpty(licencesTemp))
       {
-        licenceMap.put(licence.getName(), licence);
+        for (Licence licence : licencesTemp)
+        {
+          licenceMap.put(licence.getName(), licence);
+        }
       }
     }
 
+    log.trace(method + "End");
     return licenceMap;
   }
 
+  /**
+   * Gibt die Lizenzen in einer sortierten Liste zurück.
+   * 
+   * @return die sortierte Liste der Lizenzen.
+   */
   public List<Licence> getLicenceListSortedByTitle()
   {
-    if (licenceMapSortedByTitle == null)
+    final String method = "getLicenceListSortedByTitle() : ";
+    log.trace(method + "Start");
+
+    // fill internal cache if not initialized or cache expired
+    if (licenceMapSortedByTitle == null || isCacheExpired())
     {
-      // Avoid ConcurrentModificationException on same list object when modifying list in Java 8
       List<Licence> licencesTemp = getLicences();
       if (licencesTemp != null)
       {
+        // Avoid ConcurrentModificationException on same list object when modifying list in Java 8
         licenceMapSortedByTitle = new ArrayList<Licence>(licencesTemp);
         Collections.sort(licenceMapSortedByTitle, new LicencesTitleComparator());
       }
     }
 
+    log.trace(method + "End");
     return licenceMapSortedByTitle;
   }
 
   private List<Licence> getLicences()
   {
-    if (licences == null)
+    final String method = "getLicences() : ";
+    log.trace(method + "Start");
+
+    log.info("{}Empty or expired licence cache, fetching licences from CKAN.", method);
+
+    List<Licence> licences = new ArrayList<>();
+    List<Licence> licensesFromCkan = getRegistryClient().getInstance().listLicenses();
+    if (CollectionUtils.isNotEmpty(licensesFromCkan))
     {
-      log.info("Empty licence cache, fetching licences from CKAN.");
-      licences = new ArrayList<>();
-      for (Licence licence : getRegistryClient().getInstance().listLicenses())
+      for (Licence licence : licensesFromCkan)
       {
         if (licence != null)
         {
@@ -69,7 +112,9 @@ public class LicenceCache extends BaseRegistryClientCache
         }
       }
     }
+    cacheUpdated();
 
+    log.trace(method + "End");
     return licences;
   }
 }

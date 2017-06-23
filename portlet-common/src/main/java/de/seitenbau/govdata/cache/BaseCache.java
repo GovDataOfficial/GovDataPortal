@@ -15,7 +15,7 @@ import org.apache.commons.lang3.time.DateUtils;
  */
 public abstract class BaseCache
 {
-  private final static int MAX_CACHE_TIME_HOURS_DEFAULT = 2;
+  private static final int MAX_CACHE_TIME_HOURS_DEFAULT = 2;
 
   private Date lastUpdated = new Date();
   

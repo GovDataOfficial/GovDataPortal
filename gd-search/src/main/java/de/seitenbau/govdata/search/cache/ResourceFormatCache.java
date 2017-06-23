@@ -42,9 +42,13 @@ public class ResourceFormatCache extends BaseCache
    */
   public List<String> getFormats()
   {
+    final String method = "getFormats() : ";
+    log.trace(method + "Start");
+
     if (formats == null || isCacheExpired())
     {
-      log.info("Empty or expired resource format cache, fetching resource formats from Elasticsearch.");
+      log.info("{}Empty or expired resource format cache, fetching resource formats from Elasticsearch.",
+          method);
       // 48 can be divided by 6,4 and 2, important for responsive view.
       formats = indexService.getResourceFormats(48);
       cacheUpdated();
@@ -52,6 +56,7 @@ public class ResourceFormatCache extends BaseCache
       formatsSorted = null;
     }
 
+    log.trace(method + "End");
     return formats;
   }
 
@@ -63,6 +68,9 @@ public class ResourceFormatCache extends BaseCache
    */
   public List<String> getFormatsSorted()
   {
+    final String method = "getFormatsSorted() : ";
+    log.trace(method + "Start");
+
     if (formatsSorted == null || isCacheExpired())
     {
       // Avoid ConcurrentModificationException on same list object when modifying list in Java 8
@@ -71,11 +79,12 @@ public class ResourceFormatCache extends BaseCache
       {
         formatsSorted = new ArrayList<String>(formatsTemp);
         Collator collator = Collator.getInstance(Locale.GERMAN);
-        collator.setStrength(Collator.SECONDARY);// a == A, a < Ä
+        collator.setStrength(Collator.SECONDARY); // a == A, a < Ä
         Collections.sort(formatsSorted, collator);
       }
     }
 
+    log.trace(method + "End");
     return formatsSorted;
   }
 }
