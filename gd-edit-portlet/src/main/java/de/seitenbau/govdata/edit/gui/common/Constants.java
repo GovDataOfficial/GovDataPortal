@@ -8,5 +8,5 @@ package de.seitenbau.govdata.edit.gui.common;
  */
 public interface Constants
 {
-  public static final String NAME_NEW_DATASET = "Neuer Datensatz";
+  String NAME_NEW_DATASET = "Neuer Datensatz";
 }

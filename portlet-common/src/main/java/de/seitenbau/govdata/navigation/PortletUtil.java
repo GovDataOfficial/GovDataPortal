@@ -8,6 +8,7 @@ import javax.portlet.RenderRequest;
 
 import org.elasticsearch.common.lang3.StringUtils;
 
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -43,5 +44,17 @@ public abstract class PortletUtil
     {
       url.setParameter(paramName, value);
     }
+  }
+
+  /**
+   * Gibt die Basis-URL für den Link zu den Details im Raw-Format zurück. Die URL endet mit einem
+   * Slash, so dass der Metadatenname nur noch angehängt werden muss.
+   * 
+   * @return
+   */
+  public static String getLinkToDatasetDetailsRawFormatBaseUrl()
+  {
+    String ckanFriendlyUrl = StringUtils.appendIfMissing(PropsUtil.get("cKANurlFriendly"), "/");
+    return ckanFriendlyUrl + "dataset/";
   }
 }

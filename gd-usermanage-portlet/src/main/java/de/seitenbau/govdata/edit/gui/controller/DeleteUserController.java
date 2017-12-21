@@ -49,7 +49,7 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
-import de.fhg.fokus.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.messages.MessageType;
 import de.seitenbau.govdata.navigation.LiferayNavigation;
 import de.seitenbau.govdata.odr.ODRTools;
@@ -222,7 +222,7 @@ class DeleteUserController
     }
     
     // delete ckan user
-    de.fhg.fokus.odp.registry.model.User ckanUser =
+    de.seitenbau.govdata.odp.registry.model.User ckanUser =
         new ODRTools().findCkanUser(ticketUser.getScreenName(), client);
     if(ckanUser != null) {
       // rename the ckan user prior to deletion (so the original name can be used again)

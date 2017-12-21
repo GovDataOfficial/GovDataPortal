@@ -461,12 +461,11 @@
   .category-list > * {
     margin: 5px 0;
   }
+}
 
-  .resource-icon {
-    display: inline-block;
-    float: none;
-    margin: 0 .07em .4em 0;
-  }
+.aui .resultentry .resource-icon {
+  display: inline-block;
+  float: none;
 }
 
 .searchresults-more {

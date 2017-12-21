@@ -1,0 +1,366 @@
+{
+  "license_title": null,
+  "maintainer": "maintainer_name",
+  "relationships_as_object": [],
+  "private": false,
+  "maintainer_email": "maintainer_email",
+  "num_tags": 9,
+  "id": "c9e92d9b-5437-47bb-9f64-b3f9400d8e53",
+  "metadata_created": "2017-09-04T10:37:17.780978",
+  "metadata_modified": "2017-09-04T10:37:28.029510",
+  "author": "author_name",
+  "author_email": "author_email",
+  "state": "active",
+  "version": "2.0",
+  "creator_user_id": "d6ca072e-17fd-4ba2-a70e-bbb70467456d",
+  "type": "dataset",
+  "resources": [
+    {
+      "documentation": "https://www.govdata.de/ckan/api/rest/dataset/naturraume-geest-und-marsch3",
+      "cache_last_updated": null,
+      "issued": "2017-02-27",
+      "modified": "2017-03-07T10:00:00",
+      "licenseAttributionByText": "Freie und Hansestadt Hamburg, Behörde für Umwelt und Energie, 2015",
+      "webstore_last_updated": null,
+      "id": "5ba8c170-f4b4-411a-b3a4-a117cf6e2687",
+      "size": "685246",
+      "license": "http://dcat-ap.de/def/licenses/dl-by-de/2_0",
+      "conforms_to": "[\"Eine Regel oder eine URL\"]",
+      "download_url": "http://geodienste.hamburg.de/Geest-_Marsch",
+      "state": "active",
+      "status": "http://purl.org/adms/status/Completed",
+      "mimetype": null,
+      "hash": "5bcc814127be171c75595d419f371c74c9cf041419c45d6e8d2c789e5c303b47",
+      "description": "Das ist eine deutsche Beschreibung der Distribution 1",
+      "format": "https://www.iana.org/assignments/media-types/application/gml+xml",
+      "mimetype_inner": null,
+      "url_type": null,
+      "plannedAvailability": "http://dcat-ap.de/def/plannedAvailability/available",
+      "cache_url": null,
+      "name": "Download WFS Naturräume Geest und Marsch (GML)",
+      "language": "[\"de\"]",
+      "rights": "http://dcat-ap.de/def/licenses/dl-by-de/2_0",
+      "url": "http://geodienste.hamburg.de/darf_nicht_die_gleiche_url_wie_downloadurl_sein_da_es_sonst_nicht_angezeigt_wird",
+      "created": "2017-09-04T12:37:28.069494",
+      "package_id": "c9e92d9b-5437-47bb-9f64-b3f9400d8e53",
+      "webstore_url": null,
+      "last_modified": null,
+      "hash_algorithm": "http://dcat-ap.de/def/hashAlgorithms/sha/256",
+      "position": 0,
+      "revision_id": "4dba7592-580b-474c-9dbd-38d98395ba73",
+      "resource_type": null
+    },
+    {
+      "documentation": "https://www.govdata.de/ckan/api/rest/dataset/naturraume-geest-und-marsch3",
+      "cache_last_updated": null,
+      "issued": "2017-02-27",
+      "modified": "2017-03-07T10:00:00",
+      "licenseAttributionByText": "Freie und Hansestadt Hamburg, Behörde für Umwelt und Energie, 2015",
+      "webstore_last_updated": null,
+      "id": "776783b0-194e-4193-aaa5-b275050f7595",
+      "size": "222441",
+      "license": "http://dcat-ap.de/def/licenses/dl-by-de/2_0",
+      "download_url": "http://daten-hamburg.de/umwelt_klima/naturraeume_geest_und_marsch/Naturraeume_Geest_und_Marsch_HH_2017-02-20.zip",
+      "state": "active",
+      "status": "http://purl.org/adms/status/Completed",
+      "mimetype": "ZIP",
+      "hash": "BBBBA2505BD74BE6C4775591E45DF702B93FBDC55CAFE2774FE77275DB1277AF",
+      "description": "Das ist eine deutsche Beschreibung der Distribution 4",
+      "format": "",
+      "mimetype_inner": null,
+      "url_type": null,
+      "plannedAvailability": "http://dcat-ap.de/def/plannedAvailability/available",
+      "cache_url": null,
+      "name": "Download WFS Naturräume Geest und Marsch (GML)",
+      "language": "[\"de\"]",
+      "rights": "http://dcat-ap.de/def/licenses/dl-by-de/2_0",
+      "url": "http://daten-hamburg.de/umwelt_klima/naturraeume_geest_und_marsch/Naturraeume_Geest_und_Marsch_HH_2017-02-20.zip_abweichend",
+      "created": "2017-09-04T12:37:28.069512",
+      "package_id": "c9e92d9b-5437-47bb-9f64-b3f9400d8e53",
+      "webstore_url": null,
+      "last_modified": null,
+      "hash_algorithm": "http://dcat-ap.de/def/hashAlgorithms/sha/256",
+      "position": 1,
+      "revision_id": "4dba7592-580b-474c-9dbd-38d98395ba73",
+      "resource_type": null
+    }
+  ],
+  "num_resources": 2,
+  "tags": [
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "Bodenschutz",
+      "id": "9a736e21-b84d-48f0-a393-589cfa8fec24",
+      "name": "Bodenschutz"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "Geodaten",
+      "id": "292ad1bc-4d41-4dd3-9d6d-061f5d4df98b",
+      "name": "Geodaten"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "Grundwasser",
+      "id": "c632e71b-46b1-46be-ab9c-a960cd8a88f5",
+      "name": "Grundwasser"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "Karte",
+      "id": "33c1b94f-0fcc-486e-81d5-b7afff3c3893",
+      "name": "Karte"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "Thematische Karte",
+      "id": "1bc5434f-caec-4581-b642-3625e9272391",
+      "name": "Thematische Karte"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "Umwelt und Klima",
+      "id": "3c6cca23-c7e3-4f0d-995b-d6bee03ea07d",
+      "name": "Umwelt und Klima"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "hmbtg",
+      "id": "584dbd0f-2dea-4d25-9dec-797ffef998df",
+      "name": "hmbtg"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "hmbtg_09_geodaten",
+      "id": "126972b0-30e7-4fe5-b81d-839dd4f64953",
+      "name": "hmbtg_09_geodaten"
+    },
+    {
+      "vocabulary_id": null,
+      "state": "active",
+      "display_name": "opendata",
+      "id": "2436ac6e-28f1-4ede-94b9-2ff93db4b729",
+      "name": "opendata"
+    }
+  ],
+  "groups": [{
+    "display_name": "Umwelt",
+    "description": "",
+    "image_display_url": "",
+    "title": "Umwelt",
+    "id": "envi",
+    "name": "envi"
+  }],
+  "license_id": null,
+  "relationships_as_subject": [],
+  "organization": {
+    "description": "",
+    "created": "2015-10-23T15:30:23.779666",
+    "title": "Datahub.io",
+    "name": "datahub-io",
+    "is_organization": true,
+    "state": "active",
+    "image_url": "",
+    "revision_id": "b7ce150a-4216-4532-87d9-863ed53cc1fe",
+    "type": "organization",
+    "id": "30b7e9ef-327c-4f32-9591-70a88bcbdda4",
+    "approval_status": "approved"
+  },
+  "name": "metadata_max",
+  "isopen": false,
+  "url": "https://www.govdata.de/web/guest/daten/-/details/naturraume-geest-und-marsch3",
+  "notes": "Die Zuordnung des Hamburger Stadtgebietes zu den Naturräumen Geest und Marsch wird dargestellt. Die Karte ist auch als Hilfskarte für den Kontext -Einbau Ersatzbaustoffe- zu verstehen. Hier gibt es unterschiedliche Richtlinien je nachdem, ob ein Bauvorhaben in bzw. auf Geest- oder Marsch-Boden geplant ist. Die Daten werden als WMS-Darstellungsdienst und als WFS-Downloaddienst bereitgestellt.",
+  "owner_org": "30b7e9ef-327c-4f32-9591-70a88bcbdda4",
+  "extras": [
+    {
+      "key": "access_rights",
+      "value": "public"
+    },
+    {
+      "key": "alternate_identifier",
+      "value": "4635D337-4805-4C32-A211-13F8C038BF27"
+    },
+    {
+      "key": "conforms_to",
+      "value": "Eine Regel oder eine URL"
+    },
+    {
+      "key": "contact_email",
+      "value": "michael.schroeder@bue.hamburg.de"
+    },
+    {
+      "key": "contact_name",
+      "value": "Herr Dr. Michael Schröder"
+    },
+    {
+      "key": "contributorID",
+      "value": "http://dcat-ap.de/def/contributors/transparenzportalHamburg"
+    },
+    {
+      "key": "documentation",
+      "value": "http://metaver.de/trefferanzeige?docuuid=4635D337-4805-4C32-A211-13F8C038BF27"
+    },
+    {
+      "key": "frequency",
+      "value": "http://publications.europa.eu/resource/authority/frequency/ANNUAL"
+    },
+    {
+      "key": "has_version",
+      "value": "https://www.govdata.de/web/guest/suchen/-/details/naturraume-geest-und-marsch4"
+    },
+    {
+      "key": "is_version_of",
+      "value": "https://www.govdata.de/web/guest/suchen/-/details/naturraume-geest-und-marsch2"
+    },
+    {
+      "key": "language",
+      "value": "de"
+    },
+    {
+      "key": "legalbasisText",
+      "value": "Umweltinformationsgesetz (UIG)"
+    },
+    {
+      "key": "maintainer_contacttype",
+      "value": "Person"
+    },
+    {
+      "key": "maintainer_tel",
+      "value": "+49 40 4 28 40 - 3494"
+    },
+    {
+      "key": "originator",
+      "value": "Peter Schröder"
+    },
+    {
+      "key": "originator_contacttype",
+      "value": "Person"
+    },
+    {
+      "key": "politicalGeocodingLevelURI",
+      "value": "http://dcat-ap.de/def/politicalGeocoding/Level/state"
+    },
+    {
+      "key": "politicalGeocodingURI",
+      "value": "[\"http://dcat-ap.de/def/politicalGeocoding/regionalKey/020000000000\",\"http://dcat-ap.de/def/politicalGeocoding/stateKey/02\"]"
+    },
+    {
+      "key": "provenance",
+      "value": "MDK/c71a34e1-bf96-44d8-8020-5ebb0c7012a3"
+    },
+    {
+      "key": "publisher_name",
+      "value": "Behörde für Umwelt und Energie (BUE), Amt für Umweltschutz"
+    },
+    {
+      "key": "publisher_type",
+      "value": "http://purl.org/adms/publishertype/LocalAuthority"
+    },
+    {
+      "key": "publisher_uri",
+      "value": "http://www.hamburg.de/bue/"
+    },
+    {
+      "key": "publisher_url",
+      "value": "http://www.hamburg.de/bue/"
+    },
+    {
+      "key": "related_resource",
+      "value": "http://www.hamburg.de/grundwasser/;jsessionid=2955D422DF427EF0F3DBCA0E67239DC7.liveWorker2"
+    },
+    {
+      "key": "sample",
+      "value": "Referenz auf Beispieldatenstruktur"
+    },
+    {
+      "key": "source",
+      "value": "HMDK/c71a34e1-bf96-44d8-8020-5ebb0c7012a3"
+    },
+    {
+      "key": "spatial",
+      "value": "{\"type\":\"Polygon\",\"coordinates\":[[[10.3263,53.3949],[10.3263,53.9641],[8.4205,53.9641],[8.4205,53.3949],[10.3263,53.3949]]]}"
+    },
+    {
+      "key": "temporal_end",
+      "value": "2016-12-31"
+    },
+    {
+      "key": "temporal_start",
+      "value": "2016-01-01"
+    },
+    {
+      "key": "theme",
+      "value": "http://publications.europa.eu/resource/authority/data-theme/ENVI"
+    },
+    {
+      "key": "version_notes",
+      "value": "Teilweise geänderte Fassung"
+    },
+    {
+      "key": "issued",
+      "value": "2017-09-04T10:10:00.000000"
+    },
+    {
+      "key": "modified",
+      "value": "2017-09-04T11:10:00.000000"
+    },
+    {
+      "key": "geocodingText",
+      "value": "Eine Stadt"
+    },
+    {
+      "key": "author_url",
+      "value": "author_url"
+    },
+    {
+      "key": "maintainer_url",
+      "value": "maintainer_url"
+    },
+    {
+      "key": "maintainer_addressee",
+      "value": "maintainer_addressee"
+    },
+    {
+      "key": "maintainer_details",
+      "value": "maintainer_details"
+    },
+    {
+      "key": "maintainer_street",
+      "value": "maintainer_street"
+    },
+    {
+      "key": "maintainer_city",
+      "value": "maintainer_city"
+    },
+    {
+      "key": "maintainer_country",
+      "value": "maintainer_country"
+    },
+    {
+      "key": "maintainer_zip",
+      "value": "maintainer_zip"
+    },
+    {
+      "key": "publisher_name",
+      "value": "publisher_name"
+    },
+    {
+      "key": "publisher_email",
+      "value": "publisher_email"
+    },
+    {
+      "key": "publisher_url",
+      "value": "publisher_url"
+    }
+  ],
+  "title": "Naturräume Geest und Marsch",
+  "revision_id": "4dba7592-580b-474c-9dbd-38d98395ba73"
+}

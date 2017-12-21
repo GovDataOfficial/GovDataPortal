@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 		copy: {
 		  parentStyles: {
 			    expand: true,
-			    cwd:	'target/govdatastyle-theme-2.3.0-SNAPSHOT/css',
+			    cwd:	'target/govdatastyle-theme-2.4.7-SNAPSHOT/css',
 			    src:	['**'],
 			    dest: 	'.tmp/styles/',
 			    rename: function(dest, src) {

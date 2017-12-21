@@ -6,7 +6,7 @@ package de.seitenbau.govdata.constants;
  * @author rnoerenberg
  *
  */
-public interface DetailsRequestParamNames
+public abstract class DetailsRequestParamNames
 {
   /** Der Parametername für die ID oder den Namen eines Metadatensatzes. */
   public static final String PARAM_METADATA = "metadata";

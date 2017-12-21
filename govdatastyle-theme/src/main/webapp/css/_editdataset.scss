@@ -48,6 +48,30 @@
     margin-left: auto;
     margin-right: 1em;
   }
+
+  .css-table {
+    display: table;
+    width: 100%;
+  }
+
+  .css-row {
+    display: table-row;
+
+    > * {
+      display: table-cell;
+      vertical-align: middle;
+      padding: .3em;
+    }
+
+    > label {
+      vertical-align: top;
+      line-height: 50px;
+    }
+  }
+
+  .date-container .resource-modifieddate {
+    padding: 13px 16px;
+  }
 }
 
 .requiredfieldhint {
@@ -86,9 +110,14 @@
   }
 
   th {
-    padding: 13px 16px;
+    padding: .3em 13px 16px 13px;
+    vertical-align: top;
     text-align: left;
     white-space: nowrap;
+
+    > label {
+      line-height: 50px;
+    }
   }
 
   th.align-right {
@@ -118,6 +147,10 @@
       .checkboxitem {
         display: inline-block;
         width: (99% / 2);
+
+        &.singleitem {
+          width: auto;
+        }
       }
     }
   }
@@ -146,10 +179,49 @@
   .btn.abort {
     float: right;
   }
+
+  .editform_contact {
+    display: table;
+    width: 100%;
+  }
+
+  .editform_contact label {
+    display: table-row;
+  }
+
+  .editform_contact span,
+  .editform_contact input {
+    display: table-cell;
+    padding: .3em;
+    margin: .3em 0;
+  }
+
+  .flex-container {
+    align-items: flex-start;
+  }
+
+  .editform_resource input {
+    width: 100%;
+  }
+  .editform_resource label {
+    width: 20%;
+  }
 }
 
 .addrowbuttoncontainer {
   padding: .3em;
+}
+
+.editform-detailscontainer {
+  border-left: .3em solid $kontur-gray;
+  padding-left: .5em;
+  border-radius: .2em;
+  margin-bottom: 2em;
+
+  .sb-chapter-head {
+    margin: 10px 0;
+    width: 100%;
+  }
 }
 
 #datesCreated {
@@ -165,7 +237,7 @@
 }
 
 .aui .buttonDeleteRow {
-  margin-top: .4em;
+  white-space: nowrap;
 }
 
 #editform {

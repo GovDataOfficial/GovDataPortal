@@ -13,21 +13,20 @@
         <div class="h2-metainfo" th:if="${hit.ckanMetadata}">
           <dl class="resultdetail inline-list publisher">
             <dt>[[#{od.datasets_metadata_contact_publisher}]]: </dt>
-            <dd>[[${hit.contact}]]</dd>
+            <dd th:unless="${#strings.isEmpty(hit.contact)}" th:text="${hit.contact}"></dd>
+            <dd th:if="${#strings.isEmpty(hit.contact)}">-</dd>
           </dl>
           <dl class="resultdetail category-list">
             <dt>[[#{od.datasets_metadata_category}]]: </dt>
-            <dd class="category-item" th:each="category : ${hit.categories}">
-              <img th:alt="${category.title}"
-                th:src="@{${themeDisplay.pathThemeImages} + '/categories/icon_kat_' + ${category.name} + '.svg'}"
-                width="20" height="20" />
-              <span th:text="${category.displayName}"></span>
-            </dd>
+            <th:block th:each="category : ${hit.categories}">
+              <dd th:replace="fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})"></dd>
+            </th:block>
+            <dd th:if="${#lists.isEmpty(hit.categories)}" th:text="#{od.gdsearch.details.withoutcategories}"></dd>
           </dl>
           <dl class="resultdetail inline-list">
             <dt>[[#{od.datasets_open_licence}]]: </dt>
             <dd class="od_usage_agreement"
-                  th:if="${hit.isOpen}"
+                  th:if="${hit.hasOpen and not hit.hasClosed}"
                   th:title="#{od.usage_agreement.free.description}">
               <img th:alt="#{od.usage_agreement.free}"
                    th:src="@{${themeDisplay.pathThemeImages} + '/licence/freie_nutzung.svg'}"
@@ -35,26 +34,38 @@
               [[#{od.usage_agreement.free}]]
             </dd>
             <dd class="od_usage_agreement"
-                  th:unless="${hit.isOpen}"
+                  th:if="${not hit.hasOpen and hit.hasClosed}"
                   th:title="#{od.usage_agreement.restricted.description}">
               <img th:alt="#{od.usage_agreement.restricted}"
                    th:src="@{${themeDisplay.pathThemeImages} + '/licence/eingeschraenkte_nutzung.svg'}"
                    width="20" height="20" />
               [[#{od.usage_agreement.restricted}]]
             </dd>
+            <dd class="od_usage_agreement"
+                th:if="${hit.hasOpen and hit.hasClosed}"
+                th:title="#{od.usage_agreement.restricted.description}">
+              <img th:alt="#{od.usage_agreement.free}"
+                   th:src="@{${themeDisplay.pathThemeImages} + '/licence/freie_nutzung.svg'}"
+                   width="20" height="20" />/
+              <img th:alt="#{od.usage_agreement.restricted}"
+                   th:src="@{${themeDisplay.pathThemeImages} + '/licence/eingeschraenkte_nutzung.svg'}"
+                   width="20" height="20" />
+              [[#{od.usage_agreement.multiplelicenses}]]
+            </dd>
+            <dd class="od_usage_agreement" th:if="${not hit.hasOpen and not hit.hasClosed}">-</dd>
           </dl>
         </div>
       </div>
       <div class="column small-12 medium-4 large-3">
         <dl th:if="${hit.ckanMetadata}" class="resource-formats">
-          <dt th:text="#{od.datasets_formats}"></dt>
+          <dt>[[#{od.datasets_formats}]]:</dt>
           <th:block th:each="format : ${hit.differentFormatTypes}">
             <dd th:replace="fragments/icons :: resourceicondd(${format})"></dd>
           </th:block>
-          <dd th:if="${#lists.isEmpty(hit.differentFormatTypes)}"></dd>
+          <dd th:if="${#lists.isEmpty(hit.differentFormatTypes)}">-</dd>
         </dl>
         <dl class="last-modified">
-          <dt th:text="#{last-modified}"></dt>
+          <dt>[[#{last-modified}]]:</dt>
           <dd th:text="${#dates.format(hit.lastModified, 'dd.MM.yyyy')}"></dd>
         </dl>
         

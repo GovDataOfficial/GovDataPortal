@@ -60,8 +60,8 @@ public class SearchMapController extends AbstractBaseController
     String sort = request.getParameter(QueryParamNames.PARAM_SORT);
     String q = request.getParameter(QueryParamNames.PARAM_PHRASE);
     String boundingbox = request.getParameter(QueryParamNames.PARAM_BOUNDINGBOX);
-    String dateFrom = request.getParameter(QueryParamNames.PARAM_FROM);
-    String dateUntil = request.getParameter(QueryParamNames.PARAM_UNTIL);
+    String dateFrom = request.getParameter(QueryParamNames.PARAM_START);
+    String dateUntil = request.getParameter(QueryParamNames.PARAM_END);
     
     // credits: Resolve placeholder "$year".
     String creditsReplaced =

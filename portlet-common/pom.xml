@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>2.4.6</version>
+    <version>3.0.2</version>
   </parent>
   <artifactId>portlet-common</artifactId>
   <name>Portlet Core GovData</name>
@@ -12,6 +12,12 @@
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>opendataregistry-client</artifactId>
+    </dependency>
+
+    <!-- Microservices -->
+    <dependency>
+      <groupId>de.seitenbau.serviceportal</groupId>
+      <artifactId>gui-common</artifactId>
     </dependency>
     
     <!-- Elasticsearch -->
@@ -31,22 +37,23 @@
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
-      <version>2.0</version>
-      <scope>provided</scope>
+    </dependency>
+    
+    <!--  JSF -->
+    <dependency>
+      <groupId>com.sun.faces</groupId>
+      <artifactId>jsf-api</artifactId>
+      <version>2.1.29</version>
     </dependency>
     
     <!-- Servlet -->
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.4</version>
-      <scope>provided</scope>
+      <artifactId>javax.servlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
-      <version>2.0</version>
-      <scope>provided</scope>
     </dependency>
 
     <!-- DI -->
@@ -94,6 +101,20 @@
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vividsolutions</groupId>
+      <artifactId>jts</artifactId>
+      <version>1.13</version>
+    </dependency>
+    <dependency>
+      <groupId>com.rometools</groupId>
+      <artifactId>rome</artifactId>
+      <version>1.5.0</version>
     </dependency>
 
     <!-- Testing -->

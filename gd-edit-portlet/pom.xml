@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>2.4.6</version>
+    <version>3.0.2</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -30,14 +30,10 @@
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
-      <scope>provided</scope>
-      <version>${portlet-api.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
+      <artifactId>javax.servlet-api</artifactId>
     </dependency>
 
     <!-- ODP -->
@@ -75,7 +71,6 @@
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
-      <version>2.1</version>
     </dependency>
     
     <dependency>
@@ -153,7 +148,11 @@
       <artifactId>rome</artifactId>
       <version>1.5.0</version>
     </dependency>
-    
+    <!--<dependency>-->
+      <!--<groupId>cz.jirutka.validator</groupId>-->
+      <!--<artifactId>validator-collection</artifactId>-->
+      <!--<version>2.2.0</version>-->
+    <!--</dependency>-->
     
 
     <!-- Logging -->

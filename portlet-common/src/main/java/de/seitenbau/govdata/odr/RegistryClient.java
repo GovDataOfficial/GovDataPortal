@@ -27,9 +27,9 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import de.fhg.fokus.odp.registry.ODRClient;
-import de.fhg.fokus.odp.registry.ckan.Constants;
-import de.fhg.fokus.odp.spi.OpenDataRegistry;
+import de.seitenbau.govdata.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.ckan.Constants;
+import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
 
 /**
  * Ein Client für den Zugriff auf CKAN über die CKAN-API.

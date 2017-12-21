@@ -3,7 +3,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
 
   // Define Fielddefinitions
   var dropdownFilterSaveHandler = function(res, model) {
-    var value = model.get('name') + ":" + model.get('selected') + ",";
+    var value = model.get('name') + ":" + encodeURIComponent(model.get('selected')) + ",";
     res.f = (res.hasOwnProperty('f') ? res.f : '') + value;
   };
 
@@ -43,10 +43,10 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
       save: dropdownFilterSaveHandler
     },
 
-    'isopen': {
+    'openness': {
       type: "dropdownview",
-      name: "isopen",
-      options: isopenList,
+      name: "openness",
+      options: opennessList,
       selected: [],
       save: dropdownFilterSaveHandler
     },
@@ -81,7 +81,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
           tags.forEach(function(item) {
             // remove everything that is not allowed in a tag
             item = item.trim().toLowerCase().replace(/[^a-zäöüß0-9 \-_\.]/g, '');
-            values += model.get('name') + ":" + item + ",";
+            values += model.get('name') + ":" + encodeURIComponent(item) + ",";
           });
 
           res.f = (res.hasOwnProperty('f') ? res.f : '') + values;
@@ -101,7 +101,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
         if(model.get('value')) {
           var value = model.get('value').replace(/\/|,/g, ' ').trim();
           if (value)
-            res.f = (res.hasOwnProperty('f') ? res.f : '') + model.get('name') + ":" + value + ",";
+            res.f = (res.hasOwnProperty('f') ? res.f : '') + model.get('name') + ":" + encodeURIComponent(value) + ",";
         }
       }
     };
@@ -121,7 +121,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
       save: function(res, model) {
         var values = "";
         model.get('selected').forEach(function(item) {
-          values += model.get('name') + ":" + item + ",";
+          values += model.get('name') + ":" + encodeURIComponent(item) + ",";
         });
 
         // append to existing property. If it does not exist, create it.
@@ -484,7 +484,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
     }
 
     // Dropdown-Fields / Multiselect (same Model-Structure)
-    ['groups', 'type', 'licence', 'sourceportal', 'isopen', 'format'].forEach(function(item) {
+    ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format'].forEach(function(item) {
       if (param.activeFilters.hasOwnProperty(item)) {
         fieldList.add(Y.merge(fieldTypes[item], {
           selected: param.activeFilters[item]

@@ -7,7 +7,7 @@ AUI({
       Y.DateFormat = '%d.%m.%Y';
 
       [ '#temporalCoverageFrom', '#temporalCoverageUntil', '#datesCreated',
-          '#datesModified', '#datesPublished' ].forEach(function(item) {
+          '#datesModified', '#datesPublished', '.resource-modifieddate' ].forEach(function(item) {
         new Y.DatePicker({
           trigger : item,
           mask : Y.DateFormat,
@@ -28,10 +28,10 @@ AUI({
         editform.submit();
       }
       
-      var removerowdialog = $('#editform').data('removerowdialog');
+      var removeresourcedialog = $('#editform').data('removeresourcedialog');
       $('.buttonDeleteRow').click(function(e) {
-        if(confirm(removerowdialog)) {
-          submitForm("removeRow", e.target.value);
+        if(confirm(removeresourcedialog)) {
+          submitForm("removeResource", e.target.value);
         }
       });
       
@@ -43,7 +43,7 @@ AUI({
       });
       
       $('#buttonAddRow').click(function(e) {
-        submitForm("addRow", "yes, please");
+        submitForm("addResource", "yes, please");
       });
       
       // register confirmation when user wants to leave page without saving changes

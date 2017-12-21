@@ -10,7 +10,7 @@
 
   <mvc:annotation-driven />
 
-  <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+  <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" primary="true"/>
 
   <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.portlet.mvc.annotation.AnnotationMethodHandlerAdapter">
     <property name="webBindingInitializer">

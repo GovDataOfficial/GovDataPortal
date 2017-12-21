@@ -32,6 +32,7 @@
   margin-bottom: rem-calc(30);
   padding: rem-calc(15);
   position: relative;
+  word-wrap: break-word;
 
   &:hover h2,
   &:hover .goto-entry {
@@ -70,5 +71,17 @@
 
   li.column {
     display: block;
+  }
+}
+
+
+.boxesportlet-faketitle {
+  display: none;
+
+  @media #{$large-up} {
+    display: block;
+    margin: 10px 0;
+    font-size: 24px;
+    line-height: 31px;
   }
 }

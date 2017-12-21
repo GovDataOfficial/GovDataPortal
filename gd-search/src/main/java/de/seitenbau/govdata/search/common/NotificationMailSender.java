@@ -25,9 +25,9 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
-import de.fhg.fokus.odp.registry.model.Contact;
-import de.fhg.fokus.odp.registry.model.Metadata;
-import de.fhg.fokus.odp.registry.model.RoleEnumType;
+import de.seitenbau.govdata.odp.registry.model.Contact;
+import de.seitenbau.govdata.odp.registry.model.Metadata;
+import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import lombok.extern.slf4j.Slf4j;
 

@@ -17,95 +17,25 @@
         </h2>
 
         <ul class="row">
-          <ui:repeat value="#{datasets.datasets}" var="dataset">
-            <li class="column small-12 medium-6 large-12">
-              <a href="/web/guest/suchen/-/details/#{dataset.name}" title="#{dataset.title}">
-                <div class="boxesportlet-box design-box">
-                  <div class="metainfo h2-metainfo">
-                    <div class="mediatype-icon mediatype-datensatz">
-                      <img src="/govdatastyle-theme/images/mediatypes/typ_datensatz_inverted.svg" alt=""/>
-                    </div>
-                    <strong>#{i18n['od.dataset']}</strong>
-                    <span>
-                      <h:outputText value="#{dataset.metadataModified}">
-                        <f:convertDateTime pattern="dd.MM.yyyy" />
-                      </h:outputText>
-                    </span>
-                  </div>
-                  
-                  <h3>#{dataset.title}</h3>
-                  <p class="boxtext h2-teaser">
-                    <h:outputText value="#{dataset.notes.length() gt 120 ? dataset.notes.substring(0,117).concat('...') : dataset.notes}" />
-                  </p>
-                  
-                  <ui:include src="category.xhtml">
-                    <ui:param name="categories" value="#{dataset.categories}" />
-                  </ui:include>
-                  
-                  <ui:include src="licence.xhtml">
-                    <ui:param name="isOpen" value="#{dataset.open}" />
-                    <ui:param name="licencetext" value="#{dataset.licence.title}" />
-                  </ui:include>
-                  
-                  <div class="goto-entry h2-metainfo">
-                    <div>#{i18n['od.goto.datensatz']}</div>
-                  </div>
-                  <div class="goto-entry-spacer"></div>
-                </div>
-              </a>
-            </li>
+          <ui:repeat value="#{datasets.datasets}" var="dataset" size="#{datasets.firstColumnLength}">
+            <ui:include src="dataset.xhtml">
+              <ui:param name="dataset" value="#{dataset}" />
+            </ui:include>
           </ui:repeat>
         </ul>
       </div>
+
       <div class="column small-12 large-4">
-        <h2 class="boxesportlet-title">
-          <a href="/web/guest/dokumente/-/searchresult/s/lastmodification_desc">
-            #{i18n['od.home.recent_documents']} 
-            <span class="label label-inverse more-linklabel">#{i18n['od.more']}</span>
-          </a>
-        </h2>
-        
+        <div class="boxesportlet-faketitle">&#160;</div>
         <ul class="row">
-          <ui:repeat value="#{documents.documents}" var="document">
-            <li class="column small-12 medium-6 large-12">
-              <a href="/web/guest/suchen/-/details/#{document.name}" title="#{document.title}" class="box-title">
-                <div class="boxesportlet-box design-box">
-                  <div class="metainfo h2-metainfo">
-                    <div class="mediatype-icon mediatype-dokument">
-                      <img src="/govdatastyle-theme/images/mediatypes/typ_dokument_inverted.svg" alt=""/>
-                    </div>
-                    <strong>#{i18n['od.document']}</strong>
-                    <span>
-                      <h:outputText value="#{document.metadataModified}">
-                        <f:convertDateTime pattern="dd.MM.yyyy" />
-                      </h:outputText>
-                    </span>
-                  </div>
-                  
-                  <h3>#{document.title}</h3>
-                  <p class="boxtext h2-teaser">
-                    <h:outputText value="#{document.notes.length() gt 120 ? document.notes.substring(0,117).concat('...') : document.notes}" />
-                  </p>
-                  
-                  <ui:include src="category.xhtml">
-                    <ui:param name="categories" value="#{document.categories}" />
-                  </ui:include>
-                  
-                  <ui:include src="licence.xhtml">
-                    <ui:param name="isOpen" value="#{document.open}" />
-                    <ui:param name="licencetext" value="#{document.licence.title}" />
-                  </ui:include>
-                  
-                  <div class="goto-entry h2-metainfo">
-                    <div>#{i18n['od.goto.dokument']}</div>
-                  </div>
-                  <div class="goto-entry-spacer"></div>
-                </div>
-              </a>
-            </li>
+          <ui:repeat value="#{datasets.datasets}" var="dataset" offset="2">
+            <ui:include src="dataset.xhtml">
+              <ui:param name="dataset" value="#{dataset}" />
+            </ui:include>
           </ui:repeat>
         </ul>
       </div>
+
       <div class="column small-12 large-4">
         <h2 class="boxesportlet-title">
           <a  href="/web/guest/neues/">
@@ -121,12 +51,12 @@
                 <div class="boxesportlet-box design-box">
                   <div class="metainfo h2-metainfo">
                     <div class="mediatype-icon mediatype-blog">
-                      <img src="/govdatastyle-theme/images/mediatypes/typ_blog_inverted.svg" alt=""/>
+                      <img src="/govdatastyle-theme/images/mediatypes/typ_blog_inverted.svg" alt="typ blog icon"/>
                     </div>
                     <strong>#{i18n['od.blog']}</strong>
                     <span>
                       <h:outputText value="#{blog.displayDate}">
-                        <f:convertDateTime pattern="dd.MM.yyyy" />
+                        <f:convertDateTime pattern="dd.MM.yyyy" timeZone="Europe/Berlin" />
                       </h:outputText>
                     </span>
                   </div>

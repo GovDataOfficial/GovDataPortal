@@ -30,7 +30,10 @@ import org.jsoup.safety.Whitelist;
  */
 public abstract class StringCleaner
 {
-  public final static Whitelist metadataNotes = new Whitelist()
+  /**
+   * Eine Whitelist von HTML-Elementen und -Attributen für die Metadaten-Beschreibung.
+   */
+  public static final Whitelist WHITELIST_METADATA_NOTES = new Whitelist()
       .addTags("a", "li", "ol", "p", "ul")
       .addAttributes("a", "href")
       .addProtocols("a", "href", "ftp", "http", "https", "mailto")

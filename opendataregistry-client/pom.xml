@@ -4,7 +4,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>2.4.6</version>
+    <version>3.0.2</version>
   </parent>
   <artifactId>opendataregistry-client</artifactId>
 
@@ -135,7 +135,7 @@
         <version>2.9</version>
         <configuration>
           <show>public</show>
-          <excludePackageNames>de.fhg.fokus.odp.registry.ckan:de.fhg.fokus.odp.registry.ckan.*</excludePackageNames>
+          <excludePackageNames>de.seitenbau.govdata.odp.registry.ckan:de.seitenbau.govdata.odp.registry.ckan.*</excludePackageNames>
           <reportOutputDirectory>${basedir}/src/docs</reportOutputDirectory>
           <minmemory>128m</minmemory>
           <maxmemory>1g</maxmemory>
@@ -152,7 +152,7 @@
         <version>2.9</version>
         <configuration>
           <show>public</show>
-          <excludePackageNames>de.fhg.fokus.odp.registry.ckan:de.fhg.fokus.odp.registry.ckan.*</excludePackageNames>
+          <excludePackageNames>de.seitenbau.govdata.odp.registry.ckan:de.seitenbau.govdata.odp.registry.ckan.*</excludePackageNames>
           <minmemory>128m</minmemory>
           <maxmemory>1g</maxmemory>
         </configuration>

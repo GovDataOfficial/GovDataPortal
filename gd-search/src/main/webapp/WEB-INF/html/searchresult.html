@@ -118,8 +118,8 @@
       </th:block>
 
       <!--/* there are only two options. These are always in the list, so we have to check if any of them is > 0 */-->
-      <th:block th:if="${searchResult.filterMap.get('isopen').get(0).docCount > 0 || searchResult.filterMap.get('isopen').get(1).docCount > 0}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('isopen')}, 'isopen', #{'od.datasets_open_licence'}, false)"></dl>
+      <th:block th:if="${searchResult.filterMap.get('openness').get(0).docCount > 0 || searchResult.filterMap.get('openness').get(1).docCount > 0}">
+        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('openness')}, 'openness', #{'od.gdsearch.searchresult.facet.openness'}, false)"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('licence'))}">

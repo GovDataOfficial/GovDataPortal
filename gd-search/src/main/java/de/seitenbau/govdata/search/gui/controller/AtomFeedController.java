@@ -21,9 +21,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
-import de.fhg.fokus.odp.registry.model.Organization;
-import de.fhg.fokus.odp.registry.model.User;
-import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
+import de.seitenbau.govdata.odp.registry.model.Organization;
+import de.seitenbau.govdata.odp.registry.model.User;
+import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;

@@ -40,62 +40,61 @@
   }
 }
 
-.resource-item {
-  border-bottom: 1px solid $kontur-gray;
-  display: block;
-  padding: .5em 0;
+.aui .resource-list {
+  margin: 0;
 
-  .resource-title {
-    box-sizing: content-box;
-    overflow: hidden;
-    padding-right: 1em;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  dt,
+  dd {
+    margin: .5em 0;
+    line-height: rem-calc(23px);
   }
 
-  .ckan-title {
-    box-sizing: content-box;
-    overflow: hidden;
-    padding-right: 1em;
+  dt:before {
+    content: "";
+    display: block;
   }
 
-  &:hover {
-    .resource-icon::after {
-      color: $white;
+  li {
+    display: block;
+    margin-bottom: .6em;
+    word-wrap: break-word;
+
+    &:last-child {
+      margin-bottom: 0;
     }
+  }
+
+  h2, h3 {
+    border-top: 1px solid $kontur-gray;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 0;
+    padding: .7em 0 .4em;
+    font-weight: bold;
+  }
+
+  a {
+    text-decoration: underline;
   }
 }
 
-.resource-icon {
+.aui .resource-icon {
   background-color: $dark-gray;
-  border-radius: 4px;
+  border-radius: 3px;
   color: $white;
   float: right;
   padding: 0 .5em;
-  position: relative;
   text-align: center;
-  width: 3.7em;
-}
+  font-weight: normal;
 
-.resource-list,
-.ckan-link {
-  .resource-icon {
-    margin-right: 1.2em;
+  font-family: 'Source Sans Pro';
+  font-size: 14px;
+  line-height: 20px;
 
-    &::after {
-      color: $dark-gray;
-      content: 'B';
-      speak: none;
-      font-family: 'govdata';
-      font-size: .9em;
-      -moz-osx-font-smoothing: grayscale;
-      -webkit-font-smoothing: antialiased;
-      font-weight: bold;
-      position: absolute;
-      right: -1em;
-      top: 0;
-    }
-  }
+  max-width: 11em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .ckan-link .resource-item {

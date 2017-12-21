@@ -56,7 +56,7 @@
 	}
 	%>
 
-	<div class="nav-menu nav-menu-style-<%= bulletStyle %>">
+	<div class="nav-menu nav-menu-style-<%= HtmlUtil.escapeAttribute(bulletStyle) %>">
 		<c:choose>
 			<c:when test='<%= headerType.equals("root-layout") && (rootLayout != null) %>'>
 				<h2>

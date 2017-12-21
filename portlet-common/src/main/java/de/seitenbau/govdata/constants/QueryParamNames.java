@@ -7,7 +7,7 @@ package de.seitenbau.govdata.constants;
  * @author rnoerenberg
  *
  */
-public interface QueryParamNames
+public abstract class QueryParamNames
 {
   /** Der Parametername für den Suchbegriff der einfachen Suche. */
   public static final String PARAM_PHRASE = "q";
@@ -43,10 +43,10 @@ public interface QueryParamNames
   public static final String PARAM_BOUNDINGBOX = "boundingbox";
 
   /** Der Parametername für den Start für den Zeitbezug in der Suche. */
-  public static final String PARAM_FROM = "start";
+  public static final String PARAM_START = "start";
 
   /** Der Parametername für das Ende für den Zeitbezug in der Suche. */
-  public static final String PARAM_UNTIL = "end";
+  public static final String PARAM_END = "end";
 
   /** Der Parametername für den Start für die Checkbox zum Zeitbezug in der Suche. */
   public static final String PARAM_FROM_CHECKBOX = "filter-date-from-checkbox";

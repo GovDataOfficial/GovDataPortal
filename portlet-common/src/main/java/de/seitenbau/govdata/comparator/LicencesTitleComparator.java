@@ -21,7 +21,7 @@ import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;
 
-import de.fhg.fokus.odp.registry.model.Licence;
+import de.seitenbau.govdata.odp.registry.model.Licence;
 
 /**
  * The Class LicencesTitleComparator.

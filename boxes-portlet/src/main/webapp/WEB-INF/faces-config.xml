@@ -6,7 +6,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 >
-	<lifecycle>
-		<phase-listener>com.liferay.faces.util.lifecycle.DebugPhaseListener</phase-listener>
-	</lifecycle>
+  <lifecycle>
+    <phase-listener>com.liferay.faces.util.lifecycle.DebugPhaseListener</phase-listener>
+  </lifecycle>
+  
+  <application>
+    <el-resolver>
+            org.springframework.web.jsf.el.SpringBeanFacesELResolver
+    </el-resolver>
+  </application>
 </faces-config>

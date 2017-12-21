@@ -16,7 +16,6 @@ import org.hibernate.validator.constraints.URL;
 import de.seitenbau.govdata.edit.gui.common.Constants;
 import de.seitenbau.govdata.edit.validator.Categories;
 import de.seitenbau.govdata.edit.validator.GeoJSONPolygon;
-import de.seitenbau.govdata.edit.validator.LicenceId;
 import de.seitenbau.govdata.edit.validator.MapKeys;
 import de.seitenbau.govdata.edit.validator.RequiredRole;
 import de.seitenbau.govdata.edit.validator.StringDate;
@@ -37,11 +36,6 @@ public class EditForm implements Serializable
   
   @NotEmpty
   private String title;
-    
-  private String maintainer;
-  
-  @Email
-  private String maintainerEmail;
   
   @NotEmpty
   private String notes;
@@ -51,13 +45,19 @@ public class EditForm implements Serializable
   
   @URL
   private String url;
-  
-  @Pattern(regexp="datensatz|dokument|app", message="{typ}")
-  private String typ;
-  
-  @NotEmpty
-  @LicenceId(message="{licenceId}")
-  private String licenseId;
+
+  @URL
+  private String qualityProcessURI;
+
+  // Is a list, but we will offer a comma separated string here
+  private String policiticalGeocodingURI;
+
+  @URL
+  private String policiticalGeocodingLevelURI;
+
+  private String geocodingText;
+
+  private String legalbasisText;
   
   @GeoJSONPolygon(message="{geoJSONPolygon}")
   private String spatial;
@@ -70,29 +70,21 @@ public class EditForm implements Serializable
   private String temporalCoverageUntil;
   
   // dates
-  @NotEmpty
-  @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
-  private String datesCreated;
-  
-  @NotEmpty
   @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String datesPublished;
   
-  @NotEmpty
   @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String datesModified;
   
-  @NotEmpty(message="{categories.notempty}")
   @Categories(message="{categories}")
   private List<String> categories;
-  
+
   @NotEmpty(message="{resources}")
   @Valid
   private List<Resource> resources;
   
   @Valid
-  @MapKeys(allowedKeys={"autor", "vertrieb", "ansprechpartner"}, message="{mapKeys}")
-  @RequiredRole(name="autor", message="{requiredRole}")
+  @MapKeys(allowedKeys={"maintainer", "publisher", "author", "originator"}, message="{mapKeys}")
   private Map<String, Contact> contacts;
 
   /**

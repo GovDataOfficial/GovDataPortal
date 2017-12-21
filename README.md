@@ -24,7 +24,7 @@ Architektur
 
 Grundsätzlich sind viele der Komponenten flexibel austauschbar. Ein typischer Aufbau sieht wie folgt aus:
 
-Ein Apache httpd empfängt alle Anfragen per HTTPS. Statische Dateien wie Dumps und Logs werden sofort ausgeliefert. Normale Portalanfragen werden per Reverse Proxy an einen oder bei Hochverfügbarkeit mehrere Tomcat-Prozesse weitergeleitet. CKAN wird per WSGI ebenfalls in einem Apache httpd ausgeführt und bedient die HTTP-REST-Anfragen der Liferay-Anwendungen und die API-Anfragen von außen. Für http://www.govdata.de läuft CKAN statt mit dem Apache Modul mod_wsgi mit dem WSGI HTTP Server Gunicorn (http://gunicorn.org/), was das Python Virtual Environment besser voon dem des Betriebsystems trennt. Sowohl Liferay als auch CKAN greifen per PostgreSQL-Client auf den Datenbank-Prozess zu.
+Ein Apache httpd empfängt alle Anfragen per HTTPS. Statische Dateien wie Dumps und Logs werden sofort ausgeliefert. Normale Portalanfragen werden per Reverse Proxy an einen oder bei Hochverfügbarkeit mehrere Tomcat-Prozesse weitergeleitet. CKAN wird per WSGI ebenfalls in einem Apache httpd ausgeführt und bedient die HTTP-REST-Anfragen der Liferay-Anwendungen und die API-Anfragen von außen. Für http://www.govdata.de läuft CKAN statt mit dem Apache Modul mod_wsgi mit dem WSGI HTTP Server Gunicorn (http://gunicorn.org/), was das Python Virtual Environment besser von dem des Betriebsystems trennt. Sowohl Liferay als auch CKAN greifen per PostgreSQL-Client auf den Datenbank-Prozess zu.
 
 Diese Architektur kann sowohl auf einer einzelnen Server-Maschine als auch in einer Microservice-Umgebung umgesetzt werden, da alle Prozesse per Netzwerk miteinander kommunizieren.
 
@@ -64,8 +64,9 @@ Links:
 
 - [Installing ODP](./INSTALL.md)
 - [Contributing to ODP](./CONTRIBUTING.md)
-- [Open data metadata structure for Germany](https://github.com/GovDataOfficial/OGD-1.1)
+- [Open data metadata structure for Germany](http://www.dcat-ap.de/def/)
 - Relevant CKAN plugins
-  - [harvesting extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-govdatade)
   - [searchindex extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-searchindexhook)
+  - [german specific dcat extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-dcatde)
+  - [harvesting extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-govdatade)
 

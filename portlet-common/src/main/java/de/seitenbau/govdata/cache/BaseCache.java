@@ -15,6 +15,12 @@ import org.apache.commons.lang3.time.DateUtils;
  */
 public abstract class BaseCache
 {
+  /** The cache name categories grid. */
+  public static final String CACHE_NAME_CATEGORIES_GRID = "odp.categoriesgrid";
+
+  /** The cache name boxes. */
+  public static final String CACHE_NAME_BOXES = "odp.boxes";
+
   private static final int MAX_CACHE_TIME_HOURS_DEFAULT = 2;
 
   private Date lastUpdated = new Date();

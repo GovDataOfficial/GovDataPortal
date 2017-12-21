@@ -21,10 +21,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fhg.fokus.odp.registry.model.Contact;
-import de.fhg.fokus.odp.registry.model.Metadata;
-import de.fhg.fokus.odp.registry.model.RoleEnumType;
-import de.fhg.fokus.odp.registry.model.exception.UnknownRoleException;
+import de.seitenbau.govdata.odp.registry.model.Contact;
+import de.seitenbau.govdata.odp.registry.model.Metadata;
+import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
+import de.seitenbau.govdata.odp.registry.model.exception.UnknownRoleException;
 
 /**
  * CurrentMetadataContact.
@@ -43,7 +43,7 @@ public class CurrentMetadataContact
   private static final Logger logger = LoggerFactory.getLogger(CurrentMetadataContact.class);
 
   /** this is the order in which the contact is searched. The first available is taken. */
-  private final RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.AUTHOR, RoleEnumType.PUBLISHER,
+  private final RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.CREATOR, RoleEnumType.PUBLISHER,
       RoleEnumType.MAINTAINER};
   
   /**
@@ -106,7 +106,7 @@ public class CurrentMetadataContact
       if (contact.getRole() == role)
       {
         // consider special case: The author of metadata has priority
-        if (role == RoleEnumType.AUTHOR && !isNullOrEmpty(author))
+        if (role == RoleEnumType.CREATOR && !isNullOrEmpty(author))
         {
           this.name = author;
         }

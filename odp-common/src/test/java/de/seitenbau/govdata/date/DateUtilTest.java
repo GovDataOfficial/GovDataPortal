@@ -29,13 +29,17 @@ public class DateUtilTest
 
   private static final String DATE_TIME_WITH_TIMEZONE_HOURS_PATTERN = "dd.MM.yyyy'T'HH:mm:ssX";
 
+  private static final String DATE_TIME_ENGLISH_WITH_TIMEZONE_HOURS_PATTERN = "yyyy-MM-dd'T'HH:mm:ssX";
+
   private static final String DATE_TIME_STRING = "10.11.2015 2:10:55";
 
   private static final String DATE_TIME_WITH_TIMEZONE_STRING = "10.11.2015T2:10:55";
 
   private static final String DATE_TIME_WITH_TIMEZONE_HOURS_STRING = "10.11.2015T2:10:55+02:00";
 
-  private static final String DATE_TIME_WITH_TIMEZONE_HOURS_DAYLIGHT_TIME_STRING = "10.07.2015T2:10:55+02:00";
+  private static final String DATE_TIME_ENGLISH_WITH_TIMEZONE_HOURS_STRING = "2017-08-16T11:01:06+02:00";
+
+  private static final String DATE_TIME_WITH_TIMEZONE_HOURS_DAYLIGHT_TIME_STRING = "10.07.2015T2:10:55+0200";
 
   @Test
   public void parseDateString_dateString_null() throws Exception
@@ -72,14 +76,7 @@ public class DateUtilTest
     Date result = DateUtil.parseDateString(DATE_TIME_WITH_TIMEZONE_STRING);
 
     /* verify */
-    Assertions.assertThat(result).isEqualTo(expected);
-    Calendar cal = new GregorianCalendar();
-    cal.setLenient(false);
-    cal.setTime(result);
-    Assertions.assertThat(cal.getTimeZone()).isEqualToComparingFieldByField(
-        TimeZone.getTimeZone("Europe/Berlin"));
-    Assertions.assertThat(cal.get(Calendar.HOUR_OF_DAY)).isEqualTo(2);
-    Assertions.assertThat(cal.getTime()).isEqualTo(expected);
+    assertDate(expected, result, 2);
   }
 
   @Test
@@ -92,14 +89,21 @@ public class DateUtilTest
     Date result = DateUtil.parseDateString(DATE_TIME_WITH_TIMEZONE_HOURS_STRING);
 
     /* verify */
-    Assertions.assertThat(result).isEqualTo(expected);
-    Calendar cal = new GregorianCalendar();
-    cal.setLenient(false);
-    cal.setTime(result);
-    Assertions.assertThat(cal.getTimeZone()).isEqualToComparingFieldByField(
-        TimeZone.getTimeZone("Europe/Berlin"));
-    Assertions.assertThat(cal.get(Calendar.HOUR_OF_DAY)).isEqualTo(1);
-    Assertions.assertThat(cal.getTime()).isEqualTo(expected);
+    assertDate(expected, result, 1);
+  }
+
+  @Test
+  public void parseDateString_dateString_dateTime_english_withTimezoneAndHours() throws Exception
+  {
+    /* prepare */
+    Date expected =
+        parseDate(DATE_TIME_ENGLISH_WITH_TIMEZONE_HOURS_STRING, DATE_TIME_ENGLISH_WITH_TIMEZONE_HOURS_PATTERN);
+
+    /* execute */
+    Date result = DateUtil.parseDateString(DATE_TIME_ENGLISH_WITH_TIMEZONE_HOURS_STRING);
+
+    /* verify */
+    assertDate(expected, result, 11);
   }
 
   @Test
@@ -113,14 +117,7 @@ public class DateUtilTest
     Date result = DateUtil.parseDateString(DATE_TIME_WITH_TIMEZONE_HOURS_DAYLIGHT_TIME_STRING);
 
     /* verify */
-    Assertions.assertThat(result).isEqualTo(expected);
-    Calendar cal = new GregorianCalendar();
-    cal.setLenient(false);
-    cal.setTime(result);
-    Assertions.assertThat(cal.getTimeZone()).isEqualToComparingFieldByField(
-        TimeZone.getTimeZone("Europe/Berlin"));
-    Assertions.assertThat(cal.get(Calendar.HOUR_OF_DAY)).isEqualTo(2);
-    Assertions.assertThat(cal.getTime()).isEqualTo(expected);
+    assertDate(expected, result, 2);
   }
 
   @Test
@@ -235,11 +232,36 @@ public class DateUtilTest
     Assertions.assertThat(result).isNull();
   }
 
+  @Test
+  public void formatDate_dateStringWithPattern_date() throws Exception
+  {
+    /* prepare */
+    Date input = new GregorianCalendar(2015, Calendar.NOVEMBER, 10).getTime();
+
+    /* execute */
+    String result = DateUtil.formatDate(input, DATE_PATTERN_POINT);
+
+    /* verify */
+    Assertions.assertThat(result).isEqualTo(DATE_POINT);
+  }
+
   private Date parseDate(String dateString, String pattern) throws ParseException
   {
     DateFormat df = new SimpleDateFormat(pattern);
     df.setLenient(false);
 
     return df.parse(dateString);
+  }
+
+  private void assertDate(Date expected, Date result, int hourExpected)
+  {
+    Assertions.assertThat(result).isEqualTo(expected);
+    Calendar cal = new GregorianCalendar();
+    cal.setLenient(false);
+    cal.setTime(result);
+    Assertions.assertThat(cal.getTimeZone()).isEqualToComparingFieldByField(
+        TimeZone.getTimeZone("Europe/Berlin"));
+    Assertions.assertThat(cal.get(Calendar.HOUR_OF_DAY)).isEqualTo(hourExpected);
+    Assertions.assertThat(cal.getTime()).isEqualTo(expected);
   }
 }

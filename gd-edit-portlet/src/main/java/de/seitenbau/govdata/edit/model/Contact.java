@@ -24,6 +24,6 @@ public class Contact implements Serializable
   @Email
   private String email;
   
-  private String address;
+  private ContactAddress address;
   
 }

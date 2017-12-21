@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>2.4.6</version>
+    <version>3.0.2</version>
   </parent>
   <artifactId>boxes-portlet</artifactId>
   <packaging>war</packaging>
@@ -78,14 +78,10 @@
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
-      <version>2.0</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
+      <artifactId>javax.servlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jboss.seam</groupId>
@@ -105,7 +101,6 @@
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
-      <version>2.1</version>
     </dependency>
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
@@ -114,6 +109,10 @@
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>odp-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.fhg.fokus.odp</groupId>
+      <artifactId>portlet-common</artifactId>
     </dependency>
 
     <!-- Testing -->
@@ -166,6 +165,11 @@
       <artifactId>xpp3_min</artifactId>
       <version>1.1.3.4.O</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

@@ -1,14 +1,14 @@
 package de.seitenbau.govdata.edit.gui.controller;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.portlet.ActionRequest;
@@ -19,6 +19,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.validation.Valid;
 import javax.ws.rs.ClientErrorException;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -32,56 +34,73 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
-import de.fhg.fokus.odp.registry.ckan.impl.ContactImpl;
-import de.fhg.fokus.odp.registry.ckan.impl.ResourceImpl;
-import de.fhg.fokus.odp.registry.ckan.impl.TagImpl;
-import de.fhg.fokus.odp.registry.ckan.json.ContactBean;
-import de.fhg.fokus.odp.registry.ckan.json.ResourceBean;
-import de.fhg.fokus.odp.registry.ckan.json.TagBean;
-import de.fhg.fokus.odp.registry.model.Category;
-import de.fhg.fokus.odp.registry.model.Metadata;
-import de.fhg.fokus.odp.registry.model.MetadataEnumType;
-import de.fhg.fokus.odp.registry.model.Organization;
-import de.fhg.fokus.odp.registry.model.RoleEnumType;
-import de.fhg.fokus.odp.registry.model.Tag;
-import de.fhg.fokus.odp.registry.model.User;
-import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
+import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.edit.gui.common.Constants;
 import de.seitenbau.govdata.edit.model.Contact;
+import de.seitenbau.govdata.edit.model.ContactAddress;
 import de.seitenbau.govdata.edit.model.EditForm;
 import de.seitenbau.govdata.edit.model.Resource;
 import de.seitenbau.govdata.messages.MessageType;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
+import de.seitenbau.govdata.odp.registry.ckan.impl.ResourceImpl;
+import de.seitenbau.govdata.odp.registry.ckan.impl.TagImpl;
+import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
+import de.seitenbau.govdata.odp.registry.ckan.json.TagBean;
+import de.seitenbau.govdata.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.Metadata;
+import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
+import de.seitenbau.govdata.odp.registry.model.MetadataStringExtraFields;
+import de.seitenbau.govdata.odp.registry.model.Organization;
+import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
+import de.seitenbau.govdata.odp.registry.model.Tag;
+import de.seitenbau.govdata.odp.registry.model.User;
+import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
+import de.seitenbau.govdata.odp.registry.model.exception.UnknownRoleException;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;
 
-import lombok.extern.slf4j.Slf4j;
-
+/**
+ * Controller für das Bearbeiten von Metadaten.
+ * 
+ * @author tscheffler
+ * @author rnoerenberg
+ *
+ */
 @Slf4j
 @Controller
 @RequestMapping("VIEW")
-class EditController
+public class EditController
 {
-  private static final String DEFAULT_LICENCE = "dl-de-by-2.0";
+  private static final String DATE_PATTERN = "dd.MM.yyyy";
+
+  private static final String DEFAULT_LICENCE = "http://dcat-ap.de/def/licenses/dl-by-de/2_0";
+
   private static final String MESSAGE = "message";
+
   private static final String MESSAGE_TYPE = "messageType";
 
+  private static final RoleEnumType[] EDITABLE_CONTACTS = {
+      RoleEnumType.CREATOR,
+      RoleEnumType.MAINTAINER,
+      RoleEnumType.PUBLISHER,
+      RoleEnumType.ORIGINATOR
+  };
+
   @Inject
-  RegistryClient registryClient;
+  private RegistryClient registryClient;
 
   @Inject
   private LicenceCache licenceCache;
 
   @Inject
   private CategoryCache categoryCache;
-  
+
   @Inject
   private GovDataNavigation gdNavigation;
-
-  SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
   @RenderMapping
   public String showForm(
@@ -96,17 +115,19 @@ class EditController
     boolean userCanEditDataset = false;
 
     List<Organization> organizationsForUser;
-    try {
+    try
+    {
       // will throw an exception, if there is no ckan-user
       User ckanuserFromRequest = getCkanuserFromRequestProxy(request);
-      
+
       // load organizations to fill dropdown in form
       organizationsForUser =
           registryClient.getInstance().getOrganizationsForUser(ckanuserFromRequest, "create_dataset");
-      
-      if(!organizationsForUser.isEmpty()) { // user needs at least 1 organisation to be able to edit datasets
+
+      if (!organizationsForUser.isEmpty())
+      { // user needs at least 1 organisation to be able to edit datasets
         userCanEditDataset = true;
-        
+
         // if we have existing form data, use them
         if (StringUtils.isNotEmpty(editForm.getName()))
         {
@@ -118,10 +139,10 @@ class EditController
         {
           log.debug("data: loading dataset: " + metadataName);
           editForm = loadDataset(ckanuserFromRequest, metadataName);
-          
+
           // check if the user is part of the organisation that this dataset belongs to
-          if(!new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId())) {
-            userCanEditDataset = false;
+          if (!new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId()))
+          {
             throw new OpenDataRegistryException("User does not belong to the datasets organisation");
           }
         }
@@ -132,19 +153,19 @@ class EditController
           log.debug("data: creating a new dataset");
           editForm = newDataset();
         }
-        
+
         // form data
         model.addAttribute("actionUrl", response.createActionURL().toString());
         model.addAttribute("editForm", editForm);
 
         // set form structure data for displaying available options
-        model.addAttribute("licenceMap", licenceCache.getLicenceMap());
+        model.addAttribute("licenseList", licenceCache.getLicenceListSortedByTitle());
         model.addAttribute("categoryList", categoryCache.getCategoriesSortedByTitle());
         model.addAttribute("organizationList", organizationsForUser);
-        
+
         model.addAttribute(MESSAGE, request.getParameter(MESSAGE));
         model.addAttribute(MESSAGE_TYPE, request.getParameter(MESSAGE_TYPE));
-        
+
         // back to metadata-details view
         String abortUrl = null;
         // do not show button for unsaved new dataset
@@ -152,7 +173,8 @@ class EditController
         {
           PortletURL createLinkForMetadata =
               gdNavigation.createLinkForMetadata("gdsearchdetails", editForm.getName());
-          if(createLinkForMetadata != null) {
+          if (createLinkForMetadata != null)
+          {
             abortUrl = createLinkForMetadata.toString();
           }
         }
@@ -162,12 +184,14 @@ class EditController
         }
         model.addAttribute("metadataUrl", abortUrl);
       }
-    } catch (OpenDataRegistryException | PortalException | SystemException e) {
+    }
+    catch (OpenDataRegistryException | PortalException | SystemException e)
+    {
       // you can't do anything!
       log.error("Could not load edit dataset form: " + e.getMessage());
       userCanEditDataset = false;
     }
-    
+
     model.addAttribute("userCanEditDataset", userCanEditDataset);
     return "edit";
   }
@@ -177,17 +201,19 @@ class EditController
       ActionResponse response, ActionRequest request)
   {
     // fix zeitbezug dates if they are in the wrong temporal order
-    Date fromDate = parseDate(editForm.getTemporalCoverageFrom());
-    Date untilDate = parseDate(editForm.getTemporalCoverageUntil());
+    Date fromDate = DateUtil.parseDateString(editForm.getTemporalCoverageFrom());
+    Date untilDate = DateUtil.parseDateString(editForm.getTemporalCoverageUntil());
     if (fromDate != null && untilDate != null && fromDate.after(untilDate))
     {
       editForm.setTemporalCoverageFrom(formatDate(untilDate));
       editForm.setTemporalCoverageUntil(formatDate(fromDate));
-    } else {
+    }
+    else
+    {
       editForm.setTemporalCoverageFrom(formatDate(fromDate));
       editForm.setTemporalCoverageUntil(formatDate(untilDate));
     }
-    
+
     // check if form is valid
     if (!result.hasErrors())
     {
@@ -195,7 +221,7 @@ class EditController
       {
         User ckanUser = getCkanuserFromRequestProxy(request);
         saveDataset(editForm, ckanUser);
-        
+
         // get the name in the same way he new name is created for new datasets
         if (editForm.isNewDataset())
         {
@@ -204,21 +230,26 @@ class EditController
 
         // reload saved dataset, so we reflect the actual saved data
         editForm = loadDataset(ckanUser, editForm.getName());
-        
+
         response.setRenderParameter(MESSAGE_TYPE, MessageType.SUCCESS.toString());
         response.setRenderParameter(MESSAGE, "od.editform.save.success");
       }
       catch (OpenDataRegistryException | PortalException | SystemException e)
       {
         response.setRenderParameter(MESSAGE_TYPE, MessageType.ERROR.toString());
-        if(StringUtils.isNotEmpty(e.getMessage())) {
+        if (StringUtils.isNotEmpty(e.getMessage()))
+        {
           response.setRenderParameter(MESSAGE, e.getMessage());
-        } else {
+        }
+        else
+        {
           response.setRenderParameter(MESSAGE, "od.editform.save.error");
           e.printStackTrace(); // just so we can look it up... we don't know yet what's going on.
         }
       }
-    } else {
+    }
+    else
+    {
       response.setRenderParameter(MESSAGE_TYPE, MessageType.WARNING.toString());
       response.setRenderParameter(MESSAGE, "od.editform.save.warning");
       log.warn("Form has errors: " + result.getAllErrors());
@@ -227,36 +258,42 @@ class EditController
 
   /**
    * Adds a row of Resources
+   *
    * @param editForm
    * @param bindingResult
    * @param response
    */
-  @RequestMapping(params = {"addRow"})
-  public void addRow(final @ModelAttribute("editForm") EditForm editForm, final BindingResult bindingResult,
+  @RequestMapping(params = {"addResource"})
+  public void addResource(final @ModelAttribute("editForm") EditForm editForm,
+      final BindingResult bindingResult,
       ActionResponse response)
   {
-    if(editForm.getResources() == null) {
-      editForm.setResources(new ArrayList<Resource>());
+    if (editForm.getResources() == null)
+    {
+      editForm.setResources(new ArrayList<>());
     }
-    editForm.getResources().add(new Resource());
+    Resource resource = new Resource();
+    resource.setLicenseId(DEFAULT_LICENCE);
+    editForm.getResources().add(resource);
   }
 
   /**
    * Removed a row of Resources
+   *
    * @param editForm
    * @param bindingResult
-   * @param rowId index of the row to delete
+   * @param rowId         index of the row to delete
    * @param response
    */
-  @RequestMapping(params = {"removeRow"})
-  public void removeRow(final @ModelAttribute("editForm") EditForm editForm,
+  @RequestMapping(params = {"removeResource"})
+  public void removeResource(final @ModelAttribute("editForm") EditForm editForm,
       final BindingResult bindingResult,
-      @RequestParam(value = "removeRow") Integer rowId,
+      @RequestParam(value = "removeResource") Integer rowId,
       ActionResponse response)
   {
     editForm.getResources().remove(rowId.intValue());
   }
-  
+
   @RequestMapping(params = {"deleteDataset"})
   public void deleteDataset(final @ModelAttribute("editForm") EditForm editForm,
       final BindingResult bindingResult,
@@ -268,16 +305,20 @@ class EditController
       User ckanuserFromRequest = getCkanuserFromRequestProxy(request);
       List<Organization> organizationsForUser =
           registryClient.getInstance().getOrganizationsForUser(ckanuserFromRequest, "create_dataset");
-      if(new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId())) {
-        if(registryClient.getInstance().deleteMetadata(ckanuserFromRequest, editForm.getName())) {
+      if (new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId()))
+      {
+        if (registryClient.getInstance().deleteMetadata(ckanuserFromRequest, editForm.getName()))
+        {
           response.sendRedirect(
               gdNavigation.createLinkForSearchResults("suchen", "gdsearchresult", "").toString());
-        } else {
+        }
+        else
+        {
           // we could not delete the dataset!
           throw new OpenDataRegistryException();
         }
       }
-    
+
     }
     catch (PortalException | SystemException | OpenDataRegistryException | IOException e)
     {
@@ -286,8 +327,6 @@ class EditController
       response.setRenderParameter(MESSAGE, "od.editform.delete.error");
     }
   }
-
-
 
   private User getCkanuserFromRequestProxy(PortletRequest request)
       throws OpenDataRegistryException, PortalException, SystemException
@@ -299,29 +338,29 @@ class EditController
   {
     EditForm form = new EditForm();
     form.setName(Constants.NAME_NEW_DATASET); // invalid ckan name, but will be replaced
-    
+
     // fill in mandatory contact rows
     Map<String, Contact> contacts = new HashMap<>();
-    for (RoleEnumType role : new RoleEnumType[] {RoleEnumType.AUTHOR, RoleEnumType.MAINTAINER,
-        RoleEnumType.DISTRIBUTOR})
+    for (RoleEnumType role : new RoleEnumType[] {RoleEnumType.CREATOR, RoleEnumType.MAINTAINER,
+        RoleEnumType.PUBLISHER})
     {
-      contacts.put(role.toField(), new Contact("", "", "", ""));
+      contacts.put(role.getField(), new Contact("", "", "", new ContactAddress()));
     }
     form.setContacts(contacts);
-    
+
     // add one Resource
     List<Resource> resources = new ArrayList<>();
-    resources.add(new Resource());
+    Resource resource = new Resource();
+    resource.setLicenseId(DEFAULT_LICENCE);
+    resources.add(resource);
     form.setResources(resources);
-    
-    // default licence
-    form.setLicenseId(DEFAULT_LICENCE);
-    
+
     return form;
   }
-  
+
   /**
    * Loads a dataset from ckan and prepares the EditForm.
+   *
    * @param metadataName id of the dataset to load
    * @return
    * @throws OpenDataRegistryException
@@ -331,11 +370,13 @@ class EditController
     log.info("loading: " + metadataName);
 
     Metadata metadata = registryClient.getInstance().getMetadata(ckanuser, metadataName);
-    if(metadata == null) {
+    if (metadata == null)
+    {
       throw new OpenDataRegistryException("could not find dataset");
     }
-    
-    if(!StringUtils.equals(metadata.getState(), Metadata.State.ACTIVE.getValue())) {
+
+    if (!StringUtils.equals(metadata.getState(), Metadata.State.ACTIVE.getValue()))
+    {
       throw new OpenDataRegistryException("dataset has been deleted");
     }
 
@@ -352,75 +393,78 @@ class EditController
     }
     form.setCategories(categories);
 
-    form.setLicenseId(metadata.getLicence().getName());
-
     form.setName(metadata.getName());
 
     form.setNotes(metadata.getNotes());
 
     // prepare resources
     List<Resource> resources = new ArrayList<>();
-    for (de.fhg.fokus.odp.registry.model.Resource resource : metadata.getResources())
+    for (de.seitenbau.govdata.odp.registry.model.Resource resource : metadata.getResources())
     {
+      String languageString = resource.getLanguage().stream().collect(Collectors.joining(", "));
       resources.add(new Resource(
           resource.getUrl(),
           resource.getFormat(),
           resource.getDescription(),
           resource.getName(),
-          resource.getLanguage()));
+          languageString,
+          resource.getLicense().getName(),
+          resource.getLicenseAttributionByText(),
+          formatDate(resource.getLast_modified()),
+          resource.getPlannedAvailability()));
     }
-    if(resources.isEmpty()) { // make sure there is at least one row!
+    if (resources.isEmpty()) // make sure there is at least one row!
+    {
       resources.add(new Resource());
     }
     form.setResources(resources);
 
-    // concat all tags to comma separated list with no trailing comma
-    StringBuilder serializedTags = new StringBuilder();
-    List<Tag> tags = metadata.getTags();
-    for (int i = 0; i < tags.size() - 1; i++)
-    {
-      serializedTags.append(tags.get(i).getName()).append(", ");
-    }
-    if (!tags.isEmpty())
-    {
-      serializedTags.append(tags.get(tags.size() - 1).getName());
-    }
-    form.setTags(serializedTags.toString());
+    // flatten list using commas as delimiters
+    String serializedTags = metadata.getTags().stream().map(Tag::getName).collect(Collectors.joining(", "));
+    form.setTags(serializedTags);
+
+    // list extra fields
+    form.setPoliciticalGeocodingURI(listToString(metadata, MetadataListExtraFields.POLITICAL_GEOCODING_URI));
+    form.setGeocodingText(listToString(metadata, MetadataListExtraFields.GEOCODING_TEXT));
+    form.setLegalbasisText(listToString(metadata, MetadataListExtraFields.LEGALBASIS_TEXT));
 
     form.setTitle(metadata.getTitle());
 
-    form.setTyp(metadata.getType().toField());
-
     form.setUrl(metadata.getUrl());
+
+    form.setQualityProcessURI(metadata.getExtraString(MetadataStringExtraFields.QUALITY_PROCESS_URI));
+
+    form.setPoliciticalGeocodingLevelURI(
+        metadata.getExtraString(MetadataStringExtraFields.POLITICAL_GEOCODING_LEVEL_URI));
 
     form.setTemporalCoverageFrom(formatDate(metadata.getTemporalCoverageFrom()));
     form.setTemporalCoverageUntil(formatDate(metadata.getTemporalCoverageTo()));
 
     // correct wrong OGD-Schema value for proper use
-    String spatial = metadata.getSpatialDataValue();
-    if(spatial != null) {
+    String spatial = metadata.getExtraString(MetadataStringExtraFields.SPATIAL);
+    if (spatial != null)
+    {
       spatial = spatial.replace("polygon", "Polygon");
     }
     form.setSpatial(spatial);
 
-    form.setDatesCreated(formatDate(metadata.getCreated()));
     form.setDatesPublished(formatDate(metadata.getPublished()));
     form.setDatesModified(formatDate(metadata.getModified()));
 
     Map<String, Contact> contacts = new HashMap<>();
-    for (RoleEnumType role : new RoleEnumType[] {RoleEnumType.AUTHOR, RoleEnumType.MAINTAINER,
-        RoleEnumType.DISTRIBUTOR})
+    for (RoleEnumType role : EDITABLE_CONTACTS)
     {
-      de.fhg.fokus.odp.registry.model.Contact contact = metadata.getContact(role);
+      de.seitenbau.govdata.odp.registry.model.Contact contact = metadata.getContact(role);
       if (contact != null)
       {
-        contacts.put(role.toField(),
-            new Contact(contact.getName(), contact.getUrl(), contact.getEmail(), contact.getAddress()));
+        contacts.put(role.getField(),
+            new Contact(contact.getName(), contact.getUrl(), contact.getEmail(),
+                mapContactAddress(contact.getAddress())));
       }
       else
       {
         // we need to have that contact, so the form can show the row.
-        contacts.put(role.toField(), new Contact("", "", "", ""));
+        contacts.put(role.getField(), new Contact("", "", "", new ContactAddress()));
       }
     }
     form.setContacts(contacts);
@@ -428,102 +472,109 @@ class EditController
     return form;
   }
 
+  private String listToString(Metadata metadata, MetadataListExtraFields field)
+  {
+    // flatten list using commas as delimiters
+    List<String> list = metadata.getExtraList(field);
+    if (list != null)
+    {
+      return list.stream().collect(Collectors.joining(", "));
+    }
+
+    return null;
+  }
+
+  private ContactAddress mapContactAddress(de.seitenbau.govdata.odp.registry.ckan.impl.ContactAddress src)
+  {
+    return new ContactAddress(src.getAddressee(), src.getDetails(), src.getStreet(), src.getCity(),
+        src.getZIP(), src.getCountry());
+  }
+
   /**
    * Format Date as String or pass through null
-   * @param date
-   * @return
+   *
+   * @param date date to format
    */
   private String formatDate(Date date)
   {
-    return (date != null ? dateFormat.format(date) : null);
-  }
-
-  private Date parseDate(String date)
-  {
-    try
-    {
-      return (StringUtils.isEmpty(date) ? null : dateFormat.parse(date));
-    }
-    catch (ParseException e)
-    {
-      // if we don't understand the date, we return null.
-      return null;
-    }
+    return DateUtil.formatDate(date, DATE_PATTERN);
   }
 
   /**
    * Converts the EditForm to a dataset and saves it to ckan
-   * @param editForm form to save
-   * @throws OpenDataRegistryException
+   *
+   * @param form form to save
+   * @throws OpenDataRegistryException if saving metadata with the odr client went wrong
    */
-  private void saveDataset(EditForm form, de.fhg.fokus.odp.registry.model.User ckanUser)
+  private void saveDataset(EditForm form, de.seitenbau.govdata.odp.registry.model.User ckanUser)
       throws OpenDataRegistryException
   {
     log.info("saving: " + form.getName());
-    
+
     // get existing Dataset if available
-    Metadata metadata = null;
+    Metadata metadata;
 
     if (form.isNewDataset())
     {
-      metadata = registryClient.getInstance().createMetadata(MetadataEnumType.fromField(form.getTyp()));
+      metadata = registryClient.getInstance().createMetadata();
     }
     else
     {
       metadata = registryClient.getInstance().getMetadata(ckanUser, form.getName());
       if (metadata == null)
       {
-        throw new OpenDataRegistryException("dataset is not new, but could not be found in ckan: " + form.getName());
+        throw new OpenDataRegistryException(
+            "dataset is not new, but could not be found in ckan: " + form.getName());
       }
     }
-    
+
     metadata.setOwnerOrg(form.getOrganizationId());
-    
+
     metadata.setPrivate(form.isPrivate());
 
     metadata.setTitle(form.getTitle());
-    
+
     metadata.setNotes(form.getNotes());
 
     // tags
-    List<Tag> tags = metadata.getTags(); // get the list and add tags
-    String[] formTags = form.getTags().trim().split(",");
-    tags.clear(); // we don't want to keep existing tags
-    if (formTags.length > 0)
+    List<Tag> tags = metadata.getTags(); // get the list and replace all tags with the ones from the form
+    tags.clear();
+    for (String formTag : listFromString(form.getTags()))
     {
-      for (String formTag : formTags)
-      {
-        formTag = formTag.trim();
-        if(formTag.length() > 0) {
-          TagBean tagBean = new TagBean();
-          tagBean.setName(formTag);
-          tagBean.setDisplay_name(formTag);
-          tags.add(new TagImpl(tagBean));
-        }
-      }
+      tags.add(new TagImpl(new TagBean(formTag)));
     }
 
     metadata.setUrl(form.getUrl());
 
-    metadata.setType(MetadataEnumType.fromField(form.getTyp()));
+    metadata.setExtraString(MetadataStringExtraFields.QUALITY_PROCESS_URI, form.getQualityProcessURI());
 
-    metadata.setLicence(licenceCache.getLicenceMap().get(form.getLicenseId()));
+    metadata.setExtraString(MetadataStringExtraFields.SPATIAL, form.getSpatial());
 
-    metadata.setSpatialDataValue(form.getSpatial());
+    metadata.setExtraString(MetadataStringExtraFields.POLITICAL_GEOCODING_LEVEL_URI,
+        convertBlankStringToNull(form.getPoliciticalGeocodingLevelURI()));
 
-    Date fromDate = parseDate(form.getTemporalCoverageFrom());
-    Date untilDate = parseDate(form.getTemporalCoverageUntil());
+    metadata.setExtraList(MetadataListExtraFields.POLITICAL_GEOCODING_URI,
+        listFromString(form.getPoliciticalGeocodingURI()));
+
+    metadata.setExtraList(MetadataListExtraFields.GEOCODING_TEXT,
+        listFromString(form.getGeocodingText()));
+
+    metadata.setExtraList(MetadataListExtraFields.LEGALBASIS_TEXT,
+        listFromString(form.getLegalbasisText()));
+
+    Date fromDate = DateUtil.parseDateString(form.getTemporalCoverageFrom());
+    Date untilDate = DateUtil.parseDateString(form.getTemporalCoverageUntil());
     metadata.setTemporalCoverageFrom(fromDate);
     metadata.setTemporalCoverageTo(untilDate);
 
-    metadata.setCreated(parseDate(form.getDatesCreated()));
-    metadata.setPublished(parseDate(form.getDatesPublished()));
-    metadata.setModified(parseDate(form.getDatesModified()));
+    metadata.setPublished(DateUtil.parseDateString(form.getDatesPublished()));
+    metadata.setModified(DateUtil.parseDateString(form.getDatesModified()));
 
     // categories
     List<Category> categories = metadata.getCategories();
     categories.clear(); // we don't want to keep existing categories
-    if(form.getCategories() != null) {
+    if (form.getCategories() != null)
+    {
       for (String formCat : form.getCategories())
       {
         categories.add(categoryCache.getCategoryMap().get(formCat));
@@ -531,52 +582,86 @@ class EditController
     }
 
     // resources
-    List<de.fhg.fokus.odp.registry.model.Resource> resources = metadata.getResources();
+    List<de.seitenbau.govdata.odp.registry.model.Resource> resources = metadata.getResources();
     resources.clear();
     if (form.getResources() != null)
     {
       for (Resource res : form.getResources())
       {
-        ResourceBean resourceBean = new ResourceBean();
-        resourceBean.setName(res.getName());
-        resourceBean.setDescription(res.getDescription());
-        resourceBean.setFormat(res.getFormat());
-        resourceBean.setUrl(res.getUrl());
-        resourceBean.setLanguage(res.getLanguage());
-        resources.add(new ResourceImpl(resourceBean));
+        ResourceImpl resourceImpl = new ResourceImpl((MetadataImpl) metadata, new ResourceBean());
+        resourceImpl.setName(res.getName());
+        resourceImpl.setDescription(res.getDescription());
+        resourceImpl.setUrl(res.getUrl());
+        resourceImpl.setFormat(res.getFormat());
+        resourceImpl.setLanguage(listFromString(res.getLanguage()));
+        resourceImpl.setLast_modified(DateUtil.parseDateString(res.getModified()));
+        resourceImpl.setLicense(res.getLicenseId());
+        resourceImpl.setLicenseAttributionByText(res.getLicenseAttributionByText());
+        resourceImpl.setPlannedAvailability(convertBlankStringToNull(res.getPlannedAvailability()));
+        resources.add(resourceImpl);
       }
     }
 
     // contacts
-    List<de.fhg.fokus.odp.registry.model.Contact> contacts = metadata.getContacts();
-    contacts.clear();
     if (form.getContacts() != null)
     {
       for (Entry<String, Contact> con : form.getContacts().entrySet())
       {
-        // don't save contact if name is empty
-        if(StringUtils.isEmpty(con.getValue().getName())) {
-          continue;
+        try
+        {
+          // Contact will be automatically stored in the metadata object
+          // just by setting it on the Contact Proxy
+          de.seitenbau.govdata.odp.registry.model.Contact contact =
+              metadata.getContact(RoleEnumType.fromField(con.getKey()));
+          contact.setName(con.getValue().getName());
+          contact.setEmail(con.getValue().getEmail());
+          contact.setUrl(con.getValue().getUrl());
+
+          ContactAddress formAddress = con.getValue().getAddress();
+          contact.getAddress().setAddressee(formAddress.getAddressee());
+          contact.getAddress().setDetails(formAddress.getDetails());
+          contact.getAddress().setStreet(formAddress.getStreet());
+          contact.getAddress().setCity(formAddress.getCity());
+          contact.getAddress().setZIP(formAddress.getZip());
+          contact.getAddress().setCountry(formAddress.getCountry());
         }
-        
-        ContactBean contactBean = new ContactBean();
-        contactBean.setRole(con.getKey());
-        contactBean.setName(con.getValue().getName());
-        contactBean.setEmail(con.getValue().getEmail());
-        contactBean.setUrl(con.getValue().getUrl());
-        contactBean.setAddress(con.getValue().getAddress());
-        contacts.add(new ContactImpl(contactBean));
+        catch (UnknownRoleException e)
+        {
+          log.error(e.getMessage() + " Not saving this contact.");
+        }
       }
     }
 
-    try {
+    try
+    {
       registryClient.getInstance().persistMetadata(ckanUser, metadata);
-    } catch(ClientErrorException e) {
-      if(e.getResponse().getStatus() == 409) {
+    }
+    catch (ClientErrorException e)
+    {
+      if (e.getResponse().getStatus() == 409)
+      {
         throw new OpenDataRegistryException("od.editform.save.error.alreadyexists");
-      } else {
+      }
+      else
+      {
         throw new OpenDataRegistryException();
       }
     }
+  }
+
+  private String convertBlankStringToNull(String value)
+  {
+    String result = null;
+    if (StringUtils.isNotBlank(value))
+    {
+      result = value;
+    }
+    return result;
+  }
+
+  private List<String> listFromString(String s)
+  {
+    return Arrays.stream(s.split(",")).map(String::trim).filter(StringUtils::isNotBlank)
+        .collect(Collectors.toList());
   }
 }

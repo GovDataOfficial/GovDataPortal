@@ -9,9 +9,11 @@
 				</c:forEach>
 			</ul>
 			<ul class="flex-list">
+			  <li class="category-box-spacer"></li>
 				<c:forEach items="${categories}" var="category" varStatus="row" begin="7">
           <%@include file="box.jsp" %>
 				</c:forEach>
+				<li class="category-box-spacer"></li>
 			</ul>
 		</div>
 	</div>

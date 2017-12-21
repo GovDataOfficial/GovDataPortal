@@ -29,7 +29,7 @@ public class SearchExtViewModel
   
   private List<Map<String, String>> formatList;
   
-  private List<Map<String, String>> isopenList;
+  private List<Map<String, String>> opennessList;
   
   private Map<String, String> translationMap;
   

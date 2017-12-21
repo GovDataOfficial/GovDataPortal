@@ -114,7 +114,6 @@
       $theme.include($bottom_include)
 
       <script src="/govdatastyle-theme/js/jquery.js"></script>
-      <script src="/govdatastyle-theme/js/fastclick.js"></script>
       <script src="/govdatastyle-theme/js/foundation.js"></script>
       <script src="/govdatastyle-theme/js/foundation.offcanvas.js"></script>
       <script src="/govdatastyle-theme/js/foundation.dropdown.js"></script>

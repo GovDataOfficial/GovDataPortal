@@ -92,7 +92,7 @@ public class StringCleanerTest
     /* prepare */
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(null, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(null, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isNull();
@@ -104,7 +104,7 @@ public class StringCleanerTest
     /* prepare */
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString("  ", StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString("  ", StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEmpty();
@@ -131,7 +131,7 @@ public class StringCleanerTest
         "test <b>bold</b> <p>paragraph <b>bold</b></p> <ul><li>one</li></ul> <ol><li>two</li></ol>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo("test bold \n<p>paragraph bold</p> "
@@ -145,7 +145,7 @@ public class StringCleanerTest
     String dirty = "test <a href=\"\" >link</a>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo("test \n<a rel=\"nofollow\" target=\"_blank\">link</a>");
@@ -158,7 +158,7 @@ public class StringCleanerTest
     String dirty = "test <a href=\"http://test.de\" title=\"title\" alt=\"alt\" style=\"style\" >link</a>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
@@ -172,7 +172,7 @@ public class StringCleanerTest
     String dirty = "test <a href=\"ftp://test.de\" >link</a>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
@@ -186,7 +186,7 @@ public class StringCleanerTest
     String dirty = "test <a href=\"http://test.de\" >link</a>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
@@ -200,7 +200,7 @@ public class StringCleanerTest
     String dirty = "test <a href=\"https://test.de\" >link</a>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
@@ -214,7 +214,7 @@ public class StringCleanerTest
     String dirty = "test <a href=\"mailto://test@test.de\" >link</a>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
@@ -228,7 +228,7 @@ public class StringCleanerTest
     String dirty = "test <a href=\"http://test.de\" rel=\"follow\" target=\"_self\" >link</a>";
 
     /* execute */
-    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.metadataNotes);
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(

@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
-import de.fhg.fokus.odp.registry.model.Organization;
+import de.seitenbau.govdata.odp.registry.model.Organization;
 
 /**
  * Liefert die gecachte Liste der Organisationen.

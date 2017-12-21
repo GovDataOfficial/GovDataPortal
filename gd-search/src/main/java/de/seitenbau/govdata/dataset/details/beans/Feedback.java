@@ -19,14 +19,11 @@ package de.seitenbau.govdata.dataset.details.beans;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 /**
  * Indicates wether userfeedback exists or not. UI can handle the state with (in JSF EL)
- * #{feedback.XXX}
+ * #{feedback.XXX}.
  * 
  * @author Benjamin Dittwald, Fraunhofer FOKUS
- */
-/**
  * @author bdi
  * 
  */

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>2.4.6</version>
+    <version>3.0.2</version>
   </parent>
   <artifactId>entities</artifactId>
   <packaging>pom</packaging>

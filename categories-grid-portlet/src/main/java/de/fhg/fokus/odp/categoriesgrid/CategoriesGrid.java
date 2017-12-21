@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS
+ * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS | 2017 SEITENBAU GmbH
  *
  * This file is part of Open Data Platform.
  *
@@ -43,25 +43,29 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.PropsUtil;
 
 import de.fhg.fokus.odp.categoriesgrid.model.CategoryViewModel;
-import de.fhg.fokus.odp.registry.ODRClient;
-import de.fhg.fokus.odp.registry.ckan.Constants;
-import de.fhg.fokus.odp.registry.model.Category;
-import de.fhg.fokus.odp.spi.OpenDataRegistry;
+import de.seitenbau.govdata.cache.BaseCache;
 import de.seitenbau.govdata.filter.FilterPathUtils;
 import de.seitenbau.govdata.filter.SearchConsts;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.ckan.Constants;
+import de.seitenbau.govdata.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
 
 /**
- * The class constitutes a bean that serves as a source for the categories on the categories-grid portlet.
+ * The class constitutes a bean that serves as a source for the categories on the categories-grid
+ * portlet.
  * 
+ * @author rnoerenberg, SEITENBAU GmbH
  * @author Benjamin Dittwald, Fraunhofer FOKUS
  */
 @Controller(value = "categoriesGridController")
 @RequestMapping("VIEW")
 @SessionAttributes({ "categories" })
-public class CategoriesGrid implements Serializable {
-
-    private static final Logger log = LoggerFactory.getLogger(CategoriesGrid.class);
+public class CategoriesGrid implements Serializable
+{
+    /** The logger. */
+    private static final Logger LOG = LoggerFactory.getLogger(CategoriesGrid.class);
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
@@ -72,20 +76,24 @@ public class CategoriesGrid implements Serializable {
     /** The prop name ckan url. */
     private final String PROP_NAME_CKAN_URL = "cKANurl";
 
-    /** The cache name. */
-    private final String CACHE_NAME = "de.fhg.fokus.odp.categoriesgrid";
-
     /** The cache categories key. */
     private final String CACHE_CATEGORIES_KEY = "categories";
 
     /** The odr. */
     private ODRClient odr;
-
-    /** The log. */
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
     
     private GovDataNavigation govDataNavigation;
 
+  /**
+   * Erstellt die Objekte für die Anzeige.
+   * 
+   * @param request der Request.
+   * @param response die Response.
+   * @param model das Model für die Anzeige.
+   * @return der View-Name.
+   * @throws PortalException
+   * @throws SystemException
+   */
     @RenderMapping
     public String showSearchResults(
         RenderRequest request,
@@ -100,53 +108,60 @@ public class CategoriesGrid implements Serializable {
       return "view";
     }
 
-    /**
-     * Gets the categories.
-     * 
-     * @return the categories
-     */
-    @SuppressWarnings("unchecked")
-    public List<Category> getCategories() {
+  /**
+   * Gets the categories.
+   * 
+   * @return the categories
+   */
+  @SuppressWarnings("unchecked")
+  private List<Category> getCategories()
+  {
+    List<Category> categories =
+        (List<Category>) MultiVMPoolUtil.getCache(BaseCache.CACHE_NAME_CATEGORIES_GRID)
+            .get(CACHE_CATEGORIES_KEY);
 
-        List<Category> categories = (List<Category>) MultiVMPoolUtil.getCache(CACHE_NAME).get(CACHE_CATEGORIES_KEY);
+    if (categories == null)
+    {
 
-        if (categories == null) {
+      LOG.info("Empty {} cache, fetching categories from CKAN.", CACHE_CATEGORIES_KEY);
+      Properties props = new Properties();
+      props.setProperty("ckan.authorization.key", PropsUtil.get(PROP_NAME_AUTHORIZATION_KEY));
+      props.setProperty("ckan.url", PropsUtil.get(PROP_NAME_CKAN_URL));
 
-            LOG.info("Empty {} cache, fetching categories from CKAN.", CACHE_CATEGORIES_KEY);
-            Properties props = new Properties();
-            props.setProperty("ckan.authorization.key", PropsUtil.get(PROP_NAME_AUTHORIZATION_KEY));
-            props.setProperty("ckan.url", PropsUtil.get(PROP_NAME_CKAN_URL));
+      odr = OpenDataRegistry.getClient(Constants.OPEN_DATA_PROVIDER_NAME);
+      odr.init(props);
 
-            odr = OpenDataRegistry.getClient(Constants.OPEN_DATA_PROVIDER_NAME);
-            odr.init(props);
+      List<Category> list = odr.listCategories();
+      categories = new ArrayList<Category>();
 
-            List<Category> list = odr.listCategories();
-            categories = new ArrayList<Category>();
-
-            for (Category category : list) {
-                if ("group".equalsIgnoreCase(category.getType())) {
-                    categories.add(category);
-                }
-            }
-            Collections.sort(categories, new CategoriesTitleComparator());
-            MultiVMPoolUtil.getCache(CACHE_NAME).put(CACHE_CATEGORIES_KEY, (Serializable) categories); // safe cast: LinkedList
+      for (Category category : list)
+      {
+        if ("group".equalsIgnoreCase(category.getType()))
+        {
+          categories.add(category);
         }
-        
-        return categories;
+      }
+      Collections.sort(categories, new CategoriesTitleComparator());
+      // safe cast: LinkedList
+      MultiVMPoolUtil.getCache(BaseCache.CACHE_NAME_CATEGORIES_GRID)
+          .put(CACHE_CATEGORIES_KEY, (Serializable) categories);
     }
-    
-    /**
-     * Map to CategoryViewModels and add actionURLs
-     * @param categories list of ODP-categories
-     * @param renderUrl 
-     * @return list of categoryViewModels
-     * @throws PortalException 
-     * @throws SystemException 
-     */
+
+    return categories;
+    }
+
+  /**
+   * Map to CategoryViewModels and add actionURLs
+   * @param categories list of ODP-categories
+   * @param renderUrl
+   * @return list of categoryViewModels
+   * @throws PortalException
+   * @throws SystemException
+   */
   private List<CategoryViewModel> mapToCategoryViewModels(List<Category> categories) throws SystemException
   {
     final String method = "mapToCategoryViewModels() : ";
-    log.trace(method + "Start");
+    LOG.trace(method + "Start");
 
     List<CategoryViewModel> result = new ArrayList<>();
 
@@ -164,7 +179,7 @@ public class CategoriesGrid implements Serializable {
       }
       catch (PortalException | IllegalArgumentException e)
       {
-        log.warn(method + "Fehler beim Erstellen der Filter-URL für die Kategorien. Fehler: {}"
+        LOG.warn(method + "Fehler beim Erstellen der Filter-URL für die Kategorien. Fehler: {}"
             + e.getMessage());
       }
 
@@ -175,12 +190,13 @@ public class CategoriesGrid implements Serializable {
           .actionURL(redirectUrlString).build());
     }
 
-    log.trace(method + "End");
+    LOG.trace(method + "End");
     return result;
 
   }
 
-    public void setGovDataNavigation(GovDataNavigation govDataNavigation) {
-      this.govDataNavigation = govDataNavigation;
-    }
+  public void setGovDataNavigation(GovDataNavigation govDataNavigation)
+  {
+    this.govDataNavigation = govDataNavigation;
+  }
 }

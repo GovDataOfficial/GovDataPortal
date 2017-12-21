@@ -27,29 +27,29 @@ Prepare Database
 If not already done, create database and user for Liferay:
 
     sudo su postgres
-    psql -c "create user liferay with password 'yyy';"
+    psql -c "create user liferay with password 'liferay';"
     createdb -O liferay liferay -E utf-8 -T template0
 
 
 Prepare CKAN
 ------------
-Assuming you have an installed and reachable CKAN 2.3 installation.
+Assuming you have an installed and reachable CKAN 2.x installation.
 
 - Create an admin user ([CKAN doc for that](http://docs.ckan.org/en/latest/maintaining/getting-started.html#create-admin-user))
 
 - Note the admin API key, Liferay will be using this one to authenticate against CKAN (portal-ext.properties)
 
-- Define the file *deutschland.json* with the licenses used by the German Open Data Portals. The file is available at [ogd-metadata](https://github.com/GovDataOfficial/OGD-1.1/blob/master/lizenzen/deutschland.json). This can be configured in the ckan configuration file *production.ini*, e.g.
+- Define the file with the licenses used by the German Open Data Portals. The file is available at [ckanext-dcatde](https://github.com/GovDataOfficial/ckanext-dcatde/blob/master/examples/dcat_licenses.json). This can be configured in the ckan configuration file *production.ini*, e.g.
 
   - directly to the remote url
 
-    licenses_group_url = https://raw.githubusercontent.com/GovDataOfficial/OGD-1.1/master/lizenzen/deutschland.json
+    licenses_group_url = https://raw.githubusercontent.com/GovDataOfficial/ckanext-dcatde/master/examples/dcat_licenses.json
 
   - or to a local copy of the file
 
-    licenses_group_url = file:///usr/lib/ogd-metadata/lizenzen/deutschland.json
+    licenses_group_url = file:///usr/lib/dcat-metadata/dcat_licenses.json
 
-- Create some categories (CKAN calls them "groups"). The ogd conform groups can be easily created by the CKAN command *groupadder* in the CKAN extension [ckanext-govdatade](https://github.com/GovDataOfficial/ckanext-govdatade).
+- Create some categories (CKAN calls them "groups"). The DCAT-AP.de conform groups can be easily created by the CKAN command *dcatde_themeadder* in the CKAN extension [ckanext-dcatde](https://github.com/GovDataOfficial/ckanext-dcatde#creating-dcat-ap-categories-as-groups).
 
 - Create some datasets
 

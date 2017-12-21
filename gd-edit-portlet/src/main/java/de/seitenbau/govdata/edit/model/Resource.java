@@ -1,15 +1,14 @@
 package de.seitenbau.govdata.edit.model;
 
-import java.io.Serializable;
-
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.URL;
-
+import de.seitenbau.govdata.edit.validator.LicenceId;
+import de.seitenbau.govdata.edit.validator.StringDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
+
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
@@ -22,14 +21,23 @@ public class Resource implements Serializable
   @NotEmpty
   private String url;
   
-  @NotEmpty
   private String format;
   
   private String description;
   
   private String name;
   
-  @Pattern(regexp="[a-z]{2}|", message="{languageCode}")
   private String language;
   
+  @NotEmpty
+  @LicenceId(message="{licenceId}")
+  private String licenseId;
+
+  private String licenseAttributionByText;
+
+  @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
+  private String modified;
+
+  @URL
+  private String plannedAvailability;
 }

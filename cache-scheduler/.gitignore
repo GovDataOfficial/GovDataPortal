@@ -43,3 +43,4 @@ target
 /target
 
 cache-scheduler.iml
+/.checkstyle

@@ -29,9 +29,9 @@ import org.elasticsearch.common.lang3.StringUtils;
 import com.liferay.portal.kernel.exception.SystemException;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
-import de.fhg.fokus.odp.registry.model.Metadata;
-import de.fhg.fokus.odp.registry.model.Organization;
-import de.fhg.fokus.odp.registry.model.User;
+import de.seitenbau.govdata.odp.registry.model.Metadata;
+import de.seitenbau.govdata.odp.registry.model.Organization;
+import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.permission.PermissionUtil;
 
 /**

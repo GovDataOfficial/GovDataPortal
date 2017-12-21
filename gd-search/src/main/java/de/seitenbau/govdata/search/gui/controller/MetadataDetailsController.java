@@ -21,6 +21,8 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowStateException;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
@@ -50,9 +52,6 @@ import com.liferay.portlet.PortletURLFactoryUtil;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil;
-import de.fhg.fokus.odp.registry.model.Metadata;
-import de.fhg.fokus.odp.registry.model.Organization;
-import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.dataset.details.beans.CurrentMetadataContact;
@@ -63,6 +62,9 @@ import de.seitenbau.govdata.filter.SearchConsts;
 import de.seitenbau.govdata.messages.MessageKey;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.navigation.PortletUtil;
+import de.seitenbau.govdata.odp.registry.model.Metadata;
+import de.seitenbau.govdata.odp.registry.model.Organization;
+import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;
 import de.seitenbau.govdata.permission.PermissionUtil;
@@ -70,23 +72,16 @@ import de.seitenbau.govdata.redis.adapter.RedisClientAdapter;
 import de.seitenbau.govdata.redis.util.RedisReportUtil;
 import de.seitenbau.govdata.search.common.NotificationMailSender;
 import de.seitenbau.govdata.search.common.NotificationMailSender.EventType;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller for the metadata details page.
- * 
- * @author rnoerenberg
  *
+ * @author rnoerenberg
  */
 @Slf4j
 @RequestMapping("VIEW")
 public class MetadataDetailsController extends BaseServiceImpl
 {
-  public static final String[] ANONYMOUS_NAMES = {
-      BaseServiceImpl.JRUN_ANONYMOUS, BaseServiceImpl.ORACLE_ANONYMOUS,
-      BaseServiceImpl.SUN_ANONYMOUS, BaseServiceImpl.WEBLOGIC_ANONYMOUS
-  };
-
   private static final String MODEL_KEY_THEME_DISPLAY = "themeDisplay";
 
   private static final String MODEL_KEY_CURRENT_USER = "currentUser";
@@ -99,13 +94,13 @@ public class MetadataDetailsController extends BaseServiceImpl
 
   private static final String VIEW_MODEL_NAME = "details";
 
-  public static final String SUBMIT_RATING_RESOURCE_URL_ID = "submitRating";
+  private static final String SUBMIT_RATING_RESOURCE_URL_ID = "submitRating";
 
-  public static final String ADD_COMMENT_RESOURCE_URL_ID = "addComment";
+  private static final String ADD_COMMENT_RESOURCE_URL_ID = "addComment";
 
-  public static final String EDIT_COMMENT_RESOURCE_URL_ID = "editComment";
+  private static final String EDIT_COMMENT_RESOURCE_URL_ID = "editComment";
 
-  public static final String DELETE_COMMENT_RESOURCE_URL_ID = "deleteComment";
+  private static final String DELETE_COMMENT_RESOURCE_URL_ID = "deleteComment";
 
   private static final String HTTP_STATUS_FORBIDDEN = "403";
 
@@ -124,22 +119,23 @@ public class MetadataDetailsController extends BaseServiceImpl
   private static final String MODEL_KEY_EDITDATASETURL = "editDatasetUrl";
 
   private static final String MODEL_KEY_SHOW_BROKEN_LINKS_HINT = "showBrokenLinksHint";
-  
+
   @Inject
   private RegistryClient registryClient;
 
   @Inject
   private RedisClientAdapter redisClientAdapter;
-  
+
   @Inject
   private NotificationMailSender notificationMailSender;
-  
+
   @Inject
   private GovDataNavigation gdNavigation;
 
   @RenderMapping
   public String showMetadataDetails(
-      @RequestParam(value = DetailsRequestParamNames.PARAM_METADATA, required = false) String metadataIdOrName,
+      @RequestParam(value = DetailsRequestParamNames.PARAM_METADATA,
+          required = false) String metadataIdOrName,
       RenderRequest request,
       RenderResponse response,
       Model model) throws PortalException, SystemException, PortletModeException, WindowStateException
@@ -164,18 +160,18 @@ public class MetadataDetailsController extends BaseServiceImpl
 
     ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
     PortletPreferences portletPreferences = request.getPreferences();
-    
+
     // CurrentUser
     User liferayUser = PortalUtil.getUser(request);
     CurrentUser currentUser = findOrCreateCurrentUser(liferayUser);
-    
+
     // Metadata
     boolean showBrokenLinksHint =
-        GetterUtil.getBoolean(portletPreferences.getValue("showBrokenLinksHint", StringPool.TRUE));
-    
+        GetterUtil.getBoolean(portletPreferences.getValue(MODEL_KEY_SHOW_BROKEN_LINKS_HINT, StringPool.TRUE));
+
     SelectedMetadata selectedMetadata =
         createMetadata(metadataIdOrName, themeDisplay, currentUser.getCkanUser(), showBrokenLinksHint);
-    
+
     PortletURL actionUrl = response.createActionURL();
     selectedMetadata.setActionUrl(actionUrl.toString());
     selectedMetadata.setCurrentUser(currentUser);
@@ -186,7 +182,7 @@ public class MetadataDetailsController extends BaseServiceImpl
     if (selectedMetadata.getMetadata() != null)
     {
       metadataName = selectedMetadata.getMetadata().getName();
-      
+
       // can edit this Metadata?
       if (currentUser.getCkanUser() != null)
       {
@@ -197,13 +193,12 @@ public class MetadataDetailsController extends BaseServiceImpl
             organizationsForUser, selectedMetadata.getMetadata().getOwnerOrg()))
         {
           userCanEditDataset = true;
-          
+
           // create Link to edit form
           String url =
               gdNavigation.createLinkForMetadataEdit(
                   "gdeditportlet", selectedMetadata.getMetadata().getName()).toString();
           model.addAttribute(MODEL_KEY_EDITDATASETURL, url);
-          
         }
       }
     }
@@ -222,7 +217,7 @@ public class MetadataDetailsController extends BaseServiceImpl
     model.addAttribute(MODEL_KEY_CURRENT_USER, currentUser);
     model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
     model.addAttribute(MODEL_KEY_CANEDIT, userCanEditDataset);
-    
+
     // create LoginURL to be used with the fastlogin-popup - anonymous users can comment that way
     PortletURL loginURL =
         PortletURLFactoryUtil.create(
@@ -247,7 +242,7 @@ public class MetadataDetailsController extends BaseServiceImpl
     log.trace(method + "End");
     return VIEW_MODEL_NAME;
   }
-  
+
   @ResourceMapping(value = ADD_COMMENT_RESOURCE_URL_ID)
   public String addComment(
       ResourceRequest request,
@@ -256,7 +251,7 @@ public class MetadataDetailsController extends BaseServiceImpl
   {
     final String method = "addComment() : ";
     log.trace(method + "Start");
-    
+
     String emailAddress = request.getParameter(QueryParamNames.PARAM_EMAIL_ADDRESS);
 
     String newComment = request.getParameter(QueryParamNames.PARAM_COMMENT);
@@ -272,17 +267,19 @@ public class MetadataDetailsController extends BaseServiceImpl
         // Check permission and existence of metadata
         User liferayUser = getGuestOrUser(); // request User from BaseServiceImpl
         CurrentUser currentUser = findOrCreateCurrentUser(liferayUser);
-        
+
         // get id of newly created temporary user, if this was a guest session
         User commentAuthor = liferayUser;
-        if(liferayUser.isDefaultUser() && emailAddress != null) {
+        if (liferayUser.isDefaultUser() && emailAddress != null)
+        {
           User temporaryUser =
               UserLocalServiceUtil.getUserByEmailAddress(themeDisplay.getCompanyId(), emailAddress);
-          if(temporaryUser.getStatus() == 6) { // 6 = user created as inactive guest user
+          if (temporaryUser.getStatus() == 6)
+          { // 6 = user created as inactive guest user
             commentAuthor = temporaryUser;
           }
         }
-        
+
         if (PermissionUtil.hasCreateCommentPermission(liferayUser)
             && (getMetadataFromCkan(currentUser.getCkanUser(), StringUtils.trim(metadataName)) != null))
         {
@@ -374,7 +371,7 @@ public class MetadataDetailsController extends BaseServiceImpl
             MetadataCommentLocalServiceUtil.updateMetadataComment(metadataComment);
             log.debug(method + "Kommentar mit ID {} geändert.", commentId);
             view.addStaticAttribute(QueryParamNames.PARAM_COMMENT, newComment);
-            
+
             long companyId = PortalUtil.getCompanyId(request);
             ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
             Metadata metadata =
@@ -505,7 +502,7 @@ public class MetadataDetailsController extends BaseServiceImpl
     log.trace(method + "End");
     return view;
   }
-  
+
   @ResourceMapping(value = SUBMIT_RATING_RESOURCE_URL_ID)
   public View submitRating(
       ResourceRequest request,
@@ -517,26 +514,26 @@ public class MetadataDetailsController extends BaseServiceImpl
 
     String rating = request.getParameter(QueryParamNames.PARAM_RATING);
     log.debug(method + "rating: {}", rating);
-    
+
     String dataset = request.getParameter(QueryParamNames.PARAM_DATASET);
     log.debug(method + "dataset: {}", dataset);
 
     MappingJackson2JsonView view = new MappingJackson2JsonView();
-    
+
     try
     {
       // get the current user
       User liferayUser = PortalUtil.getUser(request);
       CurrentUser currentUser = findOrCreateCurrentUser(liferayUser);
-      
+
       // check rating score
       int ratingInt = Integer.parseInt(rating);
-      
+
       // submit rating to ckan
       log.debug(method
           + "rateMetadata({}, {}, {})", currentUser.getCkanUser().getDisplayName(), dataset, ratingInt);
       registryClient.getInstance().rateMetadata(currentUser.getCkanUser(), dataset, ratingInt);
-      
+
       // get updated metadata
       Metadata metadata = getMetadataFromCkan(currentUser.getCkanUser(), dataset);
       view.addStaticAttribute("avgRating", Math.round(metadata.getAverageRating()));
@@ -548,7 +545,7 @@ public class MetadataDetailsController extends BaseServiceImpl
       response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_INTERNAL_SERVER_ERROR);
       return null;
     }
-    
+
     view.addStaticAttribute("rating", rating);
     log.debug(method + "End");
     return view;
@@ -563,7 +560,8 @@ public class MetadataDetailsController extends BaseServiceImpl
   }
 
   private SelectedMetadata createMetadata(
-      String metadataIdOrName, ThemeDisplay themeDisplay, de.fhg.fokus.odp.registry.model.User ckanuser,
+      String metadataIdOrName, ThemeDisplay themeDisplay,
+      de.seitenbau.govdata.odp.registry.model.User ckanuser,
       boolean showBrokenLinkHint)
   {
     final String method = "createMetadata() : ";
@@ -601,13 +599,16 @@ public class MetadataDetailsController extends BaseServiceImpl
       result.setComments(wrapComments(comments, themeDisplay));
 
       // read unavailable resource links
-      if(showBrokenLinkHint) {
+      if (showBrokenLinkHint)
+      {
         result.setNotAvailableResourceLinks(
             RedisReportUtil.readUnavailableResourceLinks(metadata.getId(), redisClientAdapter));
-      } else {
+      }
+      else
+      {
         result.setNotAvailableResourceLinks(new HashSet<String>());
       }
-      
+
       log.debug(method + "SelectedMetadata created!");
     }
     else
@@ -618,7 +619,8 @@ public class MetadataDetailsController extends BaseServiceImpl
     return result;
   }
 
-  private Metadata getMetadataFromCkan(de.fhg.fokus.odp.registry.model.User ckanuser, String metadataId)
+  private Metadata getMetadataFromCkan(de.seitenbau.govdata.odp.registry.model.User ckanuser,
+      String metadataId)
   {
     final String method = "getMetadataFromCkan() : ";
     log.trace(method + "Start");
@@ -648,7 +650,7 @@ public class MetadataDetailsController extends BaseServiceImpl
 
   private List<MetadataCommentWrapper> wrapComments(List<MetadataComment> comments, ThemeDisplay themeDisplay)
   {
-    List<MetadataCommentWrapper> result = new ArrayList<MetadataCommentWrapper>();
+    List<MetadataCommentWrapper> result = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(comments))
     {
       for (MetadataComment metadataComment : comments)
@@ -677,6 +679,7 @@ public class MetadataDetailsController extends BaseServiceImpl
   /**
    * Tries to find the matching ckanUser for the currently logged in Liferay user (if somebody is
    * logged in...). If no user exists, a new one will be created.
+   *
    * @param liferayUser
    * @return
    */

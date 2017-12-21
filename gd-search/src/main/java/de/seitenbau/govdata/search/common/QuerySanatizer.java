@@ -7,19 +7,43 @@ import org.jsoup.Jsoup;
 
 import de.seitenbau.govdata.date.DateUtil;
 
-public class QuerySanatizer {
+/**
+ * Stellt Methoden bereits, um die Parameter in der Suchanfrage zu säubern.
+ * 
+ * @author tscheffler
+ *
+ */
+public abstract class QuerySanatizer
+{
   private static final String BLACKLISTED_QUERY_CHARS = "[/]";
 
-  public static String sanatizeQuery(String q) {
+  /**
+   * Entfernt aus dem übergebenen String HTML-Markup und nicht erlaubte Zeichen heraus und gibt
+   * diesen String zurück.
+   * 
+   * @param q der zu säubernde String.
+   * @return der gesäuberte String.
+   */
+  public static String sanatizeQuery(String q)
+  {
     q = Jsoup.parse(q).text(); // remove html
     q = q.replaceAll(BLACKLISTED_QUERY_CHARS, " ");
-    
+
     return q;
   }
-  
-  public static Date getDateFromString(String dateStr) throws ParseException {
+
+  /**
+   * Versucht aus dem übergebenen String ein Datumsobjekt zu erzeugen.
+   * 
+   * @param dateStr ein String, der eventuell ein Datum repräsentiert.
+   * @return das Datumsobjekt.
+   * @throws ParseException falls der String nicht zu einem Datum geparst werden konnte.
+   */
+  public static Date getDateFromString(String dateStr) throws ParseException
+  {
     Date result = DateUtil.parseDateString(dateStr, "dd.MM.yyyy");
-    if(result == null) {
+    if (result == null)
+    {
       throw new ParseException("Not a valid Date-String", 0);
     }
     return result;

@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import de.fhg.fokus.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.cache.CategoryCache;
 
 public class CategoriesValidator implements ConstraintValidator<Categories, List<String>>

@@ -1,0 +1,252 @@
+<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+
+  <div th:fragment="contact(editForm, cname)" class="editform-detailscontainer">
+    <fieldset th:object="${editForm.contacts[__${cname}__]}">
+      <legend th:text="#{'od.contacts.' + ${cname}}" class="contact-legend"></legend>
+
+      <div class="css-table">
+        <!--/* name */-->
+        <div class="css-row">
+          <label th:id="'contacts_'+${cname}+'_name_label'"
+                 th:for="'contacts'+${cname}+'.name'">[[#{'od.name.name'}]]</label>
+          <div>
+            <input type="text"
+                   th:attr="aria-labelledby='contacts_'+${cname}+'_name_label contacts_'+${cname}+'_name_error'"
+                   th:field="*{name}"/>
+            <div class="validation-error"
+                 th:if="${#fields.hasErrors('name')}"
+                 th:id="'contacts_'+${cname}+'_name_error'"
+                 th:errors="*{name}"></div>
+            <div th:unless="${#fields.hasErrors('name')}"
+                 th:id="'contacts_'+${cname}+'_name_error'"></div>
+          </div>
+        </div>
+
+        <!--/* email */-->
+        <div class="css-row">
+          <label th:id="'contacts_'+${cname}+'_email_label'"
+                 th:for="'contacts'+${cname}+'.email'">[[#{'od.email.name'}]]</label>
+          <div>
+            <input type="text"
+                   th:attr="aria-labelledby='contacts_'+${cname}+'_email_label contacts_'+${cname}+'_email_error'"
+                   th:field="*{email}"/>
+            <div class="validation-error"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:id="'contacts_'+${cname}+'_email_error'"
+                 th:errors="*{email}"></div>
+            <div th:unless="${#fields.hasErrors('email')}"
+                 th:id="'contacts_'+${cname}+'_email_error'"></div>
+          </div>
+        </div>
+
+        <!--/* url */-->
+        <div class="css-row">
+          <label th:id="'contacts_'+${cname}+'_url_label'"
+                 th:for="'contacts'+${cname}+'.url'">[[#{'od.url.name'}]]</label>
+          <div>
+            <input type="text"
+                   th:attr="aria-labelledby='contacts_'+${cname}+'_url_label contacts_'+${cname}+'_url_error'"
+                   th:field="*{url}"/>
+            <div class="validation-error"
+                 th:if="${#fields.hasErrors('url')}"
+                 th:id="'contacts_'+${cname}+'_url_error'"
+                 th:errors="*{url}"></div>
+            <div th:unless="${#fields.hasErrors('url')}"
+                 th:id="'contacts_'+${cname}+'_url_error'"></div>
+          </div>
+        </div>
+
+        <!--/* address */-->
+        <div class="css-row">
+          <div>
+            [[#{'od.address.name'}]]
+          </div>
+          <fieldset>
+            <legend class="offscreen" th:text="#{'od.address.name'}"></legend>
+            <div class="editform_contact" th:object="${editForm.contacts[__${cname}__].address}">
+              <label class="editform_addressee">
+                <span th:text="#{od.editform.contact.addressee}"></span>
+                <input type="text" th:field="*{addressee}"/>
+              </label>
+              <label class="editform_details">
+                <span th:text="#{od.editform.contact.details}"></span>
+                <input type="text" th:field="*{details}"/>
+              </label>
+              <label class="editform_street">
+                <span th:text="#{od.editform.contact.street}"></span>
+                <input type="text" th:field="*{street}"/>
+              </label>
+              <label class="editform_city">
+                <span th:text="#{od.editform.contact.city}"></span>
+                <input type="text" th:field="*{city}"/>
+              </label>
+              <label class="editform_zip">
+                <span th:text="#{od.editform.contact.zip}"></span>
+                <input type="text" th:field="*{zip}"/>
+              </label>
+              <label class="editform_country">
+                <span th:text="#{od.editform.contact.country}"></span>
+                <input type="text" th:field="*{country}"/>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+      </div>
+    </fieldset>
+  </div>
+
+  <div th:fragment="resource(editForm, row, rowStat)" class="editform-detailscontainer">
+    <fieldset th:object="${editForm.resources[__${rowStat.index}__]}"
+              th:with="idp='resources'+${rowStat.index}">
+      <legend th:text="#{od.editform.resource}+' '+${rowStat.index +1}" class="offscreen"></legend>
+      <div class="flex-container">
+        <span class="sb-chapter-head" th:text="#{od.editform.resource}+' '+${rowStat.index +1}"></span>
+        <button th:if="${rowStat.size > 1}" type="button" name="removeResource" th:value="${rowStat.index}"
+                class="btn buttonDeleteRow" th:text="#{'delete-resource'}"></button>
+      </div>
+
+      <div class="css-table">
+        <!--/* url */-->
+        <div class="css-row editform_resource">
+          <label th:id="${idp}+'_url_label'" th:for="${idp}+'.url'">[[#{'od.url.name'}]]<span
+                  class="requiredmarker"> *</span></label>
+          <div>
+            <input th:attr="aria-labelledby=${idp}+'_url_label '+${idp}+'_url_error'" type="text"
+                   aria-required="true" th:field="*{url}" th:placeholder="#{'od.validation_required'}"/>
+            <div th:id="${idp}+'_url_error'" class="validation-error" th:if="${#fields.hasErrors('url')}"
+                 th:errors="*{url}"></div>
+            <div th:id="${idp}+'_url_error'" th:unless="${#fields.hasErrors('url')}"></div>
+          </div>
+        </div>
+
+        <!--/* name */-->
+        <div class="css-row">
+          <label th:id="${idp}+'_name_label'" th:for="${idp}+'.name'">[[#{'od.name.name'}]]</label>
+          <div>
+            <input th:attr="aria-labelledby=${idp}+'_name_label '+${idp}+'_name_error'" type="text"
+                   th:field="*{name}"/>
+            <div th:id="${idp}+'_name_error'" class="validation-error" th:if="${#fields.hasErrors('name')}"
+                 th:errors="*{name}"></div>
+            <div th:id="${idp}+'_name_error'" th:unless="${#fields.hasErrors('name')}"></div>
+          </div>
+        </div>
+
+        <!--/* beschreibung */-->
+        <div class="css-row">
+          <label th:id="${idp}+'_description_label'" th:for="${idp}+'.description'">[[#{'od.description.name'}]]</label>
+          <div>
+            <input th:attr="aria-labelledby=${idp}+'_description_label '+${idp}+'_description_error'"
+                   type="text" th:field="*{description}"/>
+            <div th:id="${idp}+'_description_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('description')}"
+                 th:errors="*{description}"></div>
+            <div th:id="${idp}+'_description_error'" th:unless="${#fields.hasErrors('description')}"></div>
+          </div>
+        </div>
+
+        <!--/* format */-->
+        <div class="css-row">
+          <label th:id="${idp}+'_format_label'" th:for="${idp}+'.format'">[[#{'od.format.name'}]]</label>
+          <div>
+            <input th:attr="aria-labelledby=${idp}+'_format_label '+${idp}+'_format_error'" type="text"
+                   th:field="*{format}"/>
+            <div th:id="${idp}+'_format_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('format')}"
+                 th:errors="*{format}"></div>
+            <div th:id="${idp}+'_format_error'" th:unless="${#fields.hasErrors('format')}"></div>
+          </div>
+        </div>
+
+        <!--/* sprache */-->
+        <div class="css-row">
+          <label th:id="${idp}+'_language_label'"
+                 th:for="${idp}+'.language'">[[#{'od.language.name'}]]</label>
+          <div>
+            <input th:attr="aria-labelledby=${idp}+'_language_label '+${idp}+'_language_error'" type="text"
+                   th:field="*{language}"/>
+            <div class="help-text" th:text="#{od.editform.listformathint}"></div>
+            <div th:id="${idp}+'_language_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('language')}"
+                 th:errors="*{language}"></div>
+            <div th:id="${idp}+'_language_error'" th:unless="${#fields.hasErrors('language')}"></div>
+          </div>
+        </div>
+
+        <!--/* lizenz (Select) */-->
+        <div class="css-row">
+          <label th:id="${idp}+'_licenseid_label'"
+                 th:for="${idp}+'.licenseId'">[[#{'od.license.name'}]]<span
+                  class="requiredmarker"> *</span></label>
+          <div>
+            <select aria-required="true" th:field="*{licenseId}"
+                    th:attr="aria-labelledby=${idp}+'_licenseid_label '+${idp}+'_licenseid_error'">
+              <option th:each="licence : ${licenseList}" th:value="${licence.name}"
+                      th:text="${licence.title}"></option>
+            </select>
+            <div th:id="${idp}+'_licenseid_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('url')}"
+                 th:errors="*{licenseId}"></div>
+            <div th:id="${idp}+'_licenseid_error'" th:unless="${#fields.hasErrors('licenseId')}"></div>
+          </div>
+        </div>
+
+        <!--/* lizenz by */-->
+        <div class="css-row">
+          <label th:id="${idp}+'_licenseAttributionByText_label'" th:for="${idp}+'.licenseAttributionByText'">[[#{'od.licenseAttributionByText.name'}]]</label>
+          <div>
+            <input th:attr="aria-labelledby=${idp}+'_licenseAttributionByText_label '+${idp}+'_licenseAttributionByText_error'"
+                   type="text"
+                   th:field="*{licenseAttributionByText}"/>
+            <div th:id="${idp}+'_licenseAttributionByText_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('licenseAttributionByText')}"
+                 th:errors="*{licenseAttributionByText}"></div>
+            <div th:id="${idp}+'_licenseAttributionByText_error'"
+                 th:unless="${#fields.hasErrors('licenseAttributionByText')}"></div>
+          </div>
+        </div>
+
+        <!--/* aktualisierungsdatum (Datum) */-->
+        <div class="css-row field-temporal_coverage">
+          <label th:id="${idp}+'_modified_label'"
+                 th:for="${idp}+'.modified'">[[#{'od.modified.name'}]]</label>
+          <div class="date-container">
+            <input th:attr="aria-labelledby=${idp}+'_modified_label '+${idp}+'_modified_error'" type="text"
+                   th:field="*{modified}" class="resource-modifieddate" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}"/>
+            <div th:id="${idp}+'_modified_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('modified')}"
+                 th:errors="*{modified}"></div>
+            <div th:id="${idp}+'_modified_error'" th:unless="${#fields.hasErrors('modified')}"></div>
+          </div>
+        </div>
+
+        <!--/* verfügbarkeit (Select)*/-->
+        <div class="css-row">
+          <label th:id="${idp}+'_plannedAvailability_label'" th:for="${idp}+'.plannedAvailability'">[[#{'od.plannedAvailability.name'}]]</label>
+          <div>
+            <select th:field="*{plannedAvailability}"
+                    th:attr="aria-labelledby=${idp}+'_plannedAvailability_label '+${idp}+'_plannedAvailability_error'">
+              <option value=""
+                      th:text="#{od.select.optional.item.text}"></option>
+              <option value="http://dcat-ap.de/def/plannedAvailability/stable"
+                      th:text="#{od.editform.plannedavailability.stable}"></option>
+              <option value="http://dcat-ap.de/def/plannedAvailability/available"
+                      th:text="#{od.editform.plannedavailability.available}"></option>
+              <option value="http://dcat-ap.de/def/plannedAvailability/experimental"
+                      th:text="#{od.editform.plannedavailability.experimental}"></option>
+              <option value="http://dcat-ap.de/def/plannedAvailability/temporary"
+                      th:text="#{od.editform.plannedavailability.temporary}"></option>
+            </select>
+            <div th:id="${idp}+'_plannedAvailability_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('plannedAvailability')}"
+                 th:errors="*{plannedAvailability}"></div>
+            <div th:id="${idp}+'_plannedAvailability_error'"
+                 th:unless="${#fields.hasErrors('plannedAvailability')}"></div>
+          </div>
+        </div>
+
+      </div>
+    </fieldset>
+  </div>
+
+</div>

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS
+ * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS | 2017 SEITENBAU GmbH
  *
  * This file is part of Open Data Platform.
  *
@@ -15,12 +15,10 @@
  * Platform. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
  */
 
-/**
- *
- */
 package de.seitenbau.govdata.dataset.details.beans;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -34,15 +32,17 @@ import org.slf4j.LoggerFactory;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
-import de.fhg.fokus.odp.registry.model.Application;
-import de.fhg.fokus.odp.registry.model.Metadata;
-import de.fhg.fokus.odp.registry.model.Resource;
-import de.fhg.fokus.odp.registry.model.Tag;
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.constants.FileExtension;
+import de.seitenbau.govdata.navigation.PortletUtil;
+import de.seitenbau.govdata.odp.registry.model.Licence;
+import de.seitenbau.govdata.odp.registry.model.Metadata;
+import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
+import de.seitenbau.govdata.odp.registry.model.Resource;
+import de.seitenbau.govdata.odp.registry.model.Tag;
 
 /**
  * The Class SelectedMetadata.
@@ -82,7 +82,8 @@ public class SelectedMetadata
   /**
    * The actual rating.
    */
-  private int currentUserRating = 0; // will remain 0... because we can't get the current users rating from CKAN API.
+  private int currentUserRating = 0; // will remain 0... because we can't get the current users
+                                     // rating from CKAN API.
 
   private String keywords = null;
 
@@ -105,9 +106,19 @@ public class SelectedMetadata
    */
   public String getTitle()
   {
-    return metadata == null ? null : metadata.getTitle();
+    String result = null;
+    if (metadata != null)
+    {
+      result = metadata.getTitle();
+    }
+    return result;
   }
 
+  /**
+   * Gibt den titel als Plain-Text zurück. Eventuell enthaltenes Markup wird herausgefiltert.
+   * 
+   * @return
+   */
   public String getTitleOnlyText()
   {
     String result = "";
@@ -126,9 +137,19 @@ public class SelectedMetadata
    */
   public String getNotes()
   {
-    return metadata == null ? null : metadata.getNotes();
+    String result = null;
+    if (metadata != null)
+    {
+      result = metadata.getNotes();
+    }
+    return result;
   }
 
+  /**
+   * Gibt die Notes als Plain-Text zurück. Eventuell enthaltenes Markup wird herausgefiltert.
+   * 
+   * @return
+   */
   public String getNotesOnlyText()
   {
     String result = "";
@@ -140,23 +161,36 @@ public class SelectedMetadata
     return result;
   }
 
+  /**
+   * Gibt die Notes zurück. Nicht erlaubtes Markup wird herausgefiltert.
+   * 
+   * @return
+   */
   public String getNotesValidated()
   {
     String result = "";
     String notes = getNotes();
     if (StringUtils.isNotBlank(notes))
     {
-      result = StringCleaner.trimAndFilterString(notes, StringCleaner.metadataNotes);
+      result = StringCleaner.trimAndFilterString(notes, StringCleaner.WHITELIST_METADATA_NOTES);
     }
     return result;
   }
   
-  public boolean isBlockelementInNotes() {
+  /**
+   * Prüft, ob mindestens ein Blockelement in den Notes enthalten ist.
+   * 
+   * @return
+   */
+  public boolean isBlockelementInNotes()
+  {
     String[] badtags = {"li", "ol", "p", "ul"};
     
     String notes = getNotes();
-    for(String badtag : badtags) {
-      if(StringUtils.containsIgnoreCase(notes, "<" + badtag)) {
+    for (String badtag : badtags)
+    {
+      if (StringUtils.containsIgnoreCase(notes, "<" + badtag))
+      {
         return true;
       }
     }
@@ -171,7 +205,12 @@ public class SelectedMetadata
    */
   public String getUrl()
   {
-    return metadata == null ? null : metadata.getUrl();
+    String result = null;
+    if (metadata != null)
+    {
+      result = metadata.getUrl();
+    }
+    return result;
   }
 
   /**
@@ -181,7 +220,12 @@ public class SelectedMetadata
    */
   public List<Resource> getResources()
   {
-    return metadata == null ? null : metadata.getResources();
+    List<Resource> result = new ArrayList<>();
+    if (metadata != null)
+    {
+      result = metadata.getResources();
+    }
+    return result;
   }
 
   /**
@@ -208,7 +252,9 @@ public class SelectedMetadata
   {
     List<Integer> resultList = new ArrayList<Integer>();
     if (metadata == null)/* msg 16.09.2014 */
+    {
       return resultList;
+    }
     double averageRating = this.metadata.getAverageRating();
     logger.debug("getRating() -> " + averageRating);
     int ratingListCount = (int) averageRating;
@@ -232,9 +278,14 @@ public class SelectedMetadata
    */
   public int getRating()
   {
-    double averageRating = this.metadata.getAverageRating();
-    logger.debug("getRating() -> " + averageRating);
-    return (int) Math.round(averageRating);
+    int result = 0;
+    if (metadata != null)
+    {
+      double averageRating = this.metadata.getAverageRating();
+      logger.debug("getRating() -> " + averageRating);
+      result = (int) Math.round(averageRating);
+    }
+    return result;
   }
 
   /**
@@ -244,31 +295,42 @@ public class SelectedMetadata
    */
   public int getRatingCount()
   {
-    int ratingCount = this.metadata.getRatingCount();
-    logger.debug("getRatingCount() -> " + ratingCount);
-    return ratingCount;
-  }
-
-  public Application asApplication()
-  {
-    return (Application) metadata;
+    int result = 0;
+    if (metadata != null)
+    {
+      result = this.metadata.getRatingCount();
+      logger.debug("getRatingCount() -> " + result);
+    }
+    return result;
   }
 
   /**
+   * Gibt die URL zur CKAN-API zur Anzeige der JSON-Repräsentation der Metadaten zurück.
    * 
    * @return The URL to CKAN API of this metadata
    */
   public String getMetadataCKANUrl()
   {
-    // TODO : Info / Zusammenbauen an zentraler Stelle ablegen. Konstante, etc.
-    return PropsUtil.get("cKANurlFriendly") + "api/rest/dataset/"
-        + metadata.getName();
+    String result = "";
+    if (metadata != null)
+    {
+      result =
+          PortletUtil.getLinkToDatasetDetailsRawFormatBaseUrl() + metadata.getName() + FileExtension.RDF;
+    }
+    return result;
   }
 
+  /**
+   * Gibt die Schlagwörter als Komma separierte Liste zurück.
+   * 
+   * @return
+   */
   public String getKeywords()
   {
     if (metadata == null)/* msg 15.09.2014 */
+    {
       return "";
+    }
 
     if (this.keywords == null)
     {
@@ -285,25 +347,74 @@ public class SelectedMetadata
     return this.keywords;
   }
 
+  /**
+   * Gibt die Schlagwörter als Liste zurück.
+   * 
+   * @return
+   */
   public List<String> getTagNameList()
   {
     if (CollectionUtils.isEmpty(this.tagNameList))
     {
       List<String> result = new ArrayList<String>();
-      List<Tag> tagList = metadata.getTags();
-      if (CollectionUtils.isNotEmpty(tagList))
+      if (metadata != null)
       {
-        for (Tag tag : tagList)
+        List<Tag> tagList = metadata.getTags();
+        if (CollectionUtils.isNotEmpty(tagList))
         {
-          String tagName = tag.getName();
-          if (StringUtils.isNotEmpty(tagName))
+          for (Tag tag : tagList)
           {
-            result.add(StringCleaner.trimAndFilterString(tagName));
+            String tagName = tag.getName();
+            if (StringUtils.isNotEmpty(tagName))
+            {
+              result.add(StringCleaner.trimAndFilterString(tagName));
+            }
           }
         }
       }
       setTagNameList(result);
     }
     return this.tagNameList;
+  }
+  
+  public List<String> getUsedDatasets()
+  {
+    return metadata.getExtraList(MetadataListExtraFields.USED_DATASETS);
+  }
+  
+  public List<String> getGeocodingText()
+  {
+    return metadata.getExtraList(MetadataListExtraFields.GEOCODING_TEXT);
+  }
+
+  /**
+   * true if the resources have different licenses.
+   */
+  public boolean hasMultipleLicenses()
+  {
+    return metadata.getResourcesLicenses().size() > 1;
+  }
+
+  /**
+   * Returns the first license of this metadatas resources - or null if no license available.
+   */
+  public Licence getSingleLicense()
+  {
+    return metadata.getResourcesLicenses().stream().findFirst().orElse(null);
+  }
+
+  /**
+   * Gibt das Datum der letzten Änderung zurück.
+   * 
+   * @return das Datum der letzten Änderung.
+   */
+  public Date getLastModifiedDate()
+  {
+    Date result = null;
+    if (metadata != null)
+    {
+      result = metadata.getLastModifiedDate();
+    }
+    return result;
   }
 }

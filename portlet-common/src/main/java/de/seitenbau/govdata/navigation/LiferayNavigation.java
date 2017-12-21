@@ -1,7 +1,9 @@
 package de.seitenbau.govdata.navigation;
 
 import java.util.List;
+import java.util.Objects;
 
+import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
@@ -113,8 +115,7 @@ public class LiferayNavigation
   }
   
   /**
-   * Creates a link o a portlet by ID and Layout. 
-   * Target is the <b>RENDER</b> phase. 
+   * Creates a link to a portlet by ID and Layout. Target is the <b>RENDER</b> phase.
    * 
    * @param request
    * @param layout
@@ -132,13 +133,16 @@ public class LiferayNavigation
     return redirectURL;
   }
   
-  protected PortletURL createLink(String layoutFriendlyUrlName, String portletName) throws SystemException, PortalException
+  protected PortletURL createLink(
+      String layoutFriendlyUrlName, String portletName) throws SystemException, PortalException
   {
     PortletRequest requestFromContext = getRequestFromContext();
     return createLink(requestFromContext, layoutFriendlyUrlName, portletName);
   }
   
-  public PortletURL createLink(PortletRequest request, String layoutFriendlyUrlName, String portletName) throws SystemException, PortalException
+  public PortletURL createLink(
+      PortletRequest request, String layoutFriendlyUrlName, String portletName) throws SystemException,
+      PortalException
   {
     PortletURL url = null;
     Layout targetLayout = getLayout(layoutFriendlyUrlName);
@@ -162,9 +166,18 @@ public class LiferayNavigation
    */
   public PortletRequest getRequestFromContext()
   {
+    PortletRequest requestFromContext;
     RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-    PortletRequestAttributes pAttributes  = (PortletRequestAttributes)attributes ;
-    PortletRequest requestFromContext = pAttributes.getRequest();
+    if (Objects.nonNull(attributes))
+    {
+      PortletRequestAttributes pAttributes = (PortletRequestAttributes) attributes;
+      requestFromContext = pAttributes.getRequest();
+    }
+    else
+    {
+      requestFromContext =
+          (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    }
     return requestFromContext;
   }
 }

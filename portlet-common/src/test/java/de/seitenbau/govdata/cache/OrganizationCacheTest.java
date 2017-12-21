@@ -12,10 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import de.fhg.fokus.odp.registry.ODRClient;
-import de.fhg.fokus.odp.registry.ckan.impl.OrganizationImpl;
-import de.fhg.fokus.odp.registry.ckan.json.OrganizationBean;
-import de.fhg.fokus.odp.registry.model.Organization;
+import de.seitenbau.govdata.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.ckan.impl.OrganizationImpl;
+import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
+import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odr.RegistryClient;
 
 /**

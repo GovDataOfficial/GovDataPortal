@@ -1474,3 +1474,4 @@ test-output
 /target
 
 opendataregistry-client.iml
+/.checkstyle

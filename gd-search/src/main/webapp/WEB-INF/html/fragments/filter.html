@@ -22,7 +22,7 @@
     <dd th:each="filterModel, iterStat : ${facetList}">
       <a th:href="${filterModel.actionURL}"
         th:if="${filterModel.docCount} != 0"
-        th:title="'Filter ' + ${filterModel.name} + ' aktivieren'"
+        th:title="#{od.gdsearch.filter.label} + ' «' + ${filterModel.displayName} + '» ' + (${filterModel.active} ? #{od.gdsearch.filter.switch.inactive} : #{od.gdsearch.filter.switch.active})"
         th:class="'checkboxrow' + (${filterModel.active} ? ' checked' : '') + (${hideMoreThanFive} and ${iterStat.count} gt 5 ? ' show-more-hidden' : '')">
         <div class="checkbox" th:text="${filterModel.active} ? 'a' : ''"></div>
         <span class="offscreen" th:if="${filterModel.active}">(ausgewählt)</span>

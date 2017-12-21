@@ -31,7 +31,7 @@
 	
 	<event-definition>
         <qname xmlns:od="http://fokus.fraunhofer.de/odplatform">od:querydatasets</qname>
-        <value-type>de.fhg.fokus.odp.registry.model.Query</value-type>
+        <value-type>de.seitenbau.govdata.odp.registry.model.Query</value-type>
     </event-definition>
 	
 </portlet-app>

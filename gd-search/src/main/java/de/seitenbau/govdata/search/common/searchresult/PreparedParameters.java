@@ -10,6 +10,7 @@ import lombok.Data;
 
 /**
  * Bundle of preprocessed parameters. These are extracted from the request parameter Map.
+ *
  * @author tscheffler
  */
 @Data
@@ -32,8 +33,9 @@ public class PreparedParameters
 
   // filter by Zeitraum
   private Date dateFrom;
+
   private Date dateUntil;
-  
+
   // meta: are there active search filters? (except query)
   private boolean filtersActive;
 }

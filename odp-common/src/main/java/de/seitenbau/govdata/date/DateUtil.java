@@ -33,17 +33,25 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class DateUtil
 {
-  private static final Logger log = LoggerFactory.getLogger(DateUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DateUtil.class);
 
-  private static final String[] defaultDateFormats = {"yyyy-MM-dd'T'HH:mm:ssX", "yyyy-MM-dd'T'HH:mm:ssz",
+  private static final String[] DEFAULT_DATE_FORMATS = {"yyyy-MM-dd'T'HH:mm:ssX", "yyyy-MM-dd'T'HH:mm:ssz",
       "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm:ssX", "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ss X",
       "yyyy-MM-dd HH:mm:ss z", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", "dd.MM.yyyy'T'HH:mm:ssX",
       "dd.MM.yyyy'T'HH:mm:ssz", "dd.MM.yyyy'T'HH:mm:ss", "dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy"};
 
+  /**
+   * Versucht aus dem übergebenen String ein Datumsobjekt zu erzeugen.
+   * 
+   * @param dateString ein String, der eventuell ein Datum repräsentiert.
+   * @param pattern das Datums-Pattern, anhand dem versucht wird ein Datumsobjekt aus dem String zu
+   *        erzeugen.
+   * @return das Datumsobjekt.
+   */
   public static Date parseDateString(String dateString, String pattern)
   {
     final String method = "parseDateString(String, String) : ";
-    log.trace(method + "Start");
+    LOG.trace(method + "Start");
 
     Date result = null;
     if (dateString != null && pattern != null)
@@ -54,23 +62,29 @@ public abstract class DateUtil
       }
       catch (ParseException e)
       {
-        log.debug(method + e.getMessage());
+        LOG.debug(method + e.getMessage());
       }
     }
 
-    log.trace(method + "End");
+    LOG.trace(method + "End");
     return result;
   }
 
+  /**
+   * Versucht aus dem übergebenen String ein Datumsobjekt zu erzeugen.
+   * 
+   * @param dateString ein String, der eventuell ein Datum repräsentiert.
+   * @return das Datumsobjekt.
+   */
   public static Date parseDateString(String dateString)
   {
     final String method = "parseDateString(String) : ";
-    log.trace(method + "Start");
+    LOG.trace(method + "Start");
 
     Date result = null;
     if (dateString != null)
     {
-      for (String pattern : defaultDateFormats)
+      for (String pattern : DEFAULT_DATE_FORMATS)
       {
         try
         {
@@ -84,24 +98,68 @@ public abstract class DateUtil
       }
       if (result == null)
       {
-        log.debug(method + "Could not parse string '{}' as date!", dateString);
+        LOG.debug(method + "Could not parse string '{}' as date!", dateString);
       }
     }
 
-    log.trace(method + "End");
+    LOG.trace(method + "End");
+    return result;
+  }
+
+  /**
+   * Versucht anhand des übergebenen Patterns das übergebene Datumsobjekt als einen String zu
+   * formatieren.
+   * 
+   * @param date das zu formatierende Datum.
+   * @param pattern das gewünschte Pattern.
+   * @return die Repräsentation als String oder null, falls das übergebene Datum null ist oder das
+   *         Datum nicht formatiert werden konnte.
+   */
+  public static String formatDate(Date date, String pattern)
+  {
+    final String method = "formatDate() : ";
+    LOG.trace(method + "Start");
+
+    String result = null;
+    if (date != null && pattern != null)
+    {
+      try
+      {
+        result = formatDateInternal(date, pattern);
+      }
+      catch (ParseException e)
+      {
+        LOG.debug(method + e.getMessage());
+      }
+    }
+
+    LOG.trace(method + "End");
     return result;
   }
 
   private static Date parseDateStringInternal(String dateString, String pattern) throws ParseException
   {
     final String method = "parseDateString() : ";
-    log.trace(method + "Start");
+    LOG.trace(method + "Start");
 
     DateFormat df = new SimpleDateFormat(pattern);
     df.setLenient(false);
     Date result = df.parse(dateString);
 
-    log.trace(method + "End");
+    LOG.trace(method + "End");
+    return result;
+  }
+
+  private static String formatDateInternal(Date date, String pattern) throws ParseException
+  {
+    final String method = "formatDateInternal() : ";
+    LOG.trace(method + "Start");
+
+    DateFormat df = new SimpleDateFormat(pattern);
+    df.setLenient(false);
+    String result = df.format(date);
+
+    LOG.trace(method + "End");
     return result;
   }
 }

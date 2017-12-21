@@ -21,9 +21,10 @@ import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 
-import de.fhg.fokus.odp.registry.model.Category;
-import de.fhg.fokus.odp.registry.model.Licence;
-import de.fhg.fokus.odp.registry.model.Organization;
+import de.seitenbau.govdata.dcatde.ViewUtil;
+import de.seitenbau.govdata.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.Licence;
+import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
@@ -71,8 +72,8 @@ public class SearchExtController extends AbstractBaseController
     String[] hiddenFields = {
         QueryParamNames.PARAM_PHRASE,
         QueryParamNames.PARAM_FILTER,
-        QueryParamNames.PARAM_FROM,
-        QueryParamNames.PARAM_UNTIL
+        QueryParamNames.PARAM_START,
+        QueryParamNames.PARAM_END
     };
     
     // fields we want to just pass through (with "hiddenFields" being exactly the fields we want to exclude)
@@ -86,7 +87,7 @@ public class SearchExtController extends AbstractBaseController
         .organizationList(prepareOrganizationList())
         .typeList(prepareTypeList(locale))
         .formatList(prepareFormatList())
-        .isopenList(prepareIsopenList(locale))
+        .opennessList(prepareOpennessList(locale))
         .passthroughParams(passthroughParams)
         .hiddenFields(hiddenFields)
         .actionUrl(actionUrl.toString())
@@ -99,8 +100,9 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareCategoryList()
   {
     List<Map<String, String>> options = new ArrayList<>();
-    for(Category cat : categoryCache.getCategoriesSortedByTitle()) {
-      HashMap<String, String> hashMap = new HashMap<String, String>();
+    for(Category cat : categoryCache.getCategoriesSortedByTitle())
+    {
+      HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", cat.getName());
       hashMap.put("label", cat.getDisplayName());
       options.add(hashMap);
@@ -113,7 +115,7 @@ public class SearchExtController extends AbstractBaseController
     List<Map<String, String>> options = new ArrayList<>();
     for (Licence licence : licenceCache.getLicenceListSortedByTitle())
     {
-      HashMap<String, String> hashMap = new HashMap<String, String>();
+      HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", licence.getName());
       hashMap.put("label", licence.getTitle());
       options.add(hashMap);
@@ -124,25 +126,27 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareOrganizationList()
   {
     List<Map<String, String>> options = new ArrayList<>();
-    for(Organization item : organizationCache.getOrganizationsSorted()) {
-      HashMap<String, String> hashMap = new HashMap<String, String>();
+    for(Organization item : organizationCache.getOrganizationsSorted())
+    {
+      HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", item.getId());
       hashMap.put("label", item.getTitle());
       options.add(hashMap);
     }
     return options;
   }
-  
+
   
   private List<Map<String, String>> prepareFormatList()
   {
     List<String> formats = resourceFormatCache.getFormatsSorted();
     
     List<Map<String, String>> options = new ArrayList<>();
-    for(String format : formats) {
-      HashMap<String, String> hashMap = new HashMap<String, String>();
+    for(String format : formats)
+    {
+      HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", format);
-      hashMap.put("label", format);
+      hashMap.put("label", ViewUtil.getShortenedFormatRef(format));
       options.add(hashMap);
     }
     return options;
@@ -151,19 +155,17 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareTypeList(Locale locale)
   {
     return translateList(locale, "od.gdsearch.searchresult.filter.label.", new String[] {
-        SearchConsts.TYPE_DATENSATZ,
-        SearchConsts.TYPE_DOCUMENT,
-        SearchConsts.TYPE_APP,
+        SearchConsts.TYPE_DATASET,
         SearchConsts.TYPE_ARTICLE,
         SearchConsts.TYPE_BLOG
     });
   }
   
-  private List<Map<String, String>> prepareIsopenList(Locale locale)
+  private List<Map<String, String>> prepareOpennessList(Locale locale)
   {
     return translateList(locale, "od.usage_agreement.", new String[] {
-        SearchConsts.ISOPEN_OPEN,
-        SearchConsts.ISOPEN_RESTRICTED,
+        SearchConsts.FACET_HAS_OPEN,
+        SearchConsts.FACET_HAS_CLOSED,
     });
   }
 
@@ -178,9 +180,10 @@ public class SearchExtController extends AbstractBaseController
   {
     List<Map<String, String>> options = new ArrayList<>();
     
-    for(String value : values) {
+    for(String value : values)
+    {
       String label = LanguageUtil.get(locale, translationPrefix + value, value);
-      HashMap<String, String> hashMap = new HashMap<String, String>();
+      HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", value);
       hashMap.put("label", label);
       options.add(hashMap);

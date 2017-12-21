@@ -20,7 +20,7 @@ import com.rometools.rome.feed.atom.Link;
 import com.rometools.rome.feed.synd.SyndPerson;
 import com.rometools.rome.feed.synd.SyndPersonImpl;
 
-import de.fhg.fokus.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
 
 public class AtomFeedView extends AbstractAtomFeedView

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -96,8 +95,8 @@ public class GovDataNavigation
     PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_FILTER, filter);
     PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_SORT, sort);
     PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_BOUNDINGBOX, bbox);
-    PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_FROM, from);
-    PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_UNTIL, until);
+    PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_START, from);
+    PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_END, until);
     return url;
   }
   
@@ -176,7 +175,8 @@ public class GovDataNavigation
     }
     if (plid != 0)
     {
-      PortletURL url = liferayNavigation.createLink(liferayNavigation.getRequestFromContext(), "neues", portletId);
+      PortletURL url =
+          liferayNavigation.createLink(liferayNavigation.getRequestFromContext(), "neues", portletId);
       PortletUtil.setParameterInPortletUrl(url, "struts_action", "/blogs/view_entry");
       PortletUtil.setParameterInPortletUrl(url, "urlTitle", blog.getUrlTitle());
       return url.toString();
@@ -184,16 +184,18 @@ public class GovDataNavigation
     return "";
   }
 
-  public void setLiferayNavigation(LiferayNavigation liferayNavigation) {
+  public void setLiferayNavigation(LiferayNavigation liferayNavigation)
+  {
     this.liferayNavigation = liferayNavigation;
   }
   
   /**
    * Creates the link to the CKAN-Represenation of the given metadataId
-   * @param metadataId
-   * @return
+   * @param metadataId die Metadata ID/Name.
+   * @return the URL.
    */
-  public String createCkanUrl(String metadataId) {
-    return PropsUtil.get("cKANurlFriendly") + "api/rest/dataset/" + metadataId;
+  public String createCkanUrl(String metadataId)
+  {
+    return PortletUtil.getLinkToDatasetDetailsRawFormatBaseUrl() + metadataId;
   }
 }

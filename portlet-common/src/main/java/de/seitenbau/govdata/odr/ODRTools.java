@@ -15,10 +15,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
-import de.fhg.fokus.odp.registry.ODRClient;
-import de.fhg.fokus.odp.registry.model.Organization;
-import de.fhg.fokus.odp.registry.model.User;
-import de.fhg.fokus.odp.registry.model.exception.OpenDataRegistryException;
+import de.seitenbau.govdata.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.model.Organization;
+import de.seitenbau.govdata.odp.registry.model.User;
+import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 
 @Slf4j
 public class ODRTools

@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>2.4.6</version>
+    <version>3.0.2</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -30,14 +30,10 @@
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
-      <scope>provided</scope>
-      <version>${portlet-api.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
-      <scope>provided</scope>
+      <artifactId>javax.servlet-api</artifactId>
     </dependency>
 
     <!-- ODP -->
@@ -67,23 +63,11 @@
       <artifactId>portlet-common</artifactId>
     </dependency>
 
-    <!-- Microservices -->
-    <dependency>
-      <groupId>de.seitenbau.serviceportal</groupId>
-      <artifactId>gui-common</artifactId>
-    </dependency>
-
     <!-- Mailing -->
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <!-- Elasticsearch -->
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
     </dependency>
 
     <!-- DI -->
@@ -120,14 +104,9 @@
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
-      <version>2.1</version>
     </dependency>
 
     <!-- Utils -->
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -141,18 +120,6 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
-      <version>1.13</version>
-    </dependency>
-    <dependency>
-      <groupId>com.rometools</groupId>
-      <artifactId>rome</artifactId>
-      <version>1.5.0</version>
-    </dependency>
-
-
 
     <!-- Logging -->
     <dependency>
@@ -226,63 +193,9 @@
   <!-- ************************************************************************** -->
   <profiles>
     <profile>
-      <id>dev</id>
-      <activation>
-        <file>
-          <!-- dev profile is default profile -->
-          <missing>always-active-profile-hack</missing>
-        </file>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-resource</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>add-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>src/main/replacement/local</directory>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
       <id>deb</id>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-resource</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>add-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>src/main/replacement/remote</directory>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>

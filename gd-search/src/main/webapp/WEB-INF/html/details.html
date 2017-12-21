@@ -1,159 +1,226 @@
 <div id="contentPane" xmlns:th="http://www.thymeleaf.org" th:inline="text">
- <div th:if="${selectedMetadata.metadata == null}" class="searchdetails row design-box-padding">
-  <div class="alert alert-error">
-   <span th:text="#{od.dataset.not.exists.error.message}"></span>
-  </div>
- </div>
- <div class="searchdetails row" th:attr="data-entry-id=${selectedMetadata.metadata.name}" th:if="${selectedMetadata.metadata != null}" itemscope="itemscope" itemtype="http://schema.org/Dataset">
-
-  <div class="column small-12 large-8">
-   <div class="design-box design-box-padding">
-    <div th:if="${userCanEditDataset}" class="show-for-large-up"><a th:href="${editDatasetUrl}" th:text="#{'od-datasets_edit-dataset'}" class="action-button"></a></div>
-    <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${selectedMetadata.metadata.type.toField()}, true)"></div>
-
-    <h1>[[${selectedMetadata.titleOnlyText}]]</h1>
-    <div class="h2-teaser" th:if="${selectedMetadata.isBlockelementInNotes()}" th:utext="${selectedMetadata.notesValidated}"></div>
-    <p class="h2-teaser" th:unless="${selectedMetadata.isBlockelementInNotes()}" th:utext="${selectedMetadata.notesValidated}"></p>
-
-    <p class="link-to-source" th:unless="${#strings.isEmpty(selectedMetadata.metadata.url)}">
-     <a th:href="${selectedMetadata.metadata.url}" target="_blank" th:text="#{od.datasets_metadata_contact_publisher.description}"></a>
-    </p>
-
-    <div class="h2-metainfo">
-     <dl class="resource-list space-bottom" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
-      <dt class="bold">[[#{od.datasets_links_resources.title}]]:</dt>
-      <dd th:each="res,iterStat : ${selectedMetadata.resources}" th:if="${res.type != 'documentation'}">
-       <span class="alert alert-warning" role="alert" th:if="${#sets.contains(selectedMetadata.notAvailableResourceLinks, res.url)}">
-        <img class="alert-icon-resource" th:src="@{${themeDisplay.pathThemeImages} + '/svgicons/alert.svg'}" alt="" />
-        <strong th:text="#{od.metadata.validation.url.unavailable}"></strong>
-       </span>
-       <a class="resource-item" target="_blank" th:href="@{${res.url}}">
-        <div th:replace="fragments/icons :: resourceicon(${res.format})"></div>
-        <div class="resource-title" th:if="${res.description ne ''}" th:id="${iterStat.index} + '.outputText_res_description'" th:text="${#strings.abbreviate(res.description, 140)}"
-         th:title="${res.description}"></div>
-        <div class="resource-title" th:if="${res.description eq ''}" th:id="${iterStat.index} + '.outputText_res_url'" th:text="${#strings.abbreviate(res.url, 140)}" th:title="${res.url}"></div>
-       </a>
-      </dd>
-     </dl>
-
-     <dl class="resource-list space-bottom" th:unless="${#lists.isEmpty(selectedMetadata.metadata.usedDatasets)}">
-      <dt class="bold">[[#{od.used_datasets.name}]]:</dt>
-      <dd th:each="res,iterStat : ${selectedMetadata.metadata.usedDatasets}">
-       <a class="resource-item" target="_blank" th:href="@{${res}}">
-        <div class="resource-title" th:text="${res}" th:title="${res}"></div>
-       </a>
-      </dd>
-     </dl>
-
-     <dl class="ckan-link">
-      <dt class="bold">[[#{od.detail.metadata.linktockan}]]:</dt>
-      <dd>
-       <a th:href="${selectedMetadata.metadataCKANUrl}" class="resource-item" target="_blank">
-        <div class="resource-icon">CKAN</div>
-        <div class="ckan-title">[[${selectedMetadata.metadataCKANUrl}]]</div>
-       </a>
-      </dd>
-     </dl>
-
-     <!--/* TODO: Apps, welche diesen Datensatz benutzen */-->
+  <div th:if="${selectedMetadata.metadata == null}" class="searchdetails row design-box-padding">
+    <div class="alert alert-error">
+      <span th:text="#{od.dataset.not.exists.error.message}"></span>
     </div>
-   </div>
   </div>
+  <div class="searchdetails row" th:attr="data-entry-id=${selectedMetadata.metadata.name}"
+       th:if="${selectedMetadata.metadata != null}" itemscope="itemscope"
+       itemtype="http://schema.org/Dataset">
 
-  <div class="column small-12 large-4 floatcontainer-right">
-   <div class="design-box design-box-padding h2-metainfo searchdetails-infobox">
-    <dl class="licence inline-list">
-     <dt>[[#{od.datasets_open_licence}]]:</dt>
-     <dd id="od_usage_agreement_free_open" class="sbi-freie-nutzung" th:if="${selectedMetadata.metadata.open}" th:title="#{od.usage_agreement.free.description}">[[#{od.usage_agreement.free}]]</dd>
-     <dd id="od_usage_agreement_restricted_not_open" class="sbi-eingeschraenkte-nutzung" th:if="${not selectedMetadata.metadata.open}" th:title="#{od.usage_agreement.restricted.description}">
-      [[#{od.usage_agreement.restricted}]]</dd>
-    </dl>
+    <div class="column small-12 large-8">
+      <div class="design-box design-box-padding">
+        <div th:if="${userCanEditDataset}" class="show-for-large-up"><a th:href="${editDatasetUrl}"
+                                                                        th:text="#{'od-datasets_edit-dataset'}"
+                                                                        class="action-button"></a></div>
+        <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${selectedMetadata.metadata.type.toField()}, true)"></div>
 
-    <dl class="usage-terms space-bottom inline-list">
-     <dt>[[#{od.usage_agreement}]]:</dt>
-     <dd>
-      <a target="_blank" th:href="${selectedMetadata.metadata.licence.url}" th:if="${not #strings.isEmpty(selectedMetadata.metadata.licence.url)}"> <span
-       th:text="${selectedMetadata.metadata.licence.title}"></span>
-      </a>
-     </dd>
-     <dd th:text="${selectedMetadata.metadata.licence.title}" th:if="${#strings.isEmpty(selectedMetadata.metadata.licence.url)}"></dd>
-    </dl>
+        <h1>[[${selectedMetadata.titleOnlyText}]]</h1>
+        <div class="h2-teaser" th:if="${selectedMetadata.isBlockelementInNotes()}"
+             th:utext="${selectedMetadata.notesValidated}"></div>
+        <p class="h2-teaser" th:unless="${selectedMetadata.isBlockelementInNotes()}"
+           th:utext="${selectedMetadata.notesValidated}"></p>
 
-    <!--/* TODO: Kompatibilität */-->
+        <p class="link-to-source" th:unless="${#strings.isEmpty(selectedMetadata.metadata.url)}">
+          <a th:href="${selectedMetadata.metadata.url}" target="_blank"
+             th:text="#{od.datasets_metadata_contact_publisher.description}"></a>
+        </p>
 
-    <dl class="space-bottom">
-     <dt>[[#{od.rating.average}]]</dt>
-     <dd class="rating-area" id="panelGrouprating_average_tooltip" th:title="#{od.rating.average.tooltip}" itemprop="aggregateRating" itemscope="itemscope" itemtype="http://schema.org/AggregateRating">
-      <span th:each="rating, iterStat : ${selectedMetadata.ratingAsList}" th:attr="data-score=${iterStat.count}"
-       th:class="(${rating eq 1} ? 'sbi-sterne-bewertung-full' : 'sbi-sterne-bewertung') + ' rating-element'"></span>
-      <span class="rating-mean" itemprop="ratingCount" th:text="${selectedMetadata.ratingCount}"></span>
-      <meta name="ratingValue" itemprop="ratingValue" th:content="${selectedMetadata.getRating()}"></meta>
-      <meta name="worstRating" itemprop="worstRating" content="0"></meta>
-      <meta name="bestRating" itemprop="bestRating" content="5"></meta>
-     </dd>
-    </dl>
+        <dl class="resource-list space-bottom" th:unless="${#lists.isEmpty(selectedMetadata.usedDatasets)}">
+          <dt class="bold">[[#{od.used_datasets.name}]]:</dt>
+          <dd th:each="res,iterStat : ${selectedMetadata.usedDatasets}">
+            <a class="resource-item" target="_blank" th:href="@{${res}}">
+              <div class="resource-title" th:text="${res}" th:title="${res}"></div>
+            </a>
+          </dd>
+        </dl>
 
-    <dl class="inline-list">
-     <dt>[[#{last-modified}]]:</dt>
-     <dd th:text="${#dates.format(selectedMetadata.metadata.metadataModified, 'dd.MM.yyyy')}" th:if="${selectedMetadata.metadata.metadataModified != null}" id="metadata_metadataModified"
-      th:title="#{od.status.metadata.update.tooltip}"></dd>
-     <dd th:unless="${selectedMetadata.metadata.metadataModified != null}"></dd>
-    </dl>
+        <ul class="resource-list h2-metainfo">
+          <li>
+            <h2>
+              <span class="resource-icon">[[#{od.gdsearch.details.rdf}]]</span>
+              <span th:text="#{od.detail.metadata.linktockan}"></span>
+            </h2>
+            <dl class="inline-list">
+              <dt>[[#{od.gdsearch.details.url}]]:</dt>
+              <dd>
+                <a th:href="${selectedMetadata.metadataCKANUrl}" target="_blank"
+                   th:text="${selectedMetadata.metadataCKANUrl}"></a>
+              </dd>
+            </dl>
+          </li>
+        </ul>
 
-    <dl class="space-bottom inline-list">
-     <dt>[[#{od.date_released}]]:</dt>
-     <dd th:text="${#dates.format(selectedMetadata.metadata.published, 'dd.MM.yyyy')}" th:if="${selectedMetadata.metadata.published != null}" id="od_status_metadata_published"></dd>
-     <dd th:unless="${selectedMetadata.metadata.published != null}"></dd>
-    </dl>
+      </div>
 
-    <dl id="contactcontainer" class="packageDetails-author space-bottom" th:if="${selectedMetadata.metadata.type.toField() eq 'datensatz' or selectedMetadata.metadata.type.toField() eq 'dokument'}">
-     <dt>[[#{od.datasets_metadata_contact_publisher}]]:</dt>
-     <dd th:text="${selectedMetadata.contact}"></dd>
-    </dl>
+      <div class="design-box design-box-padding" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
+        <h2>[[#{od.gdsearch.details.res.header}]]:</h2>
 
-    <dl class="categories h2-tags space-bottom">
-     <dt>[[#{od.datasets_metadata_categories}]]:</dt>
-     <dd th:each="category: ${selectedMetadata.metadata.categories}">
-      <span th:text="${category.displayName}" th:class="'sbi-kat-' + ${#strings.replace(category.name,'_','-')}"></span>
-     </dd>
-     <dd th:if="${#lists.isEmpty(selectedMetadata.metadata.categories)}"></dd>
-    </dl>
-    
-    <dl th:replace="fragments/display_widgets :: temporalCoverage(${selectedMetadata.metadata.temporalCoverageFrom}, ${selectedMetadata.metadata.temporalCoverageTo}, true)"></dl>
+        <ul class="resource-list h2-metainfo" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
+          <li th:each="res,iterStat : ${selectedMetadata.resources}">
+            <h3>
+              <span th:replace="fragments/icons :: resourceicon(${res.formatShort})"></span>
+              <span th:if="${res.description ne ''}" th:text="${res.description}"></span>
+              <span th:unless="${res.description ne ''}" th:text="${res.url}"></span>
+            </h3>
+            <span class="alert alert-warning" role="alert"
+                  th:if="${#sets.contains(selectedMetadata.notAvailableResourceLinks, res.url)}">
+              <img class="alert-icon-resource" th:src="@{${themeDisplay.pathThemeImages} + '/svgicons/alert.svg'}"
+                   alt=""/>
+              <strong th:text="#{od.metadata.validation.url.unavailable}"></strong>
+            </span>
+            <dl class="inline-list">
+              <dt>[[#{last-modified}]]:</dt>
+              <dd th:unless="${res.last_modified == null}"
+                  th:text="${#dates.format(res.last_modified, 'dd.MM.yyyy')}"></dd>
+              <dd th:if="${res.last_modified == null}">-</dd>
 
-    <!--/* Raumbezug */-->
-    <dl class="space-bottom inline-list">
-     <dt>[[#{od.datasets_metadata_geographical_coverage}]]:</dt>
-     <dd th:text="${(not #strings.isEmpty(selectedMetadata.metadata.spatialReferenceText))
-                  ? selectedMetadata.metadata.spatialReferenceText : '-'}" id="metadata_geographicalCoverage"
-      th:title="#{od.metadata.geographical_coverage.tooltip}"></dd>
-    </dl>
+              <dt>[[#{od.gdsearch.details.res.availability}]]:</dt>
+              <dd th:unless="${res.plannedAvailability == null}" th:text="${res.plannedAvailability}"></dd>
+              <dd th:if="${res.plannedAvailability == null}">-</dd>
 
-    <dl class="taglist space-bottom inline-list">
-     <dt>[[#{od.datasets_metadata_tags}]]:</dt>
-     <dd th:each="tagName : ${selectedMetadata.tagNameList}">
-      <span th:text=" ${tagName}"></span>
-     </dd>
-    </dl>
-   </div>
-  </div>
+              <dt>[[#{od.datasets_open_licence}]]:</dt>
+              <dd class="sbi-freie-nutzung"
+                  th:if="${res.open}" th:title="#{od.usage_agreement.free.description}">
+                [[#{od.usage_agreement.free}]]
+              </dd>
+              <dd class="sbi-eingeschraenkte-nutzung"
+                  th:unless="${res.open}" th:title="#{od.usage_agreement.restricted.description}">
+                [[#{od.usage_agreement.restricted}]]
+              </dd>
 
-  <div class="column small-12 large-8 end" th:with="isLoggedIn = ${selectedMetadata.currentUser.isLoggedin()}">
-   <div class="design-box design-box-padding" th:if="${ratingsEnabled}">
-    <th:block th:if="${isLoggedIn}">
-     <div class="details-rating rateit-widget" th:attr="data-userscore=${selectedMetadata.getCurrentUserRating()},data-ratingactionurl=${selectedMetadata.ratingActionUrl}">
-      <button th:each="rating : ${#numbers.sequence(1,5)}" th:attr="data-score=${rating}" class="rating-element sbi-sterne-bewertung">
-        <span class="offscreen" th:text="#{od.details.view.stars.rate(${rating})}"></span>
-      </button>
-     </div>
-    </th:block>
-    <h2 class="rating-title section-title bold" th:attr="data-successmessage=#{od.rateIt.success}">[[#{od.rateIt.name}]]</h2>
-    <div class="rating-title section-title" th:unless="${isLoggedIn}">[[#{od.rateIt.login}]]</div>
-    <div class="clearfix"></div>
-   </div>
+              <dt>[[#{od.usage_agreement}]]:</dt>
+              <dd th:unless="${res.license == null}">
+                <a th:unless="${#strings.isEmpty(res.license.url)}" th:href="@{${res.license.url}}" th:text="${res.license.title}"></a>
+                <span th:if="${#strings.isEmpty(res.license.url)}" th:text="${res.license.title}">></span>
+              </dd>
+              <dd th:if="${res.license == null}">-</dd>
 
-   <div id="comment-container" th:if="${commentsEnabled}" th:class="'design-box design-box-padding' + (${#lists.isEmpty(selectedMetadata.comments)} ? ' no-comments' : '')"
-    th:attr="data-addurl=${selectedMetadata.addCommentResourceURL},
+              <dt>[[#{od.gdsearch.details.url}]]:</dt>
+              <dd>
+                <a th:href="@{${res.url}}" target="_blank" th:id="'resource'+${iterStat.index}+'_url'"
+                   th:text="${res.url}"></a>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+
+        <div th:if="${#lists.isEmpty(selectedMetadata.resources)}"
+             th:text="#{od.gdsearch.details.res.emptymsg}"></div>
+      </div>
+
+    </div>
+
+    <div class="column small-12 large-4 floatcontainer-right">
+      <div class="design-box design-box-padding h2-metainfo searchdetails-infobox">
+        <dl class="licence inline-list"
+            th:if="${selectedMetadata.singleLicense != null}">
+          <dt>[[#{od.datasets_open_licence}]]:</dt>
+          <dd id="od_usage_agreement_free_open" class="sbi-freie-nutzung" th:if="${selectedMetadata.metadata.open}" th:title="#{od.usage_agreement.free.description}">[[#{od.usage_agreement.free}]]</dd>
+          <dd id="od_usage_agreement_restricted_not_open" class="sbi-eingeschraenkte-nutzung" th:unless="${selectedMetadata.metadata.open}" th:title="#{od.usage_agreement.restricted.description}">
+            [[#{od.usage_agreement.restricted}]]</dd>
+        </dl>
+
+        <dl class="usage-terms space-bottom inline-list"
+            th:if="${selectedMetadata.hasMultipleLicenses() or selectedMetadata.singleLicense != null}">
+          <dt>[[#{od.usage_agreement}]]:</dt>
+          <dd th:if="${selectedMetadata.hasMultipleLicenses()}" th:text="#{od.usage_agreement.multiplelicenses}"></dd>
+          <dd th:unless="${selectedMetadata.hasMultipleLicenses()}">
+            <a target="_blank" th:href="${selectedMetadata.singleLicense.url}"><span th:text="${selectedMetadata.singleLicense.title}"></span></a>
+          </dd>
+        </dl>
+
+        <dl class="space-bottom">
+          <dt>[[#{od.rating.average}]]</dt>
+          <dd class="rating-area" id="panelGrouprating_average_tooltip"
+              th:title="#{od.rating.average.tooltip}" itemprop="aggregateRating" itemscope="itemscope"
+              itemtype="http://schema.org/AggregateRating">
+      <span th:each="rating, iterStat : ${selectedMetadata.ratingAsList}"
+            th:attr="data-score=${iterStat.count}"
+            th:class="(${rating eq 1} ? 'sbi-sterne-bewertung-full' : 'sbi-sterne-bewertung') + ' rating-element'"></span>
+            <span class="rating-mean" itemprop="ratingCount" th:text="${selectedMetadata.ratingCount}"></span>
+            <meta name="ratingValue" itemprop="ratingValue"
+                  th:content="${selectedMetadata.getRating()}"></meta>
+            <meta name="worstRating" itemprop="worstRating" content="0"></meta>
+            <meta name="bestRating" itemprop="bestRating" content="5"></meta>
+          </dd>
+        </dl>
+
+        <dl class="inline-list">
+          <dt>[[#{last-modified}]]:</dt>
+          <dd th:text="${#dates.format(selectedMetadata.lastModifiedDate, 'dd.MM.yyyy')}"
+              th:if="${selectedMetadata.lastModifiedDate != null}" id="metadata_metadataModified"
+              th:title="#{od.status.metadata.update.tooltip}"></dd>
+          <dd th:unless="${selectedMetadata.lastModifiedDate != null}">-</dd>
+        </dl>
+
+        <dl class="space-bottom inline-list">
+          <dt>[[#{od.date_released}]]:</dt>
+          <dd th:text="${#dates.format(selectedMetadata.metadata.published, 'dd.MM.yyyy')}"
+              th:if="${selectedMetadata.metadata.published != null}" id="od_status_metadata_published"></dd>
+          <dd th:unless="${selectedMetadata.metadata.published != null}">-</dd>
+        </dl>
+
+        <dl id="contactcontainer" class="packageDetails-author space-bottom">
+          <dt>[[#{od.datasets_metadata_contact_publisher}]]:</dt>
+          <dd th:unless="${selectedMetadata.contact == null}" th:text="${selectedMetadata.contact}"></dd>
+          <dd th:if="${selectedMetadata.contact == null}">-</dd>
+        </dl>
+
+        <dl class="categories h2-tags space-bottom">
+          <dt>[[#{od.datasets_metadata_categories}]]:</dt>
+          <th:block th:each="category : ${selectedMetadata.metadata.categories}">
+            <dd th:replace="fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})"></dd>
+          </th:block>
+          <dd th:if="${#lists.isEmpty(selectedMetadata.metadata.categories)}">-</dd>
+        </dl>
+
+        <dl th:replace="fragments/display_widgets :: temporalCoverage(${selectedMetadata.metadata.temporalCoverageFrom}, ${selectedMetadata.metadata.temporalCoverageTo}, true)"></dl>
+
+        <!--/* Raumbezug */-->
+        <dl class="space-bottom inline-list" id="metadata_geographicalCoverage">
+          <dt>[[#{od.datasets_metadata_geographical_coverage}]]:</dt>
+          <dd th:if="${#lists.isEmpty(selectedMetadata.geocodingText)}"
+              th:title="#{od.metadata.geographical_coverage.tooltip}">-</dd>
+          <dd th:unless="${#lists.isEmpty(selectedMetadata.geocodingText)}"
+              th:title="#{od.metadata.geographical_coverage.tooltip}"
+              th:each="geocodingText: ${selectedMetadata.geocodingText}">
+            <span th:text="${geocodingText}"></span>
+          </dd>
+        </dl>
+
+        <dl class="taglist space-bottom inline-list">
+          <dt>[[#{od.datasets_metadata_tags}]]:</dt>
+          <dd th:each="tagName : ${selectedMetadata.tagNameList}">
+            <span th:text=" ${tagName}"></span>
+          </dd>
+          <dd th:if="${#lists.isEmpty(selectedMetadata.tagNameList)}"
+              th:title="#{od.tags.tooltip}">-</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="column small-12 large-8 end"
+         th:with="isLoggedIn = ${selectedMetadata.currentUser.isLoggedin()}">
+      <div class="design-box design-box-padding" th:if="${ratingsEnabled}">
+        <th:block th:if="${isLoggedIn}">
+          <div class="details-rating rateit-widget"
+               th:attr="data-userscore=${selectedMetadata.getCurrentUserRating()},data-ratingactionurl=${selectedMetadata.ratingActionUrl}">
+            <button th:each="rating : ${#numbers.sequence(1,5)}" th:attr="data-score=${rating}"
+                    class="rating-element sbi-sterne-bewertung">
+              <span class="offscreen" th:text="#{od.details.view.stars.rate(${rating})}"></span>
+            </button>
+          </div>
+        </th:block>
+        <h2 class="rating-title section-title bold" th:attr="data-successmessage=#{od.rateIt.success}">
+          [[#{od.rateIt.name}]]</h2>
+        <div class="rating-title section-title" th:unless="${isLoggedIn}">[[#{od.rateIt.login}]]</div>
+        <div class="clearfix"></div>
+      </div>
+
+      <div id="comment-container" th:if="${commentsEnabled}"
+           th:class="'design-box design-box-padding' + (${#lists.isEmpty(selectedMetadata.comments)} ? ' no-comments' : '')"
+           th:attr="data-addurl=${selectedMetadata.addCommentResourceURL},
         data-editurl=${selectedMetadata.editCommentResourceURL},
         data-deleteurl=${selectedMetadata.deleteCommentResourceURL},
         data-loginurl=${loginurl},
@@ -164,31 +231,37 @@
         data-error500=#{od.error.message},
         data-dialogtitle=#{od.comment.loginDialogTitle}">
 
-      <h2 class="comment-title section-title bold">[[#{od.datasets_comment_dataset}]]</h2>
-    
-      <!--/* if the user is allowed to comment, show form */-->
-      <th:block th:if="${isLoggedIn} or ${guestCommentsEnabled}">
-        <div id="comment-message-box" style="display: none;" class="alert"></div>
-        
-        <label class="offscreen" for="newCommentInput" th:text="#{od.comment.field.title}"></label>
-        <textarea id="newCommentInput" title="#{od.comment.field.title}" name="new_comment_input" class="comment-textarea" required="required" th:placeholder="#{od.comment.new.name}"></textarea>
-        <div class="comment-button-row">
-          <button id="newCommentSubmit" th:if="${isLoggedIn}" class="btn existinguser" th:text="#{od.comment.create}" disabled="disabled"></button>
-          <button id="newCommentSubmit" th:unless="${isLoggedIn}" class="btn anonymoususer" th:text="#{od.comment.create_as}" disabled="disabled"></button>
-        </div>
-      </th:block>
-      
-      <!--/* if the user is guest and guest is not allowed: show registration hint */-->
-      <div th:unless="${isLoggedIn} or ${guestCommentsEnabled}" class="comment-title section-title">[[#{od.datasets_not_logged_in_comment}]]</div>
-  
-      <h2 class="section-title bold section-margin-top" th:text="#{od.comment.label.latest.comments}"></h2>
-      <div class="section-title show-no-comments">[[#{od.comment.empty}]]</div>
-      <div id="comment-list" class="comment-list">
-        <th:block th:each="comment,iterStat : ${selectedMetadata.comments}">
-          <div th:replace="fragments/comments :: commentEntry(${comment}, ${selectedMetadata})"></div>
+        <h2 class="comment-title section-title bold">[[#{od.datasets_comment_dataset}]]</h2>
+
+        <!--/* if the user is allowed to comment, show form */-->
+        <th:block th:if="${isLoggedIn} or ${guestCommentsEnabled}">
+          <div id="comment-message-box" style="display: none;" class="alert"></div>
+
+          <label class="offscreen" for="newCommentInput" th:text="#{od.comment.field.title}"></label>
+          <textarea id="newCommentInput" title="#{od.comment.field.title}" name="new_comment_input"
+                    class="comment-textarea" required="required"
+                    th:placeholder="#{od.comment.new.name}"></textarea>
+          <div class="comment-button-row">
+            <button id="newCommentSubmit" th:if="${isLoggedIn}" class="btn existinguser"
+                    th:text="#{od.comment.create}" disabled="disabled"></button>
+            <button id="newCommentSubmit" th:unless="${isLoggedIn}" class="btn anonymoususer"
+                    th:text="#{od.comment.create_as}" disabled="disabled"></button>
+          </div>
         </th:block>
+
+        <!--/* if the user is guest and guest is not allowed: show registration hint */-->
+        <div th:unless="${isLoggedIn} or ${guestCommentsEnabled}" class="comment-title section-title">
+          [[#{od.datasets_not_logged_in_comment}]]
+        </div>
+
+        <h2 class="section-title bold section-margin-top" th:text="#{od.comment.label.latest.comments}"></h2>
+        <div class="section-title show-no-comments">[[#{od.comment.empty}]]</div>
+        <div id="comment-list" class="comment-list">
+          <th:block th:each="comment,iterStat : ${selectedMetadata.comments}">
+            <div th:replace="fragments/comments :: commentEntry(${comment}, ${selectedMetadata})"></div>
+          </th:block>
+        </div>
       </div>
-   </div>
+    </div>
   </div>
- </div>
 </div>
