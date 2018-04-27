@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>3.0.2</version>
+  <version>3.1.1</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
