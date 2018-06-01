@@ -203,7 +203,7 @@ public class MetadataImplTest {
     assertThat(res.getUrl()).isEqualTo("http://geodienste.hamburg.de/darf_nicht_die_gleiche_url_wie_downloadurl_sein_da_es_sonst_nicht_angezeigt_wird");
     assertThat(res.getDescription()).isEqualTo("Das ist eine deutsche Beschreibung der Distribution 1");
     assertThat(res.getHash()).isEqualTo("5bcc814127be171c75595d419f371c74c9cf041419c45d6e8d2c789e5c303b47");
-    assertThat(res.getLicense().getName()).isEqualTo("http://dcat-ap.de/def/licenses/dl-by-de/2_0");
+    assertThat(res.getLicense().getName()).isEqualTo("http://dcat-ap.de/def/licenses/dl-by-de/2.0");
     assertThat(res.getLanguage()).containsExactly("de");
 
 
@@ -358,6 +358,21 @@ public class MetadataImplTest {
   }
 
   @Test
+  public void isOpen_with_resources_and_licence_open_with_unknown_licence() throws IOException, ParseException
+  {
+    /* prepare */
+    expectListLicences(true);
+    MetadataImpl target = createMetadataImplFromJson("/dcatap-dataset-only-unknown-licence.json");
+    assertThat(target.getResources()).isNotEmpty();
+
+    /* execute */
+    boolean result = target.isOpen();
+
+    /* verify */
+    assertThat(result).isFalse();
+  }
+
+  @Test
   public void isOpen_with_resources_and_licence_closed() throws IOException, ParseException
   {
     /* prepare */
@@ -406,7 +421,7 @@ public class MetadataImplTest {
   {
     List<Licence> licenceList = new ArrayList<>();
     LicenceBean licenceBean = new LicenceBean();
-    licenceBean.setId("http://dcat-ap.de/def/licenses/dl-by-de/2_0");
+    licenceBean.setId("http://dcat-ap.de/def/licenses/dl-by-de/2.0");
     licenceBean.set_okd_compliant(isOpen);
     licenceList.add(new LicenceImpl(licenceBean));
     when(odrClient.listLicenses()).thenReturn(licenceList);
@@ -415,7 +430,13 @@ public class MetadataImplTest {
   private MetadataImpl createMetadataImplFromJson() throws IOException, JsonParseException,
       JsonMappingException
   {
-    File file = new File(this.getClass().getResource("/dcatap-dataset.json").getFile());
+    return createMetadataImplFromJson("/dcatap-dataset.json");
+  }
+
+  private MetadataImpl createMetadataImplFromJson(String path) throws IOException, JsonParseException,
+      JsonMappingException
+  {
+    File file = new File(this.getClass().getResource(path).getFile());
     MetadataBean readValue = OM.readValue(file, MetadataBean.class);
     MetadataImpl metadataImpl = new MetadataImpl(readValue, odrClient);
     return metadataImpl;

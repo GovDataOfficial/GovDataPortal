@@ -28,19 +28,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import de.seitenbau.govdata.dcatde.ViewUtil;
+import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
 import de.seitenbau.govdata.odp.registry.ckan.Util;
+import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceExportBean;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of Resources.
@@ -50,7 +51,8 @@ public class ResourceImpl implements Resource, Serializable
 {
   private static final long serialVersionUID = -4236686335813667952L;
 
-  private MetadataImpl metadata;
+  /** Stores the odrClient client for retrieving additional information like licenses. */
+  private transient ODRClient odrClient;
 
   private ResourceBean resource;
 
@@ -59,12 +61,12 @@ public class ResourceImpl implements Resource, Serializable
   /**
    * Creates a new ResourceImpl to implement Resource Interface.
    *
-   * @param metadata reference to the parent metadataImpl
+   * @param odrClient reference to the ODRClient
    * @param resource bean containing all data
    */
-  public ResourceImpl(MetadataImpl metadata, ResourceBean resource)
+  public ResourceImpl(ODRClient odrClient, ResourceBean resource)
   {
-    this.metadata = metadata;
+    this.odrClient = odrClient;
     this.resource = resource;
   }
 
@@ -257,11 +259,27 @@ public class ResourceImpl implements Resource, Serializable
 
   private void initLicense(String license)
   {
-    if (this.license == null && license != null)
+    if (this.license == null)
     {
-      List<Licence> licences = metadata.odr.listLicenses();
-      this.license = licences.stream().filter(l -> l.getName().equals(license)).findFirst().orElse(null);
+      if (license != null)
+      {
+        Licence licenceIfUnknown = createLicence(license);
+        List<Licence> licences = odrClient.listLicenses();
+        this.license =
+            licences.stream().filter(l -> l.getName().equals(license)).findFirst().orElse(licenceIfUnknown);
+      }
+      else
+      {
+        this.license = createLicence("license-id-not-set");
+      }
     }
+  }
+  
+  private Licence createLicence(String licenceId)
+  {
+    LicenceBean bean = new LicenceBean();
+    bean.setId(licenceId);
+    return new LicenceImpl(bean);
   }
 
   @Override

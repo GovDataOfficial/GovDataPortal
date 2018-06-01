@@ -588,7 +588,8 @@ public class EditController
     {
       for (Resource res : form.getResources())
       {
-        ResourceImpl resourceImpl = new ResourceImpl((MetadataImpl) metadata, new ResourceBean());
+        ResourceImpl resourceImpl =
+            new ResourceImpl(((MetadataImpl) metadata).getOdrClient(), new ResourceBean());
         resourceImpl.setName(res.getName());
         resourceImpl.setDescription(res.getDescription());
         resourceImpl.setUrl(res.getUrl());

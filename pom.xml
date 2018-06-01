@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>3.1.1</version>
+  <version>3.1.2</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -383,7 +383,7 @@
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>1.16.6</version>
+        <version>1.16.20</version>
         <scope>provided</scope>
       </dependency>
 

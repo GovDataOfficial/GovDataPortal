@@ -100,8 +100,8 @@ public class MetadataImpl implements Metadata, Serializable
 
   private boolean ratingfetched = false;
 
-  /** Stores the odr client for retrieving additional information like licenses. */
-  protected transient ODRClient odr;
+  /** Stores the odrClient client for retrieving additional information like licenses. */
+  private transient ODRClient odrClient;
 
   private boolean resoucesModified;
 
@@ -110,9 +110,9 @@ public class MetadataImpl implements Metadata, Serializable
   /**
    * Concept for Extra-Beans: Use this Impl as facade and use the beans to back the data.
    */
-  public MetadataImpl(MetadataBean metadata, ODRClient odr)
+  public MetadataImpl(MetadataBean metadata, ODRClient odrClient)
   {
-    this.odr = odr;
+    this.odrClient = odrClient;
     this.metadata = metadata;
     this.metadata.setType(MetadataEnumType.DATASET.toField());
 
@@ -308,7 +308,7 @@ public class MetadataImpl implements Metadata, Serializable
       resources = new ArrayList<>();
       for (ResourceBean bean : metadata.getResources())
       {
-        resources.add(new ResourceImpl(this, bean));
+        resources.add(new ResourceImpl(this.odrClient, bean));
       }
     }
     return resources;
@@ -331,7 +331,7 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public Resource newResource()
   {
-    Resource resource = new ResourceImpl(this, new ResourceBean());
+    Resource resource = new ResourceImpl(this.odrClient, new ResourceBean());
     getResources().add(resource);
     return resource;
   }
@@ -559,9 +559,9 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public double getAverageRating()
   {
-    if (!ratingfetched && odr != null)
+    if (!ratingfetched && odrClient != null)
     {
-      odr.loadRating(this);
+      odrClient.loadRating(this);
       ratingfetched = true;
     }
     return averageRating;
@@ -575,9 +575,9 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public int getRatingCount()
   {
-    if (!ratingfetched && odr != null)
+    if (!ratingfetched && odrClient != null)
     {
-      odr.loadRating(this);
+      odrClient.loadRating(this);
       ratingfetched = true;
     }
     return ratingCount;
@@ -750,5 +750,15 @@ public class MetadataImpl implements Metadata, Serializable
   public void setExtraString(MetadataStringExtraFields field, String value)
   {
     setExtra(field.getField(), value);
+  }
+
+  /**
+   * Returns the odrClient.
+   * 
+   * @return the odrClient
+   */
+  public ODRClient getOdrClient()
+  {
+    return odrClient;
   }
 }
