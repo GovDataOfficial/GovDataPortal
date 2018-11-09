@@ -163,8 +163,8 @@
 
         <dl id="contactcontainer" class="packageDetails-author space-bottom">
           <dt>[[#{od.datasets_metadata_contact_publisher}]]:</dt>
-          <dd th:unless="${selectedMetadata.contact == null}" th:text="${selectedMetadata.contact}"></dd>
-          <dd th:if="${selectedMetadata.contact == null}">-</dd>
+          <dd th:unless="${#strings.isEmpty(selectedMetadata.contact)}" th:text="${selectedMetadata.contact}"></dd>
+          <dd th:if="${#strings.isEmpty(selectedMetadata.contact)}">-</dd>
         </dl>
 
         <dl class="categories h2-tags space-bottom">

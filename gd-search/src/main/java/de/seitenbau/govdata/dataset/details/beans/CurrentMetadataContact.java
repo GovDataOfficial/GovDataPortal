@@ -1,6 +1,6 @@
 package de.seitenbau.govdata.dataset.details.beans;
 /**
- * Copyright (c) 2012, 2015 Fraunhofer Institute FOKUS
+ * Copyright (c) 2012, 2015 Fraunhofer Institute FOKUS | 2017 SEITENBAU GmbH
  *
  * This file is part of Open Data Platform.
  *
@@ -17,53 +17,28 @@ package de.seitenbau.govdata.dataset.details.beans;
  */
 
 import java.util.List;
+import java.util.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 
 import de.seitenbau.govdata.odp.registry.model.Contact;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
-import de.seitenbau.govdata.odp.registry.model.exception.UnknownRoleException;
 
 /**
  * CurrentMetadataContact.
  * 
+ * @author rnoerenberg
  * @author bdi,msg
  */
 public class CurrentMetadataContact
 {
+  private String name;
 
-  private static final String EMPTY_STRING = "";
-
-  private String name = EMPTY_STRING;
-
-  private String email = EMPTY_STRING;
-
-  private static final Logger logger = LoggerFactory.getLogger(CurrentMetadataContact.class);
+  private String email;
 
   /** this is the order in which the contact is searched. The first available is taken. */
-  private final RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.CREATOR, RoleEnumType.PUBLISHER,
-      RoleEnumType.MAINTAINER};
-  
-  /**
-   * Konstruktur mit einer Liste der Kontakte und Defaultwerten.
-   * 
-   * @param contacts die Liste der Kontakte.
-   * @param author der Defaultwert für den Autor.
-   * @param authorEmail der Defaultwert für die E-Mail des Autors.
-   */
-  public CurrentMetadataContact(List<Contact> contacts, String author, String authorEmail)
-  {
-    try
-    {
-      findContact(contacts, author, authorEmail);
-    }
-    catch (UnknownRoleException e)
-    {
-      logger.debug("Error while processing metadata contact: {}", e.getMessage());
-    }
-  }
+  private final RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.PUBLISHER};
   
   /**
    * Konstruktur mit einem Parameter {@link Metadata}.
@@ -72,60 +47,36 @@ public class CurrentMetadataContact
    */
   public CurrentMetadataContact(Metadata metadata)
   {
-    try
+    if (metadata != null)
     {
-      if (metadata != null)
+      for (RoleEnumType role : roles)
       {
-       findContact(metadata.getContacts(), metadata.getAuthor(), null);
-      }
-    }
-    catch (UnknownRoleException e)
-    {
-      logger.debug("Error while processing metadata contact: {}", e.getMessage());
-    }
-  }
-  
-  private void findContact(List<Contact> contacts, String author, String authorEmail)
-      throws UnknownRoleException
-  {
-    for (RoleEnumType role : roles)
-    {
-      if (tryFetchContact(contacts, author, authorEmail, role))
-      {
-        break; // we have found our contact, let's stop.
+        if (tryFetchContact(metadata.getContacts(), role))
+        {
+          break; // we have found our contact, let's stop.
+        }
       }
     }
   }
 
-  private boolean tryFetchContact(
-      List<Contact> contacts, String author, String authorEmail, RoleEnumType role)
-      throws UnknownRoleException
+  private boolean tryFetchContact(List<Contact> contacts, RoleEnumType role)
   {
     for (Contact contact : contacts)
     {
-      if (contact.getRole() == role)
+      if (Objects.nonNull(role) && Objects.equals(contact.getRole(), role))
       {
-        // consider special case: The author of metadata has priority
-        if (role == RoleEnumType.CREATOR && !isNullOrEmpty(author))
+        if (StringUtils.isNotEmpty(contact.getName()))
         {
-          this.name = author;
+          this.name =  contact.getName();
         }
-        else
+        if (StringUtils.isNotEmpty(contact.getEmail()))
         {
-          this.name = (!isNullOrEmpty(contact.getName()) ? contact.getName() : "");
+          this.email = contact.getEmail();
         }
-
-        this.email = (!isNullOrEmpty(contact.getEmail()) ? contact.getEmail() : "");
         return true; // we found it!
       }
     }
-    
     return false;
-  }
-
-  private static boolean isNullOrEmpty(String s)
-  {
-    return s == null || s.length() == 0;
   }
 
   @Override

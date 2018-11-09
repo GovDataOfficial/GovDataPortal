@@ -20,8 +20,6 @@ import javax.portlet.RenderResponse;
 import javax.validation.Valid;
 import javax.ws.rs.ClientErrorException;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +60,7 @@ import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryExcepti
 import de.seitenbau.govdata.odp.registry.model.exception.UnknownRoleException;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller für das Bearbeiten von Metadaten.
@@ -77,7 +76,7 @@ public class EditController
 {
   private static final String DATE_PATTERN = "dd.MM.yyyy";
 
-  private static final String DEFAULT_LICENCE = "http://dcat-ap.de/def/licenses/dl-by-de/2_0";
+  private static final String DEFAULT_LICENCE = "http://dcat-ap.de/def/licenses/dl-by-de/2.0";
 
   private static final String MESSAGE = "message";
 

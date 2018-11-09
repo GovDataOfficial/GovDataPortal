@@ -19,6 +19,8 @@
 
 package de.seitenbau.govdata.odp.registry.ckan.impl;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.seitenbau.govdata.odp.registry.model.Contact;
 import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 
@@ -153,7 +155,8 @@ public class ContactImpl implements Contact
   public boolean exists()
   {
     // ignore Address in this check, it will never appear standalone.
-    return getName() != null || getEmail() != null || getUrl() != null;
+    return StringUtils.isNotEmpty(getName()) || StringUtils.isNotEmpty(getEmail())
+        || StringUtils.isNotEmpty(getUrl());
   }
 
   @Override

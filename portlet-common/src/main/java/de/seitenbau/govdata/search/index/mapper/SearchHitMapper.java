@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import de.seitenbau.govdata.date.DateUtil;
+import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 import de.seitenbau.govdata.search.index.PortalIndexConstants;
 import de.seitenbau.govdata.search.index.model.HitDto;
 import de.seitenbau.govdata.search.index.model.ResourceDto;
@@ -27,6 +28,13 @@ import de.seitenbau.govdata.search.index.model.ResourceDto;
 public class SearchHitMapper
 {
   private static final Logger logger = LoggerFactory.getLogger(SearchHitMapper.class);
+
+  private static final String CONTACT_NAME_SUFFIX = "_name";
+
+  private static final String CONTACT_EMAIL_SUFFIX = "_email";
+
+  /** this is the order in which the contact is searched. The first available is taken. */
+  private final RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.PUBLISHER};
 
   /**
    * Mappt ein Elasticsearch-Objekt {@link SearchHit} zu einem Datenobjekt {@link HitDto}.
@@ -101,41 +109,47 @@ public class SearchHitMapper
   @SuppressWarnings("unchecked")
   private String[] extractContact(Map<String, Object> metadata)
   {
-    List<Map<String, String>> extras = (List<Map<String, String>>) metadata.get("extras");
-    // find the best suited contact to be the contact for this metadata
-    String name;
-
-    // author from extras
-    name = getValueFromExtras(extras, "author_name");
-    if (name != null)
+    String[] result = new String[] {null, null};
+    if (metadata != null)
     {
-      return new String[] {name, getValueFromExtras(extras, "author_email")};
+      List<Map<String, String>> extras = (List<Map<String, String>>) metadata.get("extras");
+      // find the best suited contact to be the contact for this metadata
+      for (RoleEnumType role : roles)
+      {
+        if (role == RoleEnumType.CREATOR || role == RoleEnumType.MAINTAINER)
+        {
+          // author from extras
+          String name = getValueFromExtras(extras, role.getField() + CONTACT_NAME_SUFFIX);
+          if (StringUtils.isNotEmpty(name))
+          {
+            result = new String[] {name, getValueFromExtras(extras, role.getField() + CONTACT_EMAIL_SUFFIX)};
+            break;
+          }
+          else
+          {
+            // author from metadata
+            name = getFieldValueString(metadata, role.getField(), null);
+            if (StringUtils.isNotEmpty(name))
+            {
+              result = new String[] {name,
+                  getFieldValueString(metadata, role.getField() + CONTACT_EMAIL_SUFFIX, null)};
+              break;
+            }
+          }
+        }
+        else
+        {
+          // publisher from extras
+          String name = getValueFromExtras(extras, role.getField() + CONTACT_NAME_SUFFIX);
+          if (StringUtils.isNotEmpty(name))
+          {
+            result = new String[] {name, getValueFromExtras(extras, role.getField() + CONTACT_EMAIL_SUFFIX)};
+            break;
+          }
+        }
+      }
     }
-
-    // author from metadata
-    name = getFieldValueString(metadata, "author", null);
-    if (name != null)
-    {
-      return new String[] {name, getFieldValueString(metadata, "author_email", null)};
-    }
-
-    // publisher from extras
-    name = getValueFromExtras(extras, "publisher_name");
-    if (name != null)
-    {
-      return new String[] {name, getValueFromExtras(extras, "publisher_email")};
-    }
-
-    // maintainer from extras
-    name = getValueFromExtras(extras, "maintainer_name");
-    if (name != null)
-    {
-      return new String[] {name, getValueFromExtras(extras, "maintainer_email")};
-    }
-
-    // maintainer from metadata
-    return new String[] {getFieldValueString(metadata, "maintainer", null),
-        getFieldValueString(metadata, "maintainer_email", null)};
+    return result;
   }
 
   private String getValueFromExtras(List<Map<String, String>> extras, String key)

@@ -41,8 +41,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -72,6 +70,7 @@ import de.seitenbau.govdata.odp.registry.model.MetadataStringExtraFields;
 import de.seitenbau.govdata.odp.registry.model.Resource;
 import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 import de.seitenbau.govdata.odp.registry.model.Tag;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides logic to access and manipulate metadata.
@@ -122,22 +121,6 @@ public class MetadataImpl implements Metadata, Serializable
     for (ExtraBean bean : metadata.getExtras())
     {
       extras.put(bean.getKey(), bean);
-    }
-
-    // overwrite publisher with creator values, if not already present
-    if (metadata.getAuthor() != null && !metadata.getAuthor().isEmpty())
-    {
-      addContactIfNotPresent(RoleEnumType.PUBLISHER, metadata.getAuthor(), metadata.getAuthor_email());
-    }
-  }
-
-  private void addContactIfNotPresent(RoleEnumType type, String name, String email)
-  {
-    Contact contact = getContact(type);
-    if (!contact.exists())
-    {
-      contact.setName(name);
-      contact.setEmail(email);
     }
   }
 

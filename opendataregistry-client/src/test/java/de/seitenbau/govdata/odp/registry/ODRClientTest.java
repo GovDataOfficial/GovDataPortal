@@ -108,12 +108,13 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(metadata.getAuthor()).isEqualTo("Landesamt f\u00fcr Geologie und Bergbau");
 
     // Number of "groups"
-    Assertions.assertThat(metadata.getCategories().size()).isEqualTo(2);
-    // 3 contacts (author, publisher and maintainer)
-    Assertions.assertThat(metadata.getContacts().size()).isEqualTo(3);
-    Assertions.assertThat(metadata.getResources().size()).isEqualTo(3);
+    Assertions.assertThat(metadata.getCategories()).hasSize(2);
+    // 2 contacts (author and maintainer)
+    Assertions.assertThat(metadata.getContacts()).hasSize(2);
+    // 3 resources
+    Assertions.assertThat(metadata.getResources()).hasSize(3);
     // No subgroups in response
-    Assertions.assertThat(metadata.getTags().size()).isEqualTo(21);
+    Assertions.assertThat(metadata.getTags()).hasSize(21);
 
     // Rating count from dataset_response.json "ratings_count"
     Assertions.assertThat(metadata.getRatingCount()).isEqualTo(0);

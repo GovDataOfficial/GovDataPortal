@@ -25,6 +25,9 @@ try {
   // we seem to not have that page... okay, so no link.
 }
 %>
+<c:if test="<%= hasChecklistViewPermission %>">
+  <li id="topnavi-checklists"><a href="/checklisten"><liferay-ui:message key="od.page.checklists" /></a></li>
+</c:if>
 
 <%-- BEGIN original content --%>
 <liferay-util:buffer var="userName">
