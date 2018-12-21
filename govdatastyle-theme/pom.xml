@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>3.1.3</version>
+    <version>3.2.0</version>
   </parent>
   <groupId>com.seitenbau.govdata.theme</groupId>
   <artifactId>govdatastyle-theme</artifactId>

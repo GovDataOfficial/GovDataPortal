@@ -8,6 +8,8 @@ public abstract class ViewUtil
   private static final String[] FORMAT_PREFIX_URLS = {
       "http://www.iana.org/assignments/media-types/",
       "https://www.iana.org/assignments/media-types/",
+      "http://publications.europa.eu/resource/authority/file-type/",
+      "https://publications.europa.eu/resource/authority/file-type/",
       "http://publications.europa.eu/mdr/resource/authority/file-type/",
       "https://publications.europa.eu/mdr/resource/authority/file-type/"
   };
