@@ -43,6 +43,11 @@ public abstract class ESFieldConsts
   public static final String PRIVATE = "metadata.private";
 
   /**
+   * Key for field TYPE in search index, e.g. "dataset", "article" or "blog".
+   */
+  public static final String FIELD_METADATA_TYPE = "metadata.type";
+
+  /**
    * Key for field FIELD_TAGS_SEARCH in search index.
    */
   public static final String FIELD_TAGS_SEARCH = "tags";

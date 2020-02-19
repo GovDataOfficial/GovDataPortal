@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>3.2.0</version>
+    <version>3.5.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -257,51 +257,6 @@
               <warName>${project.name}</warName>
               <packagingExcludes>**/suche-gui*.properties/**</packagingExcludes>
             </configuration>
-          </plugin>
-          <!-- ************************************************************************** -->
-          <!-- * Package Debian : build the actual .deb * -->
-          <!-- ************************************************************************** -->
-          <plugin>
-            <artifactId>jdeb</artifactId>
-            <groupId>org.vafer</groupId>
-            <version>1.3</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>jdeb</goal>
-                </goals>
-                <configuration>
-                  <verbose>true</verbose>
-                  <controlDir>${basedir}/src/deb/control</controlDir>
-                  <dataSet>
-                    <data>
-                      <src>${project.build.directory}/${project.name}.war</src>
-                      <type>file</type>
-                      <mapper>
-                        <type>perm</type>
-                        <prefix>/opt/app/portal-liferay/liferay-home/deploy/</prefix>
-                        <user>tomcat7</user>
-                        <group>tomcat7</group>
-                        <filemode>600</filemode>
-                      </mapper>
-                    </data>
-                    <data>
-                      <type>file</type>
-                      <conffile>true</conffile>
-                      <src>src/main/resources/search-gui.properties</src>
-                      <dst>/opt/app/portal-liferay/config/search-gui.properties</dst>
-                      <mapper>
-                        <type>perm</type>
-                        <user>tomcat7</user>
-                        <group>tomcat7</group>
-                        <filemode>666</filemode>
-                      </mapper>
-                    </data>
-                  </dataSet>
-                </configuration>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>

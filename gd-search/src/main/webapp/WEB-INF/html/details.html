@@ -60,9 +60,10 @@
           <li th:each="res,iterStat : ${selectedMetadata.resources}">
             <h3>
               <span th:replace="fragments/icons :: resourceicon(${res.formatShort})"></span>
-              <span th:if="${res.description ne ''}" th:text="${res.description}"></span>
-              <span th:unless="${res.description ne ''}" th:text="${res.url}"></span>
+              <span th:unless="${#strings.isEmpty(res.name)}" th:text="${res.name}"></span>
+              <span th:if="${#strings.isEmpty(res.name)}" th:text="${res.url}"></span>
             </h3>
+            <p th:unless="${#strings.isEmpty(res.description)}" th:text="${res.description}"></p>
             <span class="alert alert-warning" role="alert"
                   th:if="${#sets.contains(selectedMetadata.notAvailableResourceLinks, res.url)}">
               <img class="alert-icon-resource" th:src="@{${themeDisplay.pathThemeImages} + '/svgicons/alert.svg'}"

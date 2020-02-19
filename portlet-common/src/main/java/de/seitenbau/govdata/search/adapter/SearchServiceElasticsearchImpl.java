@@ -12,8 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.naming.ConfigurationException;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchException;
@@ -84,6 +82,7 @@ import de.seitenbau.govdata.search.index.model.HitDto;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import de.seitenbau.govdata.search.index.model.SuggestionOption;
 import de.seitenbau.govdata.search.sort.Sort;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Führt Aktionen (Suche, Vorschläge, Speicherung der Suchwörter) gegen die Elasticsearch aus.
@@ -105,8 +104,6 @@ public class SearchServiceElasticsearchImpl implements SearchService
   private static final String SUGGEST_DID_YOU_MEAN = "did_you_mean";
 
   private static final int DEFAULT_SEARCH_RESULT_SIZE = 10;
-
-  private static final String FIELD_METADATA_TYPE = "metadata.type";
 
   private static final String SAYT_COMPLETION_SUGGESTION = "search-as-you-type";
 
@@ -308,7 +305,8 @@ public class SearchServiceElasticsearchImpl implements SearchService
     if (typeFilter != null)
     {
       totalHitsAllTypes =
-          countHits(baseQuery, FilterBuilders.inFilter(FIELD_METADATA_TYPE, defaultTypeFilterValues),
+          countHits(baseQuery,
+              FilterBuilders.inFilter(ESFieldConsts.FIELD_METADATA_TYPE, defaultTypeFilterValues),
               filters);
     }
 
@@ -579,7 +577,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
     {
       if (StringUtils.isNotBlank(typeFilterString))
       {
-        typeFilter = FilterBuilders.termFilter(SearchConsts.FILTER_KEY_TYPE, typeFilterString);
+        typeFilter = FilterBuilders.termFilter(ESFieldConsts.FIELD_METADATA_TYPE, typeFilterString);
       }
     }
     return typeFilter;
@@ -805,7 +803,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
   private FacetDto buildFacetDto(String type, BaseQueryBuilder baseQuery, FilterBuilder filters)
   {
-    TermsFilterBuilder typeFilter = FilterBuilders.termsFilter(FIELD_METADATA_TYPE, type);
+    TermsFilterBuilder typeFilter = FilterBuilders.termsFilter(ESFieldConsts.FIELD_METADATA_TYPE, type);
     return buildFacetDto(type, countHits(baseQuery, typeFilter, filters));
   }
 
@@ -828,7 +826,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
       // counting hits
       for (String type : typeArray)
       {
-        TermsFilterBuilder typeFilter = FilterBuilders.termsFilter(FIELD_METADATA_TYPE, type);
+        TermsFilterBuilder typeFilter = FilterBuilders.termsFilter(ESFieldConsts.FIELD_METADATA_TYPE, type);
         hitsCount += countHits(baseQuery, typeFilter, filters);
       }
       builder.name(name).docCount(hitsCount);

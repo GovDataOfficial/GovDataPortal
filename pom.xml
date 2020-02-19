@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>3.2.0</version>
+  <version>3.5.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -43,6 +43,9 @@
     <project.encoding>UTF-8</project.encoding>
     <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
+    <tomcat.package>tomcat8</tomcat.package>
+    <tomcat.user>${tomcat.package}</tomcat.user>
+    <tomcat.group>${tomcat.package}</tomcat.group>
   </properties>
   <profiles>
     <profile>

@@ -153,7 +153,7 @@ Build the portlets with Maven:
 
     mvn package
 
-Put the WAR-Files in your deploy folder, e.g. /opt/app/portal-liferay/liferay-home/deploy. In the target folder you will find a debian package which put all necessary WAR-Files in the folder /opt/app/portal-liferay/liferay-home/deploy and copy the portal-ext.properties to /var/lib/tomcat7. Otherwise you can copy the WAR-files from the target folder of the several projects into the desired deploy folder, e.g.
+Put the WAR-Files in your deploy folder, e.g. /opt/app/portal-liferay/liferay-home/deploy. In the target folder you will find a debian package which put all necessary WAR-Files in the folder /opt/app/portal-liferay/liferay-home/deploy and copy the portal-ext.properties to /var/lib/tomcat8. Otherwise you can copy the WAR-files from the target folder of the several projects into the desired deploy folder, e.g.
 
     cp $(find . -name "*.war") /opt/liferay/deploy
 

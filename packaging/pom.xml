@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>3.2.0</version>
+    <version>3.5.0</version>
   </parent>
   <artifactId>od-platform-packaging</artifactId>
   <packaging>deb</packaging>
@@ -33,12 +33,91 @@
         <version>1.3</version>
         <executions>
           <execution>
+            <id>jdeb-ubuntu18</id>
             <phase>package</phase>
             <goals>
               <goal>jdeb</goal>
             </goals>
             <configuration>
               <verbose>true</verbose>
+              <deb>${project.build.directory}/${artifactId}_${version}-${tomcat.package}.deb</deb>
+              <dataSet>
+                <data>
+                  <src>${project.basedir}/../</src>
+                  <type>directory</type>
+                  <includes>**/*.war</includes>
+                  <excludes>**/entities/**/*.war,**/liferay-core-portlets/*.war</excludes>
+                  <mapper>
+                    <type>perm</type>
+                    <strip>2</strip>
+                    <prefix>/opt/app/portal-liferay/liferay-home/deploy</prefix>
+                    <user>${tomcat.user}</user>
+                    <group>${tomcat.group}</group>
+                    <filemode>600</filemode>
+                  </mapper>
+                </data>
+                <data>
+                  <src>${project.basedir}/../liferay-core-portlets/</src>
+                  <type>directory</type>
+                  <includes>*.war</includes>
+                  <mapper>
+                    <type>perm</type>
+                    <strip>2</strip>
+                    <prefix>/opt/app/portal-liferay/liferay-home/deploy</prefix>
+                    <user>${tomcat.user}</user>
+                    <group>${tomcat.group}</group>
+                    <filemode>600</filemode>
+                  </mapper>
+                </data>
+                <data>
+                  <src>${project.basedir}/../entities/</src>
+                  <type>directory</type>
+                  <includes>**/*.war</includes>
+                  <mapper>
+                    <type>perm</type>
+                    <strip>2</strip>
+                    <prefix>/opt/app/portal-liferay/liferay-home/deploy</prefix>
+                    <user>${tomcat.user}</user>
+                    <group>${tomcat.group}</group>
+                    <filemode>600</filemode>
+                  </mapper>
+                </data>
+                <data>
+                  <type>file</type>
+                  <conffile>true</conffile>
+                  <src>${project.basedir}/src/main/resources/portal-ext.properties</src>
+                  <mapper>
+                    <type>perm</type>
+                    <prefix>/var/lib/${tomcat.package}</prefix>
+                    <user>root</user>
+                    <group>root</group>
+                    <filemode>666</filemode>
+                  </mapper>
+                </data>
+                <data>
+                  <type>file</type>
+                  <conffile>true</conffile>
+                  <src>${project.basedir}/src/main/resources/system-ext.properties</src>
+                  <mapper>
+                    <type>perm</type>
+                    <prefix>/var/lib/${tomcat.package}</prefix>
+                    <user>root</user>
+                    <group>root</group>
+                    <filemode>666</filemode>
+                  </mapper>
+                </data>
+              </dataSet>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jdeb-ubuntu14</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jdeb</goal>
+            </goals>
+            <configuration>
+              <verbose>true</verbose>
+              <deb>${project.build.directory}/${artifactId}_${version}-tomcat7.deb</deb>
               <dataSet>
                 <data>
                   <src>${project.basedir}/../</src>
