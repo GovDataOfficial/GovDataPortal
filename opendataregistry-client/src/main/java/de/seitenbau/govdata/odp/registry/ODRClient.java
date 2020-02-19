@@ -109,6 +109,20 @@ public interface ODRClient
   Metadata getMetadata(User user, String name) throws OpenDataRegistryException;
 
   /**
+   * Gets the JSON-LD schema.org representation for the metadata.
+   *
+   * @param user the user to authenticate with
+   * @param name dataset name
+   * @param datasetSchemaUrl The URL to the frontend page which is to be set in schema:url of the dataset
+   *                   element
+   * @param catalogSchemaUrl The URL to the frontend page which is to be set in schema:url of the catalog
+   *                   element
+   * @return JSON-LD representation as string
+   * @throws OpenDataRegistryException
+   */
+  String getJsonLdMetadata(User user, String name, String datasetSchemaUrl, String catalogSchemaUrl);
+
+  /**
    * Query metadata.
    * 
    * @param query the query

@@ -1,4 +1,5 @@
 <div id="contentPane" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+  <script type="application/ld+json" th:unless="${#strings.isEmpty(metadataJsonLd)}" th:utext="${metadataJsonLd}"></script>
   <div th:if="${selectedMetadata.metadata == null}" class="searchdetails row design-box-padding">
     <div class="alert alert-error">
       <span th:text="#{od.dataset.not.exists.error.message}"></span>
@@ -29,7 +30,7 @@
         <dl class="resource-list space-bottom" th:unless="${#lists.isEmpty(selectedMetadata.usedDatasets)}">
           <dt class="bold">[[#{od.used_datasets.name}]]:</dt>
           <dd th:each="res,iterStat : ${selectedMetadata.usedDatasets}">
-            <a class="resource-item" target="_blank" th:href="@{${res}}">
+            <a class="resource-item" target="_blank" th:href="${res}">
               <div class="resource-title" th:text="${res}" th:title="${res}"></div>
             </a>
           </dd>
@@ -92,14 +93,14 @@
 
               <dt>[[#{od.usage_agreement}]]:</dt>
               <dd th:unless="${res.license == null}">
-                <a th:unless="${#strings.isEmpty(res.license.url)}" th:href="@{${res.license.url}}" th:text="${res.license.title}"></a>
+                <a th:unless="${#strings.isEmpty(res.license.url)}" th:href="${res.license.url}" th:text="${res.license.title}"></a>
                 <span th:if="${#strings.isEmpty(res.license.url)}" th:text="${res.license.title}">></span>
               </dd>
               <dd th:if="${res.license == null}">-</dd>
 
               <dt>[[#{od.gdsearch.details.url}]]:</dt>
               <dd>
-                <a th:href="@{${res.url}}" target="_blank" th:id="'resource'+${iterStat.index}+'_url'"
+                <a th:href="${res.url}" target="_blank" th:id="'resource'+${iterStat.index}+'_url'"
                    th:text="${res.url}"></a>
               </dd>
             </dl>

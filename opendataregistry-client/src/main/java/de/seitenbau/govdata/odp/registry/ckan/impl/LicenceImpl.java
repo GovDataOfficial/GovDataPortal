@@ -72,6 +72,9 @@ public class LicenceImpl implements Licence, Serializable
   }
 
   @Override
+  public boolean isActive() { return licence.getStatus().equals("active"); }
+
+  @Override
   public void setOther(String other)
   {
     this.other = other;

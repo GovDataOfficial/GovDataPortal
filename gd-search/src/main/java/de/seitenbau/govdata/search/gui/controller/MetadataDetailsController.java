@@ -21,6 +21,7 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowStateException;
 
+import de.seitenbau.govdata.clean.StringCleaner;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -120,6 +121,8 @@ public class MetadataDetailsController extends BaseServiceImpl
 
   private static final String MODEL_KEY_SHOW_BROKEN_LINKS_HINT = "showBrokenLinksHint";
 
+  private static final String MODEL_KEY_METADATA_JSON_LD = "metadataJsonLd";
+
   @Inject
   private RegistryClient registryClient;
 
@@ -168,6 +171,21 @@ public class MetadataDetailsController extends BaseServiceImpl
     // Metadata
     boolean showBrokenLinksHint =
         GetterUtil.getBoolean(portletPreferences.getValue(MODEL_KEY_SHOW_BROKEN_LINKS_HINT, StringPool.TRUE));
+
+    final String currentUrl = gdNavigation.createLinkForMetadata(
+        "gdsearchdetails", metadataIdOrName, "daten").toString();
+    final String catalogUrl = gdNavigation.createLinkForSearchResults("daten",
+        "gdsearchresult", "").toString();
+    String jsonLd = registryClient.getInstance().getJsonLdMetadata(currentUser.getCkanUser(),
+        metadataIdOrName, currentUrl, catalogUrl);
+    if (jsonLd == null)
+    {
+      // output empty node if something went wrong
+      jsonLd = "";
+    }
+    // remove potential html tags, as text is rendered without escaping due to quotes in JSON data
+    jsonLd = StringCleaner.trimAndFilterString(jsonLd);
+    model.addAttribute(MODEL_KEY_METADATA_JSON_LD, jsonLd);
 
     SelectedMetadata selectedMetadata =
         createMetadata(metadataIdOrName, themeDisplay, currentUser.getCkanUser(), showBrokenLinksHint);

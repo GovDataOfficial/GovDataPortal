@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>od-platform</artifactId>
 		<groupId>de.fhg.fokus.odp</groupId>
-		<version>3.5.0</version>
+		<version>3.6.2</version>
 	</parent>
 	<artifactId>errorpages-hook</artifactId>
 	<packaging>war</packaging>

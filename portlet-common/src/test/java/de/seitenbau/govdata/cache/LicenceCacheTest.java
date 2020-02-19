@@ -132,12 +132,40 @@ public class LicenceCacheTest
     Mockito.verify(odrClientMock, Mockito.times(2)).listLicenses();
   }
 
+  @Test
+  public void getActiveLicenceListSortedByTitle_registryClient()
+  {
+    /* prepare */
+    List<Licence> licenceList = new ArrayList<Licence>();
+    licenceList.add(createLicence("aa"));
+    licenceList.add(createLicence("xy"));
+    licenceList.add(createLicence("c", "inactive"));
+    licenceList.add(createLicence("bb"));
+    Mockito.when(registryClientMock.getInstance()).thenReturn(odrClientMock);
+    Mockito.when(odrClientMock.listLicenses()).thenReturn(licenceList);
+
+    /* execute */
+    List<Licence> result = target.getActiveLicenceListSortedByTitle();
+
+    /* verify */
+    Assertions.assertThat(result).hasSize(licenceList.size() - 1);
+    Assertions.assertThat(result.get(0).getTitle()).isEqualTo("aa");
+    Assertions.assertThat(result.get(1).getTitle()).isEqualTo("bb");
+    Assertions.assertThat(result.get(2).getTitle()).isEqualTo("xy");
+  }
+
   private LicenceImpl createLicence(String title)
+  {
+    return createLicence(title, "active");
+  }
+
+  private LicenceImpl createLicence(String title, String status)
   {
     LicenceBean bean = new LicenceBean();
     bean.setId("id:" + title);
     bean.setTitle(title);
     bean.setUrl("http://" + title + ".de");
+    bean.setStatus(status);
     return new LicenceImpl(bean);
   }
 }

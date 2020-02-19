@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -28,6 +29,8 @@ public class LicenceCache extends BaseRegistryClientCache
   private Map<String, Licence> licenceMap = null;
 
   private List<Licence> licenceMapSortedByTitle = null;
+
+  private List<Licence> activeLicenceMapSortedByTitle = null;
 
   /**
    * Initialisiert die Klasse mit individuellen Parametern.
@@ -65,6 +68,24 @@ public class LicenceCache extends BaseRegistryClientCache
 
     log.trace(method + "End");
     return licenceMap;
+  }
+
+  /**
+   * Gibt alle in der aktuellen DCAT-AP.de-Version aktiven Lizenzen in einer sortierten Liste zurück.
+   *
+   * @return die sortierte Liste aller aktiven Lizenzen.
+   */
+  public List<Licence> getActiveLicenceListSortedByTitle()
+  {
+    if (activeLicenceMapSortedByTitle == null || isCacheExpired())
+    {
+      activeLicenceMapSortedByTitle = getLicenceListSortedByTitle()
+          .stream()
+          .filter(licence -> licence.isActive())
+          .collect(Collectors.toList());
+    }
+
+    return activeLicenceMapSortedByTitle;
   }
 
   /**

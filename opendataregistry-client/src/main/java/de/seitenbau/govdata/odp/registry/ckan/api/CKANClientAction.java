@@ -144,6 +144,12 @@ public interface CKANClientAction
   public JsonNode showMetadata(@HeaderParam("Authorization") String authenticationKey, JsonNode body);
 
   @POST
+  @Path("/api/3/action/dcat_dataset_show")
+  @Produces("application/json")
+  @Consumes("application/json")
+  public JsonNode showDcatDataset(@HeaderParam("Authorization") String authenticationKey, JsonNode body);
+
+  @POST
   @Path("/api/3/action/package_create")
   @Produces("application/json")
   @Consumes("application/json")

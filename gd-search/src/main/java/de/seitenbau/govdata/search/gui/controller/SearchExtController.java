@@ -113,7 +113,7 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareLicenceList()
   {
     List<Map<String, String>> options = new ArrayList<>();
-    for (Licence licence : licenceCache.getLicenceListSortedByTitle())
+    for (Licence licence : licenceCache.getActiveLicenceListSortedByTitle())
     {
       HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", licence.getName());

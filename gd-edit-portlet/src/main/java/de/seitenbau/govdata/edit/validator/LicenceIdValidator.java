@@ -5,6 +5,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import de.seitenbau.govdata.cache.LicenceCache;
+import de.seitenbau.govdata.odp.registry.model.Licence;
 
 public class LicenceIdValidator implements ConstraintValidator<LicenceId, String>
 {
@@ -19,7 +20,8 @@ public class LicenceIdValidator implements ConstraintValidator<LicenceId, String
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context)
   {
-    return licenceCache.getLicenceMap().containsKey(value);
+    Licence licence = licenceCache.getLicenceMap().get(value);
+    return licence != null && licence.isActive();
   }
 
 }

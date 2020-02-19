@@ -49,6 +49,7 @@ import de.seitenbau.govdata.odp.registry.ckan.impl.TagImpl;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.TagBean;
 import de.seitenbau.govdata.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
 import de.seitenbau.govdata.odp.registry.model.MetadataStringExtraFields;
@@ -126,13 +127,13 @@ public class EditController
       if (!organizationsForUser.isEmpty())
       { // user needs at least 1 organisation to be able to edit datasets
         userCanEditDataset = true;
+        List<Licence> licenceList = licenceCache.getLicenceListSortedByTitle();
 
         // if we have existing form data, use them
         if (StringUtils.isNotEmpty(editForm.getName()))
         {
           log.debug("data: using editform data");
         }
-
         // try to load the given dataset
         else if (StringUtils.isNotEmpty(metadataName))
         {
@@ -145,12 +146,13 @@ public class EditController
             throw new OpenDataRegistryException("User does not belong to the datasets organisation");
           }
         }
-
         // create a new dataset
         else
         {
           log.debug("data: creating a new dataset");
           editForm = newDataset();
+          // only provide active licenses in dropdown for new datasets
+          licenceList = licenceCache.getActiveLicenceListSortedByTitle();
         }
 
         // form data
@@ -158,7 +160,7 @@ public class EditController
         model.addAttribute("editForm", editForm);
 
         // set form structure data for displaying available options
-        model.addAttribute("licenseList", licenceCache.getLicenceListSortedByTitle());
+        model.addAttribute("licenseList", licenceList);
         model.addAttribute("categoryList", categoryCache.getCategoriesSortedByTitle());
         model.addAttribute("organizationList", organizationsForUser);
 

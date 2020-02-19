@@ -74,6 +74,12 @@ public class CkanResource implements CKANClientAction, CKANClientUtil, CKANClien
   }
 
   @Override
+  public JsonNode showDcatDataset(String authenticationKey, JsonNode body)
+  {
+    return getJsonNode("dcat_dataset_show_response.json");
+  }
+
+  @Override
   public JsonNode createMetadataRating(String authenticationKey, JsonNode body)
   {
     return getJsonNode("rating_create_response.json");

@@ -88,6 +88,7 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(licence.getTitle()).isEqualTo("Datenlizenz Deutschland Namensnennung");
     Assertions.assertThat(licence.getUrl()).isEqualTo("https://www.govdata.de/dl-de/by-1-0");
     Assertions.assertThat(licence.getOther()).isNull();
+    Assertions.assertThat(licence.isActive()).isTrue();
     Assertions.assertThat(licence.isDomainContent()).isTrue();
     Assertions.assertThat(licence.isDomainData()).isTrue();
     Assertions.assertThat(licence.isDomainSoftware()).isFalse();
@@ -120,6 +121,22 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(metadata.getRatingCount()).isEqualTo(0);
 
     Assertions.assertThat(metadata.isOpen()).isFalse();
+  }
+
+  // ODR: getJsonLdMetadata - CKAN: dcat_dataset_show
+  @Test
+  public void getJsonLdMetadata()
+  {
+    String result = odrClient.getJsonLdMetadata(null, "13dfb16a-c4f1-36b4-eda2-01ff5b1b294f",
+        "http://test-portal.com/dataset", "http://test-portal.com/results");
+
+    Assertions.assertThat(result).isNotNull();
+
+    Assertions.assertThat(result).contains("\"@context\":");
+    Assertions.assertThat(result).contains("schema:");
+    Assertions.assertThat(result).contains("Metadaten zur WMS Kartenebene");
+    Assertions.assertThat(result).contains("http://test-portal.com/dataset");
+    Assertions.assertThat(result).contains("http://test-portal.com/results");
   }
 
   // ODR: loadRating() - CKAN: dataset

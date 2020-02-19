@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,7 +68,6 @@ import de.seitenbau.govdata.odp.registry.ckan.impl.OrganizationImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.QueryFacetImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.QueryFacetItemImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.QueryResultImpl;
-import de.seitenbau.govdata.odp.registry.ckan.impl.ResourceImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.TagImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.UserImpl;
 import de.seitenbau.govdata.odp.registry.ckan.json.GroupBean;
@@ -75,7 +75,6 @@ import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.RelationshipBean;
-import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.StatusBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.TagBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.UserBean;
@@ -84,7 +83,6 @@ import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.MetadataEnumType;
 import de.seitenbau.govdata.odp.registry.model.Organization;
-import de.seitenbau.govdata.odp.registry.model.Resource;
 import de.seitenbau.govdata.odp.registry.model.Tag;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
@@ -1219,6 +1217,110 @@ public class ODRClientImpl implements ODRClient
 
       LOG.trace(method + "End");
       return generateImpl(result);
+    }
+  }
+
+  /**
+   * Parses the given input as JSON-LD schema.org graph and replaces the dataset and catalog URL with
+   * the given ones.
+   *
+   * @param input JSON-LD schema.org dataset as string
+   * @param datasetUrl Desired schema:url value for the dataset
+   * @param catalogUrl Desired schema:url value for the catalog
+   * @return The modified dataset as String, or the unmodified input if processing fails
+   */
+  private String replaceJsonLdUrls(String input, String datasetUrl, String catalogUrl)
+  {
+    try
+    {
+      JsonNode parsedResult = OM.readTree(input);
+      JsonNode schemaGraph = parsedResult.path("@graph");
+
+      JsonNode datasetNode = null;
+      JsonNode catalogNode = null;
+      // find Dataset item
+      for (JsonNode item : schemaGraph)
+      {
+        if (item.path("@type").textValue().equals("schema:Dataset"))
+        {
+          datasetNode = item;
+        }
+        else if (item.path("@type").textValue().equals("schema:DataCatalog"))
+        {
+          catalogNode = item;
+        }
+      }
+      // replace dataset URL
+      if (datasetNode != null)
+      {
+        ((ObjectNode) datasetNode).put("schema:url", datasetUrl);
+      }
+      // replace catalog URL
+      if (catalogNode != null)
+      {
+        ((ObjectNode) catalogNode).put("schema:url", catalogUrl);
+      }
+      // generate String value again
+      return parsedResult.toString();
+    }
+    catch (JsonProcessingException e)
+    {
+      LOG.error("Cannot process JSON-LD input, not replacing CKAN Dataset URL", e);
+      return input;
+    }
+    catch (IOException e)
+    {
+      LOG.error("IO Exception on JSON-LD input, not replacing CKAN Dataset URL", e);
+      return input;
+    }
+  }
+
+  @Override
+  public String getJsonLdMetadata(User user, String name, String datasetSchemaUrl, String catalogSchemaUrl)
+  {
+    final String method = "getJsonLdMetadata() : ";
+    LOG.trace(method + "Start");
+
+    ObjectNode body = OM.createObjectNode();
+    body.put("id", name);
+    ArrayNode profiles = OM.createArrayNode();
+    profiles.add("schemaorg");
+    body.set("profiles", profiles);
+    body.put("format", "jsonld");
+    String key = getApiKeyFromUser(user);
+
+    LOG.trace("REST > calling action api 'dcat_dataset_show' with: {}", body);
+    long start = System.currentTimeMillis();
+    JsonNode node;
+    try
+    {
+      node = action.showDcatDataset(key, body);
+    }
+    catch (Exception e)
+    {
+      LOG.error(method + e.getMessage());
+      return null;
+    }
+    if (node == null)
+    {
+      LOG.info("METADATA not found.");
+      return null;
+
+    }
+    else
+    {
+      LOG.debug("/api/3/action/dcat_dataset_show: {}ms",
+          System.currentTimeMillis() - start);
+      LOG.trace("REST < returns: {}", node);
+
+      JsonNode result = node.path("result");
+      // Replace the schema:url of the dataset element such that dataset search redirects to the
+      // frontend instead of CKAN.
+      // Do the same for the catalog, which should point to the dataset results page.
+      // result contains a string representation, which is to be parsed during replacement.
+      String output = replaceJsonLdUrls(result.asText(), datasetSchemaUrl, catalogSchemaUrl);
+      LOG.trace(method + "End");
+      return output;
     }
   }
 

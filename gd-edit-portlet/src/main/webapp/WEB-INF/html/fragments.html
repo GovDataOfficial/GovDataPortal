@@ -185,7 +185,7 @@
                       th:text="${licence.title}"></option>
             </select>
             <div th:id="${idp}+'_licenseid_error'" class="validation-error"
-                 th:if="${#fields.hasErrors('url')}"
+                 th:if="${#fields.hasErrors('licenseId')}"
                  th:errors="*{licenseId}"></div>
             <div th:id="${idp}+'_licenseid_error'" th:unless="${#fields.hasErrors('licenseId')}"></div>
           </div>

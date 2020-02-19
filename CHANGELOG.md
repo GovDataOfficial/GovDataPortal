@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.6.2 2019-11-28
+
+* Integrate Schema.org representation in the HTML source code of the metadata detail page for indexing by Google Dataset Search
+* Fix problem with invalid web addresses in resource links on the metadata detail page
+
+## v3.6.0 2019-11-05
+
+* Resolve display name for older DCAT-AP.de licenses
+
 ## v3.5.0 2019-07-13
 
 * Replace distribution description with distribution title

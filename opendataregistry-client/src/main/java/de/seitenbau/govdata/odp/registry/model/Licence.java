@@ -54,6 +54,13 @@ public interface Licence {
 	String getOther();
 
 	/**
+	 * True if the license is included in the current version of DCAT-AP.de
+	 *
+	 * @return
+	 */
+	boolean isActive();
+
+	/**
 	 * Checks if is domain content.
 	 * 
 	 * @return true, if is domain content
