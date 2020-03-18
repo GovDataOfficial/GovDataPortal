@@ -1,5 +1,6 @@
 package de.seitenbau.govdata.clean;
 
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -233,5 +234,32 @@ public class StringCleanerTest
     /* verify */
     Assertions.assertThat(result).isEqualTo(
         "test \n<a href=\"http://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
+  }
+
+  @Test
+  public void mungeTitleToName_max() throws Exception
+  {
+    /* prepare */
+    String title = "BöÄüß +;á Titel  -  ";
+    title = StringUtils.rightPad(title, 120, "A");
+
+    /* execute */
+    String result = StringCleaner.mungeTitleToName(title);
+
+    /* verify */
+    Assertions.assertThat(result).isEqualTo(StringUtils.rightPad("boau-a-titel-", 100, "a"));
+  }
+
+  @Test
+  public void mungeTitleToName_min() throws Exception
+  {
+    /* prepare */
+    String title = "Ä";
+
+    /* execute */
+    String result = StringCleaner.mungeTitleToName(title);
+
+    /* verify */
+    Assertions.assertThat(result).isEqualTo(StringUtils.rightPad("a", 2, "_"));
   }
 }

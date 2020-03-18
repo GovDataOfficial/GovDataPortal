@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.7.0 2019-12-19
+
+* Adapt CKAN binding to new CKAN version 2.8.3
+* Disable rating functionality, because the new CKAN version does not provide the required information no more
+* Add Python script for cleaning Elasticsearch index
+* Increase upload max file size from 10 to 100 MB
+
 ## v3.6.2 2019-11-28
 
 * Integrate Schema.org representation in the HTML source code of the metadata detail page for indexing by Google Dataset Search

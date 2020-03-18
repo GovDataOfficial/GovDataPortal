@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.ContactAddress;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
-import de.seitenbau.govdata.odp.registry.ckan.impl.UserImpl;
 import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.common.TestBase;
 import de.seitenbau.govdata.odp.registry.model.Category;
@@ -137,24 +136,6 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(result).contains("Metadaten zur WMS Kartenebene");
     Assertions.assertThat(result).contains("http://test-portal.com/dataset");
     Assertions.assertThat(result).contains("http://test-portal.com/results");
-  }
-
-  // ODR: loadRating() - CKAN: dataset
-  @Test
-  public void rateMetadata() throws OpenDataRegistryException
-  {
-    String name = "bremen";
-    String metadataName = "13dfb16a-c4f1-36b4-eda2-01ff5b1b294f";
-    User user = odrClient.findUser(name);
-
-    Metadata metadata = odrClient.getMetadata(user, metadataName);
-    odrClient.loadRating(metadata);
-
-    Assertions.assertThat(user).isNotNull();
-    Assertions.assertThat(((UserImpl) user).getApikey()).isNotNull();
-    // Metadata has not been rated yet
-    Assertions.assertThat(metadata.getRatingCount()).isEqualTo(0);
-    Assertions.assertThat(metadata.getAverageRating()).isEqualTo(0.0);
   }
 
   // ODR: queryMetadata() - CKAN: package_search

@@ -17,6 +17,9 @@
 
 package de.seitenbau.govdata.clean;
 
+import java.text.Normalizer;
+
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
@@ -39,6 +42,10 @@ public abstract class StringCleaner
       .addProtocols("a", "href", "ftp", "http", "https", "mailto")
       .addEnforcedAttribute("a", "rel", "nofollow")
       .addEnforcedAttribute("a", "target", "_blank");
+
+  public final static int CKAN_PACKAGE_NAME_MAX_LENGTH = 100;
+
+  public final static int CKAN_PACKAGE_NAME_MIN_LENGTH = 2;
 
   /**
    * Entfernt aus dem übergebenen String jeglichen Markup, trimmt den String und gibt diesen zurück.
@@ -75,5 +82,36 @@ public abstract class StringCleaner
       result = cleaner.clean(dirty).body().html();
     }
     return result;
+  }
+
+  /**
+   * Erzeugt basierend auf dem übergebenen String einen gültigen Package-Namen für CKAN. Es wird die
+   * Methode "munge_title_to_name" in https://github.com/ckan/ckan/blob/master/ckan/lib/munge.py
+   * nachimplementiert, da diese über die neue und einzige Action-API nicht mehr exponiert wird.
+   * 
+   * @param title der Titel, aus dem ein gültiger Package-Name für CKAN erzeugt wird.
+   * @return ein gültiger Package-Name, basierend auf dem übergebenen String.
+   */
+  public static String mungeTitleToName(String title)
+  {
+    String munge = Normalizer.normalize(title, Normalizer.Form.NFD);
+    // convert spaces and separators
+    munge = munge.replaceAll("[ .:/]", "-");
+    // take out not-allowed characters
+    munge = munge.replaceAll("[^a-zA-Z0-9-_]", "").toLowerCase();
+    // remove doubles
+    munge = munge.replaceAll("-+", "-");
+    // remove leading or trailing hyphens
+    munge = StringUtils.strip(munge, "-");
+    // fit length
+    if (StringUtils.length(munge) > CKAN_PACKAGE_NAME_MAX_LENGTH)
+    {
+      munge = StringUtils.substring(munge, 0, CKAN_PACKAGE_NAME_MAX_LENGTH);
+    }
+    else if (StringUtils.length(munge) < CKAN_PACKAGE_NAME_MIN_LENGTH)
+    {
+      munge = StringUtils.rightPad(munge, CKAN_PACKAGE_NAME_MIN_LENGTH, "_");
+    }
+    return munge;
   }
 }

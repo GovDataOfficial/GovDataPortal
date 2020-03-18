@@ -1,7 +1,6 @@
 package de.seitenbau.govdata.odp.registry.common;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
@@ -14,8 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientAction;
-import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientModel;
-import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientUtil;
 
 /**
  * Bündelt alle Aktionen über die CKAN-API und macht diese verfügbar.
@@ -24,7 +21,7 @@ import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientUtil;
  *
  */
 @Path("/")
-public class CkanResource implements CKANClientAction, CKANClientUtil, CKANClientModel
+public class CkanResource implements CKANClientAction
 {
   private static final Logger logger = LoggerFactory.getLogger(CkanResource.class);
 
@@ -107,12 +104,6 @@ public class CkanResource implements CKANClientAction, CKANClientUtil, CKANClien
   }
 
   @Override
-  public JsonNode getDataset(String authenticationKey, String dataset)
-  {
-    return getJsonNode("dataset_response.json");
-  }
-
-  @Override
   public Response listRelationships(String authenticationKey, JsonNode body)
   {
     return Response.ok(this.node).build();
@@ -122,12 +113,6 @@ public class CkanResource implements CKANClientAction, CKANClientUtil, CKANClien
   public Response createUser(String authenticationKey, JsonNode body)
   {
     return Response.ok(this.node).build();
-  }
-
-  @Override
-  public String mungeTitleToName(String title)
-  {
-    return title;
   }
 
   @Override
@@ -192,90 +177,6 @@ public class CkanResource implements CKANClientAction, CKANClientUtil, CKANClien
 
   @Override
   public JsonNode updateRoles(String authenticationKey, JsonNode body)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getMetadataAutoComplete(String query)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getTagsAutoComplete(String query)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getFormatsAutoComplete(String query)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getGenericModel(String path)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getRevisions()
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getRevisions(Date since)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getRevision(String revision)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getGroups()
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getGroup(String group)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getDatasets()
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getTags()
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getTag(String name)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getRating(String name)
-  {
-    return this.node;
-  }
-
-  @Override
-  public JsonNode getRatings()
   {
     return this.node;
   }

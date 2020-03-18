@@ -93,12 +93,6 @@ public class MetadataImpl implements Metadata, Serializable
 
   private Map<String, ExtraBean> extras = new HashMap<>();
 
-  private double averageRating;
-
-  private int ratingCount;
-
-  private boolean ratingfetched = false;
-
   /** Stores the odrClient client for retrieving additional information like licenses. */
   private transient ODRClient odrClient;
 
@@ -542,33 +536,17 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public double getAverageRating()
   {
-    if (!ratingfetched && odrClient != null)
-    {
-      odrClient.loadRating(this);
-      ratingfetched = true;
-    }
-    return averageRating;
-  }
-
-  public void setAverageRating(double averageRating)
-  {
-    this.averageRating = averageRating;
+    // always return 0, because the information about the rating is no more accessible through the
+    // only available acion api
+    return 0;
   }
 
   @Override
   public int getRatingCount()
   {
-    if (!ratingfetched && odrClient != null)
-    {
-      odrClient.loadRating(this);
-      ratingfetched = true;
-    }
-    return ratingCount;
-  }
-
-  public void setRatingCount(int ratingCount)
-  {
-    this.ratingCount = ratingCount;
+    // always return 0, because the information about the rating is no more accessible through the
+    // only available acion api
+    return 0;
   }
 
   @Override

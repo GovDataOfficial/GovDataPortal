@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
+import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.edit.gui.common.Constants;
@@ -226,7 +227,7 @@ public class EditController
         // get the name in the same way he new name is created for new datasets
         if (editForm.isNewDataset())
         {
-          editForm.setName(registryClient.getInstance().mungeTitleToName(editForm.getTitle()));
+          editForm.setName(StringCleaner.mungeTitleToName(editForm.getTitle()));
         }
 
         // reload saved dataset, so we reflect the actual saved data
@@ -238,14 +239,15 @@ public class EditController
       catch (OpenDataRegistryException | PortalException | SystemException e)
       {
         response.setRenderParameter(MESSAGE_TYPE, MessageType.ERROR.toString());
-        if (StringUtils.isNotEmpty(e.getMessage()))
+        if (e instanceof OpenDataRegistryException && StringUtils.isNotEmpty(e.getMessage()))
         {
           response.setRenderParameter(MESSAGE, e.getMessage());
+          log.info("Cannot save or/and load dataset! Details: {}", e.getMessage());
         }
         else
         {
           response.setRenderParameter(MESSAGE, "od.editform.save.error");
-          e.printStackTrace(); // just so we can look it up... we don't know yet what's going on.
+          log.warn("Cannot save or/and load dataset!", e);
         }
       }
     }
@@ -253,7 +255,7 @@ public class EditController
     {
       response.setRenderParameter(MESSAGE_TYPE, MessageType.WARNING.toString());
       response.setRenderParameter(MESSAGE, "od.editform.save.warning");
-      log.warn("Form has errors: " + result.getAllErrors());
+      log.debug("Form has errors: " + result.getAllErrors());
     }
   }
 

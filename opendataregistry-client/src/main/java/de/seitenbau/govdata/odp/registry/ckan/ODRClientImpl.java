@@ -57,10 +57,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
+import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientAction;
-import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientModel;
-import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientUtil;
 import de.seitenbau.govdata.odp.registry.ckan.impl.CategoryImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.LicenceImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
@@ -102,11 +101,7 @@ public class ODRClientImpl implements ODRClient
 
   private static final Logger LOG = LoggerFactory.getLogger(OpenDataRegistryProvider.class);
 
-  private CKANClientModel model;
-
   private CKANClientAction action;
-
-  private CKANClientUtil util;
 
   private String authorizationKey;
 
@@ -165,8 +160,6 @@ public class ODRClientImpl implements ODRClient
     ResteasyWebTarget target = client.target(url);
 
     action = target.proxy(CKANClientAction.class);
-    util = target.proxy(CKANClientUtil.class);
-    model = target.proxy(CKANClientModel.class);
 
     ALL_FIELDS.put(JSON_FIELD_ALL_FIELDS, true);
 
@@ -290,87 +283,6 @@ public class ODRClientImpl implements ODRClient
       }
     }
     return licencesCache;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see de.seitenbau.govdata.odp.registry.ODRClient#autoSuggestMetadata(java.lang.String)
-   */
-  @Override
-  public List<String> autoSuggestMetadata(String fragment)
-  {
-
-    LOG.trace("REST > calling util api 'dataset/autocomplete' with: {}",
-        fragment);
-    long start = System.currentTimeMillis();
-    JsonNode result = util.getMetadataAutoComplete(fragment);
-    LOG.debug("/api/2/util/dataset/autocomplete: {}ms",
-        System.currentTimeMillis() - start);
-    LOG.trace("REST < returns: {}", result);
-
-    JsonNode list = getAutoCompleteResultList(result);
-
-    List<String> autocom = new ArrayList<>();
-    for (JsonNode node : list)
-    {
-      autocom.add(node.get("title").textValue());
-    }
-    return autocom;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see de.seitenbau.govdata.odp.registry.ODRClient#autoSuggestTags(java.lang.String)
-   */
-  @Override
-  public List<String> autoSuggestTags(String fragment)
-  {
-
-    LOG.trace("REST > calling util api 'tag/autocomplete' with: {}",
-        fragment);
-    long start = System.currentTimeMillis();
-    JsonNode result = util.getTagsAutoComplete(fragment);
-    LOG.debug("/api/2/util/tag/autocomplete: {}ms",
-        System.currentTimeMillis() - start);
-    LOG.trace("REST < returns: {}", result);
-
-    JsonNode list = getAutoCompleteResultList(result);
-
-    List<String> autocom = new ArrayList<>();
-    for (JsonNode node : list)
-    {
-      autocom.add(node.get("Name").textValue());
-    }
-    return autocom;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see de.seitenbau.govdata.odp.registry.ODRClient#autoSuggestFormats(java.lang.String)
-   */
-  @Override
-  public List<String> autoSuggestFormats(String fragment)
-  {
-
-    LOG.trace("REST > calling util api 'format_autocomplete' with: {}",
-        fragment);
-    long start = System.currentTimeMillis();
-    JsonNode result = util.getFormatsAutoComplete(fragment);
-    LOG.debug("/api/2/util/resource/format_autocomplete: {}ms",
-        System.currentTimeMillis() - start);
-    LOG.trace("REST < returns: {}", result);
-
-    JsonNode list = getAutoCompleteResultList(result);
-
-    List<String> autocom = new ArrayList<>();
-    for (JsonNode node : list)
-    {
-      autocom.add(node.get("Format").textValue());
-    }
-    return autocom;
   }
 
   /*
@@ -1112,20 +1024,6 @@ public class ODRClientImpl implements ODRClient
     return OM.createObjectNode();
   }
 
-  private JsonNode getAutoCompleteResultList(JsonNode result)
-  {
-    JsonNode resultSet = result.get("ResultSet");
-    if (resultSet != null)
-    {
-      JsonNode list = resultSet.get("Result");
-      if (list != null && list.isArray())
-      {
-        return list;
-      }
-    }
-    return OM.createArrayNode();
-  }
-
   @Override
   public void persistMetadata(User user, Metadata metadata)
       throws OpenDataRegistryException
@@ -1136,7 +1034,7 @@ public class ODRClientImpl implements ODRClient
 
     if (impl.isNew())
     {
-      String munge = mungeTitleToName(impl.getTitle());
+      String munge = StringCleaner.mungeTitleToName(impl.getTitle());
 
       impl.setName(munge);
       JsonNode node = impl.write(false);
@@ -1349,55 +1247,6 @@ public class ODRClientImpl implements ODRClient
     }
 
     return impl;
-  }
-
-  private String strip(String value)
-  {
-    if (value.startsWith("\""))
-    {
-      value = value.substring(1);
-    }
-    if (value.endsWith("\""))
-    {
-      value = value.substring(0, value.length() - 1);
-    }
-    return value;
-  }
-
-  @Override
-  public String mungeTitleToName(String title)
-  {
-    LOG.trace("REST > calling util api 'munge_title_to_name' with: {}",
-        title);
-    long start = System.currentTimeMillis();
-    String result = strip(util.mungeTitleToName(title));
-    LOG.debug("/api/2/util/dataset/munge_title_to_name: {}ms",
-        System.currentTimeMillis() - start);
-    LOG.trace("REST < returns: {}", result);
-    return result;
-  }
-
-  @Override
-  public void loadRating(Metadata metadata)
-  {
-    LOG.trace("REST > calling model dataset api with: {}",
-        metadata.getName());
-    long start = System.currentTimeMillis();
-    JsonNode node = model.getDataset(authorizationKey, metadata.getName());
-    LOG.debug("/api/2/rest/dataset/{}: {}ms", metadata.getName(),
-        System.currentTimeMillis() - start);
-    LOG.trace("REST < returns: {}", node);
-
-    JsonNode count = node.get("ratings_count");
-    if (count != null && count.isNumber())
-    {
-      ((MetadataImpl) metadata).setRatingCount(count.numberValue().intValue());
-    }
-    JsonNode average = node.get("ratings_average");
-    if (average != null && average.isDouble())
-    {
-      ((MetadataImpl) metadata).setAverageRating(average.numberValue().floatValue());
-    }
   }
 
   public List<RelationshipBean> listRelationships(String name, String type)

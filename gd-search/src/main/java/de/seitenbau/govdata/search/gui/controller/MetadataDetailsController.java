@@ -21,9 +21,6 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowStateException;
 
-import de.seitenbau.govdata.clean.StringCleaner;
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
@@ -53,6 +50,7 @@ import com.liferay.portlet.PortletURLFactoryUtil;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil;
+import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.dataset.details.beans.CurrentMetadataContact;
@@ -73,6 +71,7 @@ import de.seitenbau.govdata.redis.adapter.RedisClientAdapter;
 import de.seitenbau.govdata.redis.util.RedisReportUtil;
 import de.seitenbau.govdata.search.common.NotificationMailSender;
 import de.seitenbau.govdata.search.common.NotificationMailSender.EventType;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller for the metadata details page.
@@ -172,20 +171,6 @@ public class MetadataDetailsController extends BaseServiceImpl
     boolean showBrokenLinksHint =
         GetterUtil.getBoolean(portletPreferences.getValue(MODEL_KEY_SHOW_BROKEN_LINKS_HINT, StringPool.TRUE));
 
-    final String currentUrl = gdNavigation.createLinkForMetadata(
-        "gdsearchdetails", metadataIdOrName, "daten").toString();
-    final String catalogUrl = gdNavigation.createLinkForSearchResults("daten",
-        "gdsearchresult", "").toString();
-    String jsonLd = registryClient.getInstance().getJsonLdMetadata(currentUser.getCkanUser(),
-        metadataIdOrName, currentUrl, catalogUrl);
-    if (jsonLd == null)
-    {
-      // output empty node if something went wrong
-      jsonLd = "";
-    }
-    // remove potential html tags, as text is rendered without escaping due to quotes in JSON data
-    jsonLd = StringCleaner.trimAndFilterString(jsonLd);
-    model.addAttribute(MODEL_KEY_METADATA_JSON_LD, jsonLd);
 
     SelectedMetadata selectedMetadata =
         createMetadata(metadataIdOrName, themeDisplay, currentUser.getCkanUser(), showBrokenLinksHint);
@@ -219,6 +204,21 @@ public class MetadataDetailsController extends BaseServiceImpl
           model.addAttribute(MODEL_KEY_EDITDATASETURL, url);
         }
       }
+      // add schema.org JSON-LD
+      final String currentUrl = gdNavigation.createLinkForMetadata(
+          "gdsearchdetails", metadataIdOrName, "daten").toString();
+      final String catalogUrl = gdNavigation.createLinkForSearchResults("daten",
+          "gdsearchresult", "").toString();
+      String jsonLd = registryClient.getInstance().getJsonLdMetadata(currentUser.getCkanUser(),
+          metadataIdOrName, currentUrl, catalogUrl);
+      if (jsonLd == null)
+      {
+        // output empty node if something went wrong
+        jsonLd = "";
+      }
+      // remove potential html tags, as text is rendered without escaping due to quotes in JSON data
+      jsonLd = StringCleaner.trimAndFilterString(jsonLd);
+      model.addAttribute(MODEL_KEY_METADATA_JSON_LD, jsonLd);
     }
     // set url for submitting rating via ajax
     selectedMetadata.setRatingActionUrl(
@@ -553,9 +553,13 @@ public class MetadataDetailsController extends BaseServiceImpl
       registryClient.getInstance().rateMetadata(currentUser.getCkanUser(), dataset, ratingInt);
 
       // get updated metadata
-      Metadata metadata = getMetadataFromCkan(currentUser.getCkanUser(), dataset);
-      view.addStaticAttribute("avgRating", Math.round(metadata.getAverageRating()));
-      view.addStaticAttribute("ratingCount", metadata.getRatingCount());
+      // next three lines commented out, because the information about the rating is no more
+      // accessible through the only available acion api
+      // Metadata metadata = getMetadataFromCkan(currentUser.getCkanUser(), dataset);
+      // view.addStaticAttribute("avgRating", Math.round(metadata.getAverageRating()));
+      // view.addStaticAttribute("ratingCount", metadata.getRatingCount());
+      view.addStaticAttribute("avgRating", 0);
+      view.addStaticAttribute("ratingCount", 0);
     }
     catch (Exception e)
     {

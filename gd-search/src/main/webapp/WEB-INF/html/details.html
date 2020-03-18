@@ -132,7 +132,7 @@
           </dd>
         </dl>
 
-        <dl class="space-bottom">
+        <dl class="space-bottom" th:if="${ratingsEnabled}">
           <dt>[[#{od.rating.average}]]</dt>
           <dd class="rating-area" id="panelGrouprating_average_tooltip"
               th:title="#{od.rating.average.tooltip}" itemprop="aggregateRating" itemscope="itemscope"
@@ -216,6 +216,7 @@
         </th:block>
         <h2 class="rating-title section-title bold" th:attr="data-successmessage=#{od.rateIt.success}">
           [[#{od.rateIt.name}]]</h2>
+        <div th:if="${isLoggedIn}">[[#{od.rateIt.description}]]</div>
         <div class="rating-title section-title" th:unless="${isLoggedIn}">[[#{od.rateIt.login}]]</div>
         <div class="clearfix"></div>
       </div>

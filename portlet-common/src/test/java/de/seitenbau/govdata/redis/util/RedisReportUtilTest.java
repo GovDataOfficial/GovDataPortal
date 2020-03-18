@@ -1,6 +1,7 @@
 package de.seitenbau.govdata.redis.util;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -105,7 +106,7 @@ public class RedisReportUtilTest
 
   private String readFileFromClasspathToString(String fileName) throws IOException
   {
-    return IOUtils.toString(getClass().getResourceAsStream(fileName));
+    return IOUtils.toString(getClass().getResourceAsStream(fileName), StandardCharsets.UTF_8);
   }
 
 }

@@ -24,7 +24,6 @@ import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.Organization;
-import de.seitenbau.govdata.odp.registry.model.Resource;
 import de.seitenbau.govdata.odp.registry.model.Tag;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
@@ -183,37 +182,6 @@ public interface ODRClient
   void rateMetadata(User user, String metadata, int rate) throws OpenDataRegistryException;
 
   /**
-   * Load rating.
-   * 
-   * @param metadata the metadata
-   */
-  void loadRating(Metadata metadata);
-
-  /**
-   * Auto suggest metadata.
-   * 
-   * @param fragment the fragment
-   * @return the list
-   */
-  List<String> autoSuggestMetadata(String fragment);
-
-  /**
-   * Auto suggest tags.
-   * 
-   * @param fragment the fragment
-   * @return the list
-   */
-  List<String> autoSuggestTags(String fragment);
-
-  /**
-   * Auto suggest formats.
-   * 
-   * @param fragment the fragment
-   * @return the list
-   */
-  List<String> autoSuggestFormats(String fragment);
-
-  /**
    * Creates the metadata.
    * 
    * @return the metadata
@@ -228,14 +196,6 @@ public interface ODRClient
    * @throws OpenDataRegistryException the open data registry exception
    */
   void persistMetadata(User user, Metadata metadata) throws OpenDataRegistryException;
-
-  /**
-   * Munge title to name.
-   * 
-   * @param title the title
-   * @return the string
-   */
-  String mungeTitleToName(String title);
 
   /**
    * @return
