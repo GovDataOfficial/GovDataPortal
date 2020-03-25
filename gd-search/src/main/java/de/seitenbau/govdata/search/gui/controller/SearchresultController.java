@@ -1,6 +1,14 @@
 package de.seitenbau.govdata.search.gui.controller;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
@@ -11,9 +19,6 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +66,8 @@ import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import de.seitenbau.govdata.search.index.model.SuggestionOption;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.sort.SortType;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("VIEW")
@@ -325,6 +332,11 @@ public class SearchresultController extends AbstractBaseController
   @SuppressWarnings("unchecked")
   private void recordSearchPhrase(String query, PortletSession portletSession)
   {
+    String toSave = StringUtils.trim(query);
+    if (StringUtils.isEmpty(toSave))
+    {
+      return;
+    }
     HashSet<String> usedPhrases;
 
     // load list of used phrases from session, if existing

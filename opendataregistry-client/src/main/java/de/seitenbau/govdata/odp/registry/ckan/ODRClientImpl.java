@@ -49,7 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1139,11 +1138,11 @@ public class ODRClientImpl implements ODRClient
       // find Dataset item
       for (JsonNode item : schemaGraph)
       {
-        if (item.path("@type").textValue().equals("schema:Dataset"))
+        if (isJsonNodeOfType(item, "schema:Dataset"))
         {
           datasetNode = item;
         }
-        else if (item.path("@type").textValue().equals("schema:DataCatalog"))
+        else if (isJsonNodeOfType(item, "schema:DataCatalog"))
         {
           catalogNode = item;
         }
@@ -1161,16 +1160,16 @@ public class ODRClientImpl implements ODRClient
       // generate String value again
       return parsedResult.toString();
     }
-    catch (JsonProcessingException e)
-    {
-      LOG.error("Cannot process JSON-LD input, not replacing CKAN Dataset URL", e);
-      return input;
-    }
     catch (IOException e)
     {
       LOG.error("IO Exception on JSON-LD input, not replacing CKAN Dataset URL", e);
       return input;
     }
+  }
+
+  private boolean isJsonNodeOfType(JsonNode item, String typeValue)
+  {
+    return item.path("@type").isTextual() && item.path("@type").textValue().equals(typeValue);
   }
 
   @Override

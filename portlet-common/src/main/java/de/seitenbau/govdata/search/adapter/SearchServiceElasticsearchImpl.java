@@ -107,6 +107,8 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
   private static final String SAYT_COMPLETION_SUGGESTION = "search-as-you-type";
 
+  private static final int SEARCH_PHRASE_MIN_LENGTH = 2;
+
   /**
    * not sure which unit... but the value given by the "area" package in python, used to calculate
    * our index areas
@@ -529,7 +531,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @Override
   public void recordSearchPhrase(final String phrase)
   {
-    if (StringUtils.isEmpty(phrase))
+    if (StringUtils.length(StringUtils.trim(phrase)) < SEARCH_PHRASE_MIN_LENGTH)
     {
       return;
     }

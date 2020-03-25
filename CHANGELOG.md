@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.8.0 2020-02-17
+
+* Introduce minimum length for saving a search phrase
+* Add SpotBugs Maven Plugin
+
 ## v3.7.0 2019-12-19
 
 * Adapt CKAN binding to new CKAN version 2.8.3
