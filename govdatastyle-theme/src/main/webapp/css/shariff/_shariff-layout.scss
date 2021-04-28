@@ -29,6 +29,7 @@ $size: 33px;
         padding: 0;
         margin: 0;
         list-style: none;
+        max-width: none;
     }
     li {
         height: rem-calc($size +2px);

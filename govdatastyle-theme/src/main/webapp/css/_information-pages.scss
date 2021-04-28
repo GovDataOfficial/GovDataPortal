@@ -1,7 +1,7 @@
 .information-nav {
   @extend .design-box;
 
-  .portlet-topper h1 {
+  .portlet-header h1 {
     @extend .sb-chapter-head;
   }
 
@@ -32,7 +32,7 @@
 }
 
 .aui {
-  .information-nav .portlet-topper h1 {
+  .information-nav .portlet-header h1 {
     padding-left: rem-calc(15);
     padding-right: rem-calc(15);
   }
@@ -45,7 +45,7 @@
       padding: 0;
     }
 
-    .portlet-content {
+    .portlet-content-container {
       @extend .design-box;
       margin-bottom: rem-calc(30);
       padding: rem-calc(15);
@@ -57,7 +57,7 @@
   background-color: inherit;
   border-style: none;
 
-  .portlet-content {
+  .portlet-content-container {
     @extend .design-box;
     margin-bottom: rem-calc(30);
     padding: rem-calc(15);

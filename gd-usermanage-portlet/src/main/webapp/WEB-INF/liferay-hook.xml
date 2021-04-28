@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 6.2.0//EN" "http://www.liferay.com/dtd/liferay-hook_6_2_0.dtd">
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 7.3.0//EN" "http://www.liferay.com/dtd/liferay-hook_7_3_0.dtd">
 
 <hook>
-  <portal-properties>portal.properties</portal-properties>
   <language-properties>Language_de.properties</language-properties>
-  <custom-jsp-dir>/WEB-INF/custom_jsps</custom-jsp-dir>
 </hook>

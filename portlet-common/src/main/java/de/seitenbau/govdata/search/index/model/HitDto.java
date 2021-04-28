@@ -45,8 +45,6 @@ public class HitDto
   
   private String articleId;
   
-  private String portletId;
-  
   private String entryClassPK;
   
   private Long groupId;

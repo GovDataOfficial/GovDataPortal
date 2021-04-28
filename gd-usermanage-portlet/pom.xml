@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>3.8.0</version>
+    <version>4.0.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -17,16 +17,11 @@
 
   <dependencies>
     <!-- portlet, liferay -->
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>portal-service</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>util-taglib</artifactId>
-      <scope>provided</scope>
-    </dependency>
+<dependency>
+	    <groupId>com.liferay.portal</groupId>
+	    <artifactId>com.liferay.portal.kernel</artifactId>
+	    <scope>provided</scope>
+	  </dependency>
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
@@ -93,7 +88,6 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
-      <version>1.2</version>
     </dependency>
     
     <!-- Utils -->
@@ -117,7 +111,6 @@
     <dependency>
       <groupId>com.vividsolutions</groupId>
       <artifactId>jts</artifactId>
-      <version>1.13</version>
     </dependency>
 
     <!-- Logging -->
@@ -125,10 +118,10 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>util-slf4j</artifactId>
-    </dependency>
+      <dependency>
+        <groupId>com.liferay.portal</groupId>
+        <artifactId>com.liferay.util.slf4j</artifactId>
+      </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
@@ -165,6 +158,11 @@
       <artifactId>spring-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.string</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
 
@@ -172,15 +170,6 @@
     <finalName>${project.artifactId}-${project.version}</finalName>
 
     <plugins>
-      <plugin>
-        <groupId>com.liferay.maven.plugins</groupId>
-        <artifactId>liferay-maven-plugin</artifactId>
-        <configuration>
-          <autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
-          <liferayVersion>${liferay.version}</liferayVersion>
-          <pluginType>portlet</pluginType>
-        </configuration>
-      </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
       </plugin>
@@ -252,7 +241,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <version>2.6</version>
             <configuration>
               <warName>${project.name}</warName>
               <packagingExcludes>**/suche-gui*.properties/**</packagingExcludes>

@@ -18,12 +18,12 @@ import org.springframework.web.portlet.context.PortletRequestAttributes;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.model.LayoutModel;
-import com.liferay.portal.model.LayoutTypePortlet;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.util.LayoutTypePortletFactoryUtil;
-import com.liferay.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutModel;
+import com.liferay.portal.kernel.model.LayoutTypePortlet;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.util.LayoutTypePortletFactoryUtil;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 
 @Slf4j
 @Component

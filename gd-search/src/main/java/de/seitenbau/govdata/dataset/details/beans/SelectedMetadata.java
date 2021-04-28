@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.seitenbau.govdata.clean.StringCleaner;

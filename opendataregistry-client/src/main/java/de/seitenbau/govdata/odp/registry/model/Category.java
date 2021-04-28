@@ -17,6 +17,7 @@
 
 package de.seitenbau.govdata.odp.registry.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
  * 
  * @author rnoerenberg
  */
-public interface Category
+public interface Category extends Serializable
 {
 
     /**

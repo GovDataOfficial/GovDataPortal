@@ -14,18 +14,16 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portlet.asset.service.AssetTagLocalServiceUtil;
 
 import de.seitenbau.govdata.filter.SearchConsts;
 import de.seitenbau.govdata.search.adapter.SearchService;
@@ -36,6 +34,7 @@ import de.seitenbau.serviceportal.common.api.RestUserMetadata;
 import de.seitenbau.serviceportal.common.client.impl.RestCallFailedException;
 import de.seitenbau.serviceportal.common.messaging.SearchIndexEntry;
 import de.seitenbau.serviceportal.common.messaging.Section;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Enthält die Logik, um im Portal-Index Liferay-Dokumente anzulegen, zu aktualisieren und zu
@@ -49,6 +48,8 @@ import de.seitenbau.serviceportal.common.messaging.Section;
 @Service
 public class GovDataSearchIndexWriter implements IndexWriter
 {
+  private static final Locale LOCALE_USED = Locale.GERMANY;
+
   private IndexQueueAdapterServiceRESTResource indexClient;
 
   private SearchService searchService;
@@ -91,11 +92,10 @@ public class GovDataSearchIndexWriter implements IndexWriter
   }
 
   @Override
-  public void deletePortletDocuments(SearchContext searchContext,
-      String portletId) throws SearchException
+  public void deleteEntityDocuments(SearchContext searchContext, String className) throws SearchException
   {
-    log.debug("deletePortletDocuments portletId=" + portletId);
-    List<String> uids = searchService.findPortalContentIdsByPortletId(portletId);
+    log.debug("deleteEntityDocuments className=" + className);
+    List<String> uids = searchService.findPortalContentIdsByPortletId(className);
     if (uids.size() > 0)
     {
       deleteDocuments(searchContext, uids);
@@ -246,6 +246,27 @@ public class GovDataSearchIndexWriter implements IndexWriter
     log.debug("indexSpellCheckerDictionary");
   }
 
+  @Override
+  public void commit(SearchContext searchContext) throws SearchException
+  {
+    log.debug("commit");
+  }
+
+  @Override
+  public void partiallyUpdateDocument(SearchContext searchContext, Document document) throws SearchException
+  {
+    log.debug("partiallyUpdateDocument");
+    updateDocument(searchContext, document);
+  }
+
+  @Override
+  public void partiallyUpdateDocuments(SearchContext searchContext, Collection<Document> documents)
+      throws SearchException
+  {
+    log.debug("partiallyUpdateDocuments");
+    updateDocuments(searchContext, documents);
+  }
+
   private SearchIndexEntry createSearchIndexEntryWithBasicInformation()
   {
     SearchIndexEntry entry = SearchIndexEntry.builder().build();
@@ -273,11 +294,11 @@ public class GovDataSearchIndexWriter implements IndexWriter
       {
         entry.setVersion(document.get(key));
       }
-      else if (key.equals(Field.TITLE))
+      else if (key.equals(Field.getLocalizedName(LOCALE_USED, Field.TITLE)))
       {
         msgDocument.setTitle(document.get(key));
       }
-      else if (key.equals(Field.CONTENT))
+      else if (key.equals(Field.getLocalizedName(LOCALE_USED, Field.CONTENT)))
       {
         msgDocument.setPreamble(document.get(key));
       }

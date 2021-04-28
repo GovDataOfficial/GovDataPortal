@@ -5,106 +5,67 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>3.8.0</version>
+    <version>4.0.0</version>
   </parent>
   <artifactId>boxes-portlet</artifactId>
   <packaging>war</packaging>
   <name>boxes-portlet Portlet</name>
-  <scm>
-    <developerConnection>scm:git:git@git.dev.seitenbau.net:bmi-govdata-portal/odp-boxes-portlet</developerConnection>
-  </scm>
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
-    <plugins>
-      <plugin>
-        <groupId>com.liferay.maven.plugins</groupId>
-        <artifactId>liferay-maven-plugin</artifactId>
-        <version>${liferay.version}</version>
-        <configuration>
-          <autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
-          <liferayVersion>${liferay.version}</liferayVersion>
-          <pluginType>portlet</pluginType>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.liferay.faces</groupId>
-      <artifactId>liferay-faces-bridge-api</artifactId>
-      <version>${liferay.faces.version}</version>
+      <groupId>javax.faces</groupId>
+      <artifactId>javax.faces-api</artifactId>
+      <version>${faces.api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.faces</artifactId>
+      <version>${mojarra.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.liferay.faces</groupId>
-      <artifactId>liferay-faces-bridge-impl</artifactId>
-      <version>${liferay.faces.version}</version>
+      <artifactId>com.liferay.faces.bridge.ext</artifactId>
+      <version>${liferay.faces.bridge.ext.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.liferay.faces</groupId>
-      <artifactId>liferay-faces-portal</artifactId>
-      <version>${liferay.faces.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay.faces</groupId>
-      <artifactId>liferay-faces-util</artifactId>
-      <version>${liferay.faces.version}</version>
+      <artifactId>com.liferay.faces.bridge.impl</artifactId>
+      <version>${liferay.faces.bridge.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.liferay.portal</groupId>
-      <artifactId>portal-service</artifactId>
+      <artifactId>com.liferay.portal.kernel</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>util-java</artifactId>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.blogs.api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.sun.faces</groupId>
-      <artifactId>jsf-api</artifactId>
-      <version>2.1.29</version>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.faces</groupId>
-      <artifactId>jsf-impl</artifactId>
-      <version>2.1.29</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>el-api</artifactId>
-      <version>1.0</version>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.util.tracker</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>javax.portlet</groupId>
-      <artifactId>portlet-api</artifactId>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.framework</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.seam</groupId>
-      <artifactId>jboss-el</artifactId>
-      <version>2.0.0.GA</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>el-api</artifactId>
-          <groupId>javax.el</groupId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.fhg.fokus.odp</groupId>
-      <artifactId>opendataregistry-client</artifactId>
     </dependency>
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
@@ -113,6 +74,10 @@
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>portlet-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
     </dependency>
 
     <!-- Testing -->
@@ -132,44 +97,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.blogs.service</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>portal-impl</artifactId>
-      <version>${liferay.version}</version>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.sql.dsl.api</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>easyconf</groupId>
-      <artifactId>easyconf</artifactId>
-      <version>0.9.5</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>xdoclet</groupId>
-      <artifactId>xdoclet</artifactId>
-      <version>1.2.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>xdoclet</groupId>
-      <artifactId>xdoclet-web-module</artifactId>
-      <version>1.2.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>xpp3</groupId>
-      <artifactId>xpp3_min</artifactId>
-      <version>1.1.3.4.O</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

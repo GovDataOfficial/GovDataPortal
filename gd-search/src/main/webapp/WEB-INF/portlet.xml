@@ -242,7 +242,6 @@
     </security-role-ref>
     <supported-public-render-parameter>metadata</supported-public-render-parameter>
   </portlet>
-
   <public-render-parameter>
     <identifier>q</identifier>
     <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:q</qname>
@@ -271,5 +270,4 @@
     <identifier>metadata</identifier>
     <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:metadata</qname>
   </public-render-parameter>
-
 </portlet-app>

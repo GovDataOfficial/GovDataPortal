@@ -1,0 +1,10 @@
+Bundle-Name: entities-api
+Bundle-SymbolicName: de.fhg.fokus.odp.entities.api
+Bundle-Version: 1.0.0
+Export-Package:\
+    de.fhg.fokus.odp.entities.exception,\
+    de.fhg.fokus.odp.entities.model,\
+    de.fhg.fokus.odp.entities.service,\
+    de.fhg.fokus.odp.entities.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../entities-service/service.xml

@@ -6,7 +6,7 @@ package de.seitenbau.govdata.messages;
  */
 public enum MessageType {
   ERROR("alert-error"),
-  WARNING(""), // warning has only "alert", no additional class
+  WARNING("alert-warning"),
   SUCCESS("alert-success");
   
   

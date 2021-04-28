@@ -11,8 +11,6 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +19,13 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
@@ -36,6 +34,7 @@ import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
 import de.seitenbau.govdata.search.gui.model.SearchFieldViewModel;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("VIEW")
@@ -66,15 +65,13 @@ public class SearchfieldController extends AbstractBaseController
         GetterUtil.getBoolean(portletPreferences.getValue("showSearch", StringPool.TRUE));
     String backgroundImage = GetterUtil.getString(portletPreferences.getValue("backgroundImage", "general"));
 
+    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+
     // construct the full background-image url
     String backgroundFile = (backgroundImage.equals("general") ? "" : "_mini_" + backgroundImage);
     String backgroundImageFull =
-        "/govdatastyle-theme/images/datavisuals/connectionmap" + backgroundFile + ".jpg";
-    
-    
-    
+        themeDisplay.getPathThemeImages() + "/datavisuals/connectionmap" + backgroundFile + ".jpg";
     // get currentpage for type filter
-    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
     String currentPage = themeDisplay.getLayout().getFriendlyURL();
     
     PreparedParameters preparm =

@@ -1,5 +1,12 @@
 # Changelog
 
+## v4.0.0 2020-10-30
+
+* Update to Liferay 7 (e.g. switching to OSGI bundles and adapting GovData theme)
+* Removed cache-scheduler in favor of setting a TTL for the cache entries
+* Removed errorpages-hook in favor of an custom error page handling in the web server
+* Add new standalone maintenance html page
+
 ## v3.8.0 2020-02-17
 
 * Introduce minimum length for saving a search phrase

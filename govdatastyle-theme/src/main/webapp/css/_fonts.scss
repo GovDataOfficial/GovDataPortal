@@ -1,37 +1,77 @@
 // Source Sans
 @font-face {
   font-family: 'Source Sans Pro';
-  src: url('/govdatastyle-theme/css/fonts/SourceSansPro-Regular.otf?t=' + $timestamp);
+  src: url('fonts/SourceSansPro-Regular.otf?t=' + $timestamp);
 }
 @font-face {
   font-family: 'Source Sans Pro';
-  src: url('/govdatastyle-theme/css/fonts/SourceSansPro-It.otf?t=' + $timestamp);
+  src: url('fonts/SourceSansPro-It.otf?t=' + $timestamp);
   font-style: italic;
 }
 @font-face {
   font-family: 'Source Sans Pro';
-  src: url('/govdatastyle-theme/css/fonts/SourceSansPro-Semibold.otf?t=' + $timestamp);
+  src: url('fonts/SourceSansPro-Semibold.otf?t=' + $timestamp);
   font-weight: bold;
 }
 
 // Crimson Text
 @font-face {
   font-family: 'Crimson Text';
-  src: url('/govdatastyle-theme/css/fonts/CrimsonText-Roman.ttf?t=' + $timestamp);
+  src: url('fonts/CrimsonText-Roman.ttf?t=' + $timestamp);
 }
 @font-face {
   font-family: 'Crimson Text';
-  src: url('/govdatastyle-theme/css/fonts/CrimsonText-Italic.ttf?t=' + $timestamp);
+  src: url('fonts/CrimsonText-Italic.ttf?t=' + $timestamp);
   font-style: italic;
 }
 @font-face {
   font-family: 'Crimson Text';
-  src: url('/govdatastyle-theme/css/fonts/CrimsonText-Bold.ttf?t=' + $timestamp);
+  src: url('fonts/CrimsonText-Bold.ttf?t=' + $timestamp);
   font-weight: bold;
 }
 
 
 // Font-Styles
+.aui body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: black;
+  background-color: $light-gray;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.aui {
+  h1, h2, h3, h4, h5, h6 {
+    margin: 10px 0;
+    font-family: inherit;
+    font-weight: bold;
+    line-height: 20px;
+    color: inherit;
+  }
+  h1, h2, h3 {
+    line-height:40px
+  }
+  h1 {
+    font-size:38.5px
+  }
+  h2 {
+    font-size:31.5px
+  }
+  h3 {
+    font-size:24.5px
+  }
+  h4 {
+    font-size:17.5px
+  }
+  h5 {
+    font-size:14px
+  }
+  h6 {
+    font-size:11.9px
+  }
+}
+
 .aui h1,
 .sb-bigtitle {
   font-family: 'Source Sans Pro';
@@ -108,6 +148,10 @@
     font-family: 'Source Sans Pro';
     font-size: 16px;
     line-height: 22px;
+  }
+
+  a {
+    color: $black;
   }
 }
 

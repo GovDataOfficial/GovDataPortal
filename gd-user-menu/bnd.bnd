@@ -1,0 +1,8 @@
+Bundle-Name: user-menu
+Bundle-SymbolicName: de.seitenbau.govdata.user.menu
+Bundle-Version: 1.0.0
+-contract: JavaPortlet,JavaServlet
+-jsp: *.jsp,*.jspf
+-metatype: *
+-plugin.jsp: com.liferay.ant.bnd.jsp.JspAnalyzerPlugin
+-plugin.metatype: com.liferay.ant.bnd.metatype.MetatypePlugin

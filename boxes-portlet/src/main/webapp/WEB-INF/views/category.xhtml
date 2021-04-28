@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+  <dl class="categories h2-tags">
+    <dt class="hidden">#{i18n['od.groups.name']}</dt>
+    <ui:repeat value="#{categories}" var="category">
+      <dd class="boxcategory category-item">
+        <img alt="" src="#{themeDisplay.pathThemeImages}/categories/icon_kat_${category.name}.svg" width="20" height="20" />
+        <div class="box-name">#{category.displayName}</div>
+      </dd>
+    </ui:repeat>
+  </dl>
+
+</ui:composition>

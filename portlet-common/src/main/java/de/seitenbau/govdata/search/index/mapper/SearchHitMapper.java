@@ -95,7 +95,6 @@ public class SearchHitMapper
         .articleId(getFieldValueString(metadata, "articleId", ""))
         .groupId(Long.parseLong(getFieldValueString(metadata, "groupId", "0")))
         .entryClassPK(getFieldValueString(metadata, "entryClassPK", ""))
-        .portletId(getFieldValueString(metadata, "portletId", ""))
         .hasOpen((Boolean) metadata.get("has_open"))
         .hasClosed((Boolean) metadata.get("has_closed"))
         .ownerOrg(getFieldValueString(metadata, "owner_org", ""))

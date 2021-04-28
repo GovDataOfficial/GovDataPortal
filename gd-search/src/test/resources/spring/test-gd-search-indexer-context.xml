@@ -17,14 +17,21 @@
   <bean id="indexQueueClientFactory" class="de.seitenbau.govdata.search.index.queue.adapter.IndexQueueClientFactory" />
   <bean id="indexQueueResource" factory-bean="indexQueueClientFactory" factory-method="createSuchindexQueueClient" />
 
-  <bean id="indexFilterBlog" class="de.seitenbau.govdata.search.index.filter.BlogFilter"/>
-  <bean id="indexFilterJournal" class="de.seitenbau.govdata.search.index.filter.JournalFilter"/>
-
   <bean id="indexFilterProxy" class="de.seitenbau.govdata.search.index.filter.FilterProxy">
     <property name="registeredFilter">
       <util:map>
-        <entry key="com.liferay.portlet.blogs.model.BlogsEntry" value-ref="indexFilterBlog" />
-        <entry key="com.liferay.portlet.journal.model.JournalArticle" value-ref="indexFilterJournal" />
+        <entry>
+          <key>
+            <util:constant static-field="de.seitenbau.govdata.search.index.PortalIndexConstants.CLASS_NAME_BLOGS_ENTRY" />
+          </key>
+          <bean id="indexFilterBlog" class="de.seitenbau.govdata.search.index.filter.BlogFilter"/>
+        </entry>
+        <entry>
+          <key>
+            <util:constant static-field="de.seitenbau.govdata.search.index.PortalIndexConstants.CLASS_NAME_JOURNAL_ARTICLE_ENTRY" />
+          </key>
+          <bean id="indexFilterJournal" class="de.seitenbau.govdata.search.index.filter.JournalFilter"/>
+        </entry>
       </util:map>
     </property>
   </bean>

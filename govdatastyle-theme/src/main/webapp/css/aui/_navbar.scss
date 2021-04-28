@@ -9,7 +9,9 @@
 // Base class and wrapper
 .navbar {
   overflow: visible;
-  //margin-bottom: $baseLineHeight;
+  display: block;
+  padding: 0;
+  position: static;
 
   // Fix for IE7's bad z-indexing so dropdowns don't appear below content that follows the navbar
   *position: relative;
@@ -35,12 +37,15 @@
 // We then reset it for fixed navbars in the #gridSystem mixin
 .navbar .container {
   width: auto;
+  max-width: none;
+  display: block;
 }
 
 // Override the default collapsed state
 .nav-collapse.collapse {
   height: auto;
   overflow: visible;
+  display: block;
 }
 
 
@@ -151,7 +156,7 @@
 // Static navbar
 // -------------------------
 
-.navbar-static-top {
+.navbar-top {
   position: static;
   margin-bottom: 0; // remove 18px margin for default navbar
   .navbar-inner {
@@ -174,7 +179,7 @@
   margin-bottom: 0; // remove 18px margin for default navbar
 }
 .navbar-fixed-top .navbar-inner,
-.navbar-static-top .navbar-inner {
+.navbar-top .navbar-inner {
   border-width: 0 0 1px;
 }
 .navbar-fixed-bottom .navbar-inner {
@@ -189,7 +194,7 @@
 
 // Reset container width
 // Required here as we reset the width earlier on and the grid mixins don't override early enough
-.navbar-static-top .container,
+.navbar-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
   @include grid-core-span($gridColumns, $gridColumnWidth, $gridGutterWidth);
@@ -200,7 +205,7 @@
   top: 0;
 }
 .navbar-fixed-top,
-.navbar-static-top {
+.navbar-top {
   .navbar-inner {
     @include box-shadow(0 1px 10px rgba(0,0,0,.1));
   }
@@ -223,7 +228,7 @@
   position: relative;
   left: 0;
   display: block;
-  float: left;
+  float: right;
   margin: 0 10px 0 0;
 }
 .navbar .nav.pull-right {
@@ -235,7 +240,7 @@
 }
 
 // Links
-.navbar .nav > li > a {
+.navbar .nav > li a {
   float: none;
   // Vertically center the text given $navbarHeight
   padding: (($navbarHeight - $baseLineHeight) / 2) 10px;
@@ -248,17 +253,17 @@
 }
 
 // Hover/focus
-.navbar .nav > li > a:focus,
-.navbar .nav > li > a:hover {
+.navbar .nav > li a:focus,
+.navbar .nav > li a:hover {
   background-color: $navbarLinkBackgroundHover; // "transparent" is default to differentiate :hover/:focus from .active
   color: $navbarLinkColorHover;
   text-decoration: none;
 }
 
 // Active nav items
-.navbar .nav > .active > a,
-.navbar .nav > .active > a:hover,
-.navbar .nav > .active > a:focus {
+.navbar .nav > .active a,
+.navbar .nav > .active a:hover,
+.navbar .nav > .active a:focus {
   color: $navbarLinkColorActive;
   text-decoration: none;
   background-color: $navbarLinkBackgroundActive;
@@ -288,6 +293,9 @@
   margin-top: 3px;
 }
 
+div.portlet-user-personal-bar {
+  display: inline-block;
+}
 
 
 // Dropdown menus

@@ -27,19 +27,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portlet.blogs.model.BlogsEntry;
-import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 
-import de.seitenbau.govdata.cache.BaseCache;
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
 
 /**
  * The class constitutes a bean that serves as a source for the latest blogs on the start page
@@ -50,12 +49,9 @@ import de.seitenbau.govdata.clean.StringCleaner;
  */
 @Component
 @Scope("request")
-public class Blogs implements Serializable
+public class Blogs extends BaseBoxesBean<BlogsEntry> implements Serializable
 {
   private static final long serialVersionUID = 5336951701667722369L;
-
-  /** The cache datasets key. */
-  private final String CACHE_BLOGS_KEY = "blogs";
 
   /** The log. */
   private static final Logger LOG = LoggerFactory.getLogger(Blogs.class);
@@ -63,28 +59,47 @@ public class Blogs implements Serializable
   /** The maximum number of latest blogs to show. */
   private final int maximumNumberOfBlogs = 2;
 
+  private BlogsEntryServiceTracker blogsEntryTracker;
+
   /** The blogs. */
   private List<BlogsEntry> blogs;
 
   /**
    * An init method for the bean.
    */
-  @SuppressWarnings("unchecked")
   @PostConstruct
   public void init()
   {
-
-    blogs = (List<BlogsEntry>) MultiVMPoolUtil.getCache(BaseCache.CACHE_NAME_BOXES).get(CACHE_BLOGS_KEY);
+    // initialize BlogsEntry ServiceTracker
+    initializeBlogsEntryServiceTracker();
+    // read clustered cache service
+    blogs = readItemsFromClusteredCache(CacheKey.BLOGS);
 
     if (blogs == null)
     {
-      LOG.info("Empty {} cache, fetching blogs from liferay.",
-          CACHE_BLOGS_KEY);
+      LOG.info("Empty {} cache, fetching blogs from liferay.", CacheKey.BLOGS);
       blogs = getLatestBlogs(maximumNumberOfBlogs);
       // safe cast: LinkedList
-      MultiVMPoolUtil.getCache(BaseCache.CACHE_NAME_BOXES).put(CACHE_BLOGS_KEY, (Serializable) blogs);
+      updateCache(blogs, CacheKey.BLOGS);
     }
+    LOG.debug("Initialize complete");
+  }
 
+  @PreDestroy
+  public void close()
+  {
+    blogsEntryTracker.close();
+  }
+
+  private void initializeBlogsEntryServiceTracker()
+  {
+    if (blogsEntryTracker == null)
+    {
+      // The if statement is only for testing. The tracker will be injected by the mocking framework
+      // before.
+      blogsEntryTracker = new BlogsEntryServiceTracker(this);
+    }
+    blogsEntryTracker.open();
   }
 
   private List<BlogsEntry> getLatestBlogs(int maximumnumberofblogs)
@@ -93,8 +108,8 @@ public class Blogs implements Serializable
     {
       blogs = new ArrayList<BlogsEntry>();
       // Getting the total blogs
-      int count = BlogsEntryLocalServiceUtil.getBlogsEntriesCount();
-      List<BlogsEntry> blogsList = BlogsEntryLocalServiceUtil.getBlogsEntries(0, count);
+      int count = blogsEntryTracker.getService().getBlogsEntriesCount();
+      List<BlogsEntry> blogsList = blogsEntryTracker.getService().getBlogsEntries(0, count);
       // Adding the non draft blogs in list
       Optional.ofNullable(blogsList)
           .orElseGet(Collections::emptyList)

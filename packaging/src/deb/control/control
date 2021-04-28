@@ -5,4 +5,4 @@ Priority: low
 Architecture: all
 Description: [[description]]
 Maintainer: govdata-support@seitenbau.com
-Depends: 
+Depends: portal-liferay

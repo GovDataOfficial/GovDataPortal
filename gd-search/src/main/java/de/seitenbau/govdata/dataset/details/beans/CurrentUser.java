@@ -46,7 +46,7 @@ public class CurrentUser
   private User ckanUser;
 
   /** The Liferay-User. */
-  private com.liferay.portal.model.User liferayUser;
+  private com.liferay.portal.kernel.model.User liferayUser;
 
   /** The new metadata button value. */
   private String newMetadataButtonValue;

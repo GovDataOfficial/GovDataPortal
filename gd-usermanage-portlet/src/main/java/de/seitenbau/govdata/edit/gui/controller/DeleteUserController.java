@@ -31,23 +31,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.mail.kernel.service.MailServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.mail.MailMessage;
+import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.portal.kernel.util.CookieKeys;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.model.Ticket;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.RoleLocalServiceUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.TicketLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.Ticket;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.messages.MessageType;
@@ -107,8 +107,13 @@ class DeleteUserController
       return VIEW_NAME;
     }
     
-    // user arriving from email-link. prepare final step. 
+    // user arriving from email-link. prepare final step.
     if(StringUtils.isNotEmpty(ticketKey)) {
+      // TODO: temporary workaround
+      if (ticketKey.contains(",")) {
+         ticketKey = ticketKey.split(",")[0];
+      }
+      
       model.addAttribute("actionUrl", response.createActionURL().toString());
       model.addAttribute(PARAM_TICKET_KEY, ticketKey);
       return VIEW_NAME;
@@ -227,10 +232,11 @@ class DeleteUserController
     if(ckanUser != null) {
       // rename the ckan user prior to deletion (so the original name can be used again)
       // make it unlikely to already exist
+      /* TODO: Temporary disabled, see GOVDATA-2585
       String newName = ckanUser.getName() + "-del-" + RandomStringUtils.randomAlphanumeric(6).toLowerCase();
       if(registryClient.getInstance().renameUser(ckanUser, newName) == null) {
         throw new PortalException("could not rename user!");
-      }
+      } */
       
       if(!registryClient.getInstance().deleteUser(ckanUser)) {
         throw new PortalException("could not delete user " + ticketUser.getScreenName().toLowerCase() + "!");

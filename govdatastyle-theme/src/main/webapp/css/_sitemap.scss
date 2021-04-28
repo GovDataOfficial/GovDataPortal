@@ -1,22 +1,14 @@
 .portlet-site-map {
-  @extend .row;
 
-  .portlet-topper,
   .portlet-content {
     padding-left: rem-calc(15);
     padding-right: rem-calc(15);
-  }
-
-  .portlet-topper {
-    margin: 0 rem-calc(15);
-
-    @media #{$large-up} {
-      margin: 0 rem-calc(30);
-    }
-  }
-
-  .portlet-content {
     margin-bottom: rem-calc(30);
+
+    ul {
+      padding: 0;
+      margin: 0 0 10px 25px;
+    }
 
     a {
       display: inline-block;

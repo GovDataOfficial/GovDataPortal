@@ -1,0 +1,9 @@
+Bundle-Name: gd-login-web-fragment
+Bundle-SymbolicName: de.seitenbau.govdata.login.web.fragment
+Bundle-Version: 1.0.0
+Fragment-Host: com.liferay.login.web;bundle-version="5.0.9"
+-jsp: *.jsp,*.jspf
+-metatype: *
+-plugin.jsp: com.liferay.ant.bnd.jsp.JspAnalyzerPlugin
+-plugin.metatype: com.liferay.ant.bnd.metatype.MetatypePlugin
+Portal-Bundle-Version: 7.3.2

@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.model.Organization;
@@ -64,7 +64,7 @@ public class ODRTools
   public User getCkanuserFromRequest(PortletRequest request, ODRClient client)
       throws OpenDataRegistryException, PortalException, SystemException
   {
-    com.liferay.portal.model.User liferayUser = PortalUtil.getUser(request);
+    com.liferay.portal.kernel.model.User liferayUser = PortalUtil.getUser(request);
     if (liferayUser != null && liferayUser.getScreenName() != null)
     {
       return new ODRTools().findOrCreateCkanUser(liferayUser.getScreenName(), client);

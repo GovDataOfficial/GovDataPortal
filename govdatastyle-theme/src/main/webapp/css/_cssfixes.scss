@@ -2,6 +2,17 @@
 
 // fix input color for forms:
 .aui {
+  label,
+  select,
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"],
+  input[type="radio"],
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+
   select,
   textarea,
   input[type="text"],
@@ -20,6 +31,44 @@
   input[type="color"],
   .uneditable-input {
     color: $black;
+    display: inline-block;
+    font-size: 14px;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    vertical-align: middle;
+    @media (max-width: 979px) {
+      height: auto;
+    }
+  }
+
+  textarea,
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="color"],
+  .uneditable-input {
+    background-color: white;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border linear .2s,box-shadow linear .2s;
+    -moz-transition: border linear .2s,box-shadow linear .2s;
+    -o-transition: border linear .2s,box-shadow linear .2s;
+    transition: border linear .2s,box-shadow linear .2s;
   }
 
   input[type="search"] {
@@ -31,10 +80,25 @@
     padding: 0;
   }
 
+  .radio, .checkbox {
+    margin: 0;
+  }
+
   // different fixes...
   input[type="text"],
   input[type="password"] {
     height: inherit;
     font-size: 14px;
+  }
+
+  @media (max-width: 979px) and (max-width: 767px) {
+    .btn {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      display: block;
+      margin-top: 5px;
+      width: 100%;
+    }
   }
 }

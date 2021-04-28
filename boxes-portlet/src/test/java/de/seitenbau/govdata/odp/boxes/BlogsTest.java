@@ -20,7 +20,6 @@ package de.seitenbau.govdata.odp.boxes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -35,17 +34,16 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import com.liferay.blogs.model.BlogsEntry;
+import com.liferay.blogs.model.impl.BlogsEntryImpl;
+import com.liferay.blogs.service.BlogsEntryLocalService;
 import com.liferay.portal.kernel.bean.BeanLocator;
-import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.cache.MultiVMPool;
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.cache.PortalCache;
-import com.liferay.portlet.blogs.model.BlogsEntry;
-import com.liferay.portlet.blogs.model.impl.BlogsEntryImpl;
-import com.liferay.portlet.blogs.service.BlogsEntryLocalService;
-import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 
 import de.seitenbau.govdata.cache.BaseCache;
+import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
+import de.seitenbau.govdata.servicetracker.MultiVMPoolServiceTracker;
 
 /**
  * Tests für die Klasse {@link Blogs}.
@@ -71,28 +69,23 @@ public class BlogsTest
   @Mock
   BeanLocator beanLocatorMock;
 
+  @Mock
+  MultiVMPoolServiceTracker multiVMPoolTracker;
+
+  @Mock
+  BlogsEntryServiceTracker blogsEntryTracker;
+
   @InjectMocks
   Blogs target;
-
-  private static MultiVMPoolUtil multiVMPoolUtil = new MultiVMPoolUtil();
 
   @Before
   public void setup() throws Exception
   {
-    multiVMPoolUtil.setMultiVMPool(multiVMPool);
-    PortalBeanLocatorUtil.setBeanLocator(beanLocatorMock);
-
-    Mockito.when(beanLocatorMock.locate(BlogsEntryLocalService.class.getCanonicalName())).thenReturn(
-        blogsEntryLocalService);
-
-    // reset private static field "_service"
-    Field field = BlogsEntryLocalServiceUtil.class.getDeclaredField("_service");
-    field.setAccessible(true);
-    field.set(null, null);
-    field.setAccessible(false);
+    Mockito.when(multiVMPoolTracker.getService()).thenReturn(multiVMPool);
+    Mockito.when(blogsEntryTracker.getService()).thenReturn(blogsEntryLocalService);
 
     // return every time an empty cache
-    Mockito.when(multiVMPool.getCache(BaseCache.CACHE_NAME_BOXES)).thenAnswer(
+    Mockito.when(multiVMPool.getPortalCache(BaseCache.CACHE_NAME_BOXES)).thenAnswer(
         new Answer<PortalCache<String, Serializable>>()
         {
           @Override
@@ -106,7 +99,7 @@ public class BlogsTest
   @After
   public void resetMocks()
   {
-    Mockito.reset(portalCache, multiVMPool, blogsEntryLocalService, beanLocatorMock);
+    Mockito.reset(portalCache, multiVMPool, blogsEntryLocalService, beanLocatorMock, multiVMPoolTracker);
   }
 
   @Test
@@ -176,9 +169,9 @@ public class BlogsTest
     assertThat(target.getBlogs()).hasSize(maximumNumberOfBlogs);
   }
 
-  private BlogsEntryImpl createBlogEntry()
+  private BlogsEntry createBlogEntry()
   {
-    BlogsEntryImpl blogsEntryImpl = new BlogsEntryImpl();
+    BlogsEntry blogsEntryImpl = new BlogsEntryImpl();
     blogsEntryImpl.setCreateDate(new Date());
     return blogsEntryImpl;
   }

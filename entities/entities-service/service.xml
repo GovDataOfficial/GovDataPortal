@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.3.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd">
+
+<service-builder package-path="de.fhg.fokus.odp.entities">
+	<namespace>entities</namespace>
+	<entity name="MetadataComment" uuid="true" local-service="true"
+		remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="_id" type="long" primary="true" />
+
+		<!-- Other fields -->
+
+		<column name="userLiferayId" type="long" />
+		<column name="metadataName" type="String" />
+		<column name="text" type="String" />
+		<column name="created" type="Date" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="created" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="userLiferayId" return-type="Collection">
+			<finder-column name="userLiferayId" />
+		</finder>
+		<finder name="metadataName" return-type="Collection">
+			<finder-column name="metadataName" />
+		</finder>
+	</entity>
+</service-builder>

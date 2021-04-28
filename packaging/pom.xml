@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>3.8.0</version>
+    <version>4.0.0</version>
   </parent>
   <artifactId>od-platform-packaging</artifactId>
   <packaging>deb</packaging>
@@ -19,7 +19,7 @@
       <extension>
         <groupId>org.vafer</groupId>
         <artifactId>jdeb</artifactId>
-        <version>1.4</version>
+        <version>1.5</version>
       </extension>
     </extensions>
     <pluginManagement>
@@ -28,9 +28,9 @@
         <!-- * Package Debian : build the actual .deb                                 * -->
         <!-- ************************************************************************** -->
         <plugin>
-          <artifactId>jdeb</artifactId>
           <groupId>org.vafer</groupId>
-          <version>1.3</version>
+          <artifactId>jdeb</artifactId>
+          <version>1.5</version>
           <executions>
             <execution>
               <id>jdeb-ubuntu18</id>
@@ -44,21 +44,8 @@
                   <data>
                     <src>${project.basedir}/../</src>
                     <type>directory</type>
-                    <includes>**/*.war</includes>
+                    <includes>**/*.war,**/language-hook/target/*.jar,**/gd-user-menu/target/*.jar,**/gd-users-admin-fragment/target/*.jar,**/gd-login-web-fragment/target/*.jar</includes>
                     <excludes>**/entities/**/*.war,**/liferay-core-portlets/*.war</excludes>
-                    <mapper>
-                      <type>perm</type>
-                      <strip>2</strip>
-                      <prefix>/opt/app/portal-liferay/liferay-home/deploy</prefix>
-                      <user>${tomcat.user}</user>
-                      <group>${tomcat.group}</group>
-                      <filemode>600</filemode>
-                    </mapper>
-                  </data>
-                  <data>
-                    <src>${project.basedir}/../liferay-core-portlets/</src>
-                    <type>directory</type>
-                    <includes>*.war</includes>
                     <mapper>
                       <type>perm</type>
                       <strip>2</strip>
@@ -71,7 +58,7 @@
                   <data>
                     <src>${project.basedir}/../entities/</src>
                     <type>directory</type>
-                    <includes>**/*.war</includes>
+                    <includes>**/*.jar</includes>
                     <mapper>
                       <type>perm</type>
                       <strip>2</strip>

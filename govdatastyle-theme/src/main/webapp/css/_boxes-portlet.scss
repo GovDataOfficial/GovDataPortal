@@ -25,6 +25,7 @@
   line-height: 18px;
   margin-left: rem-calc(15);
   vertical-align: middle;
+  color: $white;
 }
 
 .boxesportlet-box {
@@ -66,7 +67,10 @@
 
 .boxes-portlet {
   ul.row {
-    display: block;
+    @include grid-row(nest);
+
+    list-style: none;
+    padding: 0;
   }
 
   li.column {

@@ -423,9 +423,17 @@
 
 
 // results...
+#searchresult-container ul {
+  padding: 0;
+}
+
 .resultentry {
   margin-bottom: rem-calc(15);
   position: relative;
+
+  .row {
+    @include grid-row(nest);
+  }
 
   @media #{$large-up} {
     margin-bottom: rem-calc(30);
@@ -530,6 +538,7 @@
   margin-right: rem-calc(15);
   vertical-align: middle;
   text-decoration: none;
+  color: $white;
 
   &:hover {
     background-color: $white;
@@ -555,7 +564,7 @@
   }
 }
 
-.newdatasetbutton {
+.aui .newdatasetbutton {
   text-align: right;
 
   .btn {

@@ -8,10 +8,46 @@
     margin-right: rem-calc(15);
     max-width: $row-width;
 
-
     @media #{$large-up} {
       width: 66.6667%;
-      margin: rem-calc(30) auto;
+      margin: 0 auto rem-calc(30) auto;
+    }
+
+    .col-md-8 {
+      max-width: none;
+    }
+
+    .widget-mode-detail {
+      .widget-mode-detail-text {
+        margin-top: 0;
+      }
+    }
+
+    .entry-navigation {
+      padding-left: rem-calc(15);
+      padding-right: rem-calc(15);
+      padding-top: rem-calc(30);
+      padding-bottom: 0;
+      background: none;
+      border: 0;
+  
+      .row {
+        @extend .row;
+        display: flex;
+      }
+    }
+
+    .form-inline.input-resource-wrapper {
+      @extend .design-box, .trackback-area;
+      label {
+        margin-right: rem-calc(10);
+      }
+    }
+  }
+
+  .portlet-header {
+    @media #{$large-up} {
+      width: 66.6667%;
     }
   }
 
@@ -60,7 +96,7 @@
 
   // END: Overview-Menu
 
-  div.entry {
+  div.widget-mode-simple-entry {
     @extend .design-box;
     margin-bottom: rem-calc(15);
     padding: rem-calc(10) rem-calc(20) rem-calc(20);
@@ -68,6 +104,13 @@
     @media #{$large-up} {
       margin-bottom: rem-calc(30);
     }
+  }
+
+  .widget-mode-detail .widget-mode-detail-header .widget-mode-detail-text {
+    @extend .design-box;
+    padding: rem-calc(10) rem-calc(20) rem-calc(20);
+    border-style: none;
+    margin-bottom: 0;
   }
 
   .entry-date {
@@ -88,9 +131,8 @@
     }
   }
 
-  .entry-body {
+  .widget-mode-detail-text p {
     @extend .sb-text;
-    margin-bottom: rem-calc(15);
   }
 
   .entry-footer {
@@ -153,56 +195,6 @@
     }
   }
 
-  .entry-navigation {
-    @extend .row;
-    padding-left: rem-calc(15);
-    padding-right: rem-calc(15);
-    background: none;
-    border: 0;
-
-    a.previous,
-    a.next {
-      @extend .h2-metainfo;
-      background: $white;
-      padding: 6.5px 10px;
-      border-radius: rem-calc(5);
-
-      &:active,
-      &:hover,
-      &:focus {
-        background-color: $dark-gray;
-        color: $white;
-      }
-    }
-
-    span.previous,
-    span.next {
-      display: none;
-    }
-
-    a.previous {
-      &:before {
-        content: 'R';
-        speak: none;
-        font-family: 'govdata';
-        font-weight: bold;
-        padding-right: 5px;
-        vertical-align: middle;
-      }
-    }
-
-    a.next {
-      &::after {
-        content: 'B';
-        speak: none;
-        font-family: 'govdata';
-        font-weight: bold;
-        padding-left: 5px;
-        vertical-align: middle;
-      }
-    }
-  }
-
   .stats {
     color: $black;
     display: inline-block;
@@ -215,7 +207,6 @@
 
   // --- subscribe bar
   .subscribe {
-    @extend .row;
     padding: rem-calc(15);
 
     a {
@@ -226,8 +217,12 @@
   }
 
   // --- Pagination
+  .page-item.active .page-link {
+    background-color: $dark-gray;
+    border-color: $light-gray;
+  }
+
   .taglib-page-iterator {
-    @extend .row;
   }
 
   .lfr-pagination {
@@ -267,19 +262,54 @@
   }
 
   // --- blog details view
-  .taglib-header {
-    @extend .row;
+  .widget-mode-detail-header {
     border: 0;
 
-    .header-title {
+    .title {
       @extend .sb-bigtitle;
       color: $black;
       white-space: normal;
+      margin-top: 0;
     }
 
     .header-back-to a {
       margin-top: 24px;
       padding: 0.4em;
+    }
+  }
+
+  .container-fluid-max-xl {
+    max-width: none;
+  }
+
+  // fix back icon next to title
+  .portlet-icon-back {
+    margin-left: 16.67%;
+    padding-left: rem-calc(15);
+    height: 3rem;
+    width: 4rem;
+    line-height: 40px;
+    text-align: left;
+
+    @media #{$medium-down} {
+      margin-left: rem-calc(15);
+      width: 3rem;
+    }
+
+    @media #{$small-only} {
+      padding-left: 0;
+      width: 2rem;
+    }
+
+    .lexicon-icon-angle-left {
+      height: 2rem;
+      width: 2rem;
+      margin-top: 0;
+
+      @media #{$medium-down} {
+        height: 1.5rem;
+        width: 1.5rem;
+      }
     }
   }
 }
@@ -293,26 +323,5 @@
   .taglib-icon {
     padding: 6.5px 10px;
     display: block;
-  }
-}
-
-// fix back icon next to title
-.aui .header-back-to .icon-circle-arrow-left::before {
-  content: 'D';
-  speak: none;
-  font-family: 'govdata';
-}
-
-// fix RSS icon
-.taglib-rss {
-  img {
-    display: none;
-  }
-
-  .taglib-text::before {
-    content: 'C';
-    speak: none;
-    font-family: govdata;
-    margin-right: .5em;
   }
 }

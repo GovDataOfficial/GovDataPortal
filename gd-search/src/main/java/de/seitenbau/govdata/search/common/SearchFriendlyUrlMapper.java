@@ -10,24 +10,26 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringEncoder;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.URLStringEncoder;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.util.PortalUtil;
 
 public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
 {
   final String[] validParameters = {"q", "f", "s", "boundingbox", "start", "end"};
   final Pattern findParameterRegex = Pattern.compile("/([^/]*)/([^/]*)");
+  final String renderParameterPrefix = "p_r_p_x_http://portlet.govdata.dev.seitenbau.net_";
   
   private static final StringEncoder _urlEncoder = new URLStringEncoder();
 
   @Override
   public String buildPath(LiferayPortletURL liferayPortletURL)
   {
+
     Map<String, String> routeParameters = new HashMap<String, String>();
 
     buildRouteParameters(liferayPortletURL, routeParameters);
@@ -45,6 +47,8 @@ public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
         // remove parameter to signal Liferay "we handled it"
         routeParameters.remove(param);
       }
+      // filter namespaced params
+      liferayPortletURL.addParameterIncludedInPath(renderParameterPrefix + param);
     }
 
     String friendlyURLPath = sb.toString();
@@ -91,7 +95,7 @@ public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
       routeParameters.put(param, "");
     }
     
-    String portletId = getPortletId(routeParameters);
+    String portletId = getPortletId();
 
     if (Validator.isNull(portletId))
     {

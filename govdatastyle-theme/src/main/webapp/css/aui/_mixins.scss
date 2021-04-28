@@ -577,7 +577,7 @@
 
   // Set the container width, and override it for fixed navbars in media queries
   .container,
-  .navbar-static-top .container,
+  .navbar-top .container,
   .navbar-fixed-top .container,
   .navbar-fixed-bottom .container {
     @include grid-core-span($gridColumns, $gridColumnWidth, $gridGutterWidth);

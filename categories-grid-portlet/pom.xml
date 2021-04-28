@@ -5,49 +5,43 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>3.8.0</version>
+    <version>4.0.0</version>
   </parent>
   <artifactId>categories-grid-portlet</artifactId>
   <packaging>war</packaging>
   <name>categories-grid-portlet</name>
-  <scm>
-    <developerConnection>scm:git:git@git.dev.seitenbau.net:bmi-govdata-portal/categories-grid-portlet</developerConnection>
-  </scm>
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
-    <plugins>
-      <plugin>
-        <groupId>com.liferay.maven.plugins</groupId>
-        <artifactId>liferay-maven-plugin</artifactId>
-        <version>${liferay.version}</version>
-        <configuration>
-          <autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
-          <liferayVersion>${liferay.version}</liferayVersion>
-          <pluginType>portlet</pluginType>
-        </configuration>
-      </plugin>
-    </plugins>
   </build>
   <dependencies>
     <dependency>
       <groupId>com.liferay.portal</groupId>
-      <artifactId>portal-service</artifactId>
+      <artifactId>com.liferay.portal.kernel</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.liferay.portal</groupId>
-      <artifactId>util-bridges</artifactId>
+      <artifactId>com.liferay.util.taglib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>util-taglib</artifactId>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.util.tracker</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>util-java</artifactId>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.framework</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -89,32 +83,15 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.webflow</groupId>
-      <artifactId>spring-webflow</artifactId>
-      <version>${spring.webflow.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.webflow</groupId>
-          <artifactId>spring-js-resources</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
-      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>taglibs</groupId>
       <artifactId>standard</artifactId>
       <version>1.1.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.portlet</groupId>
-      <artifactId>portlet-api</artifactId>
     </dependency>
 
     <dependency>

@@ -126,6 +126,8 @@ function initializeComments() {
     addComment($('#newCommentInput').val());
   });
   $('#newCommentSubmit.anonymoususer').click(function() {
+    // set auth token for login form
+    $('#pAuthToken').val(Liferay.authToken);
     // trigger modal login and set callbacks
 
     window.namespace = 'govdatacomments';

@@ -6,10 +6,10 @@ package de.seitenbau.govdata.navigation;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 
-import org.elasticsearch.common.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Enthält Hilfsmethoden, die an mehreren Stellen im Code genutzt werden.

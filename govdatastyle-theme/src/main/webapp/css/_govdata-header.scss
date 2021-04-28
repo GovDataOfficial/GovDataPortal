@@ -216,7 +216,7 @@ $search-area-max-width: rem-calc(770);
 }
 
 .kartensuche-map {
-  background-image: url('$stylepath/images/teaserband_map.png');
+  background-image: url($theme-image-path + '/teaserband_map.png');
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: contain;
@@ -227,7 +227,7 @@ $search-area-max-width: rem-calc(770);
 
 // conditional styling (big / small header?)
 .show-big-header {
-  background-image: url($stylepath + '/images/datavisuals/connectionmap.jpg');
+  background-image: url($theme-image-path + '/datavisuals/connectionmap.jpg');
 
   .gd-search-searchbox {
     @media #{$small-only} {

@@ -36,8 +36,6 @@ Die einzelnen Java-Komponenten der Open Data Platform sind als Portlets umgesetz
 
 [boxes-portlet](boxes-portlet): Zeigt neuste Datensätze, Dokumente und Apps (Startseite)
 
-[cache-scheduler](cache-scheduler): Hält die zwischengespeicherten Inhalte von categories-grid-portlet und boxes-portlet aktuell.
-
 [gd-search](gd-search): Zeigt die Suchmaske und die Suchergebnis-Liste mit Filtern an. Die Suchanfragen erfolgen an Elasticsearch, die die nötigen Informationen für die Darstellung der Suchergebnissliste liefert. Für die Anzeige der Datensatzdetailseite werden die Informationen per opendataregistry-client von CKAN holt. Das Portlet enthält auch einen Hook, mit dem die Liferay-Inhalte, z.B. Blog-Beiträge in den Elasticsearch-Index geschrieben werden.
 
 [gd-edit-portlet](gd-edit-portlet): Erlaubt das erstellen und pflegen von Metadaten per Formular und opendataregistry-client.
@@ -53,8 +51,6 @@ Die einzelnen Java-Komponenten der Open Data Platform sind als Portlets umgesetz
 [screennamevalidator-hook](screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
 
 [language-hook](language-hook): Dient der Internationalisierung von Texten.
-
-[errorpages-hook](errorpages-hook): Zeigt angepasste Fehlerseiten an.
 
 [Layout20-80-layouttpl](Layout20-80-layouttpl): Wird als Layout für die Seiten unter dem Bereich Informationen genutzt.
 

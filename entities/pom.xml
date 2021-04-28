@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>3.8.0</version>
+    <version>4.0.0</version>
   </parent>
   <artifactId>entities</artifactId>
   <packaging>pom</packaging>
@@ -17,15 +17,24 @@
     <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
       <plugin>
-        <groupId>com.liferay.maven.plugins</groupId>
-        <artifactId>liferay-maven-plugin</artifactId>
-        <version>${liferay.version}</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
-          <liferayVersion>${liferay.version}</liferayVersion>
-          <pluginName>entities-portlet</pluginName>
-          <pluginType>portlet</pluginType>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -40,7 +49,7 @@
     </plugins>
   </build>
   <modules>
-    <module>entities-portlet</module>
-    <module>entities-portlet-service</module>
+    <module>entities-api</module>
+    <module>entities-service</module>
   </modules>
 </project>

@@ -1,0 +1,15 @@
+Bundle-Name: language-hook
+Bundle-SymbolicName: de.seitenbau.govdata.languagehook
+Bundle-Version: 1.0.0
+-metatype: *
+-plugin.metatype: com.liferay.ant.bnd.metatype.MetatypePlugin
+-plugin.resourcebundle: com.liferay.ant.bnd.resource.bundle.ResourceBundleLoaderAnalyzerPlugin
+Provide-Capability:\
+    liferay.resource.bundle;\
+        resource.bundle.base.name="content.Language",\
+    liferay.resource.bundle;\
+        bundle.symbolic.name=com.liferay.blogs.web;\
+        resource.bundle.aggregate:String="(bundle.symbolic.name=de.seitenbau.govdata.languagehook),(bundle.symbolic.name=com.liferay.blogs.web)";\
+        resource.bundle.base.name="content.Language";\
+        service.ranking:Long="2";\
+        servlet.context.name=blogs-web

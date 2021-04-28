@@ -17,12 +17,31 @@
   margin-bottom: rem-calc(30);
 }
 
+// portlet header fix
+.aui {
+  .portlet-header {
+    margin: 0 auto;
+    max-width: rem-calc(1440 - 1);
+    width: 100%;
+
+    h1 {
+      padding-left: rem-calc(15);
+      padding-right: rem-calc(15);
+
+      @media #{$large-up} {
+        padding-left: rem-calc(24);
+        padding-right: rem-calc(24);
+      }
+    }
+  }
+}
+
 // Style for the webcontent-box used on pages
 .aui .portlet-journal-content {
   @extend .design-box;
   border-width: 0 0 1px;
 
-  .portlet-topper h1 {
+  .portlet-header h1 {
     padding: 0;
   }
 
@@ -108,7 +127,7 @@ h3.header-title {
   }
 }
 
-.aui .btn {
+.aui .btn:not(.btn-unstyled) {
   @extend .h2-metainfo;
   background: $dark-gray;
   border: 1px solid $dark-gray;
@@ -137,7 +156,7 @@ h3.header-title {
   }
 }
 
-.aui .btn-danger {
+.aui .btn.btn-danger {
   background-color: $deletered;
   border: 1px solid $deletered;
 
@@ -276,7 +295,7 @@ h3.header-title {
   @extend .h2-metainfo;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: url($stylepath + '/images/select-arrow-down.png') no-repeat right center $dark-gray;
+  background: url($theme-image-path + '/select-arrow-down.png') no-repeat right center $dark-gray;
   border: 0;
   border-radius: 0;
   box-shadow: 1px 1px 1px $kontur-gray;
@@ -345,7 +364,7 @@ h3.header-title {
 
 // external links
 .portlet-journal-content,
-.portlet-blogs .entry-body,
+.portlet-blogs .widget-mode-detail-text p,
 .link-to-source,
 .searchdetails .h2-teaser {
   a[href]::after {
@@ -365,7 +384,7 @@ h3.header-title {
   a[href^="https://www.govdata"],
   a[href^="http://localhost"], //TODO: Remove localhost, gd.swe... for production....
   a[href^="https://localhost"],
-  a[href*="gd.swe.seitenbau.net"] {
+  a[href*="gd.bmi.dev.seitenbau.net"] {
     &::after {
       display: none;
     }
@@ -550,5 +569,164 @@ h3.header-title {
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $link-blue;
       border-color: $link-blue;
     }
+  }
+}
+
+// buttons for modal screen
+.aui {
+  .modal-header {
+    .btn.close {
+      display: inline-block;
+      padding: 0;
+    }
+  }
+
+  .modal-body {
+    .navigation ul {
+      margin: 0;
+    }
+  }
+}
+
+.col-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.boxes-portlet,
+.layout-20-80,
+.portlet-login,
+footer {
+  .row {
+    @extend .row;
+    max-width: $row-width;
+  }
+}
+
+.categoriesPane.row,
+.contentPane.row,
+.gd-search-titlearea.row,
+.share-section.row,
+.searchmap-container .row,
+.gd-search-result-portlet .row,
+.gd-search-details-portlet .row,
+.gd-search-ext-portlet .row,
+.delete-user-area .row,
+.portlet-message-boards section,
+.portlet-site-map,
+.portlet-login,
+.portlet-forms-display,
+#metadataEditForm .row {
+  @extend .row;
+  max-width: $row-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.portlet-users-admin {
+  .row {
+    display: flex;
+  }
+  .menubar-vertical-expand-lg.menubar-transparent {
+    .nav-link:hover, .nav-link:active {
+      color: $white;
+    }
+  }
+}
+
+.portlet-login {
+  .row {
+    display: flex;
+  }
+  div:not(.col-md-6):not(.taglib-captcha) {
+    > div.taglib-captcha > div.input-text-wrapper,
+    > div.input-text-wrapper {
+      input {
+        max-width: 30rem;
+      }
+      label {
+        display: block;
+      }
+    }
+  }
+}
+
+// Hide language selector
+// a) on user name fields form
+.form-group.language-selector {
+  display: none;
+}
+// b) on terms of use portlet, email verification portlet and password reset portlet
+#portlet_terms-of-use, #portlet_verify-email-address, #portlet_new-password {
+  .sheet-header .dropdown.lfr-icon-menu {
+    display: none;
+  }
+}
+
+// Foren (message boards portlet)
+.portlet-message-boards {
+  .main-content-body {
+    padding-bottom: 20px;
+  }
+
+  .statistics-panel {
+    .row {
+      display: flex;
+    }
+
+    .list-group-title {
+      font-size: 1.125rem;
+      line-height: 1.5;
+    }
+
+    .list-group-subtitle {
+      font-size: inherit;
+      line-height: inherit;
+    }
+  }
+
+  .basic-search {
+    margin-top: 20px;
+
+    .input-group-btn {
+      margin-left: 5px;
+      padding-bottom: 10px;
+
+      > button:nth-child(1) {
+        line-height: 1;
+        padding: 0 1em;
+      }
+    }
+  }
+
+  .searchcontainer {
+    .list-group-item {
+      .h5, h4 {
+        font-size: 1.5rem;
+      }
+      h5 {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .panel-heading {
+    span.h5 {
+      font-size: 1rem;
+    }
+
+    .social-interaction .ratings {
+      .btn:not(:last-child) {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+// Fix gap between the last column and the columns before in tables
+table {
+  th[class*="column"] + th[class*="column"]:last-child,
+  td[class*="column"] + td[class*="column"]:last-child {
+    float: none;
   }
 }

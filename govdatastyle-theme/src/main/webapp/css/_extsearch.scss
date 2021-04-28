@@ -41,7 +41,7 @@
   .fieldcontentarea select {
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: url($stylepath + '/images/select-arrow-down-gray.png') no-repeat right center $dark-gray;
+    background: url($theme-image-path + '/select-arrow-down-gray.png') no-repeat right center $dark-gray;
     width: 100%;
   }
 
@@ -128,6 +128,27 @@
       &:focus {
         box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 3px $link-blue;
       }
+    }
+  }
+
+  .searchext-helparea {
+    margin-top: 2em;
+  
+    @media #{$large-up} {
+      padding: 0 rem-calc(15);
+    }
+  }
+  
+  .modbutton-area,
+  #fieldlist .row {
+    @media #{$large-up} {
+      padding: 0 rem-calc(15);
+    }
+  }
+  
+  .searchext-modbuttons {
+    @media #{$medium-up} {
+      display: inline-block;
     }
   }
 }
@@ -228,7 +249,7 @@
   .date-container input {
     width: 100%;
     padding: 13px 50px;
-    background: url($stylepath + '/images/input-calendar.png') no-repeat right center $white;
+    background: url($theme-image-path + '/input-calendar.png') no-repeat right center $white;
   }
 
   .flex-container {
@@ -268,26 +289,5 @@
     padding: 14px 0 0 14px;
     position: absolute;
     top: 0;
-  }
-}
-
-.searchext-helparea {
-  margin-top: 2em;
-
-  @media #{$large-up} {
-    padding: 0 rem-calc(15);
-  }
-}
-
-.modbutton-area,
-#fieldlist .row {
-  @media #{$large-up} {
-    padding: 0 rem-calc(15);
-  }
-}
-
-.searchext-modbuttons {
-  @media #{$medium-up} {
-    display: inline-block;
   }
 }

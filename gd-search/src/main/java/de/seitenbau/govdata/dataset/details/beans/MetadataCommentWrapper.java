@@ -1,16 +1,15 @@
 package de.seitenbau.govdata.dataset.details.beans;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.UserConstants;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserConstants;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class MetadataCommentWrapper extends de.fhg.fokus.odp.entities.model.MetadataCommentWrapper
@@ -74,7 +73,7 @@ public class MetadataCommentWrapper extends de.fhg.fokus.odp.entities.model.Meta
     log.trace(method + "Start");
 
     // Set default image as fallback
-    String result = UserConstants.getPortraitURL(themeDisplay.getPathImage(), true, 0);
+    String result = UserConstants.getPortraitURL(themeDisplay.getPathImage(), true, 0, null);
     
     if (themeDisplay == null)
     {

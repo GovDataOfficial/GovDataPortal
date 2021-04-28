@@ -1,5 +1,5 @@
-.web-form-portlet {
-  .portlet-content {
+.portlet-forms-display {
+  .portlet-content-container {
     @extend .design-box;
     @extend .design-box-padding;
   }
@@ -46,10 +46,41 @@
     }
   }
 
+  // hide contact form name
+  .ddm-form-basic-info:not(.ddm-form-success-page) {
+    display: none;
+  }
 }
 
-.aui .web-form-portlet .portlet-topper h1 {
-  padding: 0;
+.aui {
+  .portlet-forms {
+    .ddm-form-builder-app .lfr-ddm-form-page > .row {
+      margin-left: 0;
+    }
+    .container-fluid-max-xl {
+        max-width: rem-calc(760);
+    }
+    .container-fluid {
+      margin-left: 0;
+    }
+    .portlet-forms-display .portlet-header h1 {
+      padding: 0;
+    }
+    .form-builder-select-field .select-field-trigger {
+      cursor: pointer;
+      max-width: 30rem;
+    }
+    .liferay-ddm-form-field-paragraph {
+      color: inherit;
+    }
+    p.ddm-label {
+      display: block;
+      font-family: inherit;
+    }
+    input[type="text"].ddm-field-text {
+      max-width: 30rem;
+    }
+  }
 }
 
 .form-field-required {

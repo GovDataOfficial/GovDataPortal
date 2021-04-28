@@ -21,36 +21,35 @@ package de.fhg.fokus.odp.categoriesgrid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.cache.MultiVMPool;
+import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.PropsUtil;
 
 import de.fhg.fokus.odp.categoriesgrid.model.CategoryViewModel;
 import de.seitenbau.govdata.cache.BaseCache;
+import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.filter.FilterPathUtils;
 import de.seitenbau.govdata.filter.SearchConsts;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
-import de.seitenbau.govdata.odp.registry.ODRClient;
-import de.seitenbau.govdata.odp.registry.ckan.Constants;
 import de.seitenbau.govdata.odp.registry.model.Category;
-import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
+import de.seitenbau.govdata.servicetracker.MultiVMPoolServiceTracker;
 
 /**
  * The class constitutes a bean that serves as a source for the categories on the categories-grid
@@ -61,28 +60,52 @@ import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
  */
 @Controller(value = "categoriesGridController")
 @RequestMapping("VIEW")
-@SessionAttributes({ "categories" })
 public class CategoriesGrid implements Serializable
 {
-    /** The logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(CategoriesGrid.class);
+  /** The logger. */
+  private static final Logger LOG = LoggerFactory.getLogger(CategoriesGrid.class);
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 1L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 1L;
 
-    /** The prop name authorization key. */
-    private final String PROP_NAME_AUTHORIZATION_KEY = "authenticationKey";
+  /** The time to live in seconds. */
+  private static final int CLUSTERED_CACHE_TTL_IN_SECONDS = 7200;
 
-    /** The prop name ckan url. */
-    private final String PROP_NAME_CKAN_URL = "cKANurl";
+  /** The cache categories key. */
+  private final String CACHE_CATEGORIES_KEY = "categories";
 
-    /** The cache categories key. */
-    private final String CACHE_CATEGORIES_KEY = "categories";
+  private MultiVMPool multiVMPool;
 
-    /** The odr. */
-    private ODRClient odr;
-    
-    private GovDataNavigation govDataNavigation;
+  private GovDataNavigation govDataNavigation;
+
+  private MultiVMPoolServiceTracker multiVMPoolTracker;
+
+  private boolean clusteredCacheAvailable = true;
+
+  private CategoryCache categoryCache;
+
+  @PostConstruct
+  public void init()
+  {
+    // read clustered cache service
+    multiVMPoolTracker = new MultiVMPoolServiceTracker(this);
+    multiVMPoolTracker.open();
+    multiVMPool = multiVMPoolTracker.getService();
+    if (multiVMPool == null)
+    {
+      clusteredCacheAvailable = false;
+      LOG.warn("The required service 'MultiVMPool' is not available.");
+    }
+    // set TTL for fallback category cache
+    categoryCache.setMaxCacheTimeHours(1);
+    LOG.debug("Initialize complete");
+  }
+
+  @PreDestroy
+  public void shutdown()
+  {
+    multiVMPoolTracker.close();
+  }
 
   /**
    * Erstellt die Objekte für die Anzeige.
@@ -94,61 +117,85 @@ public class CategoriesGrid implements Serializable
    * @throws PortalException
    * @throws SystemException
    */
-    @RenderMapping
-    public String showSearchResults(
-        RenderRequest request,
-        RenderResponse response,
-        Model model) throws PortalException, SystemException
-    {
-      
-      List<Category> categories = getCategories();
-      List<CategoryViewModel> categoryViewModels = mapToCategoryViewModels(categories);
-      
-      model.addAttribute("categories", categoryViewModels);
-      return "view";
-    }
+  @RenderMapping
+  public String showSearchResults(
+      RenderRequest request,
+      RenderResponse response,
+      Model model) throws PortalException, SystemException
+  {
+    final String method = "showSearchResults() : ";
+    LOG.trace(method + "Start");
+
+    List<Category> categories = getCategories();
+    List<CategoryViewModel> categoryViewModels = mapToCategoryViewModels(categories);
+
+    model.addAttribute("categories", categoryViewModels);
+    LOG.trace(method + "End");
+    return "grid";
+  }
 
   /**
    * Gets the categories.
    * 
    * @return the categories
    */
-  @SuppressWarnings("unchecked")
   private List<Category> getCategories()
   {
-    List<Category> categories =
-        (List<Category>) MultiVMPoolUtil.getCache(BaseCache.CACHE_NAME_CATEGORIES_GRID)
-            .get(CACHE_CATEGORIES_KEY);
+    final String method = "getCategories() : ";
+    LOG.trace(method + "Start");
+
+    List<Category> categories = readCategoriesFromClusteredCache();
 
     if (categories == null)
     {
-
-      LOG.info("Empty {} cache, fetching categories from CKAN.", CACHE_CATEGORIES_KEY);
-      Properties props = new Properties();
-      props.setProperty("ckan.authorization.key", PropsUtil.get(PROP_NAME_AUTHORIZATION_KEY));
-      props.setProperty("ckan.url", PropsUtil.get(PROP_NAME_CKAN_URL));
-
-      odr = OpenDataRegistry.getClient(Constants.OPEN_DATA_PROVIDER_NAME);
-      odr.init(props);
-
-      List<Category> list = odr.listCategories();
-      categories = new ArrayList<Category>();
-
-      for (Category category : list)
-      {
-        if ("group".equalsIgnoreCase(category.getType()))
-        {
-          categories.add(category);
-        }
-      }
-      Collections.sort(categories, new CategoriesTitleComparator());
-      // safe cast: LinkedList
-      MultiVMPoolUtil.getCache(BaseCache.CACHE_NAME_CATEGORIES_GRID)
-          .put(CACHE_CATEGORIES_KEY, (Serializable) categories);
+      LOG.info("Clustered cache empty or expired. Re-reading categories...");
+      categories = categoryCache.getCategoriesSortedByTitle();
+      updateCache(categories);
     }
 
+    LOG.trace(method + "End");
     return categories;
     }
+
+  private void updateCache(List<Category> categories)
+  {
+    if (clusteredCacheAvailable)
+    {
+      LOG.debug("Update clustered cache.");
+      // expects that the timeToLive parameter are seconds
+      getPortalCache().put(CACHE_CATEGORIES_KEY, (Serializable) categories, CLUSTERED_CACHE_TTL_IN_SECONDS);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private List<Category> readCategoriesFromClusteredCache()
+  {
+    final String method = "readCategoriesFromClusteredCache() : ";
+    LOG.trace(method + "Start");
+
+    List<Category> categories = null;
+    if (clusteredCacheAvailable)
+    {
+      LOG.debug("Start reading categories from clustered cache...");
+      categories = (List<Category>) getPortalCache().get(CACHE_CATEGORIES_KEY);
+      LOG.debug("Finished reading categories from clustered cache.");
+    }
+    else
+    {
+      LOG.info("Clustered cache service MultiVMPool is unavailable. Using not clustered cache as fallback.");
+    }
+    LOG.trace(method + "End");
+    return categories;
+  }
+
+  @SuppressWarnings("unchecked")
+  private PortalCache<String, Serializable> getPortalCache()
+  {
+    PortalCache<String, Serializable> portalCache =
+        (PortalCache<String, Serializable>) multiVMPool
+            .getPortalCache(BaseCache.CACHE_NAME_CATEGORIES_GRID);
+    return portalCache;
+  }
 
   /**
    * Map to CategoryViewModels and add actionURLs
@@ -195,8 +242,19 @@ public class CategoriesGrid implements Serializable
 
   }
 
+  @Autowired
   public void setGovDataNavigation(GovDataNavigation govDataNavigation)
   {
     this.govDataNavigation = govDataNavigation;
   }
+
+  /**
+   * @param categoryCache the categoryCache to set
+   */
+  @Autowired
+  public void setCategoryCache(CategoryCache categoryCache)
+  {
+    this.categoryCache = categoryCache;
+  }
+
 }

@@ -12,7 +12,7 @@
     display: none;
   }
 
-  .aui .navbar-static-top .navbar-inner {
+  .aui .navbar-top .navbar-inner {
     background: $white !important;
     border: 0;
     box-shadow: none !important;
@@ -20,12 +20,13 @@
 }
 
 // restyle remaining buttons
-.portlet-dockbar .navbar {
+.aui .portlet-dockbar .navbar {
   .navbar-inner {
     padding: 0;
   }
 
-  .btn-navbar {
+  .btn-navbar,
+  .navbar-toggler {
     background: none;
     border: 0;
     border-radius: 0;
@@ -44,7 +45,8 @@
       color: $white;
     }
 
-    .icon-reorder {
+    .icon-reorder,
+    .navbar-toggler-icon {
       vertical-align: middle;
 
       &::before {
@@ -94,6 +96,7 @@
 
   ul {
     margin: 0;
+    padding: 0;
   }
 
   .off-canvas-nav,

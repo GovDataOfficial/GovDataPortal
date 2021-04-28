@@ -1,3 +1,6 @@
+#metadataEditForm .row .row {
+  @include grid-row(nest);
+}
 .aui .editdataset {
   width: 100%;
 
@@ -22,7 +25,7 @@
   select {
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: url($stylepath + '/images/select-arrow-down-gray.png') no-repeat right center $white;
+    background: url($theme-image-path + '/select-arrow-down-gray.png') no-repeat right center $white;
   }
 
   textarea {

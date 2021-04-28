@@ -6,15 +6,13 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
@@ -29,6 +27,7 @@ import de.seitenbau.govdata.search.gui.model.LicenseViewModel;
 import de.seitenbau.govdata.search.gui.model.ResourceViewModel;
 import de.seitenbau.govdata.search.index.model.HitDto;
 import de.seitenbau.govdata.search.index.model.ResourceDto;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Mappt zwischen {@link HitDto} und {@link HitViewModel}.
@@ -112,8 +111,7 @@ public class SearchResultsViewMapper
     }
     else if (SearchConsts.TYPE_BLOG.equals(type))
     {
-      url = gdNavigation.getBlogEntryUrl(
-          searchHit.getEntryClassPK(), searchHit.getPortletId(), searchHit.getGroupId());
+      url = gdNavigation.getBlogEntryUrl(searchHit.getEntryClassPK(), searchHit.getGroupId());
       source = SearchConsts.SOURCE_PORTAL;
     }
     else

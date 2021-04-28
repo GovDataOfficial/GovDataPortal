@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>3.8.0</version>
+    <version>4.0.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -19,12 +19,17 @@
     <!-- portlet, liferay -->
     <dependency>
       <groupId>com.liferay.portal</groupId>
-      <artifactId>portal-service</artifactId>
+      <artifactId>com.liferay.portal.kernel</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.liferay.portal</groupId>
-      <artifactId>util-taglib</artifactId>
+      <artifactId>com.liferay.portal.impl</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.string</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -43,16 +48,9 @@
     </dependency>
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
-      <artifactId>entities-portlet</artifactId>
+      <artifactId>entities-api</artifactId>
       <version>${project.version}</version>
-      <scope>runtime</scope>
-      <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>de.fhg.fokus.odp</groupId>
-      <artifactId>entities-portlet</artifactId>
-      <version>${project.version}</version>
-      <classifier>lib</classifier>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
@@ -98,7 +96,6 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
-      <version>1.2</version>
     </dependency>
 
     <dependency>
@@ -126,10 +123,10 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>util-slf4j</artifactId>
-    </dependency>
+      <dependency>
+        <groupId>com.liferay.portal</groupId>
+        <artifactId>com.liferay.util.slf4j</artifactId>
+      </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
@@ -173,15 +170,7 @@
     <finalName>${project.artifactId}</finalName>
 
     <plugins>
-      <plugin>
-        <groupId>com.liferay.maven.plugins</groupId>
-        <artifactId>liferay-maven-plugin</artifactId>
-        <configuration>
-          <autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
-          <liferayVersion>${liferay.version}</liferayVersion>
-          <pluginType>portlet</pluginType>
-        </configuration>
-      </plugin>
+      <!-- TODO: add respective Liferay builder if needed -->
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
       </plugin>
@@ -199,7 +188,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <version>2.6</version>
             <configuration>
               <warName>${project.name}</warName>
               <packagingExcludes>**/suche-gui*.properties/**</packagingExcludes>

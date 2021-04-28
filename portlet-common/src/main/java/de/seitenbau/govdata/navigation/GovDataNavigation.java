@@ -8,15 +8,15 @@ import javax.portlet.PortletURL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.liferay.blogs.model.BlogsEntry;
+import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
+import com.liferay.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.blogs.model.BlogsEntry;
-import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
-import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.constants.QueryParamNames;
@@ -24,7 +24,8 @@ import de.seitenbau.govdata.constants.QueryParamNames;
 @Component
 public class GovDataNavigation
 {
-  @Autowired
+  private final static String BLOG_PORTLET_NAME = "com_liferay_blogs_web_portlet_BlogsPortlet";
+
   private LiferayNavigation liferayNavigation;
 
   /**
@@ -157,40 +158,41 @@ public class GovDataNavigation
   /**
    * Returns the url for a blog entry
    * @param entryClassPK
-   * @param portletId
    * @param groupId
    * @return url of the blog entry
    * @throws NumberFormatException
    * @throws PortalException
    * @throws SystemException
    */
-  public String getBlogEntryUrl(String entryClassPK, String portletId, Long groupId)
+  public String getBlogEntryUrl(String entryClassPK, Long groupId)
       throws NumberFormatException, PortalException, SystemException
   {
     BlogsEntry blog = BlogsEntryLocalServiceUtil.getBlogsEntry(Long.parseLong(entryClassPK));
-    long plid = LayoutLocalServiceUtil.getDefaultPlid(groupId, false, portletId);
+    // Check if the blog portlet is available on any site by retrieving plid.
+    long plid = LayoutLocalServiceUtil.getDefaultPlid(groupId, false, BLOG_PORTLET_NAME);
     if (plid == 0)
     {
-      plid = LayoutLocalServiceUtil.getDefaultPlid(groupId, true, portletId);
+      plid = LayoutLocalServiceUtil.getDefaultPlid(groupId, true, BLOG_PORTLET_NAME);
     }
     if (plid != 0)
     {
       PortletURL url =
-          liferayNavigation.createLink(liferayNavigation.getRequestFromContext(), "neues", portletId);
-      PortletUtil.setParameterInPortletUrl(url, "struts_action", "/blogs/view_entry");
+          liferayNavigation.createLink(liferayNavigation.getRequestFromContext(), "neues", BLOG_PORTLET_NAME);
+      PortletUtil.setParameterInPortletUrl(url, "mvcRenderCommandName", "/blogs/view_entry");
       PortletUtil.setParameterInPortletUrl(url, "urlTitle", blog.getUrlTitle());
       return url.toString();
     }
     return "";
   }
 
+  @Autowired
   public void setLiferayNavigation(LiferayNavigation liferayNavigation)
   {
     this.liferayNavigation = liferayNavigation;
   }
   
   /**
-   * Creates the link to the CKAN-Represenation of the given metadataId
+   * Creates the link to the CKAN-Representation of the given metadataId
    * @param metadataId die Metadata ID/Name.
    * @return the URL.
    */
