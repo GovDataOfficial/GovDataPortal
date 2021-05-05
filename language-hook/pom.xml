@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>4.3.3</version>
+    <version>4.3.5</version>
   </parent>
   <artifactId>language-hook</artifactId>
   <dependencies>

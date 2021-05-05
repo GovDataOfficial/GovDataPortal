@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.5 2021-03-03
+
+* Replaced Captcha with honeypot
+* Disables editing screen name for all users except administrators
+
 ## 4.3.3 2021-02-09
 
 * Add checkbox for privacy policy agreement to create account and create guest account forms

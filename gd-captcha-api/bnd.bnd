@@ -1,0 +1,10 @@
+Bundle-Name: gd-captcha-api
+Bundle-SymbolicName: gd.captcha.api
+Bundle-Version: 1.0.0
+-metatype: *
+-plugin.metatype: com.liferay.ant.bnd.metatype.MetatypePlugin
+Export-Package: \
+    com.liferay.captcha.configuration,\
+    de.seitenbau.govdata.honeypot
+-includeresource: \
+    @commons-lang3-*.jar
