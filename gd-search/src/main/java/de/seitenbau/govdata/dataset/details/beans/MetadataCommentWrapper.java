@@ -33,8 +33,6 @@ public class MetadataCommentWrapper extends de.fhg.fokus.odp.entities.model.Meta
     {
       log.debug("No owner found for Liferay ID {} in comment {}", userLiferayId, getPrimaryKey());
     }
-    
-    
   }
 
   public String getAuthorScreenName()
@@ -43,7 +41,7 @@ public class MetadataCommentWrapper extends de.fhg.fokus.odp.entities.model.Meta
     log.trace(method + "Start");
 
     String result = LanguageUtil.get(themeDisplay.getLocale(), "anonymous");
-    if (owner != null)
+    if (!isGuest())
     {
       result = owner.getScreenName();
     }
@@ -58,7 +56,7 @@ public class MetadataCommentWrapper extends de.fhg.fokus.odp.entities.model.Meta
     log.trace(method + "Start");
 
     String result = LanguageUtil.get(themeDisplay.getLocale(), "anonymous");
-    if (owner != null)
+    if (!isGuest())
     {
       result = owner.getFullName();
     }
@@ -79,7 +77,7 @@ public class MetadataCommentWrapper extends de.fhg.fokus.odp.entities.model.Meta
     {
       log.debug(method + "themeDisplay is null!");
     }
-    else if (owner != null)
+    else if (!isGuest())
     {
       try
       {
@@ -93,6 +91,11 @@ public class MetadataCommentWrapper extends de.fhg.fokus.odp.entities.model.Meta
 
     log.trace(method + "End");
     return result;
+  }
+
+  private boolean isGuest()
+  {
+    return owner == null || !owner.isActive();
   }
 
   public void setThemeDisplay(ThemeDisplay themeDisplay)

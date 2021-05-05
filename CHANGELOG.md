@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.1.0 2020-11-06
+
+* Anonymize user name in comments posted by guests
+
 ## v4.0.0 2020-10-30
 
 * Update to Liferay 7 (e.g. switching to OSGI bundles and adapting GovData theme)
@@ -15,9 +19,9 @@
 ## v3.7.0 2019-12-19
 
 * Adapt CKAN binding to new CKAN version 2.8.3
-* Disable rating functionality, because the new CKAN version does not provide the required information no more
+* Disable rating functionality, because the new CKAN version does not provide the required information anymore
 * Add Python script for cleaning Elasticsearch index
-* Increase upload max file size from 10 to 100 MB
+* Increase upload max file size from 10 up to 100 MB
 
 ## v3.6.2 2019-11-28
 

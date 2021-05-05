@@ -49,6 +49,12 @@
     @media #{$large-up} {
       width: 66.6667%;
     }
+
+    @media #{$medium-down} {
+      margin-left: rem-calc(15);
+      margin-right: rem-calc(15);
+      width: auto;
+    }
   }
 
   // Overview-Menu: START

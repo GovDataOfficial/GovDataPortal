@@ -6,7 +6,10 @@
     <groupId>de.fhg.fokus.odp</groupId>
     <version>4.1.0</version>
   </parent>
-  <artifactId>gd-users-admin-fragment</artifactId>
+	<artifactId>gd-comment-taglib-fragment</artifactId>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
   <build>
     <plugins>
       <plugin>

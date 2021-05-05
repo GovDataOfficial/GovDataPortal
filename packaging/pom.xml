@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
   </parent>
   <artifactId>od-platform-packaging</artifactId>
   <packaging>deb</packaging>
@@ -44,7 +44,7 @@
                   <data>
                     <src>${project.basedir}/../</src>
                     <type>directory</type>
-                    <includes>**/*.war,**/language-hook/target/*.jar,**/gd-user-menu/target/*.jar,**/gd-users-admin-fragment/target/*.jar,**/gd-login-web-fragment/target/*.jar</includes>
+                    <includes>**/*.war,**/language-hook/target/*.jar,**/gd-user-menu/target/*.jar,**/gd-users-admin-fragment/target/*.jar,**/gd-login-web-fragment/target/*.jar,**/gd-comment-taglib-fragment/target/*.jar</includes>
                     <excludes>**/entities/**/*.war,**/liferay-core-portlets/*.war</excludes>
                     <mapper>
                       <type>perm</type>
