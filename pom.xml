@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>4.3.2</version>
+  <version>4.3.3</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -196,7 +196,7 @@
     <module>opendataregistry-client</module>
     <module>govdatastyle-theme</module>
     <module>boxes-portlet</module>
-    <module>screennamevalidator-hook</module>
+    <module>screenname-hook</module>
     <module>categories-grid-portlet</module>
     <module>Layout20-80-layouttpl</module>
     <module>gd-developers-corner-portlet</module>

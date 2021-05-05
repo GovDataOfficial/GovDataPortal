@@ -309,6 +309,13 @@
   }
 }
 
+// FastLoginPortlet forms
+.aui .dialog-iframe-popup {
+  .portlet-body, .portlet-boundary, .portlet-column, .portlet-layout {
+    height: inherit;
+  }
+}
+
 // portlet height when there is no content = 0
 .portlet-borderless-container {
   min-height: 0;

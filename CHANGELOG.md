@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.3 2021-02-09
+
+* Add checkbox for privacy policy agreement to create account and create guest account forms
+* Add custom screen name generator and move screen name validator into common screenname-hook
+
 ## v4.3.2 2021-01-28
 
 * Switch search field in extended search for type publisher

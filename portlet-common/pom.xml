@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.3.2</version>
+    <version>4.3.3</version>
   </parent>
   <artifactId>portlet-common</artifactId>
   <name>Portlet Core GovData</name>

@@ -53,8 +53,8 @@
     <#if nav_item.hasChildren()>
 
       <li class="${nav_item_css_class} dropdown" ${nav_item_attr_selected} role="presentation">
-        <button aria-haspopup='true' class="dropdown-toggle" title="${nav_item.getName()}" role="menuitem">
-          <span>${nav_item.iconURL()} ${nav_item.getName()}</span>
+        <button aria-haspopup='true' class="dropdown-toggle" title="${nav_item.getName()?esc}" role="menuitem">
+          <span>${nav_item.iconURL()} ${nav_item.getName()?esc}</span>
         </button>
 
         <ul class="child-menu" role="menu">
@@ -72,7 +72,7 @@
             </#if>
 
             <li class="${nav_child_css_class}" ${nav_child_attr_selected} role="presentation">
-              <a title="${nav_child.getName()}" href="${nav_child.getURL()}" ${nav_child.getTarget()} role="menuitem">${nav_child.getName()}</a>
+              <a title="${nav_child.getName()?esc}" href="${nav_child.getURL()}" ${nav_child.getTarget()} role="menuitem">${nav_child.getName()?esc}</a>
             </li>
           </#foreach>
         </ul>
@@ -81,8 +81,8 @@
     <#else>
 
       <li class="${nav_item_css_class}" ${nav_item_attr_selected} role="presentation">
-        <a title="${nav_item.getName()}" ${nav_item_lang} href="${nav_item.getURL()}" ${nav_item.getTarget()} role="menuitem">
-          <span>${nav_item.iconURL()} ${nav_item.getName()}</span>
+        <a title="${nav_item.getName()?esc}" ${nav_item_lang} href="${nav_item.getURL()}" ${nav_item.getTarget()} role="menuitem">
+          <span>${nav_item.iconURL()} ${nav_item.getName()?esc}</span>
         </a>
       </li>
 

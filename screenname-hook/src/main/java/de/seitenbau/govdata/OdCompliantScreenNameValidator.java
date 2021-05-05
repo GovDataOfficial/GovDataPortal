@@ -15,7 +15,7 @@
  * Platform. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
  */
 
-package de.fhg.fokus.odp;
+package de.seitenbau.govdata;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -40,7 +40,7 @@ public class OdCompliantScreenNameValidator implements ScreenNameValidator
 
   /**
    * Validate the screen name provided by the user
-   * @see com.liferay.portal.security.auth.ScreenNameValidator#validate(long, java.lang.String)
+   * @see com.liferay.portal.security.auth.ScreenNameValidator#validate(long, String)
    */
   @Override
   public boolean validate(long loginId, String screenName)

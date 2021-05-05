@@ -5,11 +5,11 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>4.3.2</version>
+    <version>4.3.3</version>
   </parent>
-  <artifactId>screennamevalidator-hook</artifactId>
+  <artifactId>screenname-hook</artifactId>
   <packaging>war</packaging>
-  <name>screennamevalidator-hook</name>
+  <name>screenname-hook</name>
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>

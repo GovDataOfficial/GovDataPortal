@@ -228,6 +228,13 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 				<liferay-captcha:captcha />
 			</c:if>
 		</clay:col>
+
+    <clay:col md="6">
+      <aui:input label="od.registration.privacy.agreement.label" name="privacy-agreement" type="checkbox">
+        <aui:validator name="required" />
+        <liferay-ui:message arguments="<%= "datenschutz" %>" key="od.registration.privacy.agreement.link.text" translateArguments="<%= false %>" />
+       </aui:input>
+    </clay:col>
 	</aui:fieldset>
 
 	<aui:button-row>

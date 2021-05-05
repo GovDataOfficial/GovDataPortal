@@ -48,7 +48,7 @@ Die einzelnen Java-Komponenten der Open Data Platform sind als Portlets umgesetz
 
 [govdatastyle-theme](govdatastyle-theme): Das Theme für das Design von http://www.govdata.de.
 
-[screennamevalidator-hook](screennamevalidator-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
+[screenname-hook](screenname-hook): Stellt sicher, dass in Liferay erzeugte Benutzernamen auch in CKAN valide sind.
 
 [language-hook](language-hook): Dient der Internationalisierung von Texten.
 

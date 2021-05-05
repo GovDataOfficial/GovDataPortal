@@ -1,3 +1,4 @@
+<#ftl output_format="HTML" auto_esc=false>
 <!DOCTYPE html>
 
 <#include init />
@@ -89,7 +90,7 @@
       </header>
 
       <section id="content">
-        <h2 class="hide-accessible" role="heading" aria-level="1">${the_title}</h2>
+        <h2 class="hide-accessible" role="heading" aria-level="1">${the_title?esc}</h2>
 
         <#if selectable>
           <@liferay_util["include"] page=content_include />
@@ -110,9 +111,9 @@
             <h2 class="share-label"><@liferay.language key="od.share" /></h2>
             <span class="shariff"
               data-services="[&quot;twitter&quot;, &quot;facebook&quot;, &quot;diaspora&quot;, &quot;mail&quot;]"
-              data-title="${the_title} - ${company_name}"
+              data-title="${the_title?esc} - ${company_name?esc}"
               data-mail-url="mailto:"
-              data-mail-subject="${the_title} - ${company_name}"></span>
+              data-mail-subject="${the_title?esc} - ${company_name?esc}"></span>
           </div>
           <div class="clearfix"></div>
         </div>
