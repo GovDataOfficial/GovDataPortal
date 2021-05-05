@@ -91,7 +91,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
   };
 
   // add simple Text fields with same behaviour
-  ['title', 'author', 'maintainer', 'notes'].forEach(function(item) {
+  ['title', 'publisher', 'maintainer', 'notes'].forEach(function(item) {
     fieldTypes[item] = {
       type: "textview",
       name: item,
@@ -468,7 +468,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
   // Parse existing parameters into Form
   var initializeForm = function(param) {
     // simple textfields
-    ['title', 'author', 'maintainer', 'notes'].forEach(function(item) {
+    ['title', 'publisher', 'maintainer', 'notes'].forEach(function(item) {
       if (param.activeFilters.hasOwnProperty(item)) {
         fieldList.add(Y.merge(fieldTypes[item], {
           value: param.activeFilters[item][0]

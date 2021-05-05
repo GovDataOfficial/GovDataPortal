@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.3.2 2021-01-28
+
+* Switch search field in extended search for type publisher
+
 ## v4.3.1 2021-01-22
 
 * Fix possible XSS security vulnerability in site template

@@ -97,7 +97,7 @@ public abstract class ESFieldConsts
 
     EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_TITLE, "title");
     EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_NOTES, "preamble");
-    EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_AUTHOR, "metadata.author");
+    EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_PUBLISHER, "metadata.publisher_name");
     EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_MAINTAINER, "metadata.maintainer");
 
     BOOL_FACET_MAP.put(SearchConsts.FACET_HAS_OPEN, HAS_OPEN);

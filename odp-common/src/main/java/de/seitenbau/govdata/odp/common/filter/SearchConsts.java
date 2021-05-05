@@ -96,7 +96,7 @@ public abstract class SearchConsts
   // fields used in extended search
   public static final String FILTER_EXT_TITLE = "title";
 
-  public static final String FILTER_EXT_AUTHOR = "author";
+  public static final String FILTER_EXT_PUBLISHER = "publisher";
 
   public static final String FILTER_EXT_MAINTAINER = "maintainer";
 
