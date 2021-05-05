@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.3.0 2021-01-19
+
+* Introduce new developer corner portlet with SPARQL editor
+* Update triple store when metadata has been edited
+
 ## v4.1.0 2020-11-06
 
 * Anonymize user name in comments posted by guests

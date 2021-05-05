@@ -7,6 +7,8 @@ $data-green: #1e5a5a;
 $dokument-violett: #503278;
 $app-blue: #284664;
 $blog-red: #5a0a0a;
+$devcorner-green: #064300;
+
 
 $link-blue: #009fe3;
 $white: #fff;
@@ -54,6 +56,10 @@ $checkbox-border: darken($kontur-gray, 10%);
   @include navcolor($black);
 }
 
+#layout_47 { // Entwicklerecke
+  @include navcolor($devcorner-green)
+}
+
 
 // colors for mediatype-icons (could have been an elegant for-loop, but liferay uses OLD sass-compiler)
 .mediatype-icon {
@@ -71,5 +77,8 @@ $checkbox-border: darken($kontur-gray, 10%);
   }
   &.mediatype-dokument {
     background-color: $dokument-violett;
+  }
+  &.mediatype-devcorner {
+    background-color: $devcorner-green;
   }
 }

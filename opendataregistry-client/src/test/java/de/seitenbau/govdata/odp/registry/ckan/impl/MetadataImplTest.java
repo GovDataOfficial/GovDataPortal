@@ -74,6 +74,67 @@ public class MetadataImplTest {
   }
 
   @Test
+  public void getIdentifierWithFallback_null() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.getIdentifierWithFallback()).isNull();
+  }
+
+  @Test
+  public void getIdentifierWithFallback_onlyMetadataId() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+    metadataBean.setId("ID");
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.getIdentifierWithFallback()).isEqualTo("ID");
+  }
+
+  @Test
+  public void getIdentifierWithFallback_MetadataId_and_Guid() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+    metadataBean.setId("ID");
+    metadataBean.getExtras().add(
+        createExtraBean(MetadataStringExtraFields.GUID.getField(), "guid"));
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.getIdentifierWithFallback()).isEqualTo("guid");
+  }
+
+  @Test
+  public void getIdentifierWithFallback_MetadataId_Guid_and_Identifier() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+    metadataBean.setId("ID");
+    metadataBean.getExtras().add(
+        createExtraBean(MetadataStringExtraFields.GUID.getField(), "guid"));
+    metadataBean.getExtras().add(
+        createExtraBean(MetadataStringExtraFields.IDENTIFIER.getField(), "identifier"));
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.getIdentifierWithFallback()).isEqualTo("identifier");
+  }
+
+  @Test
   public void parsingDate_valid_datetime() throws Exception {
     /* prepare */
     Date expectedFrom = parseDate(COVERAGEFROM_VALID);
@@ -157,7 +218,12 @@ public class MetadataImplTest {
     assertThat(metadataImpl.getExtraList(MetadataListExtraFields.POLITICAL_GEOCODING_URI)).containsExactly("http://dcat-ap.de/def/politicalGeocoding/regionalKey/020000000000", "http://dcat-ap.de/def/politicalGeocoding/stateKey/02");
     assertThat(metadataImpl.getExtraString(MetadataStringExtraFields.POLITICAL_GEOCODING_LEVEL_URI)).isEqualTo("http://dcat-ap.de/def/politicalGeocoding/Level/state");
     assertThat(metadataImpl.getExtraString(MetadataStringExtraFields.SPATIAL)).isEqualTo("{\"type\":\"Polygon\",\"coordinates\":[[[10.3263,53.3949],[10.3263,53.9641],[8.4205,53.9641],[8.4205,53.3949],[10.3263,53.3949]]]}");
+    assertThat(metadataImpl.getExtraString(MetadataStringExtraFields.IDENTIFIER))
+        .isEqualTo("A635D337-4805-4C32-A211-13F8C038BF27");
+    assertThat(metadataImpl.getExtraString(MetadataStringExtraFields.GUID))
+        .isEqualTo("http://domain.com/datset/guid");
 
+    assertThat(metadataImpl.getIdentifierWithFallback()).isEqualTo("A635D337-4805-4C32-A211-13F8C038BF27");
     assertThat(metadataImpl.getOwnerOrg()).isEqualTo("30b7e9ef-327c-4f32-9591-70a88bcbdda4");
     assertThat(metadataImpl.isOpen()).isTrue();
     assertThat(metadataImpl.getType()).isEqualTo(MetadataEnumType.DATASET);

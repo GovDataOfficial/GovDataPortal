@@ -1,0 +1,84 @@
+.custom-sparql-layout {
+  .yasgui {
+    .tabsList {
+      display: none;
+    }
+    .controlbar {
+      display: none;
+    }
+    .yasr {
+      .tableControls {
+        .pageSizerLabel {
+          display: none;
+        }
+        .tableSizer {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.select-format-margin {
+  margin-bottom: 15px !important;
+}
+
+.query-execute {
+  float: right;
+}
+
+.prefix-textbox {
+  width: 100%;
+}
+
+.btn-margin {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.prefix-btn-active {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.formatselectarea {
+  width: 25%;
+  float: left;
+  
+  @media #{$small-only} {
+    width: 100%;
+  }
+}
+
+.aui {
+  .fieldtypelabel,
+  .formatselectarea input,
+  .formatselectarea select {
+    color: $dark-gray;
+    font-family: 'Source Sans Pro';
+    font-size: 16px;
+    font-weight: bold;
+    height: inherit;
+    margin: 0;
+    padding: 6px 8px;
+    width: 100%;
+
+    @media #{$small-only} {
+      font-size: 14px;
+    }
+  }
+
+  .formatselectarea select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url($theme-image-path + '/select-arrow-down-gray.png') no-repeat right center $dark-gray;
+    width: 100%;
+  }
+
+  .formatselectarea input,
+  .formatselectarea select {
+    background-color: $white;
+    border: 1px solid $kontur-gray;
+    box-shadow: 1px 1px 1px $kontur-gray;
+  }
+}

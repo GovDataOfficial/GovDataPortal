@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>4.1.0</version>
+  <version>4.3.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -31,6 +30,7 @@
     <elasticsearch.version>1.6.0</elasticsearch.version>
     <jetty.version>7.4.2.v20110526</jetty.version>
     <jersey.version>1.6</jersey.version>
+    <apache.jena.version>3.16.0</apache.jena.version>
     <!-- java -->
     <java.version>1.8</java.version>
     <project.source.version>${java.version}</project.source.version>
@@ -198,6 +198,7 @@
     <module>screennamevalidator-hook</module>
     <module>categories-grid-portlet</module>
     <module>Layout20-80-layouttpl</module>
+    <module>gd-developers-corner-portlet</module>
     <module>gd-user-menu</module>
     <module>gd-users-admin-fragment</module>
     <module>gd-comment-taglib-fragment</module>

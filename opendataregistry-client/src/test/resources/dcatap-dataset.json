@@ -185,12 +185,20 @@
       "value": "public"
     },
     {
+      "key": "identifier",
+      "value": "A635D337-4805-4C32-A211-13F8C038BF27"
+    },
+    {
       "key": "alternate_identifier",
       "value": "4635D337-4805-4C32-A211-13F8C038BF27"
     },
     {
       "key": "conforms_to",
       "value": "Eine Regel oder eine URL"
+    },
+    {
+      "key": "guid",
+      "value": "http://domain.com/datset/guid"
     },
     {
       "key": "contact_email",

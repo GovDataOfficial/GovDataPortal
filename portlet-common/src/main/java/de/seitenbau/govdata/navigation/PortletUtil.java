@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 
+import de.seitenbau.govdata.constants.GovDataConfigParam;
+
 /**
  * Enthält Hilfsmethoden, die an mehreren Stellen im Code genutzt werden.
  * 
@@ -19,6 +21,10 @@ import com.liferay.portal.kernel.util.PropsUtil;
  */
 public abstract class PortletUtil
 {
+  private static final String CKAN_TYPE_DATASET = "dataset";
+
+  private static final String SLASH = "/";
+
   /**
    * Extrahiert die Angabe zum FriendlyUrlMapping aus der aktuellen URL und gibt diese zurück.
    * 
@@ -28,7 +34,7 @@ public abstract class PortletUtil
   public static String extractFriendlyUrlMappingFromRequestUrl(RenderRequest request)
   {
     String url = PortalUtil.getCurrentURL(PortalUtil.getHttpServletRequest(request));
-    return StringUtils.substringBefore(StringUtils.substringAfter(url, "/-/"), "/");
+    return StringUtils.substringBefore(StringUtils.substringAfter(url, "/-/"), SLASH);
   }
 
   /**
@@ -54,7 +60,41 @@ public abstract class PortletUtil
    */
   public static String getLinkToDatasetDetailsRawFormatBaseUrl()
   {
-    String ckanFriendlyUrl = StringUtils.appendIfMissing(PropsUtil.get("cKANurlFriendly"), "/");
-    return ckanFriendlyUrl + "dataset/";
+    String ckanFriendlyUrl =
+        StringUtils.appendIfMissing(PropsUtil.get(GovDataConfigParam.CKAN_URL_FRIENDLY), SLASH);
+    return ckanFriendlyUrl + CKAN_TYPE_DATASET + SLASH;
+  }
+
+  /**
+   * Gibt die Basis-URL zur Datensatz-Detailansicht auf dem CKAN-Server zurück. Die URL endet mit
+   * einem Slash, so dass der Metadatenname nur noch angehängt werden muss.
+   * 
+   * @return
+   */
+  public static String getCkanDatasetBaseLink()
+  {
+    String result = StringUtils.appendIfMissing(PropsUtil.get(GovDataConfigParam.CKAN_URL), SLASH);
+    return result + CKAN_TYPE_DATASET + SLASH;
+  }
+
+  /**
+   * Gibt den Link für den Fuseki Triplestore zurück. Die URL endet ohne Slash.
+   * 
+   * @return
+   */
+  public static String getLinkToFusekiTriplestoreUrl()
+  {
+    String fusekiUrl = StringUtils.appendIfMissing(PropsUtil.get(GovDataConfigParam.FUSEKI_URL), SLASH);
+    return fusekiUrl + PropsUtil.get(GovDataConfigParam.FUSEKI_DATASTORE_NAME);
+  }
+
+  /**
+   * Gibt den Link für den Fuseki Triplestore zurück. Die URL endet ohne Slash.
+   * 
+   * @return
+   */
+  public static String getLinkToFusekiSparqlEndpoint()
+  {
+    return StringUtils.removeEnd(PropsUtil.get(GovDataConfigParam.FUSEKI_SPARQL_ENDPOINT), SLASH);
   }
 }

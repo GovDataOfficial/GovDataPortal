@@ -47,6 +47,8 @@ public interface Metadata extends Serializable
 
   void setExtraString(MetadataStringExtraFields field, String value);
 
+  String getIdentifierWithFallback();
+
   enum State
   {
     ACTIVE("active"),

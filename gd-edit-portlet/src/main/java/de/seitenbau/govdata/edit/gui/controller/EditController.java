@@ -42,8 +42,10 @@ import de.seitenbau.govdata.edit.model.Contact;
 import de.seitenbau.govdata.edit.model.ContactAddress;
 import de.seitenbau.govdata.edit.model.EditForm;
 import de.seitenbau.govdata.edit.model.Resource;
+import de.seitenbau.govdata.fuseki.impl.FusekiClientImpl;
 import de.seitenbau.govdata.messages.MessageType;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.navigation.PortletUtil;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.ResourceImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.TagImpl;
@@ -90,6 +92,9 @@ public class EditController
       RoleEnumType.PUBLISHER,
       RoleEnumType.ORIGINATOR
   };
+
+  @Inject
+  private FusekiClientImpl fusekiClient;
 
   @Inject
   private RegistryClient registryClient;
@@ -306,6 +311,9 @@ public class EditController
     {
       // check if the current user is allowed to edit this dataset
       User ckanuserFromRequest = getCkanuserFromRequestProxy(request);
+      // Read metadata for usage after the metadata was deleted
+      Metadata metadata = registryClient.getInstance().getMetadata(ckanuserFromRequest, editForm.getName());
+
       List<Organization> organizationsForUser =
           registryClient.getInstance().getOrganizationsForUser(ckanuserFromRequest, "create_dataset");
       if (new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId()))
@@ -314,6 +322,9 @@ public class EditController
         {
           response.sendRedirect(
               gdNavigation.createLinkForSearchResults("suchen", "gdsearchresult", "").toString());
+
+          String identifier = metadata.getIdentifierWithFallback();
+          fusekiClient.deleteDataset(PortletUtil.getCkanDatasetBaseLink(), metadata.getId(), identifier);
         }
         else
         {
@@ -635,10 +646,12 @@ public class EditController
         }
       }
     }
-
+    
+    boolean requestSuccess = false;
+    
     try
     {
-      registryClient.getInstance().persistMetadata(ckanUser, metadata);
+      requestSuccess = registryClient.getInstance().persistMetadata(ckanUser, metadata);
     }
     catch (ClientErrorException e)
     {
@@ -649,6 +662,19 @@ public class EditController
       else
       {
         throw new OpenDataRegistryException();
+      }
+    }
+    
+    if (requestSuccess)
+    {
+      try {
+        Metadata createdMetadata = registryClient.getInstance().getMetadata(ckanUser, metadata.getName());
+        String ckanDatasetBaseUrl = PortletUtil.getCkanDatasetBaseLink();
+        String identifier = createdMetadata.getIdentifierWithFallback();
+        fusekiClient.updateOrCreateDataset(ckanDatasetBaseUrl, createdMetadata.getId(), identifier);
+      }
+      catch (Exception e) {
+        log.warn(e.getMessage());
       }
     }
   }

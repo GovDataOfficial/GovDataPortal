@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.portlet.PortletRequest;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +17,7 @@ import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ODRTools
@@ -67,7 +66,7 @@ public class ODRTools
     com.liferay.portal.kernel.model.User liferayUser = PortalUtil.getUser(request);
     if (liferayUser != null && liferayUser.getScreenName() != null)
     {
-      return new ODRTools().findOrCreateCkanUser(liferayUser.getScreenName(), client);
+      return findOrCreateCkanUser(liferayUser.getScreenName(), client);
     }
     else
     {

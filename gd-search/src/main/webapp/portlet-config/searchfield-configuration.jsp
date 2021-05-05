@@ -23,6 +23,7 @@ String backgroundImage = GetterUtil.getString(portletPreferences.getValue("backg
       <aui:option value="data" label="data" selected="<%= backgroundImage.equals(\"data\") %>" />
       <aui:option value="document" label="document" selected="<%= backgroundImage.equals(\"document\") %>" />
       <aui:option value="info" label="info" selected="<%= backgroundImage.equals(\"info\") %>" />
+      <aui:option value="devcorner" label="devcorner" selected="<%= backgroundImage.equals(\"devcorner\") %>" />
     </aui:select>
 
     <aui:button-row>

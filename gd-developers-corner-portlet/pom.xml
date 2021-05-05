@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>od-platform</artifactId>
+    <groupId>de.fhg.fokus.odp</groupId>
+    <version>4.3.0</version>
+  </parent>
+  <artifactId>gd-developers-corner-portlet</artifactId>
+  <packaging>war</packaging>
+  <name>gd-developers-corner-portlet</name>
+  <build>
+    <finalName>${project.artifactId}-${project.version}</finalName>
+    <plugins>
+      <!-- BEGIN Translate some yasgui labels -->
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>maven-replacer-plugin</artifactId>
+        <version>1.4.1</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <file>src/main/webapp/js/yasgui.min.js</file>
+          <outputFile>target/release/js/yasgui.min.js</outputFile>
+          <replacements>
+            <replacement>
+              <token>Filter query results</token>
+              <value>Ergebnisse filtern</value>
+            </replacement>
+            <replacement>
+              <token>Download result</token>
+              <value>Ergebnis herunterladen</value>
+            </replacement>
+            <replacement>
+              <token>Nothing to autocomplete yet!</token>
+              <value>Aktuell ist nichts zu tun für die Autovervollständigung</value>
+            </replacement>
+            <replacement>
+              <token>Press CTRL</token>
+              <value>Drücke CTRL</value>
+            </replacement>
+            <replacement>
+              <token>spacebar</token>
+              <value>Leertaste</value>
+            </replacement>
+            <replacement>
+              <token>to autocomplete</token>
+              <value>für die Autovervollständigung</value>
+            </replacement>
+            <replacement>
+              <token>Showing _START_ to _END_ of _TOTAL_ entries</token>
+              <value>Zeige _START_ bis _END_ von _TOTAL_ Einträgen</value>
+            </replacement>
+            <replacement>
+              <token>Showing 0 to 0 of 0 entries</token>
+              <value>Zeige 0 bis 0 von 0 Einträgen</value>
+            </replacement>
+            <replacement>
+              <token>No data available in table</token>
+              <value>Keine Daten zum Anzeigen verfügbar</value>
+            </replacement>
+            <replacement>
+              <token>No matching records found</token>
+              <value>Keine zutreffenden Einträge gefunden</value>
+            </replacement>
+            <replacement>
+              <token>Run query</token>
+              <value>Query ausführen</value>
+            </replacement>
+            <replacement>
+              <token>Share query</token>
+              <value>Query teilen</value>
+            </replacement>
+            <replacement>
+              <token>total entries</token>
+              <value>Einträgen insgesamt</value>
+            </replacement>
+            <replacement>
+              <token>Showing</token>
+              <value>Zeige</value>
+            </replacement>
+            <replacement>
+              <token>entries</token>
+              <value>Einträge</value>
+            </replacement>
+            <replacement>
+              <token>Show all</token>
+              <value>Alle anzeigen</value>
+            </replacement>
+            <replacement>
+              <token>Show </token>
+              <value>Zeige </value>
+            </replacement>
+            <replacement>
+              <token>filtered from</token>
+              <value>gefiltert aus</value>
+            </replacement>
+            <replacement>
+              <token>label="Response"</token>
+              <value>label="Raw Response"</value>
+            </replacement>
+          </replacements>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>target/release/</directory>
+              <includes>
+                <include>js/yasgui.min.js</include>
+              </includes>
+              <filtering>false</filtering>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+      <!-- END Translate some yasgui labels -->
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>com.liferay.portal</groupId>
+      <artifactId>com.liferay.portal.kernel</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.fhg.fokus.odp</groupId>
+      <artifactId>odp-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.fhg.fokus.odp</groupId>
+      <artifactId>portlet-common</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc-portlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf-spring4</artifactId>
+    </dependency>
+    <dependency>
+      <artifactId>hibernate-validator</artifactId>
+      <groupId>org.hibernate</groupId>
+    </dependency>
+  </dependencies>
+</project>

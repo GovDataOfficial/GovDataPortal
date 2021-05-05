@@ -9,4 +9,5 @@ build
 .tern-project
 .metadata
 /.pydevproject
+.factorypath
 bin

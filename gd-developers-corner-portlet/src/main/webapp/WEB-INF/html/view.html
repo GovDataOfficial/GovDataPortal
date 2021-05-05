@@ -1,0 +1,51 @@
+
+<div id="devcorner" class="column" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+  <div id="exampleList" class="row row-margin"></div>
+  <div id="prefixList" class="row row-margin"></div>
+  <div class="row row-margin select-format-margin">
+     <div class="form-group">
+       <h2>[[#{'od.sparql.result.format'}]]:</h2>
+       <div class="formatselectarea">
+         <select id="selectContentType" class="form-control" onchange="setContentType(this.value)">
+           <option value="application/sparql-results+json,*/*;q=0.9">JSON</option>
+           <option value="application/sparql-results+xml,*/*;q=0.9">XML</option>
+           <option value="text/csv,*/*;q=0.9">CSV</option>
+         </select>
+       </div>
+       <a id="executeQuery" class="btn query-execute" onclick="runQuery()">[[#{'od.sparql.query.execute'}]]</a>
+     </div>
+  </div>
+  <div id="yasgui" class="custom-sparql-layout row row-margin"></div>
+</div>
+
+<script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+/*<![CDATA[*/
+  
+  var fusekiUrl = [[${fusekiQueryUrl}]];
+  const yasgui = new Yasgui(document.getElementById("yasgui"), {
+      requestConfig: { endpoint: fusekiUrl, method: "GET" },
+      autofocus: false
+    });
+
+  yasqe = yasgui.getTab().yasqe;
+  yasr = yasgui.getTab().yasr;
+  
+  // Build HTML for Query-Examples    
+  var listHtml = '<h2>Beispiel-Abfragen:</h2>';
+  var queries = getConfig().queries;
+  queries.forEach(function (q, i) {
+    listHtml += '<a id="sparqlExample' + i + '" class="btn btn-margin" onclick="loadExample(' + i + ')">' + q.name + '</a>';
+  });
+  document.getElementById("exampleList").innerHTML = listHtml;
+
+   // Build list with prefixes
+  var prefixesHtml = '<h2>Prefixes hinzufügen:</h2>';
+  var prefixes = getConfig().prefixes;
+  for(p in prefixes) {
+    prefixesHtml += '<a id="prefixButton_' + p + '" class="btn btn-margin" onclick="togglePrefix(\'' + p + '\', \'' + prefixes[p] + '\')">' + p + '</a>';
+  }
+  document.getElementById("prefixList").innerHTML = prefixesHtml;
+
+  /*]]>*/
+</script>
+  

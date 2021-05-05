@@ -17,6 +17,12 @@
   margin-bottom: rem-calc(30);
 }
 
+.aui {
+  .portlet-header-centered .portlet-header {
+    text-align: center;
+  }
+}
+
 // portlet header fix
 .aui {
   .portlet-header {
@@ -603,6 +609,7 @@ footer {
   }
 }
 
+.developers-corner-portlet .row,
 .categoriesPane.row,
 .contentPane.row,
 .gd-search-titlearea.row,

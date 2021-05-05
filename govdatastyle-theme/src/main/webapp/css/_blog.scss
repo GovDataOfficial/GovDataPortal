@@ -277,6 +277,10 @@
       white-space: normal;
       margin-top: 0;
     }
+    
+    .sub-title {
+      @extend .sb-chapter-head;
+    }
 
     .header-back-to a {
       margin-top: 24px;

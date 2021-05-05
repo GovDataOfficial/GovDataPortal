@@ -8,6 +8,8 @@ import lombok.Getter;
 public enum MetadataStringExtraFields
 {
 
+  IDENTIFIER("identifier"),
+  GUID("guid"),
   ACCESS_RIGHTS("access_rights"),
   QUALITY_PROCESS_URI("qualityProcessURI"),
   DOCUMENTATION("documentation"),

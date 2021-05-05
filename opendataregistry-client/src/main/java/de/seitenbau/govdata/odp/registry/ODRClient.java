@@ -195,7 +195,7 @@ public interface ODRClient
    * @param metadata the metadata
    * @throws OpenDataRegistryException the open data registry exception
    */
-  void persistMetadata(User user, Metadata metadata) throws OpenDataRegistryException;
+  boolean persistMetadata(User user, Metadata metadata) throws OpenDataRegistryException;
 
   /**
    * @return

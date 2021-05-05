@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -1024,37 +1025,39 @@ public class ODRClientImpl implements ODRClient
   }
 
   @Override
-  public void persistMetadata(User user, Metadata metadata)
+  public boolean persistMetadata(User user, Metadata metadata)
       throws OpenDataRegistryException
   {
     MetadataImpl impl = (MetadataImpl) metadata;
 
     String auth = getApiKeyFromUser(user);
+    
+    JsonNode node;
+    JsonNode result;
 
     if (impl.isNew())
     {
       String munge = StringCleaner.mungeTitleToName(impl.getTitle());
 
       impl.setName(munge);
-      JsonNode node = impl.write(false);
+      node = impl.write(false);
       LOG.trace("REST > calling action api 'package_create' with: {}",
           node);
       long start = System.currentTimeMillis();
-      JsonNode result = action.createMetadata(auth, node);
+      result = action.createMetadata(auth, node);
       LOG.trace("/api/3/action/package_create: {}ms",
           System.currentTimeMillis() - start);
       LOG.trace("REST < returns: {}", result);
     }
     else
     {
-      JsonNode node;
       if (impl.resourcesModified())
       {
         node = impl.write(true);
         LOG.debug(
             "REST > calling action api 'package_update:clearResources:' with: {}",
             node);
-        JsonNode result = action.updateMetadata(auth, node);
+        result = action.updateMetadata(auth, node);
         LOG.debug("REST call for empty resources < returns: {}", result);
       }
       node = impl.write(false);
@@ -1068,11 +1071,12 @@ public class ODRClientImpl implements ODRClient
       LOG.debug("REST > calling action api 'package_update' with: {}",
           node);
       long start = System.currentTimeMillis();
-      JsonNode result = action.updateMetadata(auth, node);
+      result = action.updateMetadata(auth, node);
       LOG.trace("/api/3/action/package_update: {}ms",
           System.currentTimeMillis() - start);
       LOG.trace("REST < returns: {}", result);
     }
+    return isSuccess(result);
   }
 
   @Override
@@ -1093,16 +1097,20 @@ public class ODRClientImpl implements ODRClient
     {
       node = action.showMetadata(key, body);
     }
+    catch (ClientErrorException e)
+    {
+      LOG.info(method + e.getMessage());
+      return null;
+    }
     catch (Exception e)
     {
-      LOG.error(method + e.getMessage());
+      LOG.error(method + "Unexpected error. Details: " + e.getMessage());
       return null;
     }
     if (node == null)
     {
-      LOG.info("METADATA not found.");
+      LOG.info(method + "Node is null. METADATA not found.");
       return null;
-
     }
     else
     {
@@ -1193,16 +1201,20 @@ public class ODRClientImpl implements ODRClient
     {
       node = action.showDcatDataset(key, body);
     }
+    catch (ClientErrorException e)
+    {
+      LOG.info(method + e.getMessage());
+      return null;
+    }
     catch (Exception e)
     {
-      LOG.error(method + e.getMessage());
+      LOG.error(method + "Unexpected error. Details: " + e.getMessage());
       return null;
     }
     if (node == null)
     {
-      LOG.info("METADATA not found.");
+      LOG.info(method + "Node is null. METADATA not found.");
       return null;
-
     }
     else
     {
@@ -1329,27 +1341,39 @@ public class ODRClientImpl implements ODRClient
     List<Organization> organizations = new ArrayList<>();
 
     String apikey = ((UserImpl) user).getApikey();
-    Response response = action.getOrganisationsForUser(apikey, permission);
-    if (response.getStatusInfo() == Status.OK)
-    {
-      JsonNode node = response.readEntity(JsonNode.class);
-      LOG.trace("REST < returns: {}", node);
 
-      if (isSuccess(node))
+    Response response = null;
+    try
+    {
+      response = action.getOrganisationsForUser(apikey, permission);
+      if (response.getStatusInfo() == Status.OK)
       {
-        JsonNode result = getResultList(node);
-        for (JsonNode organization : result)
+        JsonNode node = response.readEntity(JsonNode.class);
+        LOG.trace("REST < returns: {}", node);
+
+        if (isSuccess(node))
         {
-          OrganizationBean bean = convert(organization, OrganizationBean.class);
-          organizations.add(new OrganizationImpl(bean));
+          JsonNode result = getResultList(node);
+          for (JsonNode organization : result)
+          {
+            OrganizationBean bean = convert(organization, OrganizationBean.class);
+            organizations.add(new OrganizationImpl(bean));
+          }
         }
       }
+      else
+      {
+        LOG.trace("REST < (http) returns: {} - {}",
+            response.getStatusInfo().toString(),
+            response.getStatusInfo().getReasonPhrase());
+      }
     }
-    else
+    finally
     {
-      LOG.trace("REST < (http) returns: {} - {}",
-          response.getStatusInfo().toString(),
-          response.getStatusInfo().getReasonPhrase());
+      if (response != null)
+      {
+        response.close();
+      }
     }
 
     return organizations;
@@ -1360,27 +1384,38 @@ public class ODRClientImpl implements ODRClient
   {
     List<Organization> organizations = new ArrayList<>();
 
-    Response response = action.getOrganisations(true); // we need all fields -> true
-    if (response.getStatusInfo() == Status.OK)
+    Response response = null;
+    try
     {
-      JsonNode node = response.readEntity(JsonNode.class);
-      LOG.trace("REST < returns: {}", node);
-
-      if (isSuccess(node))
+      response = action.getOrganisations(true); // we need all fields -> true
+      if (response.getStatusInfo() == Status.OK)
       {
-        JsonNode result = getResultList(node);
-        for (JsonNode organization : result)
+        JsonNode node = response.readEntity(JsonNode.class);
+        LOG.trace("REST < returns: {}", node);
+
+        if (isSuccess(node))
         {
-          OrganizationBean bean = convert(organization, OrganizationBean.class);
-          organizations.add(new OrganizationImpl(bean));
+          JsonNode result = getResultList(node);
+          for (JsonNode organization : result)
+          {
+            OrganizationBean bean = convert(organization, OrganizationBean.class);
+            organizations.add(new OrganizationImpl(bean));
+          }
         }
       }
+      else
+      {
+        LOG.trace("REST < (http) returns: {} - {}",
+            response.getStatusInfo().toString(),
+            response.getStatusInfo().getReasonPhrase());
+      }
     }
-    else
+    finally
     {
-      LOG.trace("REST < (http) returns: {} - {}",
-          response.getStatusInfo().toString(),
-          response.getStatusInfo().getReasonPhrase());
+      if (response != null)
+      {
+        response.close();
+      }
     }
 
     return organizations;
@@ -1391,16 +1426,17 @@ public class ODRClientImpl implements ODRClient
   {
     ObjectNode deleteParam = OM.createObjectNode();
     deleteParam.set("id", new TextNode(metadataName));
-    
+
+    Response response = null;
     try
     {
       String apikey = ((UserImpl) user).getApikey();
-      Response response = action.deleteMetadata(apikey, deleteParam);
+      response = action.deleteMetadata(apikey, deleteParam);
       if (response.getStatusInfo() == Status.OK)
       {
         JsonNode node = response.readEntity(JsonNode.class);
         if (isSuccess(node))
-        {
+        {    
           return true;
         }
         else
@@ -1412,9 +1448,15 @@ public class ODRClientImpl implements ODRClient
     }
     catch (Exception e)
     {
-      LOG.error("Could not delete metadata: " + metadataName);
-      e.printStackTrace();
+      LOG.error("Could not delete metadata: " + metadataName, e);
       return false;
+    }
+    finally
+    {
+      if (response != null)
+      {
+        response.close();
+      }
     }
   }
 
@@ -1423,10 +1465,11 @@ public class ODRClientImpl implements ODRClient
   {
     ObjectNode deleteParam = OM.createObjectNode();
     deleteParam.set("id", new TextNode(user.getId()));
-    
+
+    Response response = null;
     try
     {
-      Response response = action.deleteUser(authorizationKey, deleteParam);
+      response = action.deleteUser(authorizationKey, deleteParam);
       if (response.getStatusInfo() == Status.OK)
       {
         JsonNode node = response.readEntity(JsonNode.class);
@@ -1443,9 +1486,15 @@ public class ODRClientImpl implements ODRClient
     }
     catch (Exception e)
     {
-      LOG.error("Could not delete User: " + user.getName());
-      e.printStackTrace();
+      LOG.error("Could not delete User: " + user.getName(), e);
       return false;
+    }
+    finally
+    {
+      if (response != null)
+      {
+        response.close();
+      }
     }
   }
 
@@ -1483,5 +1532,4 @@ public class ODRClientImpl implements ODRClient
       }
     }
   }
-
 }

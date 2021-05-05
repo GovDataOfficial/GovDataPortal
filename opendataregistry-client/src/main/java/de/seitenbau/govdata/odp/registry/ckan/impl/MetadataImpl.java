@@ -713,6 +713,22 @@ public class MetadataImpl implements Metadata, Serializable
     setExtra(field.getField(), value);
   }
 
+  @Override
+  public String getIdentifierWithFallback()
+  {
+    // Fallback as implemented in ckanext-dcat profile
+    String result = getExtraString(MetadataStringExtraFields.IDENTIFIER);
+    if (result == null)
+    {
+      result = getExtraString(MetadataStringExtraFields.GUID);
+    }
+    if (result == null)
+    {
+      result = getId();
+    }
+    return result;
+  }
+
   /**
    * Returns the odrClient.
    * 
