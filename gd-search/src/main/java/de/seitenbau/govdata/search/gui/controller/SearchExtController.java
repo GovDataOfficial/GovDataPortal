@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 import de.seitenbau.govdata.dcatde.ViewUtil;
+import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Organization;
@@ -29,7 +30,6 @@ import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.constants.QueryParamNames;
-import de.seitenbau.govdata.filter.SearchConsts;
 import de.seitenbau.govdata.search.cache.ResourceFormatCache;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;

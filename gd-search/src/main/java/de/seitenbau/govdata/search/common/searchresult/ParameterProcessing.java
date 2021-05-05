@@ -14,8 +14,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
-import de.seitenbau.govdata.filter.FilterPathUtils;
-import de.seitenbau.govdata.filter.SearchConsts;
+import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
+import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.search.common.ESFieldConsts;
 import de.seitenbau.govdata.search.common.QuerySanatizer;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;

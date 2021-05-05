@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>4.3.0</version>
+  <version>4.3.1</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -190,6 +190,7 @@
   <modules>
     <module>odp-common</module>
     <module>portlet-common</module>
+    <module>gd-search-common</module>
     <module>entities</module>
     <module>language-hook</module>
     <module>opendataregistry-client</module>
@@ -256,6 +257,11 @@
       <dependency>
         <groupId>de.fhg.fokus.odp</groupId>
         <artifactId>portlet-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.fhg.fokus.odp</groupId>
+        <artifactId>gd-search-common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -374,6 +380,11 @@
         <groupId>commons-digester</groupId>
         <artifactId>commons-digester</artifactId>
         <version>2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.8.0</version>
       </dependency>
 
       <dependency>

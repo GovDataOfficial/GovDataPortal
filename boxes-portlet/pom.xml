@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>4.3.0</version>
+    <version>4.3.1</version>
   </parent>
   <artifactId>boxes-portlet</artifactId>
   <packaging>war</packaging>
@@ -74,6 +74,10 @@
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>portlet-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.fhg.fokus.odp</groupId>
+      <artifactId>gd-search-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

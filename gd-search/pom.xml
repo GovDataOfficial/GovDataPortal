@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.3.0</version>
+    <version>4.3.1</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -59,6 +59,10 @@
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>portlet-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.fhg.fokus.odp</groupId>
+      <artifactId>gd-search-common</artifactId>
     </dependency>
 
     <!-- Mailing -->

@@ -5,7 +5,7 @@
   <portlet>
     <portlet-name>gd-edit-portlet</portlet-name>
     <icon>/icon.png</icon>
-    <friendly-url-mapper-class>de.seitenbau.govdata.search.common.DatasetDetailsFriendlyUrlMapper</friendly-url-mapper-class>
+    <friendly-url-mapper-class>de.seitenbau.govdata.portlet.common.search.common.DatasetDetailsFriendlyUrlMapper</friendly-url-mapper-class>
     <friendly-url-mapping>bearbeiten</friendly-url-mapping>
     <friendly-url-routes>edit-friendly-url-routes.xml</friendly-url-routes>
     <instanceable>false</instanceable>

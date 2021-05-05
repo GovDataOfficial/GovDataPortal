@@ -79,7 +79,7 @@
     <portlet-name>gd-search-details</portlet-name>
     <icon>/icon.png</icon>
     <configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
-    <friendly-url-mapper-class>de.seitenbau.govdata.search.common.DatasetDetailsFriendlyUrlMapper</friendly-url-mapper-class>
+    <friendly-url-mapper-class>de.seitenbau.govdata.portlet.common.search.common.DatasetDetailsFriendlyUrlMapper</friendly-url-mapper-class>
     <friendly-url-mapping>details</friendly-url-mapping>
     <friendly-url-routes>metadata-friendly-url-routes.xml</friendly-url-routes>
     <instanceable>false</instanceable>

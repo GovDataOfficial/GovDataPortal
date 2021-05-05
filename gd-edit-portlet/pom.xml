@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.3.0</version>
+    <version>4.3.1</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -44,10 +44,6 @@
     <!-- ODP -->
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
-      <artifactId>opendataregistry-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>odp-common</artifactId>
     </dependency>
     <dependency>
@@ -55,11 +51,18 @@
       <artifactId>portlet-common</artifactId>
     </dependency>
 
+    <!-- Apache Jena -->
     <dependency>
-      <groupId>de.seitenbau.serviceportal</groupId>
-      <artifactId>gui-common</artifactId>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-arq</artifactId>
+      <version>${apache.jena.version}</version>
     </dependency>
-    
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-rdfconnection</artifactId>
+      <version>${apache.jena.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
@@ -71,21 +74,11 @@
       <version>1.5.1</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-    </dependency>
-
     <!-- Mailing -->
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
     </dependency>
 
     <!-- DI -->

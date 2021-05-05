@@ -45,9 +45,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import de.fhg.fokus.odp.categoriesgrid.model.CategoryViewModel;
 import de.seitenbau.govdata.cache.BaseCache;
 import de.seitenbau.govdata.cache.CategoryCache;
-import de.seitenbau.govdata.filter.FilterPathUtils;
-import de.seitenbau.govdata.filter.SearchConsts;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
+import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.servicetracker.MultiVMPoolServiceTracker;
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.3.1 2021-01-22
+
+* Fix possible XSS security vulnerability in site template
+* Extract Elasticsearch related packages to new module gd-search-common
+
 ## v4.3.0 2021-01-19
 
 * Introduce new developer corner portlet with SPARQL editor

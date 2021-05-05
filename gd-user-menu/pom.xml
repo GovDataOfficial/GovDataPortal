@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>4.3.0</version>
+    <version>4.3.1</version>
   </parent>
   <artifactId>gd-user-menu</artifactId>
   <dependencies>

@@ -1,3 +1,4 @@
+<#ftl output_format="HTML" auto_esc=false>
 <div class="oc-languagechooser">
   <!--<span class="buttongroup">
     <a class="linkbutton selected" href="#"><@liferay.language key="od.language.de" /></a><a class="linkbutton" href="#"><@liferay.language key="od.language.en" /></a>
@@ -11,7 +12,7 @@
 
 <#if is_signed_in>
   <div class="oc-accountinfo">
-      <div class="oc-username">${user_name}</div>
+      <div class="oc-username">${user_name?esc}</div>
       <#if show_my_account>
       <a class="oc-profile-sub" href="${my_account_url}" title='<@liferay.language key="manage-my-account" />'>${my_account_text}</a>
       </#if>

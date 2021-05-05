@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import de.seitenbau.govdata.filter.SearchConsts;
 import de.seitenbau.govdata.odp.boxes.model.DatasetModel;
+import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;

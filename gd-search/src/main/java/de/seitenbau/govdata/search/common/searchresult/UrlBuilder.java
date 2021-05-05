@@ -1,9 +1,9 @@
 package de.seitenbau.govdata.search.common.searchresult;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
-import de.seitenbau.govdata.filter.FilterPathUtils;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.navigation.PortletUtil;
+import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
