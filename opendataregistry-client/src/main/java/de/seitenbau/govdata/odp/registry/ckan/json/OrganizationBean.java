@@ -1,7 +1,10 @@
 package de.seitenbau.govdata.odp.registry.ckan.json;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,4 +32,22 @@ public class OrganizationBean implements Serializable
   
   @JsonProperty
   private String title;
+
+  @JsonProperty
+  private List<ExtraBean> extras;
+
+  /**
+   * The extras as list.
+   * 
+   * @return
+   */
+  @JsonIgnore
+  public List<ExtraBean> getExtras()
+  {
+    if (extras == null)
+    {
+      extras = Collections.emptyList();
+    }
+    return extras;
+  }
 }

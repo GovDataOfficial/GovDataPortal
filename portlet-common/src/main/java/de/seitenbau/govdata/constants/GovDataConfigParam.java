@@ -17,4 +17,12 @@ public abstract class GovDataConfigParam
   /** Der Parameter "fusekiDatastoreName". */
   public static final String FUSEKI_DATASTORE_NAME = "fusekiDatastoreName";
 
+  /** Der Parameter "fusekiShaclDatastoreName". */
+  public static final String FUSEKI_SHACL_DATASTORE_NAME = "fusekiShaclDatastoreName";
+
+  /** Der Parameter "shaclValidatorEndpoint". */
+  public static final String SHACL_VALIDATOR_ENDPOINT = "shaclValidatorEndpoint";
+
+  /** Der Parameter "shaclValidatorProfileType". */
+  public static final String SHACL_VALIDATOR_PROFILE_TYPE = "shaclValidatorProfileType";
 }

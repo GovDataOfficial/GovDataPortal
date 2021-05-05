@@ -112,4 +112,8 @@ public abstract class SearchConsts
 
   public static final String FIELD_OWNER_ORG = "metadata.owner_org";
 
+  public static final String METRIC_GROUP_DATA_NAME = "group_latest_date";
+
+  public static final String METRICS_TOP_HIT_NAME = "newest_data";
+
 }

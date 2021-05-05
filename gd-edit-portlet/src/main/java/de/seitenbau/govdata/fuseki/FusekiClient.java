@@ -13,7 +13,7 @@ public interface FusekiClient
    * @param ckanTechnicalId Der Ckan-Identifier des Datensatzes
    * @param identifier Der Metadata-Identifier des Datensatzes
    */
-  void deleteDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier);
+  void deleteDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier, String ownerOrgId);
   
   /**
    * Aktualisiert den Datensatz mit dem angegebenen identifier im Triplestore. Falls kein Datensatz
@@ -21,6 +21,8 @@ public interface FusekiClient
    * @param ckanDatasetBaseUrl Die URL zu Ckan
    * @param ckanTechnicalId Der Ckan-Identifier des Datensatzes
    * @param identifier Der Metadata-Identifier des Datensatzes
+   * @param ownerOrgId Id des Datenbetreitstellers
    */
-  void updateOrCreateDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier);
+  void updateOrCreateDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier,
+      String ownerOrgId);
 }

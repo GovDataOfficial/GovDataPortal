@@ -9,7 +9,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Pattern.Flag;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
@@ -17,9 +16,7 @@ import de.seitenbau.govdata.edit.gui.common.Constants;
 import de.seitenbau.govdata.edit.validator.Categories;
 import de.seitenbau.govdata.edit.validator.GeoJSONPolygon;
 import de.seitenbau.govdata.edit.validator.MapKeys;
-import de.seitenbau.govdata.edit.validator.RequiredRole;
 import de.seitenbau.govdata.edit.validator.StringDate;
-
 import lombok.Data;
 
 @Data
@@ -29,6 +26,9 @@ public class EditForm implements Serializable
   
   private String organizationId;
   
+  @NotEmpty
+  private String contributorId;
+
   @NotEmpty
   private String name;
   

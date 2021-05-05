@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+  version="2.0">
+
+  <portlet>
+    <portlet-name>gd-metadata-quality-portlet</portlet-name>
+    <display-name>Metadatenqualität</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/metadata-quality-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-metadata-quality-portlet-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+     <portlet-info>
+      <title>GovData Metadatenqualität</title>
+      <short-title>GovData Metadatenqualität</short-title>
+      <keywords>gd-metadata-quality-portlet</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+    <supported-public-render-parameter>filter</supported-public-render-parameter>
+  </portlet>
+  <public-render-parameter>
+    <identifier>filter</identifier>
+    <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:filter</qname>
+  </public-render-parameter>
+</portlet-app>

@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.4.0 2021-03-26
+
+* Adds the DCAT-AP.de property "contributorID" to the edit form
+* Introduce the possiblity to validate the dataset graph by SHACL when updating the dataset and save the
+  validation result in a triplestore
+* Introduce new metadata quality portlet
+
 ## 4.3.5 2021-03-03
 
 * Replaced Captcha with honeypot

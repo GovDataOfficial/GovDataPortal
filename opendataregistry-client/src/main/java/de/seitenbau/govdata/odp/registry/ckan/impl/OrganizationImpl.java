@@ -2,9 +2,16 @@ package de.seitenbau.govdata.odp.registry.ckan.impl;
 
 import java.io.Serializable;
 import java.text.Collator;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import de.seitenbau.govdata.odp.registry.ckan.Util;
+import de.seitenbau.govdata.odp.registry.ckan.json.ExtraBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
+import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 
 public class OrganizationImpl implements Organization, Serializable
@@ -12,9 +19,20 @@ public class OrganizationImpl implements Organization, Serializable
   private static final long serialVersionUID = -4316531700498190834L;
   private OrganizationBean bean;
 
+  private Map<String, ExtraBean> extras = new HashMap<>();
+
+  /**
+   * Constructor with bean.
+   * 
+   * @param bean
+   */
   public OrganizationImpl(OrganizationBean bean)
   {
     this.bean = bean;
+    for (ExtraBean extraBean : bean.getExtras())
+    {
+      extras.put(extraBean.getKey(), extraBean);
+    }
   }
 
   @Override
@@ -42,9 +60,21 @@ public class OrganizationImpl implements Organization, Serializable
   }
   
   @Override
+  public List<String> getContributorIds()
+  {
+    ExtraBean extraBean = extras.get(MetadataListExtraFields.CONTRIBUTOR_ID.getField());
+    if (extraBean == null)
+    {
+      return Collections.emptyList();
+    }
+    return Util.readJsonList(extraBean.getValue());
+  }
+
+  @Override
   public String toString()
   {
-    return "Organization{id: " + getId() + ", name: " + getName() + ", displayName: " + getDisplayName() + ", title: " + getTitle();
+    return "Organization{id: " + getId() + ", name: " + getName() + ", displayName: " + getDisplayName()
+        + ", title: " + getTitle() + ", contributorIds: " + getContributorIds();
   }
 
   @Override
@@ -52,7 +82,7 @@ public class OrganizationImpl implements Organization, Serializable
   {
     
     Collator collator = Collator.getInstance(Locale.GERMAN);
-    collator.setStrength(Collator.SECONDARY);// a == A, a < Ä
+    collator.setStrength(Collator.SECONDARY); // a == A, a < Ä
     return collator.compare(this.getTitle(), o.getTitle());
   }
 }

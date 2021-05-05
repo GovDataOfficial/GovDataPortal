@@ -10,7 +10,8 @@
   
   <context:component-scan base-package="de.seitenbau.govdata.navigation,
       de.seitenbau.govdata.odr, de.seitenbau.govdata.edit.model,
-      de.seitenbau.govdata.cache, de.seitenbau.govdata.fuseki" />
+      de.seitenbau.govdata.cache, de.seitenbau.govdata.fuseki,
+      de.seitenbau.govdata.cache, de.seitenbau.govdata.shacl" />
   
   <bean class="de.seitenbau.govdata.edit.gui.controller.EditController" depends-on="registryClient" />
 

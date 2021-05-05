@@ -3,11 +3,13 @@ package de.seitenbau.govdata.edit.gui.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -18,9 +20,12 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import javax.ws.rs.ClientErrorException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,6 +39,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
+import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.date.DateUtil;
@@ -42,7 +48,7 @@ import de.seitenbau.govdata.edit.model.Contact;
 import de.seitenbau.govdata.edit.model.ContactAddress;
 import de.seitenbau.govdata.edit.model.EditForm;
 import de.seitenbau.govdata.edit.model.Resource;
-import de.seitenbau.govdata.fuseki.impl.FusekiClientImpl;
+import de.seitenbau.govdata.fuseki.FusekiClient;
 import de.seitenbau.govdata.messages.MessageType;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.navigation.PortletUtil;
@@ -64,6 +70,7 @@ import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryExcepti
 import de.seitenbau.govdata.odp.registry.model.exception.UnknownRoleException;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;
+import de.seitenbau.govdata.portlet.common.model.OptionTag;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -94,7 +101,7 @@ public class EditController
   };
 
   @Inject
-  private FusekiClientImpl fusekiClient;
+  private FusekiClient fusekiClient;
 
   @Inject
   private RegistryClient registryClient;
@@ -106,7 +113,13 @@ public class EditController
   private CategoryCache categoryCache;
 
   @Inject
+  private OrganizationCache organizationCache;
+
+  @Inject
   private GovDataNavigation gdNavigation;
+
+  @Inject
+  private MessageSource messageSource;
 
   @RenderMapping
   public String showForm(
@@ -161,6 +174,20 @@ public class EditController
           licenceList = licenceCache.getActiveLicenceListSortedByTitle();
         }
 
+        // set contributorIds for selected org
+        List<String> contributorIdList =
+            getContributorIdsFromOrganizations(editForm.getOrganizationId(), organizationsForUser, true);
+        List<OptionTag> contributorIdSelectList = new ArrayList<>();
+        // add empty default-option in case of multiple contributor-IDs and if value is invalid
+        if (contributorIdList.size() > 1 && (StringUtils.isEmpty(editForm.getContributorId())
+            || !contributorIdList.contains(editForm.getContributorId())))
+        {
+          contributorIdSelectList.add(
+              new OptionTag("", messageSource.getMessage(
+                  "od.select.required.item.text", new Object[0], null)));
+        }
+        contributorIdSelectList.addAll(mapToOptionTagList(contributorIdList));
+
         // form data
         model.addAttribute("actionUrl", response.createActionURL().toString());
         model.addAttribute("editForm", editForm);
@@ -169,6 +196,7 @@ public class EditController
         model.addAttribute("licenseList", licenceList);
         model.addAttribute("categoryList", categoryCache.getCategoriesSortedByTitle());
         model.addAttribute("organizationList", organizationsForUser);
+        model.addAttribute("contributorIdSelectList", contributorIdSelectList);
 
         model.addAttribute(MESSAGE, request.getParameter(MESSAGE));
         model.addAttribute(MESSAGE_TYPE, request.getParameter(MESSAGE_TYPE));
@@ -227,7 +255,7 @@ public class EditController
       try
       {
         User ckanUser = getCkanuserFromRequestProxy(request);
-        saveDataset(editForm, ckanUser);
+        saveDataset(editForm, ckanUser, result);
 
         // get the name in the same way he new name is created for new datasets
         if (editForm.isNewDataset())
@@ -254,6 +282,12 @@ public class EditController
           response.setRenderParameter(MESSAGE, "od.editform.save.error");
           log.warn("Cannot save or/and load dataset!", e);
         }
+      }
+      catch (ValidationException e)
+      {
+        response.setRenderParameter(MESSAGE_TYPE, MessageType.WARNING.toString());
+        response.setRenderParameter(MESSAGE, "od.editform.save.warning");
+        log.debug("Form has validation errors: " + result.getAllErrors());
       }
     }
     else
@@ -324,7 +358,8 @@ public class EditController
               gdNavigation.createLinkForSearchResults("suchen", "gdsearchresult", "").toString());
 
           String identifier = metadata.getIdentifierWithFallback();
-          fusekiClient.deleteDataset(PortletUtil.getCkanDatasetBaseLink(), metadata.getId(), identifier);
+          fusekiClient.deleteDataset(PortletUtil.getCkanDatasetBaseLink(), metadata.getId(), identifier,
+              metadata.getOwnerOrg());
         }
         else
         {
@@ -398,6 +433,14 @@ public class EditController
     form.setName(metadataName);
     form.setPrivate(metadata.isPrivate());
     form.setOrganizationId(metadata.getOwnerOrg());
+
+    // set contributor IDs
+    List<String> datasetContributorIdList = metadata.getExtraList(MetadataListExtraFields.CONTRIBUTOR_ID);
+    form.setContributorId(
+        getGovdataContributorId(
+            getContributorIdsFromOrganizations(
+                metadata.getOwnerOrg(), organizationCache.getOrganizationsSorted(), false),
+            datasetContributorIdList));
 
     // Categories must be flattened to a List of Strings, so this can be used with checkboxes
     List<String> categories = new ArrayList<>();
@@ -520,8 +563,8 @@ public class EditController
    * @param form form to save
    * @throws OpenDataRegistryException if saving metadata with the odr client went wrong
    */
-  private void saveDataset(EditForm form, de.seitenbau.govdata.odp.registry.model.User ckanUser)
-      throws OpenDataRegistryException
+  private void saveDataset(EditForm form, de.seitenbau.govdata.odp.registry.model.User ckanUser,
+      BindingResult result) throws OpenDataRegistryException
   {
     log.info("saving: " + form.getName());
 
@@ -549,6 +592,28 @@ public class EditController
     metadata.setTitle(form.getTitle());
 
     metadata.setNotes(form.getNotes());
+
+    // Check that it is a valid value, e.g. must contain in the Contributor-IDs of the organization.
+    List<String> organizationContributorIds = getContributorIdsFromOrganizations(
+        form.getOrganizationId(),
+        organizationCache.getOrganizationsSorted(),
+        false);
+    if (!organizationContributorIds.contains(form.getContributorId()))
+    {
+      // Add error message
+      result.rejectValue(Constants.CONTRIBUTOR_ID, "od.validation_invalid_value", "Der Wert ist ungültig");
+    }
+    else
+    {
+      // add the Govdata-Contributor-ID while remove all other Contributor-IDs of the Organization
+      List<String> newDatasetContributorIds = new ArrayList<String>();
+      newDatasetContributorIds.add(form.getContributorId());
+      newDatasetContributorIds.addAll(
+          extractNonGovDataContributorIds(
+              metadata.getExtraList(MetadataListExtraFields.CONTRIBUTOR_ID),
+              organizationContributorIds));
+      metadata.setExtraList(MetadataListExtraFields.CONTRIBUTOR_ID, newDatasetContributorIds);
+    }
 
     // tags
     List<Tag> tags = metadata.getTags(); // get the list and replace all tags with the ones from the form
@@ -647,6 +712,12 @@ public class EditController
       }
     }
     
+    if (result.hasErrors())
+    {
+      // If validation of valid values in lists fails, stop and throw exception.
+      throw new ValidationException();
+    }
+
     boolean requestSuccess = false;
     
     try
@@ -671,12 +742,85 @@ public class EditController
         Metadata createdMetadata = registryClient.getInstance().getMetadata(ckanUser, metadata.getName());
         String ckanDatasetBaseUrl = PortletUtil.getCkanDatasetBaseLink();
         String identifier = createdMetadata.getIdentifierWithFallback();
-        fusekiClient.updateOrCreateDataset(ckanDatasetBaseUrl, createdMetadata.getId(), identifier);
+        fusekiClient.updateOrCreateDataset(ckanDatasetBaseUrl, createdMetadata.getId(), identifier,
+            createdMetadata.getOwnerOrg());
       }
       catch (Exception e) {
         log.warn(e.getMessage());
       }
     }
+  }
+
+  private List<String> extractNonGovDataContributorIds(List<String> datasetContributorIds,
+      List<String> organizationContributorIds)
+  {
+    List<String> result = new ArrayList<>();
+    if (datasetContributorIds != null)
+    {
+      // Remove all GovData-ContributorIDs
+      for (String contributorId : datasetContributorIds)
+      {
+        if (!organizationContributorIds.contains(contributorId))
+        {
+          result.add(contributorId);
+        }
+      }
+    }
+    return result;
+  }
+
+  private List<String> getContributorIdsFromOrganizations(String orgId, List<Organization> organizations,
+      boolean fallback)
+  {
+    List<String> contributorIdList = new ArrayList<String>();
+    if (CollectionUtils.isNotEmpty(organizations))
+    {
+      if (StringUtils.isEmpty(orgId))
+      {
+        if (fallback)
+        {
+          // use organization selected by default
+          contributorIdList.addAll(organizations.get(0).getContributorIds());
+        }
+      }
+      else
+      {
+        for (Organization orga : organizations)
+        {
+          if (orga.getId().equals(orgId))
+          {
+            contributorIdList.addAll(orga.getContributorIds());
+            break;
+          }
+        }
+      }
+    }
+    return contributorIdList;
+  }
+
+  private String getGovdataContributorId(List<String> contributorsOrg, List<String> datasetContributors)
+  {
+    if (Objects.nonNull(datasetContributors) && Objects.nonNull(datasetContributors))
+    {
+      for (String contributorId : datasetContributors)
+      {
+        if (contributorsOrg.contains(contributorId))
+        {
+          // should never have more than one match, so return
+          return contributorId;
+        }
+      }
+    }
+    return null;
+  }
+
+  private List<OptionTag> mapToOptionTagList(List<String> values)
+  {
+    if (Objects.nonNull(values))
+    {
+      return values.stream().map(value -> new OptionTag(value, value)).collect(Collectors.toList());
+    }
+    return Collections.emptyList();
   }
 
   private String convertBlankStringToNull(String value)

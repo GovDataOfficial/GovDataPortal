@@ -1,10 +1,11 @@
 package de.seitenbau.govdata.cache;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import org.apache.commons.lang3.time.DateUtils;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -21,42 +22,95 @@ public abstract class BaseCache
   /** The cache name boxes. */
   public static final String CACHE_NAME_BOXES = "odp.boxes";
 
-  private static final int MAX_CACHE_TIME_HOURS_DEFAULT = 2;
+  private static final int MAX_CACHE_TIME_AMOUNT_DEFAULT = 2;
 
-  private Date lastUpdated = new Date();
-  
-  private int maxCacheTimeHours = MAX_CACHE_TIME_HOURS_DEFAULT;
+  private static final String DEFAULT_KEY = "default";
+
+  private TemporalUnit cacheTemporalUnit = ChronoUnit.HOURS;
+
+  private int maxCacheTimeAmount = MAX_CACHE_TIME_AMOUNT_DEFAULT;
+
+  private Map<String, Instant> lastUpdatedMap = new HashMap<>();
 
   protected boolean isCacheExpired()
   {
-    Calendar maxCacheDate = new GregorianCalendar();
-    maxCacheDate.add(Calendar.HOUR_OF_DAY, -maxCacheTimeHours);
-    return DateUtils.toCalendar(lastUpdated).before(maxCacheDate);
+    return isCacheExpired(DEFAULT_KEY);
   }
 
   protected void cacheUpdated()
   {
-    lastUpdated = new Date();
+    cacheUpdated(DEFAULT_KEY);
   }
 
-  /**
-   * Gibt die maximale Zeit in Stunden zurück, die die Liste an Dateiformaten gecacht werden soll.
-   * 
-   * @return the maxCacheTimeHours
-   */
-  public int getMaxCacheTimeHours()
+  protected boolean isCacheExpired(String key)
   {
-    return maxCacheTimeHours;
+    Instant lastUpdated = lastUpdatedMap.get(key);
+    if (Objects.nonNull(lastUpdated))
+    {
+      Instant maxCacheDate = Instant.now().minus(maxCacheTimeAmount, cacheTemporalUnit);
+      return lastUpdated.isBefore(maxCacheDate);
+    }
+    return true;
+  }
+
+  protected void cacheUpdated(String key)
+  {
+    lastUpdatedMap.put(key, Instant.now());
   }
 
   /**
-   * Setzt die maximale Zeit in Stunden, die die Liste an Dateiformaten gecacht werden soll.
+   * Gibt die maximale Zeit (in der Einheit {@link cacheTemporalUnit}) zurück, die die Daten gecacht
+   * werden sollen.
+   * 
+   * @return the maxCacheTimeAmount
+   */
+  public int getMaxCacheTimeAmount()
+  {
+    return maxCacheTimeAmount;
+  }
+
+  /**
+   * Sets maxCacheTimeAmount. Default: {@link MAX_CACHE_TIME_AMOUNT_DEFAULT}.
+   * 
+   * @param maxCacheTimeAmount the maxCacheTimeAmount to set
+   */
+  public void setMaxCacheTimeAmount(int maxCacheTimeAmount)
+  {
+    this.maxCacheTimeAmount = maxCacheTimeAmount;
+  }
+
+  /**
+   * Gets the value for cacheTemporalUnit. Default: {@link ChronoUnit.HOURS}.
+   * 
+   * @return the cacheTemporalUnit.
+   */
+  public TemporalUnit getCacheTemporalUnit()
+  {
+    return cacheTemporalUnit;
+  }
+
+  /**
+   * Sets cacheTemporalUnit. Default: {@link ChronoUnit.HOURS}.
+   * 
+   * @param cacheTemporalUnit the cacheTemporalUnit to set
+   */
+  public void setCacheTemporalUnit(TemporalUnit cacheTemporalUnit)
+  {
+    this.cacheTemporalUnit = cacheTemporalUnit;
+  }
+
+  /**
+   * Setzt die maximale Zeit in Stunden, die die Daten gecacht werden sollen.
+   * 
+   * Deprecated: Use {@link setMaxCacheTimeAmount} in combination with {@link setCacheTemporalUnit}.
    * 
    * @param maxCacheTimeHours the maxCacheTimeHours to set
    */
+  @Deprecated
   public void setMaxCacheTimeHours(int maxCacheTimeHours)
   {
-    this.maxCacheTimeHours = maxCacheTimeHours;
+    this.cacheTemporalUnit = ChronoUnit.HOURS;
+    this.maxCacheTimeAmount = maxCacheTimeHours;
   }
 
 }

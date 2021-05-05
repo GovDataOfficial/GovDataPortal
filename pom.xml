@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>4.3.5</version>
+  <version>4.4.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -20,7 +20,7 @@
     <liferay.deploy.dir>/opt/app/portal-liferay/liferay-home/deploy</liferay.deploy.dir>
     <junit.version>4.13.1</junit.version>
     <assertj.version>1.7.1</assertj.version>
-    <portlet-api.version>2.0</portlet-api.version>
+    <portlet-api.version>3.0.1</portlet-api.version>
     <spring.version>4.2.6.RELEASE</spring.version>
     <thymeleaf.version>2.1.4.RELEASE</thymeleaf.version>
     <log4j.version>2.8.2</log4j.version>
@@ -202,6 +202,7 @@
     <module>gd-captcha-api</module>
     <module>gd-captcha-fragment</module>
     <module>gd-developers-corner-portlet</module>
+    <module>gd-metadata-quality-portlet</module>
     <module>gd-user-menu</module>
     <module>gd-users-admin-fragment</module>
     <module>gd-comment-taglib-fragment</module>

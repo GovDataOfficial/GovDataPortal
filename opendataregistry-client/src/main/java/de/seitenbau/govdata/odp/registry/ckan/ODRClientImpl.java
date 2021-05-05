@@ -1340,6 +1340,9 @@ public class ODRClientImpl implements ODRClient
   {
     List<Organization> organizations = new ArrayList<>();
 
+    // Get all organizations with additional informations, e.g. extras, and use these
+    List<Organization> allOrganizations = getOrganizations();
+
     String apikey = ((UserImpl) user).getApikey();
 
     Response response = null;
@@ -1357,7 +1360,15 @@ public class ODRClientImpl implements ODRClient
           for (JsonNode organization : result)
           {
             OrganizationBean bean = convert(organization, OrganizationBean.class);
-            organizations.add(new OrganizationImpl(bean));
+            for (Organization org : allOrganizations)
+            {
+              if (bean.getName().equals(org.getName()))
+              {
+                organizations.add(org);
+                break;
+              }
+            }
+
           }
         }
       }
@@ -1378,7 +1389,7 @@ public class ODRClientImpl implements ODRClient
 
     return organizations;
   }
-  
+
   @Override
   public List<Organization> getOrganizations()
   {
@@ -1387,7 +1398,7 @@ public class ODRClientImpl implements ODRClient
     Response response = null;
     try
     {
-      response = action.getOrganisations(true); // we need all fields -> true
+      response = action.getOrganisations(true, true); // we need all fields and extras -> true, true
       if (response.getStatusInfo() == Status.OK)
       {
         JsonNode node = response.readEntity(JsonNode.class);

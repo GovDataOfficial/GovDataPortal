@@ -26,10 +26,8 @@
           <tr>
             <th><label id="organizationId_label" for="organizationId">[[#{'od.organization.name'}]]<span class="requiredmarker"> *</span></label></th>
             <td>
-              <select aria-required="true" th:field="*{organizationId}" aria-labelledby="organizationId_label organizationId_error">
-                <option th:each="licence : ${organizationList}" th:value="${licence.id}" th:text="${licence.title}">
-
-                </option>
+              <select aria-required="true" th:field="*{organizationId}" aria-labelledby="organizationId_label organizationId_error" id="organizationSelect" onchange="updateContributorSelect(this.value)" >
+                <option th:each="org : ${organizationList}" th:value="${org.id}" th:text="${org.title}"></option>
               </select>
               <div id="organizationId_error" class="validation-error" th:if="${#fields.hasErrors('organizationId')}" th:errors="*{organizationId}"></div>
               <div id="organizationId_error" th:unless="${#fields.hasErrors('organizationId')}"></div>
@@ -61,6 +59,17 @@
               <textarea th:field="*{notes}" aria-required="true" th:placeholder="#{'od.validation_required'}" aria-labelledby="notes_label notes_error"></textarea>
               <div id="notes_error" class="validation-error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></div>
               <div id="notes_error" th:unless="${#fields.hasErrors('notes')}"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <th><label id="contributorId_label" for="contributorId">[[#{'od.govdata.contributor.name'}]]<span class="requiredmarker"> *</span></label></th>
+            <td>
+              <select aria-required="true" th:field="*{contributorId}" aria-labelledby="contributorId_label contributorId_error" id="govdataContributorId" >
+                <option th:each="option : ${contributorIdSelectList}" th:value="${option.value}" th:text="${option.label}"></option>
+              </select>
+              <div id="contributorId_error" class="validation-error" th:if="${#fields.hasErrors('contributorId')}" th:errors="*{contributorId}"></div>
+              <div id="contributorId_error" th:unless="${#fields.hasErrors('contributorId')}"></div>
             </td>
           </tr>
 
@@ -296,3 +305,33 @@
     </div>
   </div>
 </div>
+
+<script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+/*<![CDATA[*/
+  const organizationList = [[${organizationList}]];
+  const initialContributorId = [[${editForm.contributorId}]];
+
+  function updateContributorSelect(selectedOrganization) {
+    // read contribIds for selected Org
+    var contributorIdsOrg = organizationList.find(x => x.id === selectedOrganization).contributorIds;
+
+    // clear existing options
+    $("#govdataContributorId").empty();
+
+    // if multiple Ids available - add empty option
+    if (contributorIdsOrg.length > 1 && !contributorIdsOrg.includes(initialContributorId)) {
+      var option = "<option value=\"\">" + [[#{od.select.required.item.text}]] +"</option>";
+      $("#govdataContributorId").append(option);
+    }
+    // add contributorIds to select field
+    contributorIdsOrg.forEach(function(item, i) {
+      var selected = "";
+      if (item === initialContributorId) {
+        selected = " selected";
+      }
+      var option = "<option value=\"" + item + "\" " + selected + ">" + item +  "</option>";
+      $("#govdataContributorId").append(option);
+    });
+  }
+  /*]]>*/
+</script>

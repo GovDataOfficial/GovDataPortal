@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.naming.ConfigurationException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchException;
@@ -53,6 +54,9 @@ import org.elasticsearch.search.aggregations.bucket.filter.Filter;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsBuilder;
+import org.elasticsearch.search.aggregations.metrics.tophits.InternalTopHits;
+import org.elasticsearch.search.internal.InternalSearchHit;
+import org.elasticsearch.search.internal.InternalSearchHits;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -116,11 +120,10 @@ public class SearchServiceElasticsearchImpl implements SearchService
   private static final double AREA_GERMANY = 366786359054.79553;
 
   /**
-   * Maximum distance between boundingbox-center and a datasets spatial center.
-   * This is approx. half of the maximal distance two points in Germany can have
-   * (The ranked dataset has to be inside the boundingbox. So assuming the boundingbox
-   * is only be as big as whole germany, the center is at most half of Germanys size away
-   * from the dataset's center.)
+   * Maximum distance between boundingbox-center and a datasets spatial center. This is approx. half
+   * of the maximal distance two points in Germany can have (The ranked dataset has to be inside the
+   * boundingbox. So assuming the boundingbox is only be as big as whole germany, the center is at
+   * most half of Germanys size away from the dataset's center.)
    */
   private static final String MAX_RADIUS_GERMANY = "450km";
 
@@ -144,6 +147,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
   @Value("${elasticsearch.search.index.searchhistory}")
   private String searchhistoryIndexName;
+
+  @Value("${elasticsearch.search.index.metrics}")
+  private String metricIndexName;
 
   @Value("${elasticsearch.search.spatial_area_boost}")
   private float spatialAreaBoost;
@@ -190,15 +196,15 @@ public class SearchServiceElasticsearchImpl implements SearchService
    * Führt eine Suche mit den angegebenen Suchbegriffen und Filtern aus und gibt das Ergebnis
    * zurück.
    *
-   * @param q          der Suchbegriff.
+   * @param q der Suchbegriff.
    * @param numResults die Anzahl der maximalen Treffer, die zurückgeliefert werden sollen. Falls
-   *                   null übergeben wird das Default von {@value #DEFAULT_SEARCH_RESULT_SIZE} genutzt.
-   * @param bundle     die anzuwendenden Filter.
-   * @param sort       die Sortierung.
+   *        null übergeben wird das Default von {@value #DEFAULT_SEARCH_RESULT_SIZE} genutzt.
+   * @param bundle die anzuwendenden Filter.
+   * @param sort die Sortierung.
    * @return die Treffer mit zusätzlichen Informationen wie Facetten.
    * @see de.seitenbau.govdata.search.adapter.SearchService#search(java.lang.String,
-   * java.lang.Integer, de.seitenbau.govdata.search.common.SearchFilterBundle,
-   * de.seitenbau.govdata.search.sort.Sort)
+   *      java.lang.Integer, de.seitenbau.govdata.search.common.SearchFilterBundle,
+   *      de.seitenbau.govdata.search.sort.Sort)
    */
   @Override
   public SearchResultContainer search(
@@ -293,11 +299,11 @@ public class SearchServiceElasticsearchImpl implements SearchService
       search.addSort(createSorting(sort));
     }
 
-    //System.out.println(search.toString());
+    // System.out.println(search.toString());
 
     // execute search
     SearchResponse response = search.execute().actionGet();
-    //System.out.println(response.toString());
+    // System.out.println(response.toString());
 
     // Search and count hits per type
     SearchHits responseSearchHits = response.getHits();
@@ -642,11 +648,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   }
 
   /**
-   * Queries Elastic Search for suggestions regarding the given search phrase.
-   * One ES-Call is made for each index. This way we still get results, even
-   * if one index does return an empty list.
-   * (Querying all indices at once does return an empty list if one index has
-   * no suggestions.)
+   * Queries Elastic Search for suggestions regarding the given search phrase. One ES-Call is made
+   * for each index. This way we still get results, even if one index does return an empty list.
+   * (Querying all indices at once does return an empty list if one index has no suggestions.)
    *
    * @param q current phrase which needs suggestions
    * @return List of suggested search phrases
@@ -655,9 +659,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   {
     Set<SuggestionOption> suggestionOptions = new HashSet<>();
 
-    DirectCandidateGenerator directCandidateGenerator = new PhraseSuggestionBuilder
-        .DirectCandidateGenerator("title")
-        .suggestMode("always");
+    DirectCandidateGenerator directCandidateGenerator =
+        new PhraseSuggestionBuilder.DirectCandidateGenerator("title")
+            .suggestMode("always");
 
     PhraseSuggestionBuilder phraseSuggestionBuilder = new PhraseSuggestionBuilder(SUGGEST_DID_YOU_MEAN)
         .text(q)
@@ -746,8 +750,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
   }
 
   /**
-   * Iterates the List of Filters and removes all groups
-   * which are not part of the official list.
+   * Iterates the List of Filters and removes all groups which are not part of the official list.
    *
    * @param groupAggregateList
    */
@@ -936,5 +939,35 @@ public class SearchServiceElasticsearchImpl implements SearchService
   public void setDefaultTypeFilterValues(String[] defaultTypeFilterValues)
   {
     this.defaultTypeFilterValues = defaultTypeFilterValues;
+  }
+
+  @Override
+  public SearchHits getMetrics()
+  {
+    SearchHits result = new InternalSearchHits(new InternalSearchHit[0], 0, 1); // empty search hits
+    // get all values for latest available date
+    AbstractAggregationBuilder aggregationMetrics = AggregationBuilders
+        .terms(SearchConsts.METRIC_GROUP_DATA_NAME)
+        .field("date")
+        .size(1)
+        .order(Terms.Order.term(false)) // desc order
+        .subAggregation(AggregationBuilders
+            .topHits(SearchConsts.METRICS_TOP_HIT_NAME)
+            .setSize(9001)
+            .setFrom(0));
+
+    // send search request
+    SearchRequestBuilder search = client.prepareSearch(metricIndexName)
+        .addAggregation(aggregationMetrics)
+        .setSize(0);
+    SearchResponse response = search.execute().actionGet();
+    Terms terms = response.getAggregations().get(SearchConsts.METRIC_GROUP_DATA_NAME);
+    if (CollectionUtils.isNotEmpty(terms.getBuckets()))
+    {
+      Bucket bucket = terms.getBuckets().get(0);
+      InternalTopHits topHits = bucket.getAggregations().get(SearchConsts.METRICS_TOP_HIT_NAME);
+      result = topHits.getHits();
+    }
+    return result;
   }
 }

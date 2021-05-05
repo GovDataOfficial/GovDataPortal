@@ -1,0 +1,41 @@
+
+.aui a.open-filter-menu-small {
+  @extend .h2-metainfo;
+  background: none $white;
+  box-shadow: 1px 1px 1px $kontur-gray;
+  display: block;
+  font-weight: bold;
+  padding: .7em 1.2em .7em .7em;
+  width: 100%;
+
+  span {
+    display: inline-block; // fix upscaling in iOS when in landscape-mode...
+  }
+}
+
+.open-filter-menu-small {
+  .sbi-hamburger-menu {
+    font-size: 1.4em;
+    padding-left: 3.5em;
+    vertical-align: middle;
+  }
+}
+
+#mq-portlet-body .design-box {
+  padding: rem-calc(10) rem-calc(20);
+  &:not(:first-child) {
+    margin-top: rem-calc(30);
+  }
+  &:last-child {
+    margin-bottom: rem-calc(30);
+  }
+}
+
+.aui h2.chart-title {
+  font-weight: bold;
+  text-align: center;
+}
+
+.show-full-text {
+  cursor: pointer;
+}

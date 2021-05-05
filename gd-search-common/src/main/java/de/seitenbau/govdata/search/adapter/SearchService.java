@@ -2,6 +2,8 @@ package de.seitenbau.govdata.search.adapter;
 
 import java.util.List;
 
+import org.elasticsearch.search.SearchHits;
+
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import de.seitenbau.govdata.search.sort.Sort;
@@ -71,4 +73,10 @@ public interface SearchService
    * @param phrase
    */
   public void recordSearchPhrase(String phrase);
+
+  /**
+   * Get the metrics for the metadata-quality portlet. Uses metrics index.
+   * @return Json response from elastic-search
+   */
+  public SearchHits getMetrics();
 }

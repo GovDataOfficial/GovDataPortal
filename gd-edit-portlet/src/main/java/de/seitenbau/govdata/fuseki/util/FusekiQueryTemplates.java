@@ -1,7 +1,7 @@
 package de.seitenbau.govdata.fuseki.util;
 
 /**
- * Enthält die Templates für Query-Anfragen an den Triplestore
+ * Enthält die Templates für Query-Anfragen an den Triplestore.
  *
  */
 public abstract class FusekiQueryTemplates
@@ -11,7 +11,7 @@ public abstract class FusekiQueryTemplates
    * Delete Query
    * %s: Insert URI of the dataset
    */
-  private static final String DELETE_DATASET_QEURY = "PREFIX dct: <http://purl.org/dc/terms/>\n"
+  private static final String DELETE_DATASET_QUERY = "PREFIX dct: <http://purl.org/dc/terms/>\n"
       + "\n"
       + "DELETE { ?s ?p ?o }\n"
       + "WHERE {\n"
@@ -21,13 +21,40 @@ public abstract class FusekiQueryTemplates
       + "}";
 
   /**
+   * Delete Query
+   * @param %s Insert URI of the dataset
+   * @param %s ID of the organization
+   */
+  private static final String DELETE_MQA_DATASET_QUERY = "DELETE { ?s ?p ?o }\n" +
+      "WHERE {\n" +
+      "  ?r <http://www.w3.org/ns/dqv#computedOn> <%s> .\n"
+      +
+      "  ?r <http://govdata.de/mqa/#attributedTo> \"%s\" .\n" +
+      "  ?r (<>|!<>)* ?s .\n" +
+      "  ?s (<>|!<>)* ?o . \n" +
+      "  ?s ?p ?o\n" +
+      "}";
+
+  /**
    * Gibt eine Query zum Löschen des Datensatzes mit der URI datasetUri. Diese Query muss an den
-   * /update Endpukt des Triplestores geschickt werden.
+   * /update Endpunkt des Triplestores geschickt werden.
    * @param datasetUri URI des Datensatzes
    * @return
    */
   public static String getDeleteDatasetQuery(String datasetUri)
   {
-    return String.format(DELETE_DATASET_QEURY, datasetUri, datasetUri);
+    return String.format(DELETE_DATASET_QUERY, datasetUri, datasetUri);
+  }
+
+  /**
+   * Gibt eine Query zum Löschen des Mqa-Datensatzes mit der URI datasetUri. Diese Query muss an den
+   * /update Endpunkt des Triplestores geschickt werden.
+   * @param datasetUri URI des Datensatzes
+   * @param ownerOrg ID der zugehörigen Organisation
+   * @return
+   */
+  public static String getDeleteMqaDatasetQuery(String datasetUri, String ownerOrg)
+  {
+    return String.format(DELETE_MQA_DATASET_QUERY, datasetUri, ownerOrg);
   }
 }

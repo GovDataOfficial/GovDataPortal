@@ -7,7 +7,12 @@ $data-green: #1e5a5a;
 $dokument-violett: #503278;
 $app-blue: #284664;
 $blog-red: #5a0a0a;
+
 $devcorner-green: #064300;
+$devcorner-green-light: rgba(6, 67, 0, 0.3);
+
+$metadataquality-pink: rgb(128, 0, 75);
+$metadataquality-pink-light: rgb(230, 203, 218);
 
 
 $link-blue: #009fe3;
@@ -60,6 +65,10 @@ $checkbox-border: darken($kontur-gray, 10%);
   @include navcolor($devcorner-green)
 }
 
+#layout_51 { // Metadatenqualität
+  @include navcolor($metadataquality-pink)
+}
+
 
 // colors for mediatype-icons (could have been an elegant for-loop, but liferay uses OLD sass-compiler)
 .mediatype-icon {
@@ -80,5 +89,8 @@ $checkbox-border: darken($kontur-gray, 10%);
   }
   &.mediatype-devcorner {
     background-color: $devcorner-green;
+  }
+  &.mediatype-metadataquality {
+    background-color: $metadataquality-pink;
   }
 }

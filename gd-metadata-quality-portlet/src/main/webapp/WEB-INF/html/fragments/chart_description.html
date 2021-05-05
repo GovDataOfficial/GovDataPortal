@@ -1,0 +1,18 @@
+<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+
+  <!--/* Template for the chart descriptions (title, subtitle and metric explanation) */-->
+  <div th:fragment="description(imagepath, type)">
+    <h2 class="chart-title">[[#{'gd.metadata.charts.title.' + ${type}}]]</h2>
+    <p th:id="'subtitle-' + ${type}">
+      <span th:utext="#{'gd.metadata.charts.subtitle.' + ${type}}"></span>
+      <span class="show-full-text" th:title="#{od.metadata.charts.subtitle.title_tag.show.more}"
+          th:unless="#{'gd.metadata.charts.subtitle.' + ${type} + '.ext'} == ''"
+          th:onclick="'toggleChartExtText(this, \'#subtitle-ext-' + ${type} + '\')'">
+        <svg aria-hidden="true" class="lexicon-icon lexicon-icon-info-panel-closed">
+          <use th:attr="'xlink:href'=@{${imagepath} + '/lexicon/icons.svg#info-panel-closed'}" />
+        </svg>
+      </span>
+    </p>
+    <p th:id="'subtitle-ext-' + ${type}" class="subtitle-ext" th:utext="#{'gd.metadata.charts.subtitle.' + ${type} + '.ext'}" />
+  </div>
+</div>

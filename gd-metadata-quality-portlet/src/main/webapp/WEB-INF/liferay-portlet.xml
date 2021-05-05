@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 7.3.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_7_3_0.dtd">
+
+<liferay-portlet-app>
+  <portlet>
+    <portlet-name>gd-metadata-quality-portlet</portlet-name>
+    <icon>/icon.png</icon>
+    <configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
+    <friendly-url-mapper-class>de.seitenbau.govdata.metadataquality.common.MetadataQualityUrlMapper</friendly-url-mapper-class>
+    <friendly-url-mapping>quality</friendly-url-mapping>
+    <friendly-url-routes>metadataquality-friendly-url-routes.xml</friendly-url-routes>
+    <instanceable>false</instanceable>
+    <private-session-attributes>true</private-session-attributes>
+    <requires-namespaced-parameters>false</requires-namespaced-parameters>
+    <header-portlet-javascript>/js/Chart.bundle.min.js</header-portlet-javascript>
+    <footer-portlet-javascript>/js/mqa.js</footer-portlet-javascript>
+    <css-class-wrapper>metadata-quality-portlet</css-class-wrapper>
+  </portlet>
+  <role-mapper>
+    <role-name>administrator</role-name>
+    <role-link>Administrator</role-link>
+  </role-mapper>
+  <role-mapper>
+    <role-name>guest</role-name>
+    <role-link>Guest</role-link>
+  </role-mapper>
+  <role-mapper>
+    <role-name>power-user</role-name>
+    <role-link>Power User</role-link>
+  </role-mapper>
+  <role-mapper>
+    <role-name>user</role-name>
+    <role-link>User</role-link>
+  </role-mapper>
+</liferay-portlet-app>

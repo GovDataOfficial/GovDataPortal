@@ -1,6 +1,7 @@
 package de.seitenbau.govdata.fuseki.impl;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.ReadWrite;
@@ -28,6 +29,7 @@ import de.seitenbau.govdata.fuseki.FusekiClient;
 import de.seitenbau.govdata.fuseki.FusekiEndpoint;
 import de.seitenbau.govdata.fuseki.util.FusekiQueryTemplates;
 import de.seitenbau.govdata.navigation.PortletUtil;
+import de.seitenbau.govdata.shacl.ShaclValidator;
 
 /**
  * Ein Client für den Zugriff auf den Apache Jena Fuseki.
@@ -44,9 +46,17 @@ public class FusekiClientImpl implements FusekiClient
 
   private final String fusekiDatastoreBaseEndpoint = PortletUtil.getLinkToFusekiTriplestoreUrl();
 
+  private final String fusekiShaclValidatorDatastoreEndpoint =
+      PortletUtil.getLinkToFusekiTriplestoreShaclValidationUrl();
+
   private final String fusekiBaseUrl = PropsUtil.get(GovDataConfigParam.FUSEKI_URL);
 
-  private boolean supportDisabled = true;
+  private boolean fusekiSupportDisabled = true;
+
+  private boolean shaclSupport = true;
+
+  @Inject
+  private ShaclValidator shaclValidatorClient;
 
   /**
    * Zusätzliche Checks nach Initialisierung der Klasse.
@@ -58,7 +68,8 @@ public class FusekiClientImpl implements FusekiClient
     {
       if (isAvailable())
       {
-        supportDisabled = false;
+        fusekiSupportDisabled = false;
+        shaclSupport = shaclValidatorClient.isAvailable();
       }
       else
       {
@@ -70,12 +81,13 @@ public class FusekiClientImpl implements FusekiClient
   }
 
   @Override
-  public void deleteDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier)
+  public void deleteDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier,
+      String ownerOrgId)
   {
     final String method = "deleteDataset() : ";
     LOG.trace("{}Start. ckanTechnicalId: {}, Identifier: {}.", method, ckanTechnicalId, identifier);
 
-    if (supportDisabled)
+    if (fusekiSupportDisabled)
     {
       logStatus(method);
       LOG.trace(method + "End");
@@ -85,6 +97,7 @@ public class FusekiClientImpl implements FusekiClient
     Model model = loadModelFromCkanRdf(ckanDatasetBaseUrl, ckanTechnicalId);
     String datasetUri = getUriFromModel(model, identifier);
     deleteDataset(datasetUri, identifier);
+    deleteMqaDataset(datasetUri, identifier, ownerOrgId);
 
     LOG.trace(method + "End");
   }
@@ -92,6 +105,28 @@ public class FusekiClientImpl implements FusekiClient
   private void deleteDataset(String datasetUri, String identifier)
   {
     final String method = "deleteDataset() : ";
+    LOG.trace("{}Start.", method);
+
+    deleteDatasetBase(datasetUri, identifier,
+        FusekiQueryTemplates.getDeleteDatasetQuery(datasetUri), getUpdateEndpoint());
+
+    LOG.trace(method + "End");
+  }
+
+  private void deleteMqaDataset(String datasetUri, String identifier, String ownerOrgId)
+  {
+    final String method = "deleteMqaDataset() : ";
+    LOG.trace("{}Start.", method);
+
+    deleteDatasetBase(datasetUri, identifier,
+        FusekiQueryTemplates.getDeleteMqaDatasetQuery(datasetUri, ownerOrgId), getMqaUpdateEndpoint());
+
+    LOG.trace(method + "End");
+  }
+
+  private void deleteDatasetBase(String datasetUri, String identifier, String query, String updateEndpoint)
+  {
+    final String method = "deleteDatasetBase() : ";
     LOG.trace("{}Start. datasetUri: {}, Identifier: {}.", method, datasetUri, identifier);
 
     if (StringUtils.isBlank(datasetUri))
@@ -101,15 +136,13 @@ public class FusekiClientImpl implements FusekiClient
       return;
     }
 
-    try (RDFConnection conn = RDFConnectionFactory.connect(getUpdateEndpoint()))
+    try (RDFConnection conn = RDFConnectionFactory.connect(updateEndpoint))
     {
       conn.begin(ReadWrite.WRITE);
       try
       {
-        // delete everything from the dataset except for the organization
         LOG.debug("Deleting dataset with URIRef: " + datasetUri);
-        UpdateRequest updateQuery =
-            UpdateFactory.create(FusekiQueryTemplates.getDeleteDatasetQuery(datasetUri));
+        UpdateRequest updateQuery = UpdateFactory.create(query);
         conn.update(updateQuery);
         conn.commit();
         LOG.debug("Deleting dataset was successful");
@@ -117,7 +150,7 @@ public class FusekiClientImpl implements FusekiClient
       catch (Exception e)
       {
         conn.abort();
-        LOG.error("Problem with sparql request: " + e.getMessage());
+        LOG.error("Dataset was not deleted from triplestore. The sparql request failed: " + e.getMessage());
       }
       finally
       {
@@ -132,12 +165,13 @@ public class FusekiClientImpl implements FusekiClient
   }
 
   @Override
-  public void updateOrCreateDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier)
+  public void updateOrCreateDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier,
+      String ownerOrgId)
   {
     final String method = "updateOrCreateDataset() : ";
     LOG.trace(method + "Start");
 
-    if (supportDisabled)
+    if (fusekiSupportDisabled)
     {
       logStatus(method);
       LOG.trace(method + "End");
@@ -145,11 +179,19 @@ public class FusekiClientImpl implements FusekiClient
     }
 
     Model model = loadModelFromCkanRdf(ckanDatasetBaseUrl, ckanTechnicalId);
-    String datsetUri = getUriFromModel(model, identifier);
+    String datasetUri = getUriFromModel(model, identifier);
     // delete existing dataset if possible before creating it
-    deleteDataset(datsetUri, identifier);
+    deleteDataset(datasetUri, identifier);
     createInTriplestore(model);
-
+    deleteMqaDataset(datasetUri, identifier, ownerOrgId);
+    if (shaclSupport)
+    {
+      Model validationModel = shaclValidatorClient.validate(datasetUri, model, ownerOrgId);
+      if (validationModel != null)
+      {
+        createInMqaTriplestore(validationModel);
+      }
+    }
     LOG.trace(method + "End");
   }
 
@@ -158,20 +200,41 @@ public class FusekiClientImpl implements FusekiClient
     final String method = "createInTriplestore() : ";
     LOG.trace(method + "Start");
 
-    try (RDFConnection conn = RDFConnectionFactory.connect(getDataEndpoint()))
+    createInTriplestoreBase(model, getDataEndpoint());
+
+    LOG.trace(method + "End");
+  }
+
+  private void createInMqaTriplestore(Model model)
+  {
+    final String method = "createInMqaTriplestore() : ";
+    LOG.trace(method + "Start");
+
+    createInTriplestoreBase(model, getMqaDataEndpoint());
+
+    LOG.trace(method + "End");
+  }
+
+  private void createInTriplestoreBase(Model model, String dataEndpoint)
+  {
+    final String method = "createInTriplestoreBase() : ";
+    LOG.trace(method + "Start");
+
+    try (RDFConnection conn = RDFConnectionFactory.connect(dataEndpoint))
     {
       conn.begin(ReadWrite.WRITE);
       try
       {
-        LOG.debug("Creating new dataset in the triplestore");
+        LOG.debug("Creating new dataset in the mqa-triplestore");
         conn.load(model);
         conn.commit();
         LOG.debug("New dataset was created successfully");
+
       }
       catch (Exception e)
       {
         conn.abort();
-        LOG.error("Problem with sparql request: " + e.getMessage());
+        LOG.error("Dataset was not created in triplestore. The sparql request failed: " + e.getMessage());
       }
       finally
       {
@@ -258,7 +321,7 @@ public class FusekiClientImpl implements FusekiClient
   private String getSupportText()
   {
     String result = SUPPORT_DISABLED;
-    if (!supportDisabled)
+    if (!fusekiSupportDisabled)
     {
       result = SUPPORT_ENABLED;
     }
@@ -291,6 +354,16 @@ public class FusekiClientImpl implements FusekiClient
   private String getDataEndpoint()
   {
     return FusekiEndpoint.DATA.getFusekiEndpoint(fusekiDatastoreBaseEndpoint);
+  }
+
+  private String getMqaUpdateEndpoint()
+  {
+    return FusekiEndpoint.UPDATE.getFusekiEndpoint(fusekiShaclValidatorDatastoreEndpoint);
+  }
+
+  private String getMqaDataEndpoint()
+  {
+    return FusekiEndpoint.DATA.getFusekiEndpoint(fusekiShaclValidatorDatastoreEndpoint);
   }
 
 }

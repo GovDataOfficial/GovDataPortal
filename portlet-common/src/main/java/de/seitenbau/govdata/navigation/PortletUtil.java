@@ -78,7 +78,7 @@ public abstract class PortletUtil
   }
 
   /**
-   * Gibt den Link für den Fuseki Triplestore zurück. Die URL endet ohne Slash.
+   * Gibt den Link für den Fuseki Datastore ds zurück. Die URL endet ohne Slash.
    * 
    * @return
    */
@@ -89,6 +89,17 @@ public abstract class PortletUtil
   }
 
   /**
+   * Gibt den Link für den Fuseki Datastore mqa zurück. Die URL endet ohne Slash.
+   * 
+   * @return
+   */
+  public static String getLinkToFusekiTriplestoreShaclValidationUrl()
+  {
+    String fusekiUrl = StringUtils.appendIfMissing(PropsUtil.get(GovDataConfigParam.FUSEKI_URL), SLASH);
+    return fusekiUrl + PropsUtil.get(GovDataConfigParam.FUSEKI_SHACL_DATASTORE_NAME);
+  }
+
+  /**
    * Gibt den Link für den Fuseki Triplestore zurück. Die URL endet ohne Slash.
    * 
    * @return
@@ -96,5 +107,25 @@ public abstract class PortletUtil
   public static String getLinkToFusekiSparqlEndpoint()
   {
     return StringUtils.removeEnd(PropsUtil.get(GovDataConfigParam.FUSEKI_SPARQL_ENDPOINT), SLASH);
+  }
+
+  /**
+   * Gibt den Link für den SHACL Validator zurück. Die URL endet ohne Slash.
+   * 
+   * @return
+   */
+  public static String getLinkToShaclValidatorEndpoint()
+  {
+    return StringUtils.removeEnd(PropsUtil.get(GovDataConfigParam.SHACL_VALIDATOR_ENDPOINT), SLASH);
+  }
+
+  /**
+   * Gibt das ausgewählte Profil für den SHACL Validator zurück.
+   * 
+   * @return
+   */
+  public static String getValidatorProfileType()
+  {
+    return PropsUtil.get(GovDataConfigParam.SHACL_VALIDATOR_PROFILE_TYPE);
   }
 }

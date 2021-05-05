@@ -175,5 +175,5 @@ public interface CKANClientAction
   @GET
   @Path("/api/3/action/organization_list")
   @Produces("application/json")
-  public Response getOrganisations(@QueryParam("all_fields") boolean allfields);
+  public Response getOrganisations(@QueryParam("all_fields") boolean allfields, @QueryParam("include_extras") boolean includeextras);
 }

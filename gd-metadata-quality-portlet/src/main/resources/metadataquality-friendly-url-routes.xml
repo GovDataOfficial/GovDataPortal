@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 7.3.0//EN"
+  "http://www.liferay.com/dtd/liferay-friendly-url-routes_7_3_0.dtd">
+<routes>
+  <route>
+    <pattern>/{filter}</pattern>
+  </route>
+</routes>

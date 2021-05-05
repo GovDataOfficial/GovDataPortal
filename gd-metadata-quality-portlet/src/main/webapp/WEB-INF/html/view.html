@@ -1,0 +1,431 @@
+<div id="mq-portlet-body" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+  <div id="contentPane" class="contentPane row">
+    <div class="column small-12 large-8 typefilterarea show-for-medium-down">
+      <a th:class="'open-filter-menu-small right-off-canvas-toggle' + (${selectedSourcePortal} == ${allPublishers} ? '' : ' active-filters')">
+        <i class="sbi-hamburger-menu pull-right"></i>
+        <span th:if="${selectedSourcePortal} == ${allPublishers}">[[#{gd.metadata.filter.label}]]: [[#{gd.metadata.filter.none}]]</span>
+        <span th:unless="${selectedSourcePortal} == ${allPublishers}">[[#{gd.metadata.filter.label}]]: [[#{gd.metadata.filter.active}]]</span>
+      </a>
+    </div>
+  </div>
+  <div class="contentPane row">
+    <div id="filterarea-container" class="column large-4">
+      <div class="filterarea design-box design-box-padding">
+        <h2 class="filterarea-title">
+          [[#{'gd.metadata.filter.title'}]] <a th:href="${clearFilterUrl}"
+            class="label label-inverse more-linklabel">[[#{'gd.metadata.filter.reset'}]]</a>
+        </h2>
+        <th:block th:unless="${#lists.isEmpty(organizations)}">
+          <dl class="filtergroup">
+            <dt class="filtergroup-title" th:text="#{gd.metadata.source.portal}"></dt>
+            <dd th:each="orga : ${organizations}">
+              <a th:href="${orga.actionURL}"
+                th:title="#{gd.metadata.filter.label} + ' «' + ${orga.displayName} + '» ' + (${orga.active} ? #{gd.metadata.filter.switch.inactive} : #{gd.metadata.filter.switch.active})"
+                th:class="'checkboxrow' + (${orga.active} ? ' checked' : '')">
+                <div class="checkbox" th:text="${orga.active} ? 'a' : ''"></div> <span class="offscreen"
+                th:if="${orga.active}">(ausgewählt)</span>
+                <div class="filtername" th:text="${orga.displayName}"></div>
+              </a>
+            </dd>
+          </dl>
+        </th:block>
+        <div class="reset-button reset-button-spacer" th:unless="${#lists.isEmpty(organizations)}">
+          <a th:href="${clearFilterUrl}" class="label label-inverse more-linklabel">[[#{'gd.metadata.filter.reset'}]]</a>
+        </div>
+      </div>
+    </div>
+    <div id="searchresult-container" class="column small-12 large-8">
+      <div th:if="${viewTop}">
+        <div class="design-box" th:unless="${#maps.isEmpty(topLicenses)}">
+          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'licenses')" ></div>
+          <div><canvas id="licChart" aria-label="Beliebte Lizenzen" role="img"></canvas></div>
+        </div>
+        <div class="design-box" th:unless="${#maps.isEmpty(topFormats)}">
+          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'formats')" ></div>
+         <div><canvas id="fmtChart" aria-label="Beliebte Datenformate" role="img"></canvas></div>
+        </div>
+      </div>
+      <div th:if="${viewQualityFeatures}">
+        <div class="design-box" th:unless="${#maps.isEmpty(discoverable_yes)}">
+          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'discoverable')" ></div>
+          <div><canvas id="discoverChart" aria-label="Auffindbarkeit" role="img"></canvas></div>
+        </div>
+        <div class="design-box" th:unless="${#maps.isEmpty(accessibility_yes)}">
+          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'accessibility')" ></div>
+          <div><canvas id="accessibilityChart" aria-label="Zugänglichkeit" role="img"></canvas></div>
+        </div>
+        <div class="design-box" th:unless="${#maps.isEmpty(usability_yes)}">
+          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'usability')" ></div>
+          <div><canvas id="usabilityChart" aria-label="Wiederverwendbarkeit" role="img"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+/*<![CDATA[*/
+
+  const MAX_LICENCE_LINE_LENGTH = 30;
+  const MAX_FORMAT_LABEL_LENGTH = 16;
+  const LABELS = [[${keyLabels}]]
+  const DATA = [[${keyData}]]
+  const PERCENTAGE = [[${keyDataPercentage}]]
+  const CHART_TEXT_FONT_SIZE = 14;
+  const CHART_FONT_STYLE = 'bold';
+  const CHART_FONT_COLOR = '#000';
+  const CHART_ASPECT_RATIO_DEFAULT = 2;
+  const CHART_BAR_PERCENTAGE_DEFAULT = 0.4;
+  const CHART_BAR_PERCENTAGE_COMPARE_PUBLISHER = 0.8;
+  const CHART_BAR_PERCENTAGE_COMPARE_GOVDATA = 0.6;
+  const CHART_BAR_PERCENTAGE_BASE = 0.08;
+  const CHART_TYPE_HORIZONTAL_BAR = "horizontalBar";
+  const CHART_TYPE_NORMAL_BAR = "bar";
+
+  function constructTopChart(labelFullNameList, labelShortNameList, publisherName, dataList, ctx, barType, barPercentage, aspectRatio) {
+    return new Chart(ctx, {
+          type: barType,
+          data: {
+              labels: labelShortNameList,
+              datasets: [{
+                  label: publisherName,
+                  data: dataList,
+                  backgroundColor: [[${colorDarkHue}]],
+                  borderColor: [[${colorDarkHue}]],
+                  barPercentage: barPercentage * labelFullNameList.length
+              }]
+          },
+          options: {
+              aspectRatio: aspectRatio,
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true,
+                          precision: 0,
+                          fontStyle: CHART_FONT_STYLE,
+                          fontColor: CHART_FONT_COLOR,
+                          callback: function(value, index, values) {
+                            return barType === CHART_TYPE_NORMAL_BAR ? value + "%" : value;
+                          }
+                      }
+                  }],
+                  xAxes: [{
+                      ticks: {
+                          beginAtZero: true,
+                          precision: 0,
+                          fontStyle: CHART_FONT_STYLE,
+                          fontColor: CHART_FONT_COLOR,
+                          callback: function(value, index, values) {
+                            return barType === CHART_TYPE_HORIZONTAL_BAR ? value + "%" : value;
+                          }
+                      }
+                  }]
+              },
+              title: {
+                display: false
+              },
+              legend: {
+                position: 'bottom',
+                labels: {
+                  fontStyle: CHART_FONT_STYLE,
+                  fontColor: CHART_FONT_COLOR
+                }
+              },
+              tooltips: {
+                callbacks: {
+                  title: function(tooltipItems, data) {
+                    return labelFullNameList[tooltipItems[0].index];
+                  },
+                  label: function(tooltipItem, data) {
+                      return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.value + "%";
+                    }
+                }
+              }
+          },
+          plugins: [{
+            beforeUpdate: function(c) {
+                // set font size depending on chart size
+                adjustFontSize(c)
+              }
+           }]
+      });
+  }
+
+  function constructYesNoChart(labelList, dataYesList, dataNoList, ctx, barPercentage, aspectRatio) {
+      return new Chart(ctx, {
+          type: CHART_TYPE_HORIZONTAL_BAR,
+          data: {
+              labels: labelList,
+              datasets: [{
+                  label: [[#{gd.metadata.charts.label.available}]],
+                  data: dataYesList,
+                  backgroundColor: [[${colorDarkHue}]],
+                  borderColor: [[${colorDarkHue}]],
+                  barPercentage: barPercentage
+              },
+              {
+                  label: [[#{gd.metadata.charts.label.unavailable}]],
+                  data: dataNoList,
+                  backgroundColor: [[${colorLightHue}]],
+                  borderColor: [[${colorLightHue}]],
+                  barPercentage: barPercentage
+              }]
+          },
+          options: {
+              aspectRatio: aspectRatio,
+              scales: {
+                  xAxes: [{
+                      ticks: {
+                          beginAtZero: true,
+                          precision: 0,
+                          fontStyle: CHART_FONT_STYLE,
+                          fontColor: CHART_FONT_COLOR,
+                          min: 0,
+                          max: 100,
+                          callback: function(value, index, values) {
+                              return value + "%";
+                          }
+                      },
+                      stacked: true
+                  }],
+                  yAxes: [{
+                      ticks: {
+                          precision: 0,
+                          fontStyle: CHART_FONT_STYLE,
+                          fontColor: CHART_FONT_COLOR
+                      },
+                      stacked: true
+                  }]
+              },
+              title: {
+                display: false
+              },
+              legend: {
+                position: 'bottom',
+                labels: {
+                  fontStyle: CHART_FONT_STYLE,
+                  fontColor: CHART_FONT_COLOR
+                }
+              },
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                    return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.value + "%";
+                  }
+                }
+              },
+          },
+          plugins: [{
+            beforeUpdate: function(c) {
+                // set font size depending on chart size
+                adjustFontSize(c)
+              }
+           }]
+      });
+  }
+
+  function constructYesCompareChart(labelList, publisherName, dataYesPublisher, dataYesGovdata, ctx, aspectRatio, barPercentage, barPercentageGovData) {
+      return new Chart(ctx, {
+          type: CHART_TYPE_HORIZONTAL_BAR,
+          data: {
+              labels: labelList,
+              datasets: [{
+                  label: publisherName,
+                  data: dataYesPublisher,
+                  backgroundColor: [[${colorDarkHue}]],
+                  borderColor: [[${colorDarkHue}]],
+                  barPercentage: barPercentage
+              },{
+                  label: 'GovData',
+                  data: dataYesGovdata,
+                  backgroundColor: [[${colorLightHue}]],
+                  borderColor: [[${colorLightHue}]],
+                  barPercentage: barPercentageGovData
+              }]
+          },
+          options: {
+              aspectRatio: aspectRatio,
+              scales: {
+                  xAxes: [{
+                      ticks: {
+                          beginAtZero: true,
+                          precision: 0,
+                          fontStyle: CHART_FONT_STYLE,
+                          fontColor: CHART_FONT_COLOR,
+                          min: 0,
+                          max: 100,
+                          callback: function(value, index, values) {
+                              return value + "%";
+                          }
+                      }
+                  }],
+                  yAxes: [{
+                      ticks: {
+                        precision: 0,
+                        fontStyle: CHART_FONT_STYLE,
+                        fontColor: CHART_FONT_COLOR
+                      }
+                  }]
+              },
+              title: {
+                display: false
+              },
+              legend: {
+                position: 'bottom',
+                labels: {
+                  fontStyle: CHART_FONT_STYLE,
+                  fontColor: CHART_FONT_COLOR
+                }
+              },
+              tooltips: {
+                  callbacks: {
+                    label: function(tooltipItem, data) {
+                      return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.value + "%";
+                    }
+                  }
+                }
+          },
+          plugins: [{
+            beforeUpdate: function(c) {
+                // set font size depending on chart size
+                adjustFontSize(c)
+              }
+           }]
+      });
+  }
+
+  function adjustFontSize(chartContext) {
+    var chartWidth = chartContext.chart.width;
+    var size = (chartWidth / CHART_ASPECT_RATIO_DEFAULT) * 6 / 100;
+    if (size > CHART_TEXT_FONT_SIZE) {
+      size = CHART_TEXT_FONT_SIZE;
+    }
+    chartContext.legend.options.labels.fontSize = size;
+    chartContext.legend.options.labels.boxWidth = 3 * size;
+    chartContext.scales['y-axis-0'].options.ticks.minor.fontSize = size;
+    chartContext.scales['x-axis-0'].options.ticks.minor.fontSize = size;
+  }
+
+  function labelSplitter(str, l){
+      var strs = [];
+      while(str.length > l){
+          var pos = str.substring(0, l).lastIndexOf(' ');
+          pos = pos <= 0 ? l : pos;
+          strs.push(str.substring(0, pos));
+          var i = str.indexOf(' ', pos)+1;
+          if(i < pos || i > pos+l)
+              i = pos;
+          str = str.substring(i);
+      }
+      strs.push(str);
+      return strs;
+  }
+
+  function computeAspectRatio(list, defaultRatio) {
+    if (Array.isArray(list) && list.length < 3) {
+      return 2.5;
+    }
+    return defaultRatio;
+  }
+
+  isNullOrEmptyObject = function(obj) {
+    if (obj === null) {
+      return true;
+    }
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
+  const selectedPortal = [[${selectedSourcePortal}]];
+  const selectAllPublishers = [[${allPublishers}]];
+  const selectedPublisherName = [[${selectedPortalName}]]
+
+  // Lizenzen
+  const licenses = [[${topLicenses}]];
+  if (!isNullOrEmptyObject(licenses)) {
+    var ctx = document.getElementById('licChart');
+    var displayValues = licenses[selectedPortal];
+
+    var labelList = displayValues[LABELS];
+    var aspectRatio = computeAspectRatio(labelList, CHART_ASPECT_RATIO_DEFAULT)
+    var editedLabelList = [];
+    labelList.forEach(function (item, index) {
+      editedLabelList.push(labelSplitter(item, MAX_LICENCE_LINE_LENGTH));
+    });
+    var licChart = constructTopChart(labelList, editedLabelList, selectedPublisherName, displayValues[PERCENTAGE], ctx, CHART_TYPE_HORIZONTAL_BAR, CHART_BAR_PERCENTAGE_BASE, aspectRatio);
+  }
+
+  // Formate
+  const formats = [[${topFormats}]];
+  if (!isNullOrEmptyObject(formats)) {
+    var ctx = document.getElementById('fmtChart');
+    var displayValues = formats[selectedPortal];
+    var labelList = displayValues[LABELS];
+    var aspectRatio = computeAspectRatio(labelList, CHART_ASPECT_RATIO_DEFAULT)
+    var labelShortNameList = [];
+    for (var label of labelList) {
+      labelShortNameList.push((label.length > MAX_FORMAT_LABEL_LENGTH) ? label.substr(0, MAX_FORMAT_LABEL_LENGTH-3) + '...' : label);
+    }
+    var fmtChart = constructTopChart(labelList, labelShortNameList, selectedPublisherName, displayValues[PERCENTAGE], ctx, CHART_TYPE_NORMAL_BAR, CHART_BAR_PERCENTAGE_BASE, aspectRatio);
+  }
+
+
+  // Auffindbarkeit
+  const discoverable_yes = [[${discoverable_yes}]];
+  const discoverable_no = [[${discoverable_no}]];
+  if (!isNullOrEmptyObject(discoverable_yes) && !isNullOrEmptyObject(discoverable_no)) {
+    var ctx = document.getElementById('discoverChart');
+    var displayValuesYes = discoverable_yes[selectedPortal];
+    var aspectRatio = computeAspectRatio(displayValuesYes[LABELS], CHART_ASPECT_RATIO_DEFAULT)
+    if (selectedPortal === selectAllPublishers) {
+      var displayValuesNo = discoverable_no[selectedPortal];
+      var discoverChart = constructYesNoChart(displayValuesYes[LABELS], displayValuesYes[PERCENTAGE], displayValuesNo[PERCENTAGE], ctx, CHART_BAR_PERCENTAGE_DEFAULT, aspectRatio);
+    } else {
+      var displayValuesYesGovdata = discoverable_yes[selectAllPublishers];
+      var discoverChart = constructYesCompareChart(displayValuesYes[LABELS], selectedPublisherName, displayValuesYes[PERCENTAGE], displayValuesYesGovdata[PERCENTAGE], ctx, aspectRatio, CHART_BAR_PERCENTAGE_COMPARE_PUBLISHER, CHART_BAR_PERCENTAGE_COMPARE_GOVDATA);
+    }
+  }
+
+  // Zugänglichkeit
+  const accessibility_yes = [[${accessibility_yes}]];
+  const accessibility_no = [[${accessibility_no}]];
+  if (!isNullOrEmptyObject(accessibility_yes) && !isNullOrEmptyObject(accessibility_no)) {
+    var ctx = document.getElementById('accessibilityChart');
+    var displayValuesYes = accessibility_yes[selectedPortal];
+    var aspectRatio = computeAspectRatio(displayValuesYes[LABELS], CHART_ASPECT_RATIO_DEFAULT)
+    if (selectedPortal === selectAllPublishers) {
+      var displayValuesNo = accessibility_no[selectedPortal];
+      var accessibilityChart = constructYesNoChart(displayValuesYes[LABELS], displayValuesYes[PERCENTAGE], displayValuesNo[PERCENTAGE], ctx, CHART_BAR_PERCENTAGE_DEFAULT, aspectRatio);
+    } else {
+      var displayValuesYesGovdata = accessibility_yes[selectAllPublishers];
+      var accessibilityChart = constructYesCompareChart(displayValuesYes[LABELS], selectedPublisherName, displayValuesYes[PERCENTAGE], displayValuesYesGovdata[PERCENTAGE], ctx, aspectRatio, CHART_BAR_PERCENTAGE_COMPARE_PUBLISHER, CHART_BAR_PERCENTAGE_COMPARE_GOVDATA);
+    }
+  }
+
+  // Weiterverwendbarkeit
+  const usability_yes = [[${usability_yes}]];
+  const usability_no = [[${usability_no}]];
+  if (!isNullOrEmptyObject(usability_yes) && !isNullOrEmptyObject(usability_no)) {
+    var ctx = document.getElementById('usabilityChart');
+    var displayValuesYes = usability_yes[selectedPortal];
+    var labelList = displayValuesYes[LABELS];
+    var aspectRatio = computeAspectRatio(labelList, CHART_ASPECT_RATIO_DEFAULT)
+    var editedLabelList = [];
+    labelList.forEach(function (item, index) {
+      editedLabelList.push(labelSplitter(item, 17));
+    });
+    if (selectedPortal === selectAllPublishers) {
+      var displayValuesNo = usability_no[selectedPortal];
+      var usabilityChart = constructYesNoChart(editedLabelList, displayValuesYes[PERCENTAGE], displayValuesNo[PERCENTAGE], ctx, CHART_BAR_PERCENTAGE_DEFAULT, aspectRatio);
+    } else {
+      var displayValuesYesGovdata = usability_yes[selectAllPublishers];
+      var usabilityChart = constructYesCompareChart(editedLabelList, selectedPublisherName, displayValuesYes[PERCENTAGE], displayValuesYesGovdata[PERCENTAGE], ctx, aspectRatio, CHART_BAR_PERCENTAGE_COMPARE_PUBLISHER, CHART_BAR_PERCENTAGE_COMPARE_GOVDATA);
+    }
+  }
+
+  /*]]>*/
+</script>
