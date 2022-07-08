@@ -288,6 +288,7 @@ public class MetadataImplTest {
     MetadataImpl metadata = new MetadataImpl(metadataBean, odrClient);
 
     metadata.setTitle("title");
+    metadata.setName("name");
     metadata.setNotes("notes");
     metadata.setPrivate(false);
     metadata.setUrl("url");
@@ -297,12 +298,12 @@ public class MetadataImplTest {
     // contacts
     Contact creator = metadata.getContact(RoleEnumType.CREATOR);
     creator.setName("creator");
-    creator.setEmail("creator email");
+    creator.setEmail("creator@email.de");
     creator.setUrl("creator url");
 
     Contact maintainer = metadata.getContact(RoleEnumType.MAINTAINER);
     maintainer.setName("maintainer");
-    maintainer.setEmail("maintainer email");
+    maintainer.setEmail("maintainer@email.de");
     maintainer.setUrl("maintainer url");
     ContactAddress maintainerAddress = maintainer.getAddress();
     maintainerAddress.setAddressee("maintainer addressee");
@@ -349,6 +350,7 @@ public class MetadataImplTest {
     // ### check that everything was serialized the right way
     System.out.println(serializedMetadata);
     assertThat(serializedMetadata).contains("\"title\":\"title\"");
+    assertThat(serializedMetadata).contains("\"name\":\"name\"");
     assertThat(serializedMetadata).contains("\"notes\":\"notes\"");
     assertThat(serializedMetadata).contains("\"private\":false");
     assertThat(serializedMetadata).contains("\"url\":\"url\"");
@@ -357,11 +359,11 @@ public class MetadataImplTest {
 
     // contacts
     assertThat(serializedMetadata).contains("\"author\":\"creator\"");
-    assertThat(serializedMetadata).contains("\"author_email\":\"creator email\"");
+    assertThat(serializedMetadata).contains("\"author_email\":\"creator@email.de\"");
     assertThat(serializedMetadata).contains("{\"key\":\"author_url\",\"value\":\"creator url\"}");
 
     assertThat(serializedMetadata).contains("\"maintainer\":\"maintainer\"");
-    assertThat(serializedMetadata).contains("\"maintainer_email\":\"maintainer email\"");
+    assertThat(serializedMetadata).contains("\"maintainer_email\":\"maintainer@email.de\"");
     assertThat(serializedMetadata).contains("{\"key\":\"maintainer_url\",\"value\":\"maintainer url\"}");
     assertThat(serializedMetadata).contains("{\"key\":\"maintainer_addressee\",\"value\":\"maintainer addressee\"}");
     assertThat(serializedMetadata).contains("{\"key\":\"maintainer_city\",\"value\":\"maintainer city\"}");
@@ -389,8 +391,8 @@ public class MetadataImplTest {
     assertThat(serializedMetadata).contains("\"description\":\"resource desc\"");
     assertThat(serializedMetadata).contains("\"format\":\"resource format\"");
     assertThat(serializedMetadata).contains("\"hash\":\"resource hash\"");
-    assertThat(serializedMetadata).contains("\"language\":\"[\\\"resource lang\\\"]\"");
-    assertThat(serializedMetadata).contains("\"__extras\":{\"license\":\"resource license\"}");
+    assertThat(serializedMetadata)
+        .contains("\"__extras\":{\"license\":\"resource license\",\"language\":\"[\\\"resource lang\\\"]\"}");
     assertThat(serializedMetadata).contains("\"url\":\"resource url\"");
   }
 

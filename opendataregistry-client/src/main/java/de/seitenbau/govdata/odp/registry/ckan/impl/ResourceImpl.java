@@ -191,7 +191,6 @@ public class ResourceImpl implements Resource, Serializable
     bean.setFormat(resource.getFormat());
     bean.setHash(resource.getHash());
     bean.setId(resource.getId());
-    bean.setLanguage(resource.getLanguage());
     bean.setLast_modified(resource.getLast_modified());
     bean.setName(resource.getName());
     bean.setResource_type(resource.getResource_type());
@@ -200,6 +199,7 @@ public class ResourceImpl implements Resource, Serializable
     bean.setUrl(resource.getUrl());
 
     HashMap<String, String> extras = new HashMap<>();
+    addIfNotNull(extras, "language", resource.getLanguage());
     addIfNotNull(extras, "license", resource.getLicense());
     addIfNotNull(extras, "rights", resource.getRights());
     addIfNotNull(extras, "status", resource.getStatus());

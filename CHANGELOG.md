@@ -1,10 +1,17 @@
 # Changelog
 
-## v4.7.0 2022-02-17
+## v5.1.1 2022-04-13
+
+* Fixes writing additional information about resources with CKAN 2.9 when saving datasets using the metadata edit form
+
+## v5.0.0 2022-03-24
 
 * Updates to Elasticsearch 7.16.x
 * Moves microservices and index-updater to separate repository
 * Removes individual python scripts
+
+## v4.7.0 2022-02-17
+
 * Improves date deserialization when reading metadata from CKAN
 * Saves ContributorID in addition to the organizationID in the triple store with the validation results
 * Do not include ContributorID in discoverable metrics anymore as it is always added now

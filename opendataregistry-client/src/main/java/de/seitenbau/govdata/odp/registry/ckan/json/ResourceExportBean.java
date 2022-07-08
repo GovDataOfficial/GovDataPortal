@@ -53,9 +53,6 @@ public class ResourceExportBean implements Serializable
     private String format;
 
     @JsonProperty
-    private String language;
-
-    @JsonProperty
     private Date created;
 
     @JsonProperty
@@ -75,6 +72,7 @@ public class ResourceExportBean implements Serializable
 
     /**
      * Will contain the key:value pairs for:
+         private String language
          private String license
          private Date issued
          private Date modified;
