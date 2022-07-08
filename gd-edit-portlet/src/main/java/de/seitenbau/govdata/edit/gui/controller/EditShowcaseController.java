@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.MimeResponse;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -36,8 +37,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -45,6 +44,8 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
+import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.common.api.EntityCreatedResponse;
@@ -196,7 +197,7 @@ public class EditShowcaseController
       model.addAttribute("themeDisplay", themeDisplay);
 
       // form data
-      model.addAttribute("actionUrl", response.createActionURL().toString());
+      model.addAttribute("actionUrl", response.createActionURL(Copy.NONE).toString());
       model.addAttribute("editForm", editForm);
 
       // set form structure data for displaying available options

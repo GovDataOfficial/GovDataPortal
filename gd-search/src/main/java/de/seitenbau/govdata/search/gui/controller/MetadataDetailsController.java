@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.portlet.MimeResponse;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletModeException;
 import javax.portlet.PortletPreferences;
@@ -31,8 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -53,6 +52,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
+import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil;
@@ -250,7 +251,7 @@ public class MetadataDetailsController
       }
     }
 
-    PortletURL actionUrl = response.createActionURL();
+    PortletURL actionUrl = response.createActionURL(Copy.NONE);
     selectedMetadata.setActionUrl(actionUrl.toString());
     selectedMetadata.setCurrentUser(currentUser);
     boolean userCanEditDataset = false;

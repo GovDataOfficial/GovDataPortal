@@ -3,6 +3,7 @@ package de.seitenbau.govdata.search.gui.controller;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -14,8 +15,6 @@ import javax.portlet.ResourceURL;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -26,6 +25,8 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
+import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
@@ -98,7 +99,7 @@ public class SearchfieldController extends AbstractBaseController
     ResourceURL saytCompletionUrl = response.createResourceURL();
     saytCompletionUrl.setResourceID(SAYT_COMPLETION);
 
-    PortletURL actionUrl = response.createActionURL();
+    PortletURL actionUrl = response.createActionURL(Copy.NONE);
     SearchFieldViewModel viewModel = SearchFieldViewModel.builder()
         .actionUrl(actionUrl.toString())
         .showBigHeader(showBigHeader)

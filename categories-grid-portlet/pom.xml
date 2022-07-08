@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>5.1.2</version>
+    <version>5.2.1</version>
   </parent>
   <artifactId>categories-grid-portlet</artifactId>
   <packaging>war</packaging>
@@ -76,8 +76,8 @@
       <artifactId>spring-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc-portlet</artifactId>
+      <groupId>com.liferay.portletmvc4spring</groupId>
+      <artifactId>com.liferay.portletmvc4spring.framework</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

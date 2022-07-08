@@ -12,7 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -786,6 +788,11 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
     // get the latest available date
     String latestDate = getMetricsLatestDate();
+    if (StringUtils.isBlank(latestDate))
+    {
+      log.info("{}Did not find any metrics data.", method);
+      return result;
+    }
     MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("date", latestDate);
     SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
         .query(matchQueryBuilder)
@@ -877,7 +884,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
     SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
     sourceBuilder.size(1);
     sourceBuilder.query(matchAllQuery);
-    sourceBuilder.sort("date", SortOrder.DESC);
+    sourceBuilder.sort(ESFieldConsts.FIELD_METRICS_DATE, SortOrder.DESC);
 
     // send search request
     SearchRequest searchRequest = new SearchRequest().indices(metricIndexName).source(sourceBuilder);
@@ -885,17 +892,16 @@ public class SearchServiceElasticsearchImpl implements SearchService
     try
     {
       SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
-
-      latestDate = (String) response.getHits().getAt(0).getSourceAsMap().get("date");
-      log.info("{}Get value for metrics latest date: {}", method, latestDate);
+      Optional<SearchHit> opt = Stream.of(response.getHits().getHits()).findFirst();
+      if (opt.isPresent())
+      {
+        latestDate = (String) opt.get().getSourceAsMap().get(ESFieldConsts.FIELD_METRICS_DATE);
+        log.info("{}Get value for metrics latest date: {}", method, latestDate);
+      }
     }
     catch (IOException ex)
     {
       log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
-    }
-    catch (ArrayIndexOutOfBoundsException ex)
-    {
-      log.warn("{}Extracting hits failed: {}", method, ex.getMessage());
     }
 
     log.trace(method + "End");

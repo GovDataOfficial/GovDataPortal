@@ -143,7 +143,9 @@ public class TweetCacheTest
   {
     /* prepare */
     Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-    LocalDateTime createDate = LocalDateTime.now(ZONE_ID_BERLIN);
+    String createDateString = "2022-03-29T11:43:13.671Z";
+    LocalDateTime createDate =
+        LocalDateTime.parse(createDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
     JsonObject json = createDefaultJsonResponse(createDate);
     String contentString = new Gson().toJson(json);
     InputStream content = IOUtils.toInputStream(contentString, StandardCharsets.UTF_8);
@@ -168,7 +170,9 @@ public class TweetCacheTest
   {
     /* prepare */
     Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
-    LocalDateTime createDate = LocalDateTime.now(ZONE_ID_BERLIN);
+    String createDateString = "2022-03-29T11:43:13.671Z";
+    LocalDateTime createDate =
+        LocalDateTime.parse(createDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
     JsonObject json = createDefaultJsonResponse(createDate);
     JsonArray dataArray = json.getAsJsonArray("data");
     JsonObject latestPostObject = dataArray.get(0).getAsJsonObject();
@@ -232,8 +236,9 @@ public class TweetCacheTest
     if (createDate != null)
     {
       // convert to UTC
-      createDateValue = DateTimeFormatter.ISO_INSTANT
-          .format(createDate.atZone(ZONE_ID_BERLIN).withZoneSameInstant(ZoneId.of("UTC")).toInstant());
+      createDateValue =
+          DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(ZoneId.of("UTC"))
+          .format(createDate.atZone(ZONE_ID_BERLIN).toInstant());
     }
     objectData.add("created_at", new JsonPrimitive(createDateValue));
     dataArray.add(objectData);

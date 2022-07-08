@@ -12,19 +12,19 @@ import javax.portlet.ResourceResponse;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import org.springframework.web.servlet.View;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
+import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
+import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
-import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;
 import de.seitenbau.govdata.search.adapter.SearchService;

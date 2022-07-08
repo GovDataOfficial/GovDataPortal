@@ -1,6 +1,13 @@
 package de.seitenbau.govdata.search.index.filter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,15 +17,6 @@ import org.junit.Test;
 
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
-
-import de.seitenbau.govdata.search.index.filter.Filter;
-import de.seitenbau.govdata.search.index.filter.FilterProxy;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
-import static org.mockito.Matchers.any;
 
 public class FilterProxyTest
 {

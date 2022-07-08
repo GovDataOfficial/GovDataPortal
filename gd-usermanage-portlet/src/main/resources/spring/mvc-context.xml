@@ -12,7 +12,7 @@
 
 <!--   <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
-  <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.portlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+  <bean id="annotationMethodHandlerAdapter" class="com.liferay.portletmvc4spring.mvc.method.annotation.PortletRequestMappingHandlerAdapter">
     <property name="webBindingInitializer">
       <bean id="configurableWebBindingInitializer" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
         <property name="validator">

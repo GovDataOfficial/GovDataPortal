@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>5.1.2</version>
+    <version>5.2.1</version>
   </parent>
   <artifactId>od-platform-packaging</artifactId>
   <packaging>deb</packaging>
@@ -19,7 +19,6 @@
       <extension>
         <groupId>org.vafer</groupId>
         <artifactId>jdeb</artifactId>
-        <version>1.5</version>
       </extension>
     </extensions>
     <pluginManagement>
@@ -30,7 +29,6 @@
         <plugin>
           <groupId>org.vafer</groupId>
           <artifactId>jdeb</artifactId>
-          <version>1.5</version>
           <executions>
             <execution>
               <id>jdeb-ubuntu18</id>

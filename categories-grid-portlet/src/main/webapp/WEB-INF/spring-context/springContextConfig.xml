@@ -19,10 +19,10 @@
   <bean class="de.fhg.fokus.odp.categoriesgrid.CategoriesGrid" />
 
   <bean
-    class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+    class="com.liferay.portletmvc4spring.mvc.annotation.DefaultAnnotationHandlerMapping" />
 
   <bean
-    class="org.springframework.web.portlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+    class="com.liferay.portletmvc4spring.mvc.method.annotation.PortletRequestMappingHandlerAdapter" />
 
   <bean id="viewResolver"
     class="org.springframework.web.servlet.view.InternalResourceViewResolver">

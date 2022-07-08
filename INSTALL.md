@@ -13,8 +13,8 @@ other distribution should work as. A windows based system should be possible,
 too, but we have never seen it done.
 
 - PostgreSQL 10 ([Postgres docs](https://www.postgresql.org/docs/))
-- Java JDK 8 ([OpenJDK JDK download](https://adoptopenjdk.net/) or [Oracle Java JDK download](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html))
-- Python 2.7 ([Python docs](https://www.python.org/getit/))
+- Java JDK 8 / 11 ([OpenJDK JDK download](https://adoptopenjdk.net/) or [Oracle Java JDK download](https://www.oracle.com/java/technologies/downloads/archive/))
+- Python 2.7 / 3 ([Python docs](https://www.python.org/getit/))
 - Maven 3.6.x ([Maven site](http://maven.apache.org/download.cgi))
 - CKAN 2.x ([CKAN installation](https://docs.ckan.org/en/latest/maintaining/installing/install-from-source.html)), follow the ([Apache mod_wsgi instructions](https://docs.ckan.org/en/latest/maintaining/installing/deployment.html))
 - Liferay 7.3.x ([GitHub Releases](https://github.com/liferay/liferay-portal/releases/)) bundled with an application container, e.g. Tomcat for an easy start
@@ -74,9 +74,9 @@ Install Index Services (Queue + Elasticsearch) and DB service (Showcases)
 ----------------
 - Install the Debian-Packages for the microservices index-application2-service, index-queue-service and govdata-db-service, available in folder [deb](deb), e.g.:
 
-        sudo dpkg -i index-application2-service_1.0.4_all.deb
-        sudo dpkg -i index-queue-service_1.0.4_all.deb
-        sudo dpkg -i govdata-db-service_1.0.4_all.deb
+        sudo dpkg -i index-application2-service_*_all.deb
+        sudo dpkg -i index-queue-service_*_all.deb
+        sudo dpkg -i govdata-db-service_*_all.deb
 
 - Initial tasks before first start
 
@@ -94,23 +94,23 @@ Create the necessary search indexes in Elasticsearch. Copy the Elasticsearch ind
 
 - create ckan index in Elasticsearch
 
-        curl 'http://localhost:9201/{{ index_name_ckan }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_ckan_govdata_index.json'
-        curl 'http://localhost:9201/{{ index_name_ckan }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_ckan_govdata_index_mapping.json'
+        curl 'http://localhost:9200/{{ index_name_ckan }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_ckan_govdata_index.json'
+        curl 'http://localhost:9200/{{ index_name_ckan }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_ckan_govdata_index_mapping.json'
 
 - create liferay index in Elasticsearch
 
-        curl 'http://localhost:9201/{{ index_name_liferay }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_liferay_govdata_index.json'
-        curl 'http://localhost:9201/{{ index_name_liferay }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_liferay_govdata_index_mapping.json'
+        curl 'http://localhost:9200/{{ index_name_liferay }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_liferay_govdata_index.json'
+        curl 'http://localhost:9200/{{ index_name_liferay }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_liferay_govdata_index_mapping.json'
 
 - create searchhistory index in Elasticsearch
 
-        curl 'http://localhost:9201/{{ index_name_searchhistory }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_searchhistory_govdata_index.json'
-        curl 'http://localhost:9201/{{ index_name_searchhistory }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_searchhistory_govdata_index_mapping.json'
+        curl 'http://localhost:9200/{{ index_name_searchhistory }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_searchhistory_govdata_index.json'
+        curl 'http://localhost:9200/{{ index_name_searchhistory }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_searchhistory_govdata_index_mapping.json'
 
 - create showcases index in Elasticsearch
 
-        curl 'http://localhost:9201/{{ index_name_showcases }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_showcases_govdata_index.json'
-        curl 'http://localhost:9201/{{ index_name_showcases }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_showcases_govdata_index_mapping.json'
+        curl 'http://localhost:9200/{{ index_name_showcases }}' -f -X PUT -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_showcases_govdata_index.json'
+        curl 'http://localhost:9200/{{ index_name_showcases }}/_mapping' -f -X POST -H 'Content-Type:application/json;charset=utf-8'  --user "{{ elastic_user }}:{{ elastic_user_pw }} --data '@/etc/govdata/de_showcases_govdata_index_mapping.json'
 
 Replace the variables with the real index names, e.g. the default index names:
 

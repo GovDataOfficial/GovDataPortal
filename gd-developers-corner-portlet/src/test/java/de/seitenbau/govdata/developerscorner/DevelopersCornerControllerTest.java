@@ -15,13 +15,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
-import org.springframework.mock.web.portlet.MockRenderRequest;
-import org.springframework.mock.web.portlet.MockRenderResponse;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockRenderRequest;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockRenderResponse;
 
 import de.seitenbau.govdata.developerscorner.util.SparqlEndpoint;
 

@@ -3,20 +3,21 @@ package de.seitenbau.govdata.search.gui.controller;
 import java.util.Calendar;
 
 import javax.annotation.PostConstruct;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
+
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.search.gui.model.SearchMapViewModel;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("VIEW")
@@ -54,7 +55,7 @@ public class SearchMapController extends AbstractBaseController
       RenderResponse response,
       Model model)
   {
-    PortletURL actionUrl = response.createActionURL();
+    PortletURL actionUrl = response.createActionURL(Copy.NONE);
     
     String filterRequestParam = request.getParameter(QueryParamNames.PARAM_FILTER);
     String sort = request.getParameter(QueryParamNames.PARAM_SORT);

@@ -7,13 +7,10 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.portlet.context.PortletRequestAttributes;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -21,9 +18,12 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutModel;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.util.LayoutTypePortletFactoryUtil;
-import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portletmvc4spring.context.PortletRequestAttributes;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component

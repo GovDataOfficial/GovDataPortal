@@ -1,0 +1,6 @@
+Bundle-Name: gd-search-common
+Bundle-SymbolicName: gd.search.common
+Bundle-Version: 1.0.0
+-metatype: *
+-plugin.metatype: com.liferay.ant.bnd.metatype.MetatypePlugin
+Export-Package: com.liferay.portal.kernel.search.suggest

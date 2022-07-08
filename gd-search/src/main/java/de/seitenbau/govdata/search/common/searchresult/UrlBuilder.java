@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.portlet.MimeResponse;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletURL;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -95,7 +96,7 @@ public class UrlBuilder
    */
   public PortletURL createUrl(MimeResponse response, String[] clearedParameters)
   {
-    PortletURL renderUrl = response.createRenderURL();
+    PortletURL renderUrl = response.createRenderURL(Copy.NONE);
     for (Entry<String, String> entry : parameters.entrySet())
     {
       if (ArrayUtils.contains(clearedParameters, entry.getKey()))

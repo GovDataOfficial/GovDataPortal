@@ -37,11 +37,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.developerscorner.util.SparqlEndpoint;
 import de.seitenbau.govdata.navigation.PortletUtil;

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -16,7 +17,6 @@ import javax.portlet.RenderResponse;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
@@ -78,7 +79,7 @@ public class SearchExtController extends AbstractBaseController
       RenderResponse response,
       Model model) throws JsonProcessingException
   {
-    PortletURL actionUrl = response.createActionURL();
+    PortletURL actionUrl = response.createActionURL(Copy.NONE);
     
     // get currentpage for type filter
     ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);

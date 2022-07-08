@@ -156,7 +156,7 @@ public class SearchServiceElasticsearchImplTest
     Map<String, Object> sourceMap = new HashMap<>();
     sourceMap.put("date", "2022-05-02T13:30:01");
     Mockito.when(latestDateSearchHitMock.getSourceAsMap()).thenReturn(sourceMap);
-    Mockito.when(latestDateSearchHitsMock.getAt(0)).thenReturn(latestDateSearchHitMock);
+    Mockito.when(latestDateSearchHitsMock.getHits()).thenReturn(new SearchHit[] {latestDateSearchHitMock});
     Mockito.when(latestDateSearchResponseMock.getHits()).thenReturn(latestDateSearchHitsMock);
     SearchResponse searchResponseMock = Mockito.mock(SearchResponse.class);
     String scrollId = "scrollId1";
@@ -187,6 +187,28 @@ public class SearchServiceElasticsearchImplTest
     SearchScrollRequest ssr = searchScrollRequestCaptor.getValue();
     Assertions.assertThat(ssr.scroll()).isNotNull();
     Assertions.assertThat(ssr.scrollId()).isEqualTo(scrollId);
+  }
+
+  @Test
+  public void getMetrics_noData() throws Exception
+  {
+    /* prepare */
+
+    SearchResponse latestDateSearchResponseMock = Mockito.mock(SearchResponse.class);
+    SearchHits latestDateSearchHitsMock = Mockito.mock(SearchHits.class);
+    Mockito.when(latestDateSearchHitsMock.getHits()).thenReturn(new SearchHit[] {});
+    Mockito.when(latestDateSearchResponseMock.getHits()).thenReturn(latestDateSearchHitsMock);
+    Mockito.when(clientMock.search(Mockito.any(), Mockito.any())).thenReturn(latestDateSearchResponseMock);
+
+    /* execute */
+    SearchHits result = sut.getMetrics();
+
+    /* verify */
+    Assertions.assertThat(result).isEmpty();
+    Mockito.verify(clientMock).search(searchRequestCaptor.capture(), Mockito.eq(RequestOptions.DEFAULT));
+    SearchRequest sr = searchRequestCaptor.getValue();
+    Assertions.assertThat(sr.indices()).containsOnlyOnce(IndexName.METRICS.getIndex());
+    Assertions.assertThat(sr.scroll()).isNull();
   }
 
   private SearchHit createSearchHit(int docId, String id)

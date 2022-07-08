@@ -16,8 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.mock.web.portlet.MockActionRequest;
-import org.springframework.mock.web.portlet.MockActionResponse;
 import org.springframework.validation.BindingResult;
 
 import com.google.gson.Gson;
@@ -27,6 +25,8 @@ import com.liferay.portal.kernel.portlet.DummyPortletURL;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockActionRequest;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockActionResponse;
 
 import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.edit.model.EditForm;

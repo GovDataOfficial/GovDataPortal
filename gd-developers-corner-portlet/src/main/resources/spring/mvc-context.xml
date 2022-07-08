@@ -10,7 +10,7 @@
 
   <mvc:annotation-driven />
 
-  <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.portlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+  <bean id="annotationMethodHandlerAdapter" class="com.liferay.portletmvc4spring.mvc.method.annotation.PortletRequestMappingHandlerAdapter">
   </bean>
 
 </beans>

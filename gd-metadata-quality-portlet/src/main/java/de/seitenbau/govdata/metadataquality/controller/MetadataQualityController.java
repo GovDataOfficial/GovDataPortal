@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -41,12 +42,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
@@ -124,7 +125,7 @@ public class MetadataQualityController
         GetterUtil.getString(portletPreferences.getValue("selectedPage", QUALITY_FEATURES));
 
     // generate base url
-    PortletURL baseUrl = response.createRenderURL();
+    PortletURL baseUrl = response.createRenderURL(Copy.NONE);
     baseUrl.setParameter(PORTLET_PARAM_FILTER, ALL_PUBLISHERS);
     String clearFilterUrl = baseUrl.toString();
 

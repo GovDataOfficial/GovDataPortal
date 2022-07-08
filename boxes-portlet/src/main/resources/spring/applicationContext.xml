@@ -13,10 +13,10 @@
   <import resource="properties-context.xml" />
 
   <bean
-    class="org.springframework.web.portlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+    class="com.liferay.portletmvc4spring.mvc.annotation.DefaultAnnotationHandlerMapping" />
 
   <bean
-    class="org.springframework.web.portlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+    class="com.liferay.portletmvc4spring.mvc.method.annotation.PortletRequestMappingHandlerAdapter" />
 
   <context:component-scan
     base-package="de.seitenbau.govdata.odp.boxes,

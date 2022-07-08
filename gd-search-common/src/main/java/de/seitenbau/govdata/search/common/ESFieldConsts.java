@@ -157,6 +157,11 @@ public abstract class ESFieldConsts
           + "'][j]);} a.add(doc['" + FIELD_PRIMARY_SHOWCASE_TYPE + "'].value); return a}";
 
   /**
+   * Key for the metrics date in search index.
+   */
+  public static final String FIELD_METRICS_DATE = "date";
+
+  /**
    * Key for the sorting date field in search index.
    */
   public static final String SORT_DATE = "sort_date_dct";

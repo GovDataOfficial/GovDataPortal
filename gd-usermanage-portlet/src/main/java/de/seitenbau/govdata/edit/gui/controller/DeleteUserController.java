@@ -12,16 +12,14 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.Cookie;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,16 +27,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import com.liferay.mail.kernel.model.MailMessage;
 import com.liferay.mail.kernel.service.MailServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.mail.kernel.model.MailMessage;
-import com.liferay.portal.kernel.util.CookieKeys;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.Ticket;
 import com.liferay.portal.kernel.model.User;
@@ -47,13 +42,17 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
-import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.messages.MessageType;
 import de.seitenbau.govdata.navigation.LiferayNavigation;
+import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
@@ -127,7 +126,7 @@ class DeleteUserController
         ticketKey = ticketKey.split(",")[0];
       }
 
-      model.addAttribute("actionUrl", response.createActionURL().toString());
+      model.addAttribute("actionUrl", response.createActionURL(Copy.NONE).toString());
       model.addAttribute(PARAM_TICKET_KEY, ticketKey);
       return VIEW_NAME;
     }
@@ -160,7 +159,7 @@ class DeleteUserController
       // if no parameter is set, show confirmation for starting account deletion
       ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
       model.addAttribute("isMetadataEditor", userIsMetadataEditor(user, themeDisplay.getCompanyId()));
-      model.addAttribute("actionUrl", response.createActionURL().toString());
+      model.addAttribute("actionUrl", response.createActionURL(Copy.NONE).toString());
     }
 
     return VIEW_NAME;

@@ -11,8 +11,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.mock.web.portlet.MockResourceRequest;
-import org.springframework.mock.web.portlet.MockResourceResponse;
+
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockResourceRequest;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockResourceResponse;
 
 import de.seitenbau.govdata.db.api.ShowcaseClientFactory;
 import de.seitenbau.govdata.edit.constants.EditCommonConstants;
@@ -115,7 +116,7 @@ public class EditShowcaseControllerTest
     sut.serveImage(request, response);
 
     /* assert */
-    Assertions.assertThat(response.getContentLength()).isEqualTo(476);
+    Assertions.assertThat(response.getContentLength()).isBetween(476, 592);
     Assertions.assertThat(response.getContentType()).isEqualTo("image/png");
     Assertions.assertThat(response.getContentAsByteArray()).isNotEmpty();
   }

@@ -1,5 +1,13 @@
 # Changelog
 
+## v5.2.0 2022-05-31
+
+* Adds support for Java 11
+* Updates Apache Jena Fuseki client library to version 4.5.0 (requires Java 11)
+* Fixes error handling when fetching metrics data and no data is present
+* Updates Spring dependencies and switches from "spring-webmvc-portlet" to "com.liferay.portletmvc4spring.framework"
+* Updates maven dependencies to the latest bugfix / security fix version
+
 ## v5.1.2 2022-05-05
 
 * Fixes bug when fetching metrics data from Elasticsearch

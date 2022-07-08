@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -35,10 +36,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
@@ -191,7 +192,7 @@ public class EditController
         contributorIdSelectList.addAll(mapToOptionTagList(contributorIdList));
 
         // form data
-        model.addAttribute("actionUrl", response.createActionURL().toString());
+        model.addAttribute("actionUrl", response.createActionURL(Copy.NONE).toString());
         model.addAttribute("editForm", editForm);
 
         // set form structure data for displaying available options

@@ -7,15 +7,14 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.http.HttpOp;
 import org.apache.jena.query.ReadWrite;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdfconnection.RDFConnection;
-import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFParser;
-import org.apache.jena.riot.web.HttpOp;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.DCAT;
@@ -145,7 +144,7 @@ public class FusekiClientImpl implements FusekiClient
       return;
     }
 
-    try (RDFConnection conn = RDFConnectionFactory.connect(updateEndpoint))
+    try (RDFConnection conn = RDFConnection.connect(updateEndpoint))
     {
       conn.begin(ReadWrite.WRITE);
       try
@@ -229,7 +228,7 @@ public class FusekiClientImpl implements FusekiClient
     final String method = "createInTriplestoreBase() : ";
     LOG.trace(method + "Start");
 
-    try (RDFConnection conn = RDFConnectionFactory.connect(dataEndpoint))
+    try (RDFConnection conn = RDFConnection.connect(dataEndpoint))
     {
       conn.begin(ReadWrite.WRITE);
       try
@@ -344,7 +343,7 @@ public class FusekiClientImpl implements FusekiClient
     boolean result = false;
     try
     {
-      String response = HttpOp.execHttpGetString(FusekiEndpoint.PING.getFusekiEndpoint(fusekiBaseUrl));
+      String response = HttpOp.httpGetString(FusekiEndpoint.PING.getFusekiEndpoint(fusekiBaseUrl));
       if (response != null)
       {
         result = true;

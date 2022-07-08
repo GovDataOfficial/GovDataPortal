@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 
-<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
-  version="2.0">
+<portlet-app xmlns="http://xmlns.jcp.org/xml/ns/portlet"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/portlet http://xmlns.jcp.org/xml/ns/portlet/portlet-app_3_0.xsd"
+       version="3.0">
   <portlet>
     <portlet-name>gd-search-field</portlet-name>
     <display-name>Search Input Field</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/searchfield-configuration.jsp</value>
@@ -49,7 +50,7 @@
   <portlet>
     <portlet-name>gd-search-map</portlet-name>
     <display-name>Map Search</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/searchfield-configuration.jsp</value>
@@ -92,7 +93,7 @@
   <portlet>
     <portlet-name>gd-search-ext</portlet-name>
     <display-name>Extended Search</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/searchext-configuration.jsp</value>
@@ -135,7 +136,7 @@
   <portlet>
     <portlet-name>gd-search-result</portlet-name>
     <display-name>Search Result</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>contextConfigLocation</name>
       <value>classpath:/spring/gd-search-result-context.xml</value>
@@ -174,7 +175,7 @@
   <portlet>
     <portlet-name>gd-search-atomfeed</portlet-name>
     <display-name>Search Result</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>contextConfigLocation</name>
       <value>classpath:/spring/gd-search-atomfeed-context.xml</value>
@@ -213,7 +214,7 @@
   <portlet>
     <portlet-name>gd-search-details</portlet-name>
     <display-name>Metadata Detailseite</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/metadatadetails-configuration.jsp</value>
@@ -250,7 +251,7 @@
   <portlet>
     <portlet-name>gd-search-numbers</portlet-name>
     <display-name>GovData in Zahlen</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/searchnumbers-configuration.jsp</value>
@@ -286,7 +287,7 @@
   <portlet>
     <portlet-name>gd-search-states</portlet-name>
     <display-name>Suche nach Bundesländern</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/searchstates-configuration.jsp</value>
@@ -322,7 +323,7 @@
   <portlet>
     <portlet-name>gd-featured-showcase-portlet</portlet-name>
     <display-name>Featured Showcase</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/featuredshowcase-configuration.jsp</value>
@@ -358,7 +359,7 @@
   <portlet>
     <portlet-name>gd-featured-datasets-portlet</portlet-name>
     <display-name>Featured Datasets</display-name>
-    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
     <init-param>
       <name>config-template</name>
       <value>/portlet-config/featureddatasets-configuration.jsp</value>

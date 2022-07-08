@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import javax.inject.Inject;
+import javax.portlet.MimeResponse.Copy;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -26,8 +27,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
-import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -36,6 +35,8 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
+import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
@@ -297,7 +298,7 @@ public class SearchresultController extends AbstractBaseController
       for (SuggestionOption suggestion : suggestions)
       {
         // build URL with all filters/sorting cleared, only parameter is the suggestion
-        PortletURL suggestionRenderUrl = response.createRenderURL();
+        PortletURL suggestionRenderUrl = response.createRenderURL(Copy.NONE);
         PortletUtil.setParameterInPortletUrl(
             suggestionRenderUrl, QueryParamNames.PARAM_PHRASE, suggestion.getName());
         String url = suggestionRenderUrl.toString();
@@ -333,7 +334,7 @@ public class SearchresultController extends AbstractBaseController
         .clearFilterUrl(clearFilterUrl)
         .hasActiveBoundingBoxFilter(preparm.getBoundingBox() != null)
         .clearBoundingBoxUrl(clearBoundingBoxUrl)
-        .actionUrl(response.createActionURL().toString())
+        .actionUrl(response.createActionURL(Copy.NONE).toString())
         .dateFrom(urlbuilder.getParam(QueryParamNames.PARAM_START))
         .dateUntil(urlbuilder.getParam(QueryParamNames.PARAM_END))
         .dateFilterPassthroughParams(dateFilterPassthroughParams)

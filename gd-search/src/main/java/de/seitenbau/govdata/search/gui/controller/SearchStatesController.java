@@ -9,9 +9,9 @@ import javax.portlet.RenderResponse;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.search.geostate.display.cache.DisplayStateCache;
 import de.seitenbau.govdata.search.util.states.StateViewModel;
