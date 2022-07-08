@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.1.2 2022-05-05
+
+* Fixes bug when fetching metrics data from Elasticsearch
+
 ## v5.1.1 2022-04-13
 
 * Fixes writing additional information about resources with CKAN 2.9 when saving datasets using the metadata edit form

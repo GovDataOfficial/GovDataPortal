@@ -56,11 +56,13 @@ import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.search.comparator.FilterViewModelDocCountDescComparator;
 import de.seitenbau.govdata.search.gui.model.FilterViewModel;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Controller Class for Developers Corner Portlet
  * 
  */
+@Slf4j
 @Controller
 @RequestMapping("VIEW")
 public class MetadataQualityController
@@ -230,6 +232,9 @@ public class MetadataQualityController
   List<FilterViewModel> retrieveOrganizationFilterList(String filterName, PortletURL baseUrl,
       String clearFilterUrl)
   {
+    final String method = "retrieveOrganizationFilterList() : ";
+    log.trace(method + "Start");
+
     // get all publishers that contain data
     Map<String, Long> availablePublishers = metricsParser.getAvailablePublishers();
 
@@ -240,6 +245,7 @@ public class MetadataQualityController
     {
       if (!availablePublishers.containsKey(orga.getId()) || orga.getName().equalsIgnoreCase(ALL_PUBLISHERS))
       {
+        log.debug("{}Ignore organization {}", method, orga.getId());
         continue; // filter govdata and publishers without data
       }
 
@@ -267,6 +273,8 @@ public class MetadataQualityController
         .stream()
         .sorted(new FilterViewModelDocCountDescComparator())
         .collect(Collectors.toList());
+
+    log.trace(method + "End");
     return metadataOrganizationListSorted;
   }
 

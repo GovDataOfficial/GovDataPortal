@@ -19,7 +19,6 @@ import javax.annotation.PreDestroy;
 import javax.naming.ConfigurationException;
 import javax.net.ssl.SSLContext;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
@@ -30,7 +29,6 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.lucene.search.TotalHits;
-import org.apache.lucene.search.TotalHits.Relation;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchPhaseExecutionException;
@@ -49,6 +47,7 @@ import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.ExistsQueryBuilder;
 import org.elasticsearch.index.query.MatchAllQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder.Type;
 import org.elasticsearch.index.query.Operator;
@@ -69,7 +68,6 @@ import org.elasticsearch.search.aggregations.bucket.filter.Filter;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.aggregations.metrics.ParsedTopHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -128,8 +126,6 @@ public class SearchServiceElasticsearchImpl implements SearchService
   private static final String SAYT_COMPLETION_SUGGESTION = "search-as-you-type";
 
   private static final int SEARCH_PHRASE_MIN_LENGTH = 2;
-
-  private static final String LOGGER_PREFEIX = "[SearchServiceElasticsearchImpl]: ";
 
   /**
    * not sure which unit... but the value given by the "area" package in python, used to calculate
@@ -271,6 +267,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   public SearchResultContainer search(
       SearchQuery q, Integer numResults, SearchFilterBundle bundle, Sort sort)
   {
+    final String method = "search() : ";
+    log.trace(method + "Start");
+
     final QueryBuilder baseQuery = buildBaseQuery(q);
 
     // Map of active Filters, used in result presentation
@@ -386,7 +385,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
     }
     catch (IOException ex)
     {
-      log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in search(): " + ex.getMessage());
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
       throw new RuntimeException(ex);
     }
 
@@ -471,6 +470,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
         .hitsTotal(totalHits.value)
         .build();
 
+    log.trace(method + "End");
     return result;
   }
 
@@ -542,6 +542,8 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @Override
   public SearchResultContainer singleSearch(List<String> idList, String[] searchIndexes)
   {
+    final String method = "singleSearch() : ";
+    log.trace(method + "Start");
 
     // bool query for dataset-name filtering
     BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
@@ -581,7 +583,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
     }
     catch (IOException ex)
     {
-      log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in singleSearch(): " + ex.getMessage());
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
       throw new RuntimeException(ex);
     }
 
@@ -589,6 +591,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
         .hits(mapSearchResult(response))
         .build();
 
+    log.trace(method + "End");
     return result;
   }
 
@@ -596,6 +599,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @Override
   public List<String> findPortalContentIdsByPortletId(String portletId)
   {
+    final String method = "findPortalContentIdsByPortletId() : ";
+    log.trace(method + "Start");
+
     MatchAllQueryBuilder baseQuery = QueryBuilders.matchAllQuery();
 
     QueryBuilder portletIdFilter =
@@ -619,9 +625,6 @@ public class SearchServiceElasticsearchImpl implements SearchService
     {
       SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
 
-      response = client.searchScroll(new SearchScrollRequest(response.getScrollId())
-        .scroll(new Scroll(TimeValue.timeValueMinutes(minutesKeepAliveScroll))), RequestOptions.DEFAULT);
-
       SearchHit[] hits = response.getHits().getHits();
       while (hits.length != 0)
       {
@@ -636,9 +639,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
     }
     catch (IOException ex)
     {
-      log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in findPortalContentIdsByPortletId(): "
-          + ex.getMessage());
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
     }
+    log.trace(method + "End");
     return contentIds;
   }
 
@@ -646,6 +649,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @Override
   public List<String> findSearchAsYouTypeSuggestions(String q)
   {
+    final String method = "findSearchAsYouTypeSuggestions() : ";
+    log.trace(method + "Start");
+
     List<String> suggestions = new ArrayList<>();
 
     CompletionSuggestionBuilder suggestionBuilder =
@@ -668,8 +674,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
       }
       catch (IOException ex)
       {
-        log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in findSearchAsYouTypeSuggestions(): "
-            + ex.getMessage());
+        log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
         return suggestions;
       }
       Suggest suggest = response.getSuggest();
@@ -692,6 +697,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
         }
       }
     }
+    log.trace(method + "End");
     return suggestions;
   }
 
@@ -699,6 +705,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @Override
   public List<String> getResourceFormats(int limit)
   {
+    final String method = "getResourceFormats() : ";
+    log.trace(method + "Start");
+
     // Prepare Aggregation
     TermsAggregationBuilder aggFormat = AggregationBuilders
         .terms(SearchConsts.FACET_FORMAT)
@@ -719,7 +728,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
     }
     catch (IOException ex)
     {
-      log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in getResourceFormats(): " + ex.getMessage());
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
       return formats;
     }
     Terms terms = actionGet.getAggregations().get(SearchConsts.FACET_FORMAT);
@@ -730,6 +739,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
       formats.add(b.getKeyAsString().toString());
     }
 
+    log.trace(method + "End");
     return formats;
   }
 
@@ -742,6 +752,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @Override
   public void recordSearchPhrase(final String phrase)
   {
+    final String method = "recordSearchPhrase() : ";
+    log.trace(method + "Start");
+
     if (StringUtils.length(StringUtils.trim(phrase)) < SEARCH_PHRASE_MIN_LENGTH)
     {
       return;
@@ -756,51 +769,60 @@ public class SearchServiceElasticsearchImpl implements SearchService
     }
     catch (IOException ex)
     {
-      log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in recordSearchPhrase(): " + ex.getMessage());
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
     }
-
+    log.trace(method + "End");
   }
 
   @Override
   @SuppressWarnings("deprecation")
   public SearchHits getMetrics()
   {
+    final String method = "getMetrics() : ";
+    log.trace(method + "Start");
+
     // empty search hits
-    SearchHits result = new SearchHits(new SearchHit[0], new TotalHits(0L, Relation.EQUAL_TO), 1);
+    SearchHits result = SearchHits.empty();
 
-    // get all values for latest available date
-    AggregationBuilder aggregationMetrics = AggregationBuilders
-        .terms(SearchConsts.METRIC_GROUP_DATA_NAME)
-        .field("date")
-        .size(1)
-        .order(BucketOrder.key(false)) // desc order
-        .subAggregation(AggregationBuilders
-            .topHits(SearchConsts.METRICS_TOP_HIT_NAME)
-            .size(100)
-            .from(0));
-
-    SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-    sourceBuilder.size(0);
-    sourceBuilder.aggregation(aggregationMetrics);
+    // get the latest available date
+    String latestDate = getMetricsLatestDate();
+    MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("date", latestDate);
+    SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+        .query(matchQueryBuilder)
+        .size(100);
 
     // send search request
-    SearchRequest searchRequest = new SearchRequest().indices(metricIndexName).source(sourceBuilder);
+    SearchRequest searchRequest = new SearchRequest().indices(metricIndexName).source(sourceBuilder)
+        .searchType(SearchType.DFS_QUERY_THEN_FETCH)
+        .scroll(new Scroll(TimeValue.timeValueMinutes(minutesKeepAliveScroll)));
 
     try
     {
       SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
-      Terms terms = response.getAggregations().get(SearchConsts.METRIC_GROUP_DATA_NAME);
-      if (CollectionUtils.isNotEmpty(terms.getBuckets()))
+      List<SearchHit> combinedSearchHits = new ArrayList<>();
+
+      SearchHit[] hits = response.getHits().getHits();
+
+      while (hits.length != 0)
       {
-        Bucket bucket = terms.getBuckets().get(0);
-        ParsedTopHits topHits = bucket.getAggregations().get(SearchConsts.METRICS_TOP_HIT_NAME);
-        result = topHits.getHits();
+        for (SearchHit searchHit : hits)
+        {
+          combinedSearchHits.add(searchHit);
+        }
+
+        response = client.searchScroll(new SearchScrollRequest(response.getScrollId())
+            .scroll(new Scroll(TimeValue.timeValueMinutes(minutesKeepAliveScroll))), RequestOptions.DEFAULT);
+        hits = response.getHits().getHits();
       }
+
+      hits = combinedSearchHits.toArray(new SearchHit[0]);
+      result = new SearchHits(hits, response.getHits().getTotalHits(), 1);
     }
     catch (IOException ex)
     {
-      log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in getMetrics(): " + ex.getMessage());
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
     }
+    log.trace(method + "End");
     return result;
   }
 
@@ -836,6 +858,48 @@ public class SearchServiceElasticsearchImpl implements SearchService
       mappedHits.add(indexEntry);
     }
     return mappedHits;
+  }
+
+  /**
+   * Metrics private function
+   * Returns the value of the latest available date
+   * @return
+   */
+  @SuppressWarnings("deprecation")
+  private String getMetricsLatestDate()
+  {
+    final String method = "getMetricsLatestDate() : ";
+    log.trace(method + "Start");
+
+    String latestDate = "";
+
+    MatchAllQueryBuilder matchAllQuery = QueryBuilders.matchAllQuery();
+    SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+    sourceBuilder.size(1);
+    sourceBuilder.query(matchAllQuery);
+    sourceBuilder.sort("date", SortOrder.DESC);
+
+    // send search request
+    SearchRequest searchRequest = new SearchRequest().indices(metricIndexName).source(sourceBuilder);
+
+    try
+    {
+      SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
+
+      latestDate = (String) response.getHits().getAt(0).getSourceAsMap().get("date");
+      log.info("{}Get value for metrics latest date: {}", method, latestDate);
+    }
+    catch (IOException ex)
+    {
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
+    }
+    catch (ArrayIndexOutOfBoundsException ex)
+    {
+      log.warn("{}Extracting hits failed: {}", method, ex.getMessage());
+    }
+
+    log.trace(method + "End");
+    return latestDate;
   }
 
   /**
@@ -966,6 +1030,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @SuppressWarnings("deprecation")
   private Set<SuggestionOption> querySuggestions(String q)
   {
+    final String method = "querySuggestions() : ";
+    log.trace(method + "Start");
+
     Set<SuggestionOption> suggestionOptions = new HashSet<>();
 
     DirectCandidateGeneratorBuilder directCandidateGenerator =
@@ -994,7 +1061,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
       }
       catch (IOException ex)
       {
-        log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in querySuggestions(): " + ex.getMessage());
+        log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
         return suggestionOptions;
       }
       Suggest suggest = response.getSuggest();
@@ -1014,6 +1081,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
         }
       }
     }
+    log.trace(method + "End");
     return suggestionOptions;
   }
 
@@ -1180,6 +1248,9 @@ public class SearchServiceElasticsearchImpl implements SearchService
       QueryBuilder typeFilter,
       BoolQueryBuilder filters)
   {
+    final String method = "countHits() : ";
+    log.trace(method + "Start");
+
     BoolQueryBuilder allFilters = QueryBuilders.boolQuery().must(filters).must(typeFilter);
 
     final QueryBuilder filteredQuery = QueryBuilders.boolQuery().filter(baseQuery).filter(allFilters);
@@ -1192,12 +1263,14 @@ public class SearchServiceElasticsearchImpl implements SearchService
     try
     {
       CountResponse response = client.count(countRequest, RequestOptions.DEFAULT);
+      log.trace(method + "End");
       return response.getCount();
     }
     catch (IOException ex)
     {
-      log.warn(LOGGER_PREFEIX + "Elasticsearch-request failed in countHits(): " + ex.getMessage());
+      log.warn("{}Elasticsearch-request failed: {}", method, ex.getMessage());
     }
+    log.trace(method + "End");
     return 0L;
   }
 

@@ -108,19 +108,23 @@ public class MetricsParser extends BaseCache
     {
       LOG.info("{}Empty or expired metric publishers cache, refreshing data.", method);
       SearchHit[] hitArray = this.metricData.getHits();
+      LOG.info("{}Get {} hits.", method, hitArray.length);
 
       for (SearchHit searchHit : hitArray)
       {
         Map<String, Object> hit = searchHit.getSourceAsMap();
         // Get the publisher max doc count value
         Long hitValue = Long.parseLong(Objects.toString(hit.getOrDefault("total_count", 0)));
-        if (!publishers.containsKey(hit.get(PUBLISHER)) || publishers.get(hit.get(PUBLISHER)) < hitValue)
+        String publisherKey = (String) hit.get(PUBLISHER);
+        LOG.debug("{}Process publisher {}", method, publisherKey);
+        if (!publishers.containsKey(publisherKey) || publishers.get(publisherKey) < hitValue)
         {
-          publishers.put(Objects.toString(hit.get(PUBLISHER)), hitValue);
+          publishers.put(Objects.toString(publisherKey), hitValue);
         }
       }
       publishersCache = publishers;
       cacheUpdated(PUBLISHERS_CACHE_KEY);
+      LOG.info("{}Updated metric publishers cache. Publisher count: {}", method, publishersCache.size());
     }
 
     LOG.trace(method + "End");
