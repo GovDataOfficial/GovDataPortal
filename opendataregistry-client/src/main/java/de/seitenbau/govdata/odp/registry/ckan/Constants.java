@@ -27,56 +27,66 @@ package de.seitenbau.govdata.odp.registry.ckan;
  * 
  * @author sim, msg
  */
-public interface Constants {
+public interface Constants
+{
 
-	/** The Constant PROPERTIES_FILENAME. */
-	String PROPERTIES_FILENAME = "ckan.properties";
+  /** The Constant PROPERTIES_FILENAME. */
+  String PROPERTIES_FILENAME = "ckan.properties";
 
-	/** The Constant PROPERTY_NAME_CKAN_URL. */
-	String PROPERTY_NAME_CKAN_URL = "ckan.url";
+  /** The Constant PROPERTY_NAME_CKAN_URL. */
+  String PROPERTY_NAME_CKAN_URL = "ckan.url";
 
-	/** The Constant PROPERTY_NAME_CKAN_AUTHORIZATION_KEY. */
-	String PROPERTY_NAME_CKAN_AUTHORIZATION_KEY = "ckan.authorization.key";
+  /** The Constant PROPERTY_NAME_CKAN_AUTHORIZATION_KEY. */
+  String PROPERTY_NAME_CKAN_AUTHORIZATION_KEY = "ckan.authorization.key";
 
-	String PROP_NAME_DEFAULT_SORT_METADATA = "sorting.default.metadata";
+  /** The Constant PROP_NAME_DEFAULT_SORT_METADATA. */
+  String PROP_NAME_DEFAULT_SORT_METADATA = "sorting.default.metadata";
 
-	/** The Constant OPEN_DATA_PROVIDER_NAME. */
-	String OPEN_DATA_PROVIDER_NAME = "CKAN";
+  /** The Constant OPEN_DATA_PROVIDER_NAME. */
+  String OPEN_DATA_PROVIDER_NAME = "CKAN";
 
-	/** The Constant JSON_FIELD_EXTRAS. */
-	String JSON_FIELD_EXTRAS = "extras";
+  /** The Constant JSON_FIELD_EXTRAS. */
+  String JSON_FIELD_EXTRAS = "extras";
 
-	/** The Constant JSON_FIELD_CONTACTS. */
-	String JSON_FIELD_CONTACTS = "contacts";
+  /** The Constant JSON_FIELD_CONTACTS. */
+  String JSON_FIELD_CONTACTS = "contacts";
 
-	/** The Constant JSON_FIELD_RESOURCES. */
-	String JSON_FIELD_RESOURCES = "resources";
+  /** The Constant JSON_FIELD_RESOURCES. */
+  String JSON_FIELD_RESOURCES = "resources";
 
-	/** The Constant JSON_FIELD_TAGS. */
-	String JSON_FIELD_TAGS = "tags";
+  /** The Constant JSON_FIELD_TAGS. */
+  String JSON_FIELD_TAGS = "tags";
 
-	/** The Constant JSON_FIELD_CATEGORIES. */
-	String JSON_FIELD_CATEGORIES = "groups";
+  /** The Constant JSON_FIELD_CATEGORIES. */
+  String JSON_FIELD_CATEGORIES = "groups";
 
-	/** The Constant JSON_FIELD_LICENCE. */
-	String JSON_FIELD_LICENCE = "terms_of_use";
+  /** The Constant JSON_FIELD_LICENCE. */
+  String JSON_FIELD_LICENCE = "terms_of_use";
 
+  /** The Constant JSON_FIELD_COVERAGEFROM. */
   String JSON_FIELD_COVERAGEFROM = "temporal_start";
 
+  /** The Constant JSON_FIELD_COVERAGETO. */
   String JSON_FIELD_COVERAGETO = "temporal_end";
 
-	String JSON_FIELD_politicalGeocodingLevelURI = "politicalGeocodingLevelURI";
-	
-	String JSON_FIELD_TEMPORALGRANULARITY = "temporal_granularity";
+  /** The Constant JSON_FIELD_politicalGeocodingLevelURI. */
+  String JSON_FIELD_politicalGeocodingLevelURI = "politicalGeocodingLevelURI";
 
-	String JSON_FIELD_TEMPORALGRANULARITY_FACTOR = "temporal_granularity_factor";
+  /** The Constant JSON_FIELD_TEMPORALGRANULARITY. */
+  String JSON_FIELD_TEMPORALGRANULARITY = "temporal_granularity";
 
-	/** The Constant JSON_FIELD_ALL_FIELDS. */
-	String JSON_FIELD_ALL_FIELDS = "all_fields";
+  /** The Constant JSON_FIELD_TEMPORALGRANULARITY_FACTOR. */
+  String JSON_FIELD_TEMPORALGRANULARITY_FACTOR = "temporal_granularity_factor";
 
-	String JSON_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+  /** The Constant JSON_FIELD_ALL_FIELDS. */
+  String JSON_FIELD_ALL_FIELDS = "all_fields";
 
+  /** The Constant JSON_DATETIME_PATTERN. */
+  String JSON_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+
+  /** The Constant JSON_FIELD_PUBLISHED. */
   String JSON_FIELD_PUBLISHED = "issued";
 
+  /** The Constant JSON_FIELD_MODIFIED. */
   String JSON_FIELD_MODIFIED = "modified";
 }

@@ -1,13 +1,19 @@
 package de.seitenbau.govdata.search.filter;
 
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 
 public class BooleanFilter extends BaseFilter
 {
   
   private final Boolean val;
   
+  /**
+   * Data structure to hold boolean-filter information
+   * @param elasticSearchField
+   * @param filterFragmentName
+   * @param val
+   */
   public BooleanFilter(String elasticSearchField, String filterFragmentName, Boolean val)
   {
     super(elasticSearchField, filterFragmentName);
@@ -15,9 +21,10 @@ public class BooleanFilter extends BaseFilter
   }
 
   @Override
-  public FilterBuilder createFilter()
+  public QueryBuilder createFilter()
   {
-    return FilterBuilders.termFilter(elasticSearchField, val ? "true" : "false");
+    return QueryBuilders.boolQuery()
+        .must(QueryBuilders.termQuery(elasticSearchField, val ? "true" : "false"));
   }
 
   @Override

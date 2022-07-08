@@ -2,21 +2,22 @@ package de.seitenbau.govdata.redis.util;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lambdaworks.redis.RedisConnection;
-import com.lambdaworks.redis.RedisException;
 
 import de.seitenbau.govdata.exception.RedisNotAvailableException;
 import de.seitenbau.govdata.redis.adapter.RedisClientAdapter;
 import de.seitenbau.govdata.redis.bean.MetadataValidatonReportBean;
+import io.lettuce.core.RedisException;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Eine Hilfsklasse für den Zugriff auf die Redis-Datenbank.
@@ -45,13 +46,14 @@ public abstract class RedisReportUtil
 
     Set<String> result = new HashSet<String>();
 
-    RedisConnection<String, String> redisConnection = null;
+    StatefulRedisConnection<String, String> redisConnection = null;
     try
     {
-      redisConnection = redisClientAdapter.getPooledConnection();
-      if (redisConnection.exists(metadataId))
+      redisConnection = redisClientAdapter.getConnection();
+      RedisCommands<String, String> commands = redisConnection.sync();
+      String datasetRecord = commands.get(metadataId);
+      if (Objects.nonNull(datasetRecord))
       {
-        String datasetRecord = redisConnection.get(metadataId);
         log.debug("raw redis entry: " + datasetRecord);
         datasetRecord = parseReportPythonDictStringToJson(datasetRecord);
         log.debug("processed redis entry: " + datasetRecord);
@@ -79,13 +81,6 @@ public abstract class RedisReportUtil
     catch (RedisException e)
     {
       log.warn(method + e.getMessage());
-    }
-    finally
-    {
-      if (redisConnection != null)
-      {
-        redisClientAdapter.freeConnection(redisConnection);
-      }
     }
     log.trace(method + "End");
     return result;

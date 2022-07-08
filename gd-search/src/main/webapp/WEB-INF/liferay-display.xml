@@ -9,5 +9,9 @@
     <portlet id="gd-search-result" />
     <portlet id="gd-search-atomfeed" />
     <portlet id="gd-search-details" />
+    <portlet id="gd-search-numbers"></portlet>
+    <portlet id="gd-search-states"></portlet>
+    <portlet id="gd-featured-showcase-portlet"></portlet>
+    <portlet id="gd-featured-datasets-portlet"></portlet>
   </category>
 </display>

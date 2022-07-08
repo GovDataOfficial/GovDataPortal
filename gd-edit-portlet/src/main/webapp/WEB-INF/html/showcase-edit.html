@@ -1,0 +1,351 @@
+<div id="metadataEditForm" xmlns:th="http://www.thymeleaf.org">
+  <div class="row">
+    <div class="column" th:unless="${userCanEditShowcase}">
+      <div class="alert alert-error" th:text="#{od.editform.showcase.accessdenied}" role="alert"></div>
+    </div>
+    <div class="column overflowscroll" th:if="${userCanEditShowcase}">
+      <form id="editform" action="#" th:action="${actionUrl}" th:object="${editForm}" method="post"
+        th:attr="data-deletedatasetdialog=#{od.editform.showcase.delete.confirmdialog},
+                 data-onbeforeunload=#{od.editform.showcase.unsavedchanges}">
+        <h1 th:text="#{'od.editform.showcase.title.new'}" th:if="*{isNewShowcase()}"></h1>
+        <h1 th:text="#{'od.editform.showcase.title.edit'}" th:unless="*{isNewShowcase()}"></h1>
+        <strong class="requiredfieldhint">[[#{'od.editform.required.fields.hint'}]]</strong>
+
+        <div th:unless="${#strings.isEmpty(message)}" role="alert" th:class="'alert ' + ${messageType}" th:text="${#messages.msg(message)}"></div>
+
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{inEditing}" />
+        <table class="editdataset" role="presentation">
+          <!-- private Checkbox -->
+          <tr>
+            <th>[[#{'od.private.name'}]]</th>
+            <td class="multiboxarea">
+              <div class="checkboxitem singleitem">
+                <input class="offscreen" type="checkbox" th:field="*{private}" />
+                <label class="checkbox" th:for="${#ids.prev('private')}" th:text="#{'od.private.checkboxlabel.showcase'}"></label>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Primary Showcase Types -->
+          <tr>
+            <th><label id="selectedPrimaryShowcaseType_label" for="selectedPrimaryShowcaseType">[[#{'od.showcase.type.name'}]]<span class="requiredmarker"> *</span></label></th>
+            <td>
+              <select aria-required="true" th:field="*{selectedPrimaryShowcaseType}" aria-labelledby="selectedPrimaryShowcaseType_label selectedPrimaryShowcaseType_error" id="primaryShowcaseTypeSelect">
+                <option value="">[[#{od.select.required.item.text}]]</option>
+                <option th:each="type : ${showcaseTypes}" th:value="${type.field}" th:text="${type.displayName}"></option>
+              </select>
+              <div id="selectedPrimaryShowcaseType_error" class="validation-error" th:if="${#fields.hasErrors('selectedPrimaryShowcaseType')}" th:errors="*{selectedPrimaryShowcaseType}"></div>
+              <div id="selectedPrimaryShowcaseType_error" th:unless="${#fields.hasErrors('selectedPrimaryShowcaseType')}"></div>
+            </td>
+          </tr>
+
+          <!-- Additional Showcase Types -->
+          <tr class="highfield">
+            <th th:text="#{'od.showcase.type.additional.name'}"></th>
+            <td>
+              <fieldset class="multiboxarea">
+                <legend class="offscreen" aria-labelledby="selectedAdditionalShowcaseTypes_error">[[#{'od.showcase.type.additional.name'}]]*</legend>
+                <div class="checkboxitem" th:each="type : ${showcaseTypes}">
+                  <input class="offscreen" type="checkbox" th:field="*{selectedAdditionalShowcaseTypes}" th:value="${type.field}" />
+                  <label class="checkbox" th:for="${#ids.prev('selectedAdditionalShowcaseTypes')}" th:text="${type.displayName}"></label>
+                </div>
+              </fieldset>
+              <div id="selectedAdditionalShowcaseTypes_error" class="validation-error" th:if="${#fields.hasErrors('selectedAdditionalShowcaseTypes')}" th:errors="*{selectedAdditionalShowcaseTypes}"></div>
+              <div id="selectedAdditionalShowcaseTypes_error" th:unless="${#fields.hasErrors('selectedAdditionalShowcaseTypes')}"></div>
+            </td>
+          </tr>
+
+          <!-- Title -->
+          <tr>
+            <th><label id="title_label" for="title">[[#{'od.title.name'}]]<span class="requiredmarker"> *</span></label></th>
+            <td class="required-field">
+              <div th:replace="fragments :: title(${editForm})"></div>
+            </td>
+          </tr>
+
+          <!-- Notes -->
+          <tr class="highfield">
+            <th><label id="notes_label" for="notes">[[#{'od.notes.name'}]]</label><span class="requiredmarker"> *</span></th>
+            <td>
+              <div th:replace="fragments :: notes(${editForm})"></div>
+            </td>
+          </tr>
+
+          <!-- Images -->
+          <tr class="highfield">
+            <th><label id="notes_label" for="notes">[[#{'od.images.name'}]]</label></th>
+            <td>
+              <fieldset>
+                <table class="innertable imageTable">
+                  <tbody>
+                    <tr>
+                      <th:block th:each="row,rowStat : ${editForm.images}">
+                        <td th:object="${editForm.images[__${rowStat.index}__]}">
+                          <!-- select  from image -->
+                          <div th:id="'uploadCroppie'+${rowStat.index}" class="uploadImageCroppie hideElement" th:value="${rowStat.index}"></div>
+                          <div class="addrowbuttoncontainer content-centered">
+                            <button th:id="'uploadResult'+${rowStat.index}" class="btn uploadImageCroppieResult hideElement" th:value="${rowStat.index}" >[[#{'od.images.croppie.confirm'}]]</button>
+                          </div>
+                          <input type="hidden" th:field="*{id}"/>
+                          <input type="hidden" th:field="*{thumbnailImage}"/>
+                          <input type="hidden" th:field="*{tmpFileName}"/>
+                          <input type="hidden" th:field="*{imageOrderId}"/>
+                          <!-- select image button -->
+                          <div th:id="'uploadButton'+${rowStat.index}" class="imageUpload" th:classappend="*{imageToDisplay} ? 'imagePreview' : ''">
+                            <input th:if="${rowStat.index == 0}" class="fileUpload" type="file" th:id="'fileField'+${rowStat.index}" accept="image/*" th:value="${rowStat.index}"/>
+                            <input th:unless="${rowStat.index == 0}" class="fileUpload" type="file" th:id="'fileField'+${rowStat.index}" accept="image/*" th:value="${rowStat.index}" th:disabled="${#strings.isEmpty(editForm.images[__${rowStat.index}__-1].thumbnailImage)} and ${#strings.isEmpty(editForm.images[__${rowStat.index}__-1].tmpFileName)}"/>
+                            <label th:unless="*{imageToDisplay}" th:for="'fileField'+${rowStat.index}" class="imageUploadLabel">
+                              <img th:src="@{${themeDisplay.pathThemeImages} + '/svgicons/icon_upload.svg'}"/>
+                              <span>[[#{'od.images.placeholder'}]]</span>
+                            </label>
+                            <label th:if="*{onlySavedImageToDisplay}" th:for="'fileField'+${rowStat.index}" class="imageUploadLabel">
+                              <img th:src="*{thumbnailImage}" class="thumbnail"/>
+                            </label>
+                            <label th:if="*{!#strings.isEmpty(tmpFileName)}" th:for="'fileField'+${rowStat.index}" class="imageUploadLabel">
+                              <img th:src="*{tempImageResourceUrl}" class="resourceUrl"/>
+                            </label>
+                          </div>
+                          <!-- remove image button -->
+                          <div class="addrowbuttoncontainer content-centered">
+                            <button class="btn buttonRemoveImage" th:classappend="*{imageToDisplay} ? '' : 'hideElement'"  th:value="${rowStat.index}" type="button" th:text="#{'od.image.remove'}"></button>
+                          </div>
+                          <!-- source name -->
+                          <input th:attr="aria-labelledby='images'+${rowStat.index}+'_sourceName_label images'+${rowStat.index}+'_sourceName_name_error'" type="text" th:field="*{sourceName}" th:placeholder="#{'od.images.source.placeholder'}"/>
+                          <div th:id="'images'+${rowStat.index}+'_sourceName_name_error'" class="validation-error" th:if="${#fields.hasErrors('sourceName')}" th:errors="*{sourceName}"></div>
+                          <div th:id="'images'+${rowStat.index}+'_sourceName_name_error'" th:unless="${#fields.hasErrors('sourceName')}"></div>
+                        </td>
+                      </th:block>
+                    </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+            </td>
+          </tr>
+
+          <!-- Links to Application -->
+          <tr class="highfield">
+            <th th:text="#{'od.link.app.name'}"></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen">[[#{'od.link.app.name'}]]</legend>
+                <table class="innertable">
+                  <tbody>
+                     <th:block th:each="row,rowStat : ${editForm.linksToShowcase}">
+                      <tr th:object="${editForm.linksToShowcase[__${rowStat.index}__]}">
+                        <td class="links-names">
+                          <input aria-labelledby="'linksToShowcase'+${rowStat.index}+'_name_label linksToShowcase'+${rowStat.index}+'_name_error'" type="text" th:field="*{name}" th:placeholder="#{'od.link.placeholder.name'}" />
+                          <div id="'linksToShowcase'+${rowStat.index}+'_name_error'" class="validation-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                          <div id="'linksToShowcase'+${rowStat.index}+'_name_error'" th:unless="${#fields.hasErrors('name')}"></div>
+                        </td>
+                        <td class="links-urls">
+                          <input aria-labelledby="'linksToShowcase'+${rowStat.index}+'_url_label linksToShowcase'+${rowStat.index}+'_url_error'" type="text" th:field="*{url}" th:placeholder="#{'od.link.placeholder.url'}" />
+                          <div id="'linksToShowcase'+${rowStat.index}+'_url_error'" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+                          <div id="'linksToShowcase'+${rowStat.index}+'_url_error'" th:unless="${#fields.hasErrors('url')}"></div>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+                <div class="addrowbuttoncontainer">
+                  <button id="buttonAddAppLink" type="button" name="addLinkToShowcase" class="btn">[[#{'od.link.app.add.button'}]]</button>
+                </div>
+              </fieldset>
+            </td>
+          </tr>
+
+          <!-- Links to Datasets -->
+          <tr class="highfield">
+            <th th:text="#{'od.link.dataset.name'}"></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen">[[#{'od.link.dataset.name'}]]</legend>
+                <table class="innertable">
+                  <tbody>
+                     <th:block th:each="row,rowStat : ${editForm.usedDatasets}">
+                      <tr th:object="${editForm.usedDatasets[__${rowStat.index}__]}">
+                        <td class="links-names">
+                          <input aria-labelledby="'usedDatasets'+${rowStat.index}+'_name_label usedDatasets'+${rowStat.index}+'_name_error'" type="text" th:field="*{name}" th:placeholder="#{'od.link.placeholder.name'}" />
+                          <div id="'usedDatasets'+${rowStat.index}+'_name_error'" class="validation-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                          <div id="'usedDatasets'+${rowStat.index}+'_name_error'" th:unless="${#fields.hasErrors('name')}"></div>
+                        </td>
+                        <td class="links-urls">
+                          <input aria-labelledby="'usedDatasets'+${rowStat.index}+'_url_label usedDatasets'+${rowStat.index}+'_url_error'" type="text" th:field="*{url}" th:placeholder="#{'od.link.placeholder.url'}" />
+                          <div id="'usedDatasets'+${rowStat.index}+'_url_error'" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+                          <div id="'usedDatasets'+${rowStat.index}+'_url_error'" th:unless="${#fields.hasErrors('url')}"></div>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+                <div class="addrowbuttoncontainer">
+                  <button id="buttonAddDatasetLink" type="button" name="addLinkToDataset" class="btn">[[#{'od.link.dataset.add.button'}]]</button>
+                </div>
+              </fieldset>
+            </td>
+          </tr>
+
+          <!-- Platforms/Systems -->
+          <tr class="highfield">
+            <th th:text="#{'od.platforms.name'}"></th>
+            <td>
+              <fieldset class="multiboxarea">
+                <legend class="offscreen" aria-labelledby="selectedPlatforms_error">[[#{'od.platforms.name'}]]*</legend>
+                <div class="checkboxitem" th:each="platform : ${platformList}">
+                  <input class="offscreen" type="checkbox" th:field="*{selectedPlatforms}" th:value="${platform.field}" />
+                  <label class="checkbox" th:for="${#ids.prev('selectedPlatforms')}" th:text="${platform.displayName}"></label>
+                </div>
+              </fieldset>
+              <div id="selectedPlatforms_error" class="validation-error" th:if="${#fields.hasErrors('selectedPlatforms')}" th:errors="*{selectedPlatforms}"></div>
+              <div id="selectedPlatforms_error" th:unless="${#fields.hasErrors('selectedPlatforms')}"></div>
+            </td>
+          </tr>
+
+          <!-- Contact -->
+          <tr class="hasinnertable">
+            <th th:text="#{'od.contact.name'}"></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen" aria-labelledby="contact_error">[[#{'od.contact.name'}]]</legend>
+                <div th:replace="fragments :: singleContact(${editForm})"></div>
+              </fieldset>
+              <div id="contact_error" class="validation-error" th:if="${#fields.hasErrors('contact')}" th:errors="*{contact}"></div>
+              <div id="contact_error" th:unless="${#fields.hasErrors('contact')}"></div>
+            </td>
+          </tr>
+
+          <!-- Categories -->
+          <tr class="highfield">
+            <th th:text="#{'od.groups.name'}"></th>
+            <td>
+              <fieldset class="multiboxarea">
+                <legend class="offscreen" aria-labelledby="selectedCategories_error">[[#{'od.groups.name'}]]*</legend>
+                <div class="checkboxitem" th:each="category : ${categoryList}">
+                  <input class="offscreen" type="checkbox" th:field="*{selectedCategories}" th:value="${category.name}" />
+                  <label class="checkbox" th:for="${#ids.prev('selectedCategories')}" th:text="${category.displayName}"></label>
+                </div>
+              </fieldset>
+              <div id="selectedCategories_error" class="validation-error" th:if="${#fields.hasErrors('selectedCategories')}" th:errors="*{selectedCategories}"></div>
+              <div id="selectedCategories_error" th:unless="${#fields.hasErrors('selectedCategories')}"></div>
+            </td>
+          </tr>
+
+          <!-- Link to sourcecode -->
+          <tr class="hasinnertable">
+            <th th:text="#{'od.link.sources.name'}"></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen">[[#{'od.link.sources.name'}]]</legend>
+                <table class="innertable">
+                  <tbody>
+                      <tr>
+                        <td class="links-names">
+                          <input aria-labelledby="linkToSourcesName_label linkToSourcesName_error" type="text" th:field="*{linkToSourcesName}" th:placeholder="#{'od.link.placeholder.name'}" />
+                          <div id="linkToSourcesName_error" class="validation-error" th:if="${#fields.hasErrors('linkToSourcesName')}" th:errors="*{linkToSourcesName}"></div>
+                          <div id="linkToSourcesName_error" th:unless="${#fields.hasErrors('linkToSourcesName')}"></div>
+                        </td>
+                        <td class="links-urls">
+                            <input aria-labelledby="linkToSourcesUrl_label linkToSourcesUrl_error" type="text" th:field="*{linkToSourcesUrl}" th:placeholder="#{'od.link.placeholder.url'}" />
+                          <div id="linkToSourcesUrl_error" class="validation-error" th:if="${#fields.hasErrors('linkToSourcesUrl')}" th:errors="*{linkToSourcesUrl}"></div>
+                          <div id="linkToSourcesUrl_error" th:unless="${#fields.hasErrors('linkToSourcesUrl')}"></div>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+            </td>
+          </tr>
+
+          <!-- Tags/Keywords -->
+          <tr>
+            <th><label for="tags" id="tags_label">[[#{'od.tags.name'}]]</label></th>
+            <td>
+              <div th:replace="fragments :: tags(${editForm})"></div>
+            </td>
+          </tr>
+
+          <!--  Website-URL -->
+          <tr>
+            <th><label id="url_label" for="url">[[#{'od.url.name'}]]</label></th>
+            <td>
+              <div th:replace="fragments :: url(${editForm})"></div>
+            </td>
+          </tr>
+
+          <!-- Calendar data -->
+          <tr class="hasinnertable">
+            <th th:text="#{'od.dates.name'}"></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen">[[#{'od.dates.name'}]]</legend>
+                <table class="innertable field-temporal_coverage full-width">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="date-container">
+                          <label id="manualShowcaseCreatedDate_label" for="manualShowcaseCreatedDate" class="date-label">[[#{'od.dates.showcase.published.name'}]]:</label>
+                          <input aria-labelledby="manualShowcaseCreatedDate_label manualShowcaseCreatedDate_error" type="text" th:field="*{manualShowcaseCreatedDate}" aria-required="true" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}" th:title="#{'od.gdsearch.filter.date.input.title'}" />
+                        </div>
+                        <div id="manualShowcaseCreatedDate_error" class="validation-error" th:if="${#fields.hasErrors('manualShowcaseCreatedDate')}" th:errors="*{manualShowcaseCreatedDate}"></div>
+                        <div id="manualShowcaseCreatedDate_error" th:unless="${#fields.hasErrors('manualShowcaseCreatedDate')}"></div>
+                      </td>
+                      <td>
+                        <div class="date-container">
+                          <label id="manualShowcaseModifiedDate_label" for="manualShowcaseModifiedDate" class="date-label">[[#{'od.dates.showcase.modified.name'}]]:</label>
+                          <input aria-labelledby="manualShowcaseModifiedDate_label manualShowcaseModifiedDate_error" type="text" th:field="*{manualShowcaseModifiedDate}" aria-required="true" th:placeholder="#{'od.gdsearch.filter.date.insertdate'}" th:title="#{'od.gdsearch.filter.date.input.title'}" />
+                        </div>
+                        <div id="manualShowcaseModifiedDate_error" class="validation-error" th:if="${#fields.hasErrors('manualShowcaseModifiedDate')}" th:errors="*{manualShowcaseModifiedDate}"></div>
+                        <div id="manualShowcaseModifiedDate_error" th:unless="${#fields.hasErrors('manualShowcaseModifiedDate')}"></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+            </td>
+          </tr>
+
+          <tr class="hasinnertable">
+            <th th:text="#{'od.usecase.name'}"></th>
+            <td>
+              <fieldset>
+                <legend class="offscreen">[[#{'od.usecase.name'}]]</legend>
+                <table class="innertable">
+                  <tbody>
+                      <tr>
+                        <td class="links-names">
+                          <input aria-labelledby="usecasePublisher_label usecasePublisher_error" type="text" th:field="*{usecasePublisher}" th:placeholder="#{'od.usecase.placeholder.name'}" />
+                          <div id="usecasePublisher_error" class="validation-error" th:if="${#fields.hasErrors('usecasePublisher')}" th:errors="*{usecasePublisher}"></div>
+                          <div id="usecasePublisher_error" th:unless="${#fields.hasErrors('usecasePublisher')}"></div>
+                        </td>
+                        <td class="links-urls">
+                            <input aria-labelledby="usecaseSourceUrl_label usecaseSourceUrl_error" type="text" th:field="*{usecaseSourceUrl}" th:placeholder="#{'od.usecase.placeholder.url'}" />
+                          <div id="usecaseSourceUrl_error" class="validation-error" th:if="${#fields.hasErrors('usecaseSourceUrl')}" th:errors="*{usecaseSourceUrl}"></div>
+                          <div id="usecaseSourceUrl_error" th:unless="${#fields.hasErrors('usecaseSourceUrl')}"></div>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+            </td>
+          </tr>
+
+          <!-- spatial field -->
+          <tr class="highfield">
+            <th><label id="spatial_label" for="spatial">[[#{'od.gdsearch.filter.spatial.title'}]]</label></th>
+            <td>
+              <div th:replace="fragments :: spatial(${editForm})"></div>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+              <div class="flex-container">
+                <button type="submit" class="btn">[[#{'od.editform.showcase.save-button'}]]</button>
+                <button type="button" class="btn btn-danger space-left" name="deleteDataset" id="buttonDeleteDataset" th:unless="*{isNewShowcase()}">[[#{'od.editform.showcase.delete-button'}]]</button>
+                <a th:unless="${#strings.isEmpty(metadataUrl)}" class="btn abort space-left" th:href="${metadataUrl}" th:text="#{cancel}"></a>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>

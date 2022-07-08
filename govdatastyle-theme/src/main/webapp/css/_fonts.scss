@@ -270,16 +270,15 @@
   font-family: 'Source Sans Pro';
   font-weight: bold;
   padding: rem-calc(2) rem-calc(15) rem-calc(4);
+  margin: rem-calc(2) 0;
 
   @media #{$small-only} {
     font-size: 20px;
     line-height: 22px;
-    margin: 0;
   }
   @media #{$medium-only} {
     font-size: 32px;
     line-height: 32px;
-    margin: rem-calc(2) 0;
   }
   @media #{$large-up} {
     font-size: 46px;
@@ -296,17 +295,16 @@
   font-family: 'Source Sans Pro';
   font-weight: bold;
   padding: rem-calc(2) rem-calc(15) rem-calc(4);
+  margin: rem-calc(2) 0;
 
   @media #{$small-only} {
-    font-size: 16px;
-    line-height: 18px;
-    margin: 0;
+    font-size: 12px;
+    line-height: 14px;
     font-weight: normal;
   }
   @media #{$medium-only} {
     font-size: 20px;
     line-height: 20px;
-    margin: rem-calc(2) 0;
   }
   @media #{$large-up} {
     font-size: 24px;

@@ -3,19 +3,19 @@ package de.seitenbau.govdata.search.index.listener;
 
 import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
-
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.kernel.messaging.proxy.ProxyRequest;
 import com.liferay.portal.kernel.search.IndexWriter;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 public class IndexListener implements MessageListener
 {
   @Inject
-  IndexWriter indexWriter;
+  private IndexWriter indexWriter;
   
   @Override
   public void receive(Message message) throws MessageListenerException

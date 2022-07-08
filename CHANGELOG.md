@@ -1,18 +1,88 @@
 # Changelog
 
-## 4.4.0 2021-03-26
+## v4.7.0 2022-02-17
+
+* Updates to Elasticsearch 7.16.x
+* Moves microservices and index-updater to separate repository
+* Removes individual python scripts
+* Improves date deserialization when reading metadata from CKAN
+* Saves ContributorID in addition to the organizationID in the triple store with the validation results
+* Do not include ContributorID in discoverable metrics anymore as it is always added now
+* Adds selection of a triplestore dataset which contains the SHACL validation results to the sparql editor
+* Adds description for the usability chart in the metadata quality dashboard
+* Updates dependencies log4j and slf4j to the latest versions
+
+## v4.6.5 2022-01-18
+
+* Updates the search criterias for the state search portlet
+
+## v4.6.4 2021-12-21
+
+* Updates maven dependencies Log4J to the latest security fix version 2.17.0
+
+## v4.6.3 2021-12-16
+
+* Updates maven dependencies to the latest bugfix / security fix version
+* Allows showcase contact mail and url to be stored without a name
+* Fixes bug when changing primary showcase type to an already saved additional type
+* Fixes showcase database unique constraints for the tables `showcase_link`, `showcase_used_dataset` and `showcase_image`
+
+## v4.6.0 2021-11-04
+
+* A dataset is now deleted from the triplestore when switching from public to private in the metadata edit form
+* Adds CSS styles for new horizontal sub navigation bar
+* Fixes blog navigation bar switching between public and draft blog entries
+* Adds the possiblity to the portlet "GovData in numbers" additionally displaying the latest tweet from twitter
+* Introduces new "state search" portlet
+* Little style improvements and new background images in the search bar
+* Introduces new "featured datasets" portlet
+* Introduces new "featured showcase" portlet
+* Introduces new portlet for displaying "GovData in numbers", e.g. counting datasets, apps and blog entries
+
+## v4.5.5 2021-09-20
+
+* Fixes default sort for map searches without search phrase by changing it back to 'relevance'
+
+## v4.5.3 2021-09-02
+
+* Updates jsoup version
+* Do not show private showcases in metadata details view
+
+## v4.5.2 2021-07-27
+
+* Installation documentation updated
+* Improves licence cache in module 'opendataregistry-client'
+* Increases version of some maven dependencies (bugfixes / security fixes)
+* Enforces 3.6.0 as minimum maven version
+
+## v4.5.0 2021-07-15
+
+* Fixes maven build of the project from scratch (#5)
+* Adds information on metadata details view: contributor name and license attribution by text
+* Fix checkstyle violations and excludes some classes and files
+* Sort search results by last modification date by default when no search phrase is given
+* Introduces application 'index-updater' for reindexing showcases in the search index
+* Searches additionally in field 'metadata.publisher_name'
+* Allows `<b>, <i>, <u>` and `<br>` tags in notes
+* Viewing showcases in the search results
+* Adds information on the metadata detail view about related showcases
+* Introduces detail view of showcases
+* Introduces new portlet plugin for editing showcases
+* Adds a new microservice for storing data in a separate database
+
+## v4.4.0 2021-03-26
 
 * Adds the DCAT-AP.de property "contributorID" to the edit form
 * Introduce the possiblity to validate the dataset graph by SHACL when updating the dataset and save the
   validation result in a triplestore
 * Introduce new metadata quality portlet
 
-## 4.3.5 2021-03-03
+## v4.3.5 2021-03-03
 
 * Replaced Captcha with honeypot
 * Disables editing screen name for all users except administrators
 
-## 4.3.3 2021-02-09
+## v4.3.3 2021-02-09
 
 * Add checkbox for privacy policy agreement to create account and create guest account forms
 * Add custom screen name generator and move screen name validator into common screenname-hook

@@ -457,6 +457,10 @@
     margin-bottom: 1em;
   }
 
+  .h2-metainfo dl dd {
+    word-wrap: break-word;
+  }
+
   .resultdetail {
     padding: .5em 0;
   }
@@ -575,4 +579,10 @@
 .searchdetails a.action-button {
   float: right;
   padding: .5em 1em;
+}
+
+.list-view-image {
+  @media #{$small-only} {
+    display: none;
+  }
 }

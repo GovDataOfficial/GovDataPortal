@@ -18,6 +18,7 @@
 package de.seitenbau.govdata.permission;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
@@ -36,10 +37,10 @@ import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
  */
 public abstract class PermissionUtil
 {
-  private static final Logger log = LoggerFactory.getLogger(PermissionUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PermissionUtil.class);
 
-  private static final String[] rolesWithPermission = new String[] {"Redakteur", "Chefredakteur",
-      "Administrator"};
+  private static final String[] ROLES_WITH_PERMISSION = new String[] {LiferayRole.REDAKTEUR.getRoleName(),
+      LiferayRole.CHEFREDAKTEUR.getRoleName(), LiferayRole.ADMINISTRATOR.getRoleName()};
 
   /**
    * Prüft, ob der übergebene Benutzer die Rechte besitzt einen Kommentar zu erstellen.
@@ -50,7 +51,7 @@ public abstract class PermissionUtil
   public static boolean hasCreateCommentPermission(User liferayUser)
   {
     boolean result = false;
-    // Alle registrierten Benutzer dürfen Kommentare editieren
+    // Alle registrierten Benutzer dürfen Kommentare erstellen
     if (liferayUser != null)
     {
       result = true;
@@ -100,6 +101,16 @@ public abstract class PermissionUtil
     return result;
   }
 
+  /**
+   * Prüft, ob der User berechtigt ist Showcases zu editieren.
+   * @param user User
+   * @return true wenn der User berechtigt ist
+   */
+  public static boolean hasEditShowcasePermission(User user)
+  {
+    return PermissionUtil.isRedakteur(user) || PermissionUtil.hasRole(user, LiferayRole.GESCHAEFTSSTELLE);
+  }
+
   private static boolean isOwner(User liferayUser, long commentOwnerLiferayUserId)
   {
     return (liferayUser != null && liferayUser.getUserId() == commentOwnerLiferayUserId);
@@ -114,7 +125,7 @@ public abstract class PermissionUtil
   public static boolean isRedakteur(User liferayUser)
   {
     final String method = "isRedakteur() : ";
-    log.trace(method + "Start");
+    LOG.trace(method + "Start");
 
     boolean result = false;
 
@@ -127,19 +138,59 @@ public abstract class PermissionUtil
         for (Role role : roles)
         {
           String name = role.getName();
-          if (ArrayUtils.contains(rolesWithPermission, name))
+          if (ArrayUtils.contains(ROLES_WITH_PERMISSION, name))
           {
-            log.debug(method + "Current user has role editor or admin.");
+            LOG.debug(method + "Current user has role editor or admin.");
             result = true;
+            break;
           }
         }
       }
       catch (SystemException e)
       {
-        log.warn(method + e.getMessage());
+        LOG.warn(method + e.getMessage());
       }
     }
-    log.trace(method + "End");
+    LOG.trace(method + "End");
+    return result;
+  }
+
+  /**
+   * Checks if the given user has the given role.
+   * 
+   * @return true, if the user has the given role
+   * @throws SystemException the system exception
+   */
+  public static boolean hasRole(User liferayUser, LiferayRole roleRequired)
+  {
+    final String method = "hasRole() : ";
+    LOG.trace(method + "Start");
+
+    boolean result = false;
+
+    if (liferayUser != null)
+    {
+      List<Role> roles;
+      try
+      {
+        roles = RoleLocalServiceUtil.getUserRoles(liferayUser.getUserId());
+        for (Role role : roles)
+        {
+          String name = role.getName();
+          if (Objects.equals(roleRequired.getRoleName(), name))
+          {
+            LOG.debug(method + "Current user has the role '{}'.", roleRequired.getRoleName());
+            result = true;
+            break;
+          }
+        }
+      }
+      catch (SystemException e)
+      {
+        LOG.warn(method + e.getMessage());
+      }
+    }
+    LOG.trace(method + "End");
     return result;
   }
 }

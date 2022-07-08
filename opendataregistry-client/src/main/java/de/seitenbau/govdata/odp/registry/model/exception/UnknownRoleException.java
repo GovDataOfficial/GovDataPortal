@@ -27,19 +27,21 @@ package de.seitenbau.govdata.odp.registry.model.exception;
  * 
  * @author msg
  */
-public class UnknownRoleException extends Exception {
+public class UnknownRoleException extends Exception
+{
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates a new Unknown Role model exception.
-	 * 
-	 * @param message
-	 *            the message
-	 */
-	public UnknownRoleException(String message) {
-		super(message);
-	}
+  /**
+   * Instantiates a new Unknown Role model exception.
+   * 
+   * @param message
+   *            the message
+   */
+  public UnknownRoleException(String message)
+  {
+    super(message);
+  }
 
 }

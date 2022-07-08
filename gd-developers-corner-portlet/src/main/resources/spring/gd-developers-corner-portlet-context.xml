@@ -7,10 +7,9 @@
 
   <import resource="portlet-context.xml" />
   <import resource="mvc-context.xml" />
-  
-  <context:component-scan base-package="de.seitenbau.govdata.navigation, de.seitenbau.govdata.odr,
-      de.seitenbau.govdata.cache" />
-  
+
+  <context:component-scan base-package="de.seitenbau.govdata.navigation" />
+
   <bean class="de.seitenbau.govdata.developerscorner.DevelopersCornerController" />
 
 </beans>

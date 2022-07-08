@@ -19,6 +19,9 @@
 
 package de.fhg.fokus.odp.categoriesgrid;
 
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
+import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +46,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
 import de.fhg.fokus.odp.categoriesgrid.model.CategoryViewModel;
-import de.seitenbau.govdata.cache.BaseCache;
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.model.Category;
@@ -60,13 +63,10 @@ import de.seitenbau.govdata.servicetracker.MultiVMPoolServiceTracker;
  */
 @Controller(value = "categoriesGridController")
 @RequestMapping("VIEW")
-public class CategoriesGrid implements Serializable
+public class CategoriesGrid
 {
   /** The logger. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoriesGrid.class);
-
-  /** The Constant serialVersionUID. */
-  private static final long serialVersionUID = 1L;
 
   /** The time to live in seconds. */
   private static final int CLUSTERED_CACHE_TTL_IN_SECONDS = 7200;
@@ -84,6 +84,9 @@ public class CategoriesGrid implements Serializable
 
   private CategoryCache categoryCache;
 
+  /**
+   * An init method for the bean.
+   */
   @PostConstruct
   public void init()
   {
@@ -97,10 +100,13 @@ public class CategoriesGrid implements Serializable
       LOG.warn("The required service 'MultiVMPool' is not available.");
     }
     // set TTL for fallback category cache
-    categoryCache.setMaxCacheTimeHours(1);
+    categoryCache.setMaxCacheTimeAmount(1);
     LOG.debug("Initialize complete");
   }
 
+  /**
+   * Closes all open resources.
+   */
   @PreDestroy
   public void shutdown()
   {
@@ -221,7 +227,8 @@ public class CategoriesGrid implements Serializable
         String filterParam =
             FilterPathUtils.serializeFilter(SearchConsts.FACET_GROUPS, category.getName());
         PortletURL redirectUrl = govDataNavigation
-            .createLinkForSearchResults("suchen", "gdsearchresult", "", filterParam, "", "");
+            .createLinkForSearchResults(FRIENDLY_URL_NAME_SEARCHRESULT_PAGE, PORTLET_NAME_SEARCHRESULT, "",
+                filterParam, "", "");
         redirectUrlString = redirectUrl.toString();
       }
       catch (PortalException | IllegalArgumentException e)
@@ -249,6 +256,8 @@ public class CategoriesGrid implements Serializable
   }
 
   /**
+   * Sets the categoryCache.
+   * 
    * @param categoryCache the categoryCache to set
    */
   @Autowired

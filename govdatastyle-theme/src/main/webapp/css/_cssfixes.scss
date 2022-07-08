@@ -101,4 +101,19 @@
       width: 100%;
     }
   }
+
+  // fix positioning of the dropdown menu (e.g. in blog list view) in smartphone view
+  .navbar-expand-md.navbar-collapse-absolute .navbar-collapse {
+    position: relative;
+  }
+  // fix style for navigation bar light links
+  .navigation-bar-light {
+    .nav-link, .navbar-toggler-link[aria-expanded="true"] {
+      &:hover,
+      &:active,
+      &:focus {
+        color: $white;
+      }
+    }
+  }
 }

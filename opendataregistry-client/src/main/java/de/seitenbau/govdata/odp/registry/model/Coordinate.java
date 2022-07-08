@@ -22,13 +22,13 @@
  */
 package de.seitenbau.govdata.odp.registry.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Coordinate.
  * 
  * @author sim
  */
-public interface Coordinate {
+public interface Coordinate
+{
 
     /**
      * Gets the x.

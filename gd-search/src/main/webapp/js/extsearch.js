@@ -67,6 +67,14 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
       save: dropdownFilterSaveHandler
     },
 
+    'state': {
+      type: "dropdownview",
+      name: "state",
+      options: stateList,
+      selected: [],
+      save: dropdownFilterSaveHandler
+    },
+
     // autocomplete (eigentlich, aber wir machen erstmal kommaseparierte liste)
     'tags': {
       type: "textview",
@@ -110,7 +118,9 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
   // add multiboxviews
   [
     {name: 'groups', data: categoryList},
-    {name: 'format', data: formatList}
+    {name: 'format', data: formatList},
+    {name: 'platforms', data: platformList},
+    {name: 'showcase_types', data: showcaseTypeList}
   ]
   .forEach(function(item) {
     fieldTypes[item.name] = {
@@ -477,14 +487,14 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
     });
 
     // query search
-    if(param.query !== null) {
+    if(param.query !== null && param.query.queryString !== null) {
       fieldList.add(Y.merge(fieldTypes.query, {
-        value: param.query
+        value: param.query.queryString
       }));
     }
 
     // Dropdown-Fields / Multiselect (same Model-Structure)
-    ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format'].forEach(function(item) {
+    ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format', 'showcase_types', 'platforms', 'state'].forEach(function(item) {
       if (param.activeFilters.hasOwnProperty(item)) {
         fieldList.add(Y.merge(fieldTypes[item], {
           selected: param.activeFilters[item]

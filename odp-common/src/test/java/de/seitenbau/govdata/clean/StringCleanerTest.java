@@ -129,14 +129,15 @@ public class StringCleanerTest
   {
     /* prepare */
     String dirty =
-        "test <b>bold</b> <p>paragraph <b>bold</b></p> <ul><li>one</li></ul> <ol><li>two</li></ol>";
+        "test <b>bold</b> <p>paragraph <i>italic</i> and <u>underline</u></p> <br /> <ul><li>one</li></ul> "
+            + "<br> <ol><li>two</li></ol>";
 
     /* execute */
     String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
-    Assertions.assertThat(result).isEqualTo("test bold \n<p>paragraph bold</p> "
-        + "\n<ul>\n <li>one</li>\n</ul> \n<ol>\n <li>two</li>\n</ol>");
+    Assertions.assertThat(result).isEqualTo("test <b>bold</b> <p>paragraph <i>italic</i> and "
+        + "<u>underline</u></p> <br> <ul><li>one</li></ul> <br> <ol><li>two</li></ol>");
   }
 
   @Test
@@ -149,7 +150,7 @@ public class StringCleanerTest
     String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
 
     /* verify */
-    Assertions.assertThat(result).isEqualTo("test \n<a rel=\"nofollow\" target=\"_blank\">link</a>");
+    Assertions.assertThat(result).isEqualTo("test <a rel=\"nofollow\" target=\"_blank\">link</a>");
   }
 
   @Test
@@ -163,7 +164,7 @@ public class StringCleanerTest
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
-        "test \n<a href=\"http://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
+        "test <a href=\"http://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
   }
 
   @Test
@@ -177,7 +178,7 @@ public class StringCleanerTest
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
-        "test \n<a href=\"ftp://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
+        "test <a href=\"ftp://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
   }
 
   @Test
@@ -191,7 +192,7 @@ public class StringCleanerTest
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
-        "test \n<a href=\"http://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
+        "test <a href=\"http://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
   }
 
   @Test
@@ -205,7 +206,7 @@ public class StringCleanerTest
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
-        "test \n<a href=\"https://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
+        "test <a href=\"https://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
   }
 
   @Test
@@ -219,7 +220,7 @@ public class StringCleanerTest
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
-        "test \n<a href=\"mailto://test@test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
+        "test <a href=\"mailto://test@test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
   }
 
   @Test
@@ -233,7 +234,7 @@ public class StringCleanerTest
 
     /* verify */
     Assertions.assertThat(result).isEqualTo(
-        "test \n<a href=\"http://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
+        "test <a href=\"http://test.de\" rel=\"nofollow\" target=\"_blank\">link</a>");
   }
 
   @Test

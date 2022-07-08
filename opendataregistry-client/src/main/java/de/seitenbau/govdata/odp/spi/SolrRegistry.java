@@ -48,61 +48,68 @@ import de.seitenbau.govdata.odp.registry.solr.SOLRClient;
  * @author msg
  */
 
-public abstract class SolrRegistry {
+public abstract class SolrRegistry
+{
 
+  /** The solr loader. */
+  private static ServiceLoader<SolrRegistry> solrLoader = ServiceLoader
+      .load(SolrRegistry.class);
 
-	/** The solr loader. */
-	private static ServiceLoader<SolrRegistry> solrLoader = ServiceLoader
-			.load(SolrRegistry.class);
+  /**
+   * Gets the provider implementation for a given name of the solr client
+   * interface.
+   * 
+   * @param name
+   *            the name of the provider implementation
+   * @return the client interface
+   */
+  public static synchronized SOLRClient getClient(String name)
+  {
+    if (name != null)
+    {
+      for (SolrRegistry op : solrLoader)
+      {
+        if (name.equals(op.getName()))
+        {
+          return op.createClient();
+        }
+      }
+    }
+    return null;
+  }
 
-	/**
-	 * Gets the provider implementation for a given name of the solr client
-	 * interface.
-	 * 
-	 * @param name
-	 *            the name of the provider implementation
-	 * @return the client interface
-	 */
-	public static synchronized SOLRClient getClient(String name) {
-		if (name != null) {
-			for (SolrRegistry op : solrLoader) {
-				if (name.equals(op.getName())) {
-					return op.createClient();
-				}
-			}
-		}
-		return null;
-	}
+  /**
+   * Gets the default provider implementation of the solr client interface,
+   * which is 'SOLR'.
+   * 
+   * @return the client interface
+   */
+  public static synchronized SOLRClient getClient()
+  {
+    SOLRClient client = getClient(Constants.SOLR_PROVIDER_NAME);
+    if (client == null)
+    {
+      for (SolrRegistry op : solrLoader)
+      {
+        client = op.createClient();
+      }
+    }
+    return client;
+  }
 
-	/**
-	 * Gets the default provider implementation of the solr client interface,
-	 * which is 'SOLR'.
-	 * 
-	 * @return the client interface
-	 */
-	public static synchronized SOLRClient getClient() {
-		SOLRClient client = getClient(Constants.SOLR_PROVIDER_NAME);
-		if (client == null) {
-			for (SolrRegistry op : solrLoader) {
-				client = op.createClient();
-			}
-		}
-		return client;
-	}
+  /**
+   * Gets the name of the current solr provider implementation. Default
+   * provider is 'SOLR'.
+   * 
+   * @return the name of the current provider
+   */
+  public abstract String getName();
 
-	/**
-	 * Gets the name of the current solr provider implementation. Default
-	 * provider is 'SOLR'.
-	 * 
-	 * @return the name of the current provider
-	 */
-	public abstract String getName();
-
-	/**
-	 * Creates the client.
-	 * 
-	 * @return the SOLR client
-	 */
-	public abstract SOLRClient createClient();
+  /**
+   * Creates the client.
+   * 
+   * @return the SOLR client
+   */
+  public abstract SOLRClient createClient();
 
 }

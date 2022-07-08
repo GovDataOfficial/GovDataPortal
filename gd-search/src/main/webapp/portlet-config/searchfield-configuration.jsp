@@ -18,7 +18,7 @@ String backgroundImage = GetterUtil.getString(portletPreferences.getValue("backg
     <aui:input label="Suchfeld anzeigen" name="preferences--showSearch--" type="checkbox" value="<%= showSearch %>" />
     <aui:select label="Farbschema des Hintergrundbildes (nur für den kleinen Header)" name="preferences--backgroundImage--">
     <aui:option value="general" label="general" selected="<%= backgroundImage.equals(\"general\") %>" />
-      <aui:option value="app" label="app" selected="<%= backgroundImage.equals(\"app\") %>" />
+      <aui:option value="showroom" label="showroom" selected="<%= backgroundImage.equals(\"showroom\") %>" />
       <aui:option value="blog" label="blog" selected="<%= backgroundImage.equals(\"blog\") %>" />
       <aui:option value="data" label="data" selected="<%= backgroundImage.equals(\"data\") %>" />
       <aui:option value="document" label="document" selected="<%= backgroundImage.equals(\"document\") %>" />

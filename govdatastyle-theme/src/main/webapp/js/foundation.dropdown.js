@@ -29,10 +29,19 @@
       S(this.scope)
         .off('.dropdown')
         .on('click.fndtn.dropdown', '[' + this.attr_name() + ']', function (e) {
-          var settings = S(this).data(self.attr_name(true) + '-init') || self.settings;
+          var $this = S(this);
+          var settings = $this.data(self.attr_name(true) + '-init') || self.settings;
           if (!settings.is_hover || Modernizr.touch) {
-            e.preventDefault();
-            self.toggle($(this));
+            var data_attr_value = $this.data(self.data_attr());
+            if (data_attr_value.length === 0 && $this.is('a')) {
+              // No value defined, not continuing, but follow href in link
+              return;
+            }
+            else
+            {
+              e.preventDefault();
+              self.toggle($this);
+            }
           }
         })
         .on('mouseenter.fndtn.dropdown', '[' + this.attr_name() + '], [' + this.attr_name() + '-content]', function (e) {
@@ -318,7 +327,7 @@
       this.S(this.scope).off('.fndtn.dropdown');
       this.S('html, body').off('.fndtn.dropdown');
       this.S(window).off('.fndtn.dropdown');
-      this.S('[data-dropdown-content]').off('.fndtn.dropdown');
+      this.S('[' + this.attr_name() + '-content]').off('.fndtn.dropdown');
     },
 
     reflow : function () {}

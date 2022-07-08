@@ -5,11 +5,11 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/data/elasticsearch http://www.springframework.org/schema/data/elasticsearch/spring-elasticsearch-1.0.xsd">
 
-  <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+  <import resource="properties-context.xml" />
+
+  <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
     <property name="prefix" value="/WEB-INF/html/" />
-    <property name="templateMode" value="HTML5" />
     <property name="suffix" value=".html" />
-    <property name="characterEncoding" value="UTF-8" />
     <property name="cacheTTLMs" value="${thymeleaf.cache.ttl.millis}" />
   </bean>
 
@@ -17,9 +17,17 @@
     <property name="templateResolver" ref="templateResolver" />
   </bean>
 
+  <bean id="addDialectCaller" class="org.springframework.beans.factory.config.MethodInvokingBean">
+    <property name="targetObject" ref="templateEngine"/>
+    <property name="targetMethod" value="addDialect"/>
+    <property name="arguments">
+      <bean class="org.thymeleaf.extras.java8time.dialect.Java8TimeDialect" />
+    </property>
+  </bean>
+
   <bean id="thymeleafSpringResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
     <property name="templateEngine" ref="templateEngine" />
-    <property name="contentType" value="text/html;charset=UTF-8" />
+    <property name="characterEncoding" value="UTF-8" />
   </bean>
 
   <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

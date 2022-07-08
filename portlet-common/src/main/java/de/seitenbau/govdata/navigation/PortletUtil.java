@@ -66,18 +66,6 @@ public abstract class PortletUtil
   }
 
   /**
-   * Gibt die Basis-URL zur Datensatz-Detailansicht auf dem CKAN-Server zurück. Die URL endet mit
-   * einem Slash, so dass der Metadatenname nur noch angehängt werden muss.
-   * 
-   * @return
-   */
-  public static String getCkanDatasetBaseLink()
-  {
-    String result = StringUtils.appendIfMissing(PropsUtil.get(GovDataConfigParam.CKAN_URL), SLASH);
-    return result + CKAN_TYPE_DATASET + SLASH;
-  }
-
-  /**
    * Gibt den Link für den Fuseki Datastore ds zurück. Die URL endet ohne Slash.
    * 
    * @return
@@ -100,13 +88,23 @@ public abstract class PortletUtil
   }
 
   /**
-   * Gibt den Link für den Fuseki Triplestore zurück. Die URL endet ohne Slash.
+   * Gibt den Link für den Fuseki Triplestore Datastore zurück. Die URL endet ohne Slash.
    * 
    * @return
    */
   public static String getLinkToFusekiSparqlEndpoint()
   {
     return StringUtils.removeEnd(PropsUtil.get(GovDataConfigParam.FUSEKI_SPARQL_ENDPOINT), SLASH);
+  }
+
+  /**
+   * Gibt den Link für den Fuseki Triplestore SHACL-Datastore(MQA) zurück. Die URL endet ohne Slash.
+   * 
+   * @return
+   */
+  public static String getLinkToFusekiShaclSparqlEndpoint()
+  {
+    return StringUtils.removeEnd(PropsUtil.get(GovDataConfigParam.FUSEKI_SHACL_SPARQL_ENDPOINT), SLASH);
   }
 
   /**

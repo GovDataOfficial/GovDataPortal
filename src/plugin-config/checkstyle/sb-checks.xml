@@ -105,6 +105,7 @@
     </module>
     <module name="LeftCurly">
       <property name="option" value="nl"/>
+      <property name="tokens" value="CLASS_DEF,CTOR_DEF,ENUM_CONSTANT_DEF,ENUM_DEF,INTERFACE_DEF,LAMBDA,LITERAL_CASE,LITERAL_CATCH,LITERAL_DEFAULT,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE,METHOD_DEF,OBJBLOCK,STATIC_INIT,RECORD_DEF,COMPACT_CTOR_DEF"/>
     </module>
     <module name="EmptyBlock"/>
     <module name="EmptyForIteratorPad"/>
@@ -155,7 +156,7 @@
     <module name="NPathComplexity"/>
     <module name="VisibilityModifier"/>
     <module name="JavadocMethod">
-      <property name="scope" value="public"/>
+      <property name="accessModifiers" value="public"/>
       <property name="allowMissingParamTags" value="true"/>
       <property name="allowMissingReturnTag" value="true"/>
     </module>
@@ -165,7 +166,7 @@
     <module name="ConstantName">
       <property name="format" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$|logger"/>
     </module>
-    
+    <module name="SuppressionCommentFilter"/>
   </module>
   <module name="LineLength">
     <property name="max" value="110"/>

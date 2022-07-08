@@ -7,11 +7,9 @@
 
   <import resource="properties-context.xml" />
 
-  <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+  <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
     <property name="prefix" value="/WEB-INF/html/" />
-    <property name="templateMode" value="HTML5" />
     <property name="suffix" value=".html" />
-    <property name="characterEncoding" value="UTF-8" />
     <property name="cacheTTLMs" value="${thymeleaf.cache.ttl.millis}" />
   </bean>
 
@@ -19,8 +17,17 @@
     <property name="templateResolver" ref="templateResolver" />
   </bean>
 
+  <bean id="addDialectCaller" class="org.springframework.beans.factory.config.MethodInvokingBean">
+    <property name="targetObject" ref="templateEngine"/>
+    <property name="targetMethod" value="addDialect"/>
+    <property name="arguments">
+      <bean class="org.thymeleaf.extras.java8time.dialect.Java8TimeDialect" />
+    </property>
+  </bean>
+
   <bean id="thymeleafSpringResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
     <property name="templateEngine" ref="templateEngine" />
+    <property name="characterEncoding" value="UTF-8" />
   </bean>
 
   <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">

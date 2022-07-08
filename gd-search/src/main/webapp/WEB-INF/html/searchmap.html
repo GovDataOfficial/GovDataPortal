@@ -1,4 +1,4 @@
-<div xmlns:th="http://www.thymeleaf.org" class="searchmap-container" th:inline="text">
+<div xmlns:th="http://www.thymeleaf.org" class="searchmap-container">
   <form th:action="${searchMap.actionUrl}" method="post" th:object="${searchMap}" enctype="application/x-www-form-urlencoded">
    <input type="hidden" name="boundingbox" th:field="*{boundingbox}" id="boundingbox" />
    <input type="hidden" name="q" th:field="*{q}" />

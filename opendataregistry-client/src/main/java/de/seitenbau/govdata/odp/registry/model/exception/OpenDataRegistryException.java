@@ -25,7 +25,8 @@ package de.seitenbau.govdata.odp.registry.model.exception;
 /**
  * The Class OpenDataRegistryModelException.
  */
-public class OpenDataRegistryException extends Exception {
+public class OpenDataRegistryException extends Exception
+{
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
@@ -33,7 +34,8 @@ public class OpenDataRegistryException extends Exception {
     /**
      * Instantiates a new open data registry model exception.
      */
-    public OpenDataRegistryException() {
+    public OpenDataRegistryException()
+    {
         super();
     }
 
@@ -43,7 +45,8 @@ public class OpenDataRegistryException extends Exception {
      * @param message
      *            the message
      */
-    public OpenDataRegistryException(String message) {
+    public OpenDataRegistryException(String message)
+    {
         super(message);
     }
 

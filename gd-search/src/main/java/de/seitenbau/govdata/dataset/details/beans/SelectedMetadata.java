@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.constants.FileExtension;
+import de.seitenbau.govdata.edit.model.Link;
 import de.seitenbau.govdata.navigation.PortletUtil;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
@@ -49,7 +50,7 @@ import lombok.Data;
  * @author rnoerenberg
  */
 @Data
-public class SelectedMetadata
+public class SelectedMetadata implements ISelectedObject
 {
   /**
    * The logger.
@@ -86,7 +87,9 @@ public class SelectedMetadata
 
   private String keywords = null;
 
-  private List<String> tagNameList = new ArrayList<String>();
+  private List<Link> linksToShowcases = new ArrayList<>();
+
+  private List<String> tagNameList = new ArrayList<>();
 
   private String ratingActionUrl;
 
@@ -97,6 +100,8 @@ public class SelectedMetadata
   private String deleteCommentResourceURL;
 
   private Set<String> notAvailableResourceLinks;
+
+  private String organizationName;
 
   /**
    * Gets the title.
@@ -118,6 +123,7 @@ public class SelectedMetadata
    * 
    * @return
    */
+  @Override
   public String getTitleOnlyText()
   {
     String result = "";
@@ -149,6 +155,7 @@ public class SelectedMetadata
    * 
    * @return
    */
+  @Override
   public String getNotesOnlyText()
   {
     String result = "";
@@ -351,6 +358,7 @@ public class SelectedMetadata
    * 
    * @return
    */
+  @Override
   public List<String> getTagNameList()
   {
     if (CollectionUtils.isEmpty(this.tagNameList))

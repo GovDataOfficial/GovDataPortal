@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 19.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.0"
+   id="ebene1"
+   x="0px"
+   y="0px"
+   width="60px"
+   height="60px"
+   viewBox="0 0 60 60"
+   style="enable-background:new 0 0 60 60;"
+   xml:space="preserve"
+   sodipodi:docname="typ_dataset_typecolor.svg"
+   inkscape:version="1.1 (1:1.1+202105261517+ce6663b3b7)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs1788" /><sodipodi:namedview
+   id="namedview1786"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="14.066667"
+   inkscape:cx="12.618483"
+   inkscape:cy="30.035545"
+   inkscape:window-width="1848"
+   inkscape:window-height="1016"
+   inkscape:window-x="1992"
+   inkscape:window-y="27"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="ebene1" />
+<path
+   id="typ_x5F_datensatz"
+   d="M60,29.873c0-0.737-0.385-1.418-1.008-1.783l-6.662-3.91l6.662-3.91  C59.615,19.905,60,19.224,60,18.487s-0.385-1.418-1.008-1.783l-28-16.433c-0.613-0.361-1.371-0.361-1.984,0l-28,16.433  C0.385,17.069,0,17.75,0,18.487s0.385,1.418,1.008,1.783l6.773,3.975l-6.748,3.83C0.4,28.434,0.006,29.115,0,29.858  c-0.006,0.743,0.381,1.43,1.008,1.798l6.995,4.105l-6.97,3.956C0.4,40.076,0.006,40.757,0,41.499  c-0.006,0.743,0.381,1.43,1.008,1.798l28,16.432C29.314,59.91,29.658,60,30,60s0.686-0.09,0.992-0.271l28-16.432  C59.615,42.932,60,42.251,60,41.514s-0.385-1.418-1.008-1.783l-6.88-4.037l6.88-4.037C59.615,31.291,60,30.61,60,29.873z M30,4.42  l23.969,14.067L30,32.553L6.031,18.487L30,4.42z M53.969,41.514L30,55.58L6.082,41.544l5.985-3.398l16.94,9.941  c0.307,0.181,0.65,0.271,0.992,0.271s0.686-0.09,0.992-0.271l17.089-10.029L53.969,41.514z M30,43.938L6.082,29.903l5.764-3.272  l17.162,10.071c0.307,0.181,0.65,0.271,0.992,0.271s0.686-0.09,0.992-0.271l17.307-10.157l5.67,3.327L30,43.938z"
+   style="fill:#1e5a5a;fill-opacity:1" />
+</svg>

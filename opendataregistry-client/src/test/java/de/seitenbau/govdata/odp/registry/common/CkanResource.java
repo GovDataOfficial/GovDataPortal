@@ -73,7 +73,20 @@ public class CkanResource implements CKANClientAction
   @Override
   public JsonNode showDcatDataset(String authenticationKey, JsonNode body)
   {
-    return getJsonNode("dcat_dataset_show_response.json");
+    JsonNode profiles = body.get("profiles");
+    String profile = null;
+    if (profiles.has(0))
+    {
+      profile = profiles.get(0).asText();
+    }
+    if ("schemaorg".equals(profile))
+    {
+      return getJsonNode("dcat_dataset_show_response_jsonld.json");
+    }
+    else
+    {
+      return getJsonNode("dcat_dataset_show_response_xml.json");
+    }
   }
 
   @Override

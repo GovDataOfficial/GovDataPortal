@@ -25,25 +25,22 @@ package de.seitenbau.govdata.odp.registry.ckan.json;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 /**
+ * Class for an extra in a CKAN dataset.
+ * 
  * @author sim
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExtraBean implements Serializable {
+public class ExtraBean implements Serializable
+{
+  // CHECKSTYLE:OFF
     private static final long serialVersionUID = -617566629321775708L;
-    private static final Logger log = LoggerFactory.getLogger(ExtraBean.class);
-
-    private static final ObjectMapper OM = new ObjectMapper();
 
     @JsonProperty
     private String id;

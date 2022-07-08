@@ -1,5 +1,7 @@
 package de.seitenbau.govdata.search.gui.controller;
 
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
+
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -14,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
@@ -50,7 +52,7 @@ public abstract class AbstractBaseController
     // get the page we will end on
     ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
     String currentPage = themeDisplay.getLayout().getFriendlyURL().substring(1);
-    String target = "suchen"; // default target
+    String target = FRIENDLY_URL_NAME_SEARCHRESULT_PAGE; // default target
     if (Arrays.asList(typeFilteredPaths).contains(currentPage))
     {
       target = currentPage;

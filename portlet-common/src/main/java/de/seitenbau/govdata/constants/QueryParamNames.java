@@ -59,4 +59,7 @@ public abstract class QueryParamNames
 
   /** Der Parametername für die Anzeige der eigenen Datensätze in der Suche. */
   public static final String PARAM_SHOW_ONLY_EDITOR_METADATA = "onlyEditorMetadata";
+
+  /** Der Parametername für die Anzeige der privaten Showcases in der Suche. */
+  public static final String PARAM_SHOW_ONLY_PRIVATE_SHOWCASES = "onlyPrivateShowcases";
 }

@@ -9,15 +9,14 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Constraint(validatedBy = MapKeysValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD })
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MapKeys {
   String message();
-  
+
   String[] allowedKeys();
-  
-  Class<?>[] groups() default { };
-  
+
+  Class<?>[] groups() default {};
+
   Class<? extends Payload>[] payload() default {};
 }
-

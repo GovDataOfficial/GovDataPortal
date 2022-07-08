@@ -11,11 +11,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import com.lambdaworks.redis.RedisConnection;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import de.seitenbau.govdata.redis.adapter.RedisClientAdapter;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * Tests für die Klasse {@link RedisReportUtil}.
@@ -32,7 +32,10 @@ public class RedisReportUtilTest
   private RedisClientAdapter redisClientAdapterMock;
 
   @Mock
-  private RedisConnection<String, String> redisConnection;
+  private StatefulRedisConnection<String, String> redisConnection;
+
+  @Mock
+  private RedisCommands<String, String> redisCommands;
 
   @Before
   public void setup() throws Exception
@@ -85,9 +88,9 @@ public class RedisReportUtilTest
   {
     /* prepare */
     String metadataId = "100";
-    Mockito.when(redisClientAdapterMock.getPooledConnection()).thenReturn(redisConnection);
-    Mockito.when(redisConnection.exists(metadataId)).thenReturn(true);
-    Mockito.when(redisConnection.get(metadataId)).thenReturn(reportPythonDictString);
+    Mockito.when(redisClientAdapterMock.getConnection()).thenReturn(redisConnection);
+    Mockito.when(redisConnection.sync()).thenReturn(redisCommands);
+    Mockito.when(redisCommands.get(metadataId)).thenReturn(reportPythonDictString);
 
     /* execute */
     Set<String> result = RedisReportUtil.readUnavailableResourceLinks(metadataId, redisClientAdapterMock);

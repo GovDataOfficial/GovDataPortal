@@ -29,8 +29,14 @@ public class SearchExtViewModel
   
   private List<Map<String, String>> formatList;
   
+  private List<Map<String, String>> platformList;
+
+  private List<Map<String, String>> showcaseTypeList;
+
   private List<Map<String, String>> opennessList;
-  
+
+  private List<Map<String, String>> stateList;
+
   private Map<String, String> translationMap;
   
   private List<KeyValuePair> passthroughParams;

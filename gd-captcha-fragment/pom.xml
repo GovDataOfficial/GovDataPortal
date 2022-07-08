@@ -4,7 +4,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>4.4.0</version>
+    <version>5.0.0</version>
   </parent>
 	<artifactId>gd-captcha-fragment</artifactId>
 	<properties>

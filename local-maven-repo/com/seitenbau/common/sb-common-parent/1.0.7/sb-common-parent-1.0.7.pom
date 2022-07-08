@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.seitenbau</groupId>
+    <artifactId>sb-parent</artifactId>
+    <version>1.2.6</version>
+  </parent>
+  <groupId>com.seitenbau.common</groupId>
+  <artifactId>sb-common-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.7</version>
+  <name>Seitenbau commons parent pom</name>
+
+  <scm>
+    <connection>scm:svn:http://svn1.seitenbau.net/entwicklung/java/seitenbau/common/sb-common-parent/tags/sb-common-parent-1.0.7</connection>
+  </scm>
+
+  <distributionManagement>
+    <!-- 
+      Dieser Eintrag f�hrt leider dazu, dass das release plugin die site
+      auch in das angegebene Verzeichnis deployt. Da das entsprechende
+      Verzeichnis nicht verlinkt wird, wird das akzeptiert, 
+      um in den Unterprojekten nicht jedesmal die URL konfigurieren
+      zu m�ssen.
+     -->
+    <site>
+      <id>seitenbau.site.intranet</id>
+      <name>Site im Intranet</name>
+      <url>scp://sb-intranet/export/webroot/administration/htdocs/Doku/java_seitenbau</url>
+    </site>
+  </distributionManagement>
+  
+  <ciManagement>
+    <system>Hudson</system>
+    <url>http://hudson/</url>
+  </ciManagement>
+
+  <properties>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+    <project.build.javaVersion>1.5</project.build.javaVersion>
+  </properties>
+
+</project>

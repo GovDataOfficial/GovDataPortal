@@ -24,7 +24,19 @@ import de.seitenbau.govdata.constants.QueryParamNames;
 @Component
 public class GovDataNavigation
 {
-  private final static String BLOG_PORTLET_NAME = "com_liferay_blogs_web_portlet_BlogsPortlet";
+  /** Friendly URL name of the default search result page. */
+  public static final String FRIENDLY_URL_NAME_SEARCHRESULT_PAGE = "suchen";
+
+  /** Friendly URL name of the dataset page. */
+  public static final String FRIENDLY_URL_NAME_DATASET_PAGE = "daten";
+
+  /** Friendly URL name of the showroom page. */
+  public static final String FRIENDLY_URL_NAME_SHOWROOM_PAGE = "showroom";
+
+  /** Portlet name of the search result portlet. */
+  public static final String PORTLET_NAME_SEARCHRESULT = "gdsearchresult";
+
+  private static final String BLOG_PORTLET_NAME = "com_liferay_blogs_web_portlet_BlogsPortlet";
 
   private LiferayNavigation liferayNavigation;
 
@@ -105,7 +117,7 @@ public class GovDataNavigation
       String portletName,
       String metadataName) throws SystemException, PortalException
   {
-    return createLinkForMetadata(portletName, metadataName, "suchen");
+    return createLinkForMetadata(portletName, metadataName, FRIENDLY_URL_NAME_SEARCHRESULT_PAGE);
   }
   
   public PortletURL createLinkForMetadata(
@@ -126,6 +138,16 @@ public class GovDataNavigation
     PortletRequest request = liferayNavigation.getRequestFromContext();
     PortletURL url = liferayNavigation.createLink(request, "bearbeiten", portletName);
     PortletUtil.setParameterInPortletUrl(url, DetailsRequestParamNames.PARAM_METADATA, metadataName);
+    return url;
+  }
+
+  public PortletURL createLinkForShowcaseEdit(
+      String portletName,
+      String showcaseName) throws SystemException, PortalException
+  {
+    PortletRequest request = liferayNavigation.getRequestFromContext();
+    PortletURL url = liferayNavigation.createLink(request, "showcase-bearbeiten", portletName);
+    PortletUtil.setParameterInPortletUrl(url, DetailsRequestParamNames.PARAM_METADATA, showcaseName);
     return url;
   }
 

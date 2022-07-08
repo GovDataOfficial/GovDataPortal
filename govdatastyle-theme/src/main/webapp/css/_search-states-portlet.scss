@@ -1,0 +1,154 @@
+.gd-search-states-portlet {
+  background-color: $white;
+  margin: rem-calc(20) 0;
+
+  .gd-search-states-container {
+    padding-bottom: rem-calc(20);
+  }
+
+  .teaser-text {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  
+  .portlet-header h1 {
+    margin-top: 15px;
+  }
+
+  .states-list {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      margin: 5px 0px;
+
+      li {
+        display: inline-block;
+
+        a.action-button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 0px 2.5px;
+
+          &:hover {
+            @include opacity(1);
+          }
+        }
+      }
+    }
+
+  @media #{$medium-up} {
+    .mobile-version {
+      display: none;
+    }
+
+    .states-list {
+      li {
+        height: rem-calc(80);
+
+        a.action-button {
+          font-size: 30px;
+          height: rem-calc(80);
+          white-space: pre-wrap;
+          line-height: 1.0em;
+          padding: rem-calc(12) rem-calc(15);
+        }
+      }
+    }
+  }
+
+  @media #{$small-only} {
+    .desktop-version {
+      display: none;
+    }
+
+    .states-list {
+      padding: 0px;
+
+      li {
+        height: rem-calc(50);
+
+        a.action-button {
+          height: rem-calc(50);
+          width: rem-calc(140);
+        }
+      }
+    }
+
+    .large-cell {
+      li {
+        a.action-button {
+          width: rem-calc(285);
+        }
+      }
+    }
+
+    .bundesgebiet {
+      font-size: 30px !important;
+    }
+    .baden-württemberg {
+      font-size: 17px !important;
+    }
+    .bayern {
+      font-size: 32px !important;
+    }
+    .berlin {
+      font-size: 36px !important;
+    }
+    .brandenburg {
+      font-size: 17px !important;
+    }
+    .bremen {
+      font-size: 31px !important;
+    }
+    .hamburg {
+      font-size: 26px !important;
+    }
+    .hessen {
+      font-size: 32px !important;
+    }
+    .mecklenburg-vorpommern {
+      font-size: 16px !important;
+    }
+    .niedersachsen {
+      font-size: 16px !important;
+    }
+    .nordrhein-westfalen {
+      font-size: 19px !important;
+    }
+    .rheinland-pfalz {
+      font-size: 18px !important;
+    }
+    .saarland {
+      font-size: 25px !important;
+    }
+    .sachsen-anhalt {
+      font-size: 18px !important;
+    }
+    .sachsen {
+      font-size: 28px !important;
+    }
+    .schleswig-holstein {
+      font-size: 19px !important;
+    }
+    .thüringen {
+      font-size: 22px !important;
+    }
+  }
+
+  .color_100 {
+    @include opacity(1);
+  }
+  .color_80 {
+    @include opacity(0.8);
+  }
+  .color_60 {
+    @include opacity(0.6);
+  }
+  .blocked {
+    cursor: not-allowed;
+    background-color: $white !important;
+    color: $dark-gray !important;
+    @include opacity(1);
+  }
+}

@@ -32,7 +32,7 @@ public class Honeypot extends SimpleCaptchaImpl
 {
   private static final String FIELD_NAME = "email";
 
-  private static final String _TAGLIB_PATH = "/captcha/honeypot.jsp";
+  private static final String TAGLIB_PATH = "/captcha/honeypot.jsp";
   
   @Override
   public void check(HttpServletRequest request) throws CaptchaException
@@ -49,7 +49,8 @@ public class Honeypot extends SimpleCaptchaImpl
   
   private void validate(String parameter) throws CaptchaException
   {
-    if(StringUtils.isNotEmpty(parameter)) {
+    if (StringUtils.isNotEmpty(parameter))
+    {
       throw new CaptchaTextException("Honeypot activated.");
     }
   }
@@ -57,17 +58,19 @@ public class Honeypot extends SimpleCaptchaImpl
   @Override
   public String getTaglibPath()
   {
-    return _TAGLIB_PATH;
+    return TAGLIB_PATH;
   }
 
   @Override
-  public boolean isEnabled(HttpServletRequest httpServletRequest) {
+  public boolean isEnabled(HttpServletRequest httpServletRequest)
+  {
     // we never expire
     return true;
   }
 
   @Override
-  public boolean isEnabled(PortletRequest portletRequest) {
+  public boolean isEnabled(PortletRequest portletRequest)
+  {
     // we never expire
     return true;
   }
@@ -88,7 +91,8 @@ public class Honeypot extends SimpleCaptchaImpl
   @Override
   @Activate
   @Modified
-  protected void activate(Map<String, Object> properties) {
+  protected void activate(Map<String, Object> properties)
+  {
     setCaptchaConfiguration(ConfigurableUtil.createConfigurable(CaptchaConfiguration.class, properties));
   }
 }

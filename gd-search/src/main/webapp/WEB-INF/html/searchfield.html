@@ -1,4 +1,4 @@
-<div xmlns:th="http://www.thymeleaf.org" class="gd-search-container" th:inline="text">
+<div xmlns:th="http://www.thymeleaf.org" class="gd-search-container">
   <div th:class="${searchField.showBigHeader}? 'gd-search show-big-header' : 'gd-search show-small-header'"
     th:style="${not searchField.showBigHeader}? ('background-image: url(' + ${searchField.backgroundImage} + ');')">
     <div class="searchFormPlaceholder" th:unless="${searchField.showSearch}"></div>
@@ -6,7 +6,7 @@
       th:if="${searchField.showSearch}"
       th:action="${searchField.actionUrl}" th:object="${searchField}"
       method="post" action="" th:attr="data-saytCompletionUrl=${searchField.saytCompletionUrl}, data-saytHintTpl=#{od.search.field.sayt.hint}">
-      <input type="hidden" th:each="param : ${searchField.passthroughParams}" th:name="${param.key}" th:value="${param.value}" />
+      <input type="hidden" th:each="hiddenParam : ${searchField.passthroughParams}" th:name="${hiddenParam.key}" th:value="${hiddenParam.value}" />
 
       <div th:if="${searchField.showBigHeader}" class="row gd-search-titlearea">
         <div class="column small-12">

@@ -1,0 +1,82 @@
+<div class="gd-search-states-container" xmlns:th="http://www.thymeleaf.org">
+  <div class="desktop-version">
+    <div class="row">
+      <div class="teaser-text featured-box design-box-padding">
+        <p th:text="#{od.gdsearch.searchstates.teaser.text}"></p>
+      </div>
+    </div>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[0]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[1]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[2]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[3]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[4]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[5]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[6]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[7]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[8]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[9]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[10]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[11]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[12]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[13]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[14]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[15]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[16]})"></li>
+    </ul>
+  </div>
+  <div class="mobile-version">
+    <div class="row">
+      <div class="teaser-text featured-box design-box-padding">
+        <p th:text="#{od.gdsearch.searchstates.teaser.text}"></p>
+      </div>
+    </div>
+    <ul class="states-list large-cell">
+      <li th:replace="fragments/state :: displayState(${stateList[0]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[1]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[2]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[3]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[4]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[5]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[6]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[7]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[8]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[9]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[10]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[11]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[12]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[13]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[14]})"></li>
+    </ul>
+    <ul class="states-list">
+      <li th:replace="fragments/state :: displayState(${stateList[15]})"></li>
+      <li th:replace="fragments/state :: displayState(${stateList[16]})"></li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,145 @@
+<div id="contentPane" xmlns:th="http://www.thymeleaf.org">
+  <div th:unless="${selectedShowcase.showcaseVisibleForUser}" class="searchdetails row design-box-padding">
+    <div class="alert alert-error">
+      <span th:text="#{od.dataset.not.exists.error.message}"></span>
+    </div>
+  </div>
+  <div class="searchdetails row" th:attr="data-entry-id=${selectedShowcase.showcase.id}"
+       th:if="${selectedShowcase.showcaseVisibleForUser}" itemscope="itemscope"
+       itemtype="http://schema.org/Dataset">
+    <div class="column small-12 large-8">
+      <div class="design-box design-box-padding">
+        <div th:if="${selectedShowcase.userHasEditPermission()}" class="show-for-large-up"><a th:href="${editDatasetUrl}"
+                                                                          th:text="#{'od-datasets_edit-dataset'}"
+                                                                          class="action-button"></a></div>
+
+          <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${selectedShowcase.showcase.primaryShowcaseType.name}, true)"></div>
+
+          <h1>[[${selectedShowcase.titleOnlyText}]]</h1>
+          <!-- Images -->
+          <div th:unless="${#lists.isEmpty(selectedShowcase.showcase.images)}" class="showcase-images-box">
+            <th:block th:each="image : ${selectedShowcase.showcase.images}">
+              <div class="showcase-image" th:if="${image != null and !#arrays.isEmpty(image.thumbnailImage)}">
+                <img th:src="${image.thumbnailImage}" th:title="${#strings.isEmpty(image.sourceName)} ? '' : #{'od.gdsearch.details.image.source'} + ': ' + ${image.sourceName}">
+              </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="h2-teaser" th:if="${selectedShowcase.isBlockelementInNotes()}"
+               th:utext="${selectedShowcase.notesValidated}"></div>
+          <p class="h2-teaser" th:unless="${selectedShowcase.isBlockelementInNotes()}"
+             th:utext="${selectedShowcase.notesValidated}"></p>
+        </div>
+
+        <div class="design-box design-box-padding" th:unless="${#lists.isEmpty(selectedShowcase.showcase.usedDatasets) and #lists.isEmpty(selectedShowcase.showcase.linksToShowcase)}">
+
+          <!-- Links to Apps -->
+          <h2 th:unless="${#lists.isEmpty(selectedShowcase.showcase.linksToShowcase)}">[[#{od.datasets_metadata_links_app}]]:</h2>
+          <ul id="showcase-links-to-app" class="resource-list h2-metainfo" th:unless="${#lists.isEmpty(selectedShowcase.showcase.linksToShowcase)}">
+              <li th:each="link,iterStat : ${selectedShowcase.showcase.linksToShowcase}">
+                <h3>
+                  <span th:unless="${#strings.isEmpty(link.name)}" th:text="${link.name}"></span>
+                  <span th:if="${#strings.isEmpty(link.name)}" th:text="${link.url}"></span>
+                </h3>
+                <dl class="inline-list">
+                  <dt>[[#{od.gdsearch.details.url}]]:</dt>
+                  <dd>
+                    <a th:href="${link.url}" target="_blank" th:id="'linkstoshowcases'+${iterStat.index}+'_url'"
+                       th:text="${link.url}"></a>
+                  </dd>
+                </dl>
+              </li>
+          </ul>
+
+          <!-- Links to Datasets -->
+          <h2 th:unless="${#lists.isEmpty(selectedShowcase.showcase.usedDatasets)}">[[#{od.datasets_metadata_links_datasets}]]:</h2>
+          <ul id="showcase-used-datasets" class="resource-list h2-metainfo" th:unless="${#lists.isEmpty(selectedShowcase.showcase.usedDatasets)}">
+              <li th:each="link,iterStat : ${selectedShowcase.showcase.usedDatasets}">
+                <h3>
+                  <span th:unless="${#strings.isEmpty(link.name)}" th:text="${link.name}"></span>
+                  <span th:if="${#strings.isEmpty(link.name)}" th:text="${link.url}"></span>
+                </h3>
+                <dl class="inline-list">
+                  <dt>[[#{od.gdsearch.details.url}]]:</dt>
+                  <dd>
+                    <a th:href="${link.url}" target="_blank" th:id="'useddataset'+${iterStat.index}+'_url'"
+                       th:text="${link.url}"></a>
+                  </dd>
+                </dl>
+              </li>
+          </ul>
+      </div>
+    </div>
+    <div class="column small-12 large-4 floatcontainer-right">
+      <div class="design-box design-box-padding h2-metainfo searchdetails-infobox">
+
+        <!-- Showcase Types -->
+        <dl id="showcase-types" class="categories h2-tags space-bottom">
+          <dt>[[#{od.datasets_metadata_type}]]:</dt>
+          <dd th:text="${selectedShowcase.showcaseTypeDisplayName}"></dd>
+        </dl>
+
+        <!-- Website -->
+        <dl id="showcase-url" class="categories h2-tags space-bottom" th:unless="${#strings.isEmpty(selectedShowcase.showcase.url)}">
+          <dt>[[#{od.datasets_metadata_website}]]:</dt>
+          <dd><a th:href="${selectedShowcase.showcase.url}" target="_blank" th:text="${selectedShowcase.showcase.url}"></a></dd>
+        </dl>
+
+        <!-- Platforms/Systems -->
+        <dl id="showcase-platforms" class="categories h2-tags space-bottom">
+          <dt>[[#{od.datasets_metadata_platforms}]]:</dt>
+          <th:block th:each="platform : ${selectedShowcase.showcasePlatformsDisplayNames}">
+            <dd class="disc-list-item" th:text="${platform}"></dd>
+          </th:block>
+          <dd th:if="${#lists.isEmpty(selectedShowcase.showcasePlatformsDisplayNames)}">-</dd>
+        </dl>
+
+        <!-- Contact -->
+        <dl id="showcase-contact" class="categories h2-tags space-bottom" th:if="${selectedShowcase.showcase.contact} != null">
+          <dt>[[#{od.datasets_metadata_contact}]]:</dt>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.name)}" th:text="${selectedShowcase.showcase.contact.name}"></dd>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.address.addressee)}" th:text="${selectedShowcase.showcase.contact.address.addressee}"></dd>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.address.details)}" th:text="${selectedShowcase.showcase.contact.address.details}"></dd>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.address.street)}" th:text="${selectedShowcase.showcase.contact.address.street}"></dd>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.address.city)}" th:with="zip = ${#strings.isEmpty(selectedShowcase.showcase.contact.address.zip)} ? '' : ${selectedShowcase.showcase.contact.address.zip} + ' '" th:text="${zip} + ${selectedShowcase.showcase.contact.address.city}"></dd>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.address.country)}" th:text="${selectedShowcase.showcase.contact.address.country}"></dd>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.email)}" th:text="#{od.email.name} + ': ' + ${selectedShowcase.showcase.contact.email}"></dd>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.contact.url)}" >[[#{od.website}]]: <a th:href="${selectedShowcase.showcase.contact.url}" target="_blank" th:text="${selectedShowcase.showcase.contact.url}"></a></dd>
+        </dl>
+
+        <!-- Links to Sourcecode -->
+        <dl id="showcase-sourcecode"  class="categories h2-tags space-bottom" th:if="${selectedShowcase.hasLinkToSourcesUrl()}">
+          <dt>[[#{od.datasets_metadata_link_source}]]:</dt>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.linkToSourcesUrl)}"><a th:href="${selectedShowcase.showcase.linkToSourcesUrl}" target="_blank" th:text="${#strings.isEmpty(selectedShowcase.showcase.linkToSourcesName) ? selectedShowcase.showcase.linkToSourcesUrl : selectedShowcase.showcase.linkToSourcesName}"></a></dd>
+          <dd th:if="${#strings.isEmpty(selectedShowcase.showcase.linkToSourcesUrl)}" th:text="${selectedShowcase.showcase.linkToSourcesName} + ' (' + #{od.datasets_metadata_url_not_present} + ')'"></dd>
+        </dl>
+
+        <!-- Use Case -->
+        <dl id="showcase-usecase" class="categories h2-tags space-bottom" th:if="${selectedShowcase.hasLinkToUseCase()}">
+          <dt>[[#{od.datasets_metadata_link_usecase}]]:</dt>
+          <dd th:unless="${#strings.isEmpty(selectedShowcase.showcase.usecaseSourceUrl)}"><a th:href="${selectedShowcase.showcase.usecaseSourceUrl}" target="_blank" th:text="${#strings.isEmpty(selectedShowcase.showcase.usecasePublisher) ? selectedShowcase.showcase.usecaseSourceUrl : selectedShowcase.showcase.usecasePublisher}"></a></dd>
+          <dd th:if="${#strings.isEmpty(selectedShowcase.showcase.usecaseSourceUrl)}" th:text="${selectedShowcase.showcase.usecasePublisher} + ' (' + #{od.datasets_metadata_url_not_present} + ')'"></dd>
+        </dl>
+
+        <!-- Categories -->
+        <dl id="showcase-categories" class="categories h2-tags space-bottom">
+          <dt>[[#{od.datasets_metadata_categories}]]:</dt>
+          <th:block th:each="category : ${selectedShowcase.categories}">
+            <dd th:replace="fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})"></dd>
+          </th:block>
+          <dd th:if="${#lists.isEmpty(selectedShowcase.categories)}">-</dd>
+        </dl>
+
+        <!-- Tags/Keywords -->
+        <dl id="showcase-tags" class="taglist space-bottom inline-list">
+          <dt>[[#{od.datasets_metadata_tags}]]:</dt>
+          <dd th:each="tagName : ${selectedShowcase.tagNameList}">
+            <span th:text=" ${tagName}"></span>
+          </dd>
+          <dd th:if="${#lists.isEmpty(selectedShowcase.tagNameList)}"
+              th:title="#{od.tags.tooltip}">-</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,8 +13,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 /**
- * Generates user screen names complying with the CKAN user name scheme.
- * Similar to the DefaultScreenNameGenerator, but excludes all special characters except underscore.
+ * Generates user screen names complying with the CKAN user name scheme. Similar to the
+ * DefaultScreenNameGenerator, but excludes all special characters except underscore.
  */
 public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
 {
@@ -24,21 +24,25 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
     // try to construct a base name
     String screenName = StringUtil.extractFirst(emailAddress, "@");
     // in case the email was null or no @ is contained, fall back to the user ID
-    if (screenName == null || screenName.isEmpty()) {
+    if (screenName == null || screenName.isEmpty())
+    {
       screenName = PREFIX + SEPARATOR + userId;
     }
 
     // replace all unwanted characters
     screenName = StringUtil.toLowerCase(screenName);
-    for (char c : screenName.toCharArray()) {
-      if (!isCharAllowed(c)) {
+    for (char c : screenName.toCharArray())
+    {
+      if (!isCharAllowed(c))
+      {
         screenName = StringUtil.replace(
             screenName, c, SEPARATOR);
       }
     }
 
     // name needs to start with a letter
-    if (!Validator.isChar(screenName.charAt(0))) {
+    if (!Validator.isChar(screenName.charAt(0)))
+    {
       screenName = PREFIX + screenName;
     }
 
@@ -52,7 +56,8 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
     // if name is used, append a number to the name until a free name is found
     int suffix = 1;
     String baseName = screenName;
-    while (!isNameValid(companyId, screenName, reservedScreenNames)) {
+    while (!isNameValid(companyId, screenName, reservedScreenNames))
+    {
       screenName = baseName + SEPARATOR + suffix;
       suffix++;
     }
@@ -68,9 +73,12 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
    * @param reservedNames Array of reserved screen names
    * @return True if the name is valid.
    */
-  protected boolean isNameValid(long companyId, String screenName, String[] reservedNames) {
-    for (String name : reservedNames) {
-      if (StringUtil.equalsIgnoreCase(screenName, name)) {
+  protected boolean isNameValid(long companyId, String screenName, String[] reservedNames)
+  {
+    for (String name : reservedNames)
+    {
+      if (StringUtil.equalsIgnoreCase(screenName, name))
+      {
         return false;
       }
     }
@@ -78,7 +86,8 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
     User user = UserLocalServiceUtil.fetchUserByScreenName(
         companyId, screenName);
 
-    if (user != null) {
+    if (user != null)
+    {
       return false;
     }
 
@@ -95,7 +104,8 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
    * @param c character to check
    * @return True if the character is allowed
    */
-  protected static boolean isCharAllowed(char c) {
+  protected static boolean isCharAllowed(char c)
+  {
     return Validator.isChar(c) || Validator.isDigit(c) || c == SEPARATOR;
   }
 
@@ -105,5 +115,6 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
           PropsUtil.get(PropsKeys.ADMIN_RESERVED_SCREEN_NAMES));
 
   private static final char SEPARATOR = '_';
+
   private static final String PREFIX = "user";
 }

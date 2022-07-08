@@ -20,8 +20,11 @@ package de.seitenbau.govdata.odp.boxes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,7 +34,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import com.liferay.blogs.model.BlogsEntry;
@@ -41,7 +44,7 @@ import com.liferay.portal.kernel.bean.BeanLocator;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 
-import de.seitenbau.govdata.cache.BaseCache;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
 import de.seitenbau.govdata.servicetracker.MultiVMPoolServiceTracker;
 
@@ -169,10 +172,42 @@ public class BlogsTest
     assertThat(target.getBlogs()).hasSize(maximumNumberOfBlogs);
   }
 
+  @Test
+  public void init_sort() throws Exception
+  {
+    /* prepare */
+    int count = maximumNumberOfBlogs;
+    Mockito.when(blogsEntryLocalService.getBlogsEntriesCount()).thenReturn(count);
+    ArrayList<BlogsEntry> blogEntryList = new ArrayList<BlogsEntry>();
+    Instant date4HoursInThePast = Instant.now().minus(Duration.ofHours(4));
+    Instant date2HoursInThePast = Instant.now().minus(Duration.ofHours(2));
+    blogEntryList.add(createBlogEntry(3L, date4HoursInThePast)); // The oldest and not recognized
+    blogEntryList.add(createBlogEntry(2L, date2HoursInThePast));
+    blogEntryList.add(createBlogEntry());
+    Mockito.when(blogsEntryLocalService.getBlogsEntries(0, count)).thenReturn(blogEntryList);
+
+    /* execute */
+    target.init();
+
+    /* verify */
+    List<BlogsEntry> blogs = target.getBlogs();
+    assertThat(blogs).hasSize(count);
+    assertThat(blogs.get(0).getEntryId()).isEqualTo(1L);
+    assertThat(blogs.get(0).getCreateDate()).isAfter(date2HoursInThePast);
+    assertThat(blogs.get(1).getEntryId()).isEqualTo(2L);
+    assertThat(blogs.get(1).getCreateDate()).isEqualTo(date2HoursInThePast);
+  }
+
   private BlogsEntry createBlogEntry()
   {
+    return createBlogEntry(1L, Instant.now());
+  }
+
+  private BlogsEntry createBlogEntry(long id, Instant instant)
+  {
     BlogsEntry blogsEntryImpl = new BlogsEntryImpl();
-    blogsEntryImpl.setCreateDate(new Date());
+    blogsEntryImpl.setEntryId(id);
+    blogsEntryImpl.setCreateDate(Date.from(instant));
     return blogsEntryImpl;
   }
 }

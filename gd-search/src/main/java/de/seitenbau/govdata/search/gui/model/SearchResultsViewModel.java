@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.liferay.portal.kernel.util.KeyValuePair;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import com.liferay.portal.kernel.util.KeyValuePair;
 
 @Data
 @Builder
@@ -48,8 +48,10 @@ public class SearchResultsViewModel
   
   private String activeSortLabel;
   
-  private boolean canContainCkanData;
+  private boolean canContainSpatialData;
   
+  private boolean canContainCkanData;
+
   private List<SuggestionModel> suggestions;
   
   private String dateFrom;
@@ -68,11 +70,15 @@ public class SearchResultsViewModel
   
   private boolean hasActiveBoundingBoxFilter;
 
+  @Builder.Default
   private List<HitViewModel> hits = new ArrayList<HitViewModel>();
-  
+
+  @Builder.Default
   private Map<String, FilterViewListModel> filterMap = new HashMap<>();
-  
+
+  @Builder.Default
   private List<FilterViewModel> activeFilterList = new ArrayList<>();
-  
+
+  @Builder.Default
   private List<SortViewModel> sortByList = new ArrayList<>();
 }

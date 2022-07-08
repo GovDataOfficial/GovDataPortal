@@ -7,6 +7,7 @@ import lombok.Getter;
  */
 public enum MetadataStringExtraFields
 {
+  // CHECKSTYLE:OFF
 
   IDENTIFIER("identifier"),
   GUID("guid"),

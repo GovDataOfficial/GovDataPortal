@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.4.0</version>
+    <version>5.0.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -46,11 +46,6 @@
     </dependency>
 
     <dependency>
-      <groupId>de.seitenbau.serviceportal</groupId>
-      <artifactId>gui-common</artifactId>
-    </dependency>
-    
-    <dependency>
       <groupId>javax.servlet.jsp</groupId>
       <artifactId>jsp-api</artifactId>
     </dependency>
@@ -83,6 +78,10 @@
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf-spring4</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf.extras</groupId>
+      <artifactId>thymeleaf-extras-java8time</artifactId>
     </dependency>
 
     <dependency>
@@ -133,8 +132,8 @@
 
     <!-- Validation -->
     <dependency>
-      <artifactId>hibernate-validator</artifactId>
       <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
     </dependency>
 
     <!-- Testing -->
@@ -145,7 +144,7 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

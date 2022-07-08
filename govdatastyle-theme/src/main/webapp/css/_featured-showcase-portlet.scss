@@ -1,0 +1,31 @@
+.featured-showcase-portlet {
+  @extend .featured-portlet;
+
+  .featured-showcase-box {
+    @extend .featured-box;
+
+    .showcase-images-box {
+      display: flow-root;
+      margin-bottom: rem-calc(10px);
+    }
+
+    .showcase-image {
+      float: left;
+      padding: rem-calc(4.0px);
+      width: 25%;
+
+      @media #{$small-only} {
+        width: 50%;
+        padding: rem-calc(2.5px);
+      }
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  .center-showroom-button {
+    @extend .centered-button;
+  }
+}

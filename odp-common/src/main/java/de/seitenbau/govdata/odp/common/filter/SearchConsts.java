@@ -16,6 +16,12 @@ public abstract class SearchConsts
   public static final String CONFIG_ELASTICSEARCH_LIFERAY_INDEX_NAME = "${"
       + PARAM_ELASTICSEARCH_LIFERAY_INDEX_NAME + "}";
 
+  public static final String PARAM_ELASTICSEARCH_SHOWCASES_INDEX_NAME =
+      "elasticsearch.search.index.showcases";
+
+  public static final String CONFIG_ELASTICSEARCH_SHOWCASES_INDEX_NAME = "${"
+      + PARAM_ELASTICSEARCH_SHOWCASES_INDEX_NAME + "}";
+
   public static final String PARAM_ELASTICSEARCH_SEARCH_INDEX_NAMES = "elasticsearch.search.index.names";
 
   public static final String CONFIG_ELASTICSEARCH_SEARCH_INDEX_NAMES = "${"
@@ -30,6 +36,11 @@ public abstract class SearchConsts
    * Source type in the search index.
    */
   public static final String SOURCE_PORTAL = "portal";
+
+  /**
+   * Source type in the search index.
+   */
+  public static final String SOURCE_SHOWCASE = "showcase";
 
   /**
    * Filter type for all types.
@@ -52,6 +63,11 @@ public abstract class SearchConsts
   public static final String TYPE_DATASET = "dataset";
 
   /**
+   * Filter type for showcases.
+   */
+  public static final String TYPE_SHOWCASE = "showcase";
+
+  /**
    * Types that can contain CKAN-Datasets
    */
   public static final String[] CKAN_TYPES;
@@ -62,6 +78,16 @@ public abstract class SearchConsts
   public static final String[] CKAN_TYPES_ALL;
 
   /**
+   * Types that can contain spatial-data.
+   */
+  public static final String[] SPATIAL_TYPES;
+
+  /**
+   * All filter types that can contain spatial data.
+   */
+  public static final String[] SPATIAL_TYPES_ALL;
+
+  /**
    * Valid filter types.
    */
   public static final Set<String> VALID_FILTER_TYPES;
@@ -70,7 +96,9 @@ public abstract class SearchConsts
   {
     CKAN_TYPES = new String[] {TYPE_DATASET};
     CKAN_TYPES_ALL = new String[] {TYPE_ALL, TYPE_DATASET};
-    VALID_FILTER_TYPES = Stream.of(CKAN_TYPES_ALL, new String[] {TYPE_ARTICLE, TYPE_BLOG})
+    SPATIAL_TYPES = new String[] {TYPE_DATASET, TYPE_SHOWCASE};
+    SPATIAL_TYPES_ALL = new String[] {TYPE_ALL, TYPE_DATASET, TYPE_SHOWCASE};
+    VALID_FILTER_TYPES = Stream.of(CKAN_TYPES_ALL, new String[] {TYPE_ARTICLE, TYPE_BLOG, TYPE_SHOWCASE})
         .flatMap(Stream::of)
         .collect(Collectors.toSet());
   }
@@ -92,6 +120,12 @@ public abstract class SearchConsts
   public static final String FACET_LICENCE = "licence";
 
   public static final String FACET_SOURCEPORTAL = "sourceportal";
+
+  public static final String FACET_SHOWCASE_TYPE = "showcase_types";
+
+  public static final String FACET_PLATFORMS = "platforms";
+
+  public final static String FACET_STATE = "state";
 
   // fields used in extended search
   public static final String FILTER_EXT_TITLE = "title";

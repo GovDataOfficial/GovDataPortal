@@ -23,15 +23,18 @@ public class MapKeysValidator implements ConstraintValidator<MapKeys, Map<String
   public boolean isValid(Map<String, ?> value, ConstraintValidatorContext context)
   {
     // if we have no map, that's okay.
-    if(value == null) {
+    if (value == null)
+    {
       return true;
     }
     
     // test each key if it is allowed
-    for(String key : value.keySet()) {
-      if (!ArrayUtils.contains(allowedKeys, key)) {
+    for (String key : value.keySet())
+    {
+      if (!ArrayUtils.contains(allowedKeys, key))
+      {
         return false;
-      };
+      }
     }
     return true;
   }

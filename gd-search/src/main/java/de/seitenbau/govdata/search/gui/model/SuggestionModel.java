@@ -13,15 +13,19 @@ public class SuggestionModel
 {
   // suggested query string
   private String query;
-  
+
   // url to execute a search for the suggested query
   private String url;
-  
-  public boolean equals(Object other) {
-    return (other instanceof SuggestionModel && ((SuggestionModel)other).getQuery().equalsIgnoreCase(query));
+
+  @Override
+  public boolean equals(Object other)
+  {
+    return (other instanceof SuggestionModel && ((SuggestionModel) other).getQuery().equalsIgnoreCase(query));
   }
-  
-  public int hashCode() {
+
+  @Override
+  public int hashCode()
+  {
     return query.hashCode();
   }
 }

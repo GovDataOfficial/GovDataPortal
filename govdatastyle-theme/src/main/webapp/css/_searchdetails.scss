@@ -38,6 +38,36 @@
     margin-right: .5em;
     width: rem-calc(20px);
   }
+
+  .disc-list-item {
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: inside;
+  }
+
+  .showmore-btn {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .showcase-images-box {
+    display: flow-root;
+    margin-bottom: rem-calc(10px);
+  }
+
+  .showcase-image {
+    float: left;
+    padding: rem-calc(2.5px);
+    width: 25%;
+
+    @media #{$small-only} {
+      width: 50%;
+    }
+    
+    img {
+      width: 100%;
+    }
+  }
 }
 
 .aui .resource-list {
@@ -125,6 +155,10 @@
 
   .categories > * {
     margin: rem-calc(5) 0;
+  }
+  
+  dl dd {
+    word-wrap: break-word;
   }
 }
 

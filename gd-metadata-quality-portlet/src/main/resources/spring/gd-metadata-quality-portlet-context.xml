@@ -9,9 +9,7 @@
   <import resource="mvc-context.xml" />
   
   <context:component-scan 
-      base-package="de.seitenbau.govdata.search.gui.model,
-      de.seitenbau.govdata.navigation,
-      de.seitenbau.govdata.search.gui.mapper,
+      base-package="de.seitenbau.govdata.navigation,
       de.seitenbau.govdata.search.adapter,
       de.seitenbau.govdata.search.index.mapper,
       de.seitenbau.govdata.odr,

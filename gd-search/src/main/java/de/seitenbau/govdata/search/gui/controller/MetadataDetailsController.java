@@ -1,11 +1,16 @@
 package de.seitenbau.govdata.search.gui.controller;
 
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_DATASET_PAGE;
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SHOWROOM_PAGE;
+import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.portlet.MimeResponse;
@@ -31,6 +36,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import com.google.common.collect.Lists;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -40,7 +46,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
-import com.liferay.portal.kernel.service.BaseServiceImpl;
+import com.liferay.portal.kernel.security.auth.GuestOrUserUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -50,16 +56,27 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil;
+import de.seitenbau.govdata.cache.CategoryCache;
+import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.common.api.PageableRequest;
+import de.seitenbau.govdata.common.api.PagedList;
+import de.seitenbau.govdata.common.api.SearchFilter;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.dataset.details.beans.CurrentMetadataContact;
 import de.seitenbau.govdata.dataset.details.beans.CurrentUser;
+import de.seitenbau.govdata.dataset.details.beans.ISelectedObject;
 import de.seitenbau.govdata.dataset.details.beans.MetadataCommentWrapper;
 import de.seitenbau.govdata.dataset.details.beans.SelectedMetadata;
+import de.seitenbau.govdata.dataset.details.beans.SelectedShowcase;
+import de.seitenbau.govdata.db.api.ShowcaseResource;
+import de.seitenbau.govdata.db.api.model.Showcase;
+import de.seitenbau.govdata.edit.mapper.ShowcaseMapper;
+import de.seitenbau.govdata.edit.model.Link;
+import de.seitenbau.govdata.edit.model.ShowcaseViewModel;
 import de.seitenbau.govdata.messages.MessageKey;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
-import de.seitenbau.govdata.navigation.PortletUtil;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.Organization;
@@ -71,6 +88,7 @@ import de.seitenbau.govdata.redis.adapter.RedisClientAdapter;
 import de.seitenbau.govdata.redis.util.RedisReportUtil;
 import de.seitenbau.govdata.search.common.NotificationMailSender;
 import de.seitenbau.govdata.search.common.NotificationMailSender.EventType;
+import de.seitenbau.govdata.search.util.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -80,7 +98,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequestMapping("VIEW")
-public class MetadataDetailsController extends BaseServiceImpl
+public class MetadataDetailsController
 {
   private static final String MODEL_KEY_THEME_DISPLAY = "themeDisplay";
 
@@ -93,6 +111,8 @@ public class MetadataDetailsController extends BaseServiceImpl
   private static final String HTTP_STATUS_INTERNAL_SERVER_ERROR = "500";
 
   private static final String VIEW_MODEL_NAME = "details";
+
+  private static final String APP_VIEW_MODEL_NAME = "appdetails";
 
   private static final String SUBMIT_RATING_RESOURCE_URL_ID = "submitRating";
 
@@ -122,6 +142,8 @@ public class MetadataDetailsController extends BaseServiceImpl
 
   private static final String MODEL_KEY_METADATA_JSON_LD = "metadataJsonLd";
 
+  private static final String USED_DATASETS_URL_COLUMN = "usedDatasets.url";
+
   @Inject
   private RegistryClient registryClient;
 
@@ -134,6 +156,27 @@ public class MetadataDetailsController extends BaseServiceImpl
   @Inject
   private GovDataNavigation gdNavigation;
 
+  @Inject
+  private ShowcaseResource showcaseResource;
+
+  @Inject
+  private CategoryCache categoryCache;
+
+  @Inject
+  private OrganizationCache organizationCache;
+
+  /**
+   * Display details view for datasets, showcases, blogs and articles.
+   * @param metadataIdOrName
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws PortalException
+   * @throws SystemException
+   * @throws PortletModeException
+   * @throws WindowStateException
+   */
   @RenderMapping
   public String showMetadataDetails(
       @RequestParam(value = DetailsRequestParamNames.PARAM_METADATA,
@@ -147,7 +190,7 @@ public class MetadataDetailsController extends BaseServiceImpl
 
     // Nur Detailansicht rendern, wenn das FriendlyUrlMapping für das Details-Portlet in der URL
     // steht.
-    if (!isResponsible(request))
+    if (!RequestUtil.isResponsible(request, SearchConsts.FRIENDLY_URL_MAPPING_DETAILS))
     {
       log.debug(method + "End, do nothing.");
       return null;
@@ -174,6 +217,38 @@ public class MetadataDetailsController extends BaseServiceImpl
 
     SelectedMetadata selectedMetadata =
         createMetadata(metadataIdOrName, themeDisplay, currentUser.getCkanUser(), showBrokenLinksHint);
+
+    if (selectedMetadata.getMetadata() == null)
+    {
+      // Did not find a dataset with the id. Check for Showcases.
+      try
+      {
+        SelectedShowcase selectedShowcase = createSelectedShowcase(metadataIdOrName, currentUser);
+
+        log.info("showcase {} found!", metadataIdOrName);
+
+        if (selectedShowcase.isShowcaseVisibleForUser())
+        {
+          // Set showcase details as html website meta information
+          setSiteInformationFromMetadata(themeDisplay.getLayout(), selectedShowcase);
+          // create Link to edit form
+          String url = gdNavigation
+              .createLinkForShowcaseEdit("gdeditshowcaseportlet",
+                  selectedShowcase.getShowcase().getId().toString())
+              .toString();
+          model.addAttribute(MODEL_KEY_EDITDATASETURL, url);
+        }
+
+        model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
+        model.addAttribute("selectedShowcase", selectedShowcase);
+        return APP_VIEW_MODEL_NAME;
+      }
+      catch (Exception ex)
+      {
+        // Cannot find a Showcase for the id. Continue.
+        log.info("Did not find a Showcase for the identifier: {}", metadataIdOrName);
+      }
+    }
 
     PortletURL actionUrl = response.createActionURL();
     selectedMetadata.setActionUrl(actionUrl.toString());
@@ -206,9 +281,9 @@ public class MetadataDetailsController extends BaseServiceImpl
       }
       // add schema.org JSON-LD
       final String currentUrl = gdNavigation.createLinkForMetadata(
-          "gdsearchdetails", metadataIdOrName, "daten").toString();
-      final String catalogUrl = gdNavigation.createLinkForSearchResults("daten",
-          "gdsearchresult", "").toString();
+          "gdsearchdetails", metadataIdOrName, FRIENDLY_URL_NAME_DATASET_PAGE).toString();
+      final String catalogUrl = gdNavigation.createLinkForSearchResults(FRIENDLY_URL_NAME_DATASET_PAGE,
+          PORTLET_NAME_SEARCHRESULT, "").toString();
       String jsonLd = registryClient.getInstance().getJsonLdMetadata(currentUser.getCkanUser(),
           metadataIdOrName, currentUrl, catalogUrl);
       if (jsonLd == null)
@@ -219,7 +294,14 @@ public class MetadataDetailsController extends BaseServiceImpl
       // remove potential html tags, as text is rendered without escaping due to quotes in JSON data
       jsonLd = StringCleaner.trimAndFilterString(jsonLd);
       model.addAttribute(MODEL_KEY_METADATA_JSON_LD, jsonLd);
+      // set organization
+      selectedMetadata.setOrganizationName(getOrganizationName(selectedMetadata.getMetadata().getOwnerOrg()));
     }
+
+    // Get all Apps with the dataset
+    List<Link> showcaseListForDataset = readShowcaseListForDataset(metadataIdOrName);
+    selectedMetadata.setLinksToShowcases(showcaseListForDataset);
+
     // set url for submitting rating via ajax
     selectedMetadata.setRatingActionUrl(
         createResourceUrl(response, metadataName, SUBMIT_RATING_RESOURCE_URL_ID));
@@ -283,7 +365,7 @@ public class MetadataDetailsController extends BaseServiceImpl
       {
         ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
         // Check permission and existence of metadata
-        User liferayUser = getGuestOrUser(); // request User from BaseServiceImpl
+        User liferayUser = GuestOrUserUtil.getGuestOrUser(); // request User from BaseServiceImpl
         CurrentUser currentUser = findOrCreateCurrentUser(liferayUser);
 
         // get id of newly created temporary user, if this was a guest session
@@ -554,7 +636,7 @@ public class MetadataDetailsController extends BaseServiceImpl
 
       // get updated metadata
       // next three lines commented out, because the information about the rating is no more
-      // accessible through the only available acion api
+      // accessible through the only available action api
       // Metadata metadata = getMetadataFromCkan(currentUser.getCkanUser(), dataset);
       // view.addStaticAttribute("avgRating", Math.round(metadata.getAverageRating()));
       // view.addStaticAttribute("ratingCount", metadata.getRatingCount());
@@ -571,6 +653,55 @@ public class MetadataDetailsController extends BaseServiceImpl
     view.addStaticAttribute("rating", rating);
     log.debug(method + "End");
     return view;
+  }
+
+  private SelectedShowcase createSelectedShowcase(String metadataIdOrName, CurrentUser currentUser)
+  {
+    Long appId = Long.parseLong(metadataIdOrName);
+    Showcase showcase = showcaseResource.read(appId);
+    Objects.requireNonNull(showcase);
+    ShowcaseViewModel showcaseModel = ShowcaseMapper.mapShowcaseEntityToViewModel(showcase);
+    SelectedShowcase selectedShowcase =
+        new SelectedShowcase(showcaseModel, currentUser, categoryCache.getCategoryMap());
+    return selectedShowcase;
+  }
+
+  private List<Link> readShowcaseListForDataset(String metadataIdOrName) throws PortalException
+  {
+    final String method = "readShowcaseListForDataset() : ";
+    log.trace(method + "Start");
+
+    List<Link> showcaseListForDataset = new ArrayList<>();
+    try
+    {
+      PageableRequest pageRequest = new PageableRequest(0, 50, "title", "asc");
+      SearchFilter searchFilter = SearchFilter.builder()
+          .searchColumns(Lists.newArrayList(USED_DATASETS_URL_COLUMN))
+          .searchKey(metadataIdOrName)
+          .build();
+      PagedList<Showcase> showcaseList = showcaseResource.list(pageRequest, searchFilter);
+      for (Showcase showcase : showcaseList.getItems())
+      {
+        if (showcase.isHidden())
+        {
+          // Do not show private showcases
+          continue;
+        }
+        // Create a Link for each App
+        Link link = new Link();
+        link.setName(showcase.getTitle());
+        link.setUrl(gdNavigation.createLinkForMetadata(
+            "gdsearchdetails", showcase.getId().toString(), FRIENDLY_URL_NAME_SHOWROOM_PAGE).toString());
+        showcaseListForDataset.add(link);
+      }
+    }
+    catch (Exception e)
+    {
+      log.warn("{}Error while reading linked showcases for dataset. Details: {}", method, e.getMessage());
+    }
+
+    log.trace(method + "End");
+    return showcaseListForDataset;
   }
 
   private String createResourceUrl(MimeResponse response, String metadataName, String resourceId)
@@ -693,7 +824,7 @@ public class MetadataDetailsController extends BaseServiceImpl
     return comment;
   }
 
-  private void setSiteInformationFromMetadata(Layout layout, SelectedMetadata metadata)
+  protected void setSiteInformationFromMetadata(Layout layout, ISelectedObject metadata)
   {
     layout.setTitle(metadata.getTitleOnlyText());
     layout.setDescription(StringUtils.abbreviate(metadata.getNotesOnlyText(), 160));
@@ -733,19 +864,14 @@ public class MetadataDetailsController extends BaseServiceImpl
     return currentUser;
   }
 
-  private boolean isResponsible(RenderRequest request)
+  private String getOrganizationName(String id)
   {
-    final String method = "isResponsible() : ";
-    log.trace(method + "Start");
-
-    String friendlyUrlMapping = PortletUtil.extractFriendlyUrlMappingFromRequestUrl(request);
-    log.debug(method + "friendlyUrlMapping: {}", friendlyUrlMapping);
-    if (!SearchConsts.FRIENDLY_URL_MAPPING_DETAILS.equals(friendlyUrlMapping))
+    String orgName = "";
+    Organization organization = organizationCache.getOrganizationMap().get(id);
+    if (Objects.nonNull(organization))
     {
-      return false;
+      orgName = organization.getDisplayName();
     }
-
-    log.trace(method + "End");
-    return true;
+    return orgName;
   }
 }

@@ -15,9 +15,10 @@ public interface ShaclValidator
    * @param uri URI des Datensatzes
    * @param model Der Datensatz als RDF Model
    * @param ownerOrgId Id des Datenbetreitstellers
+   * @param contributorId contributorId zum Datensatz
    * @return
    */
-  Model validate(String uri, Model model, String ownerOrgId);
+  Model validate(String uri, Model model, String ownerOrgId, String contributorId);
 
   /**
    * Prüft ob der SHACL-Validator erreichbar ist

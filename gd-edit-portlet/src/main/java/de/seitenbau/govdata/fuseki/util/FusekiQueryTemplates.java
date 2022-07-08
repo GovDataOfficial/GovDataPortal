@@ -25,15 +25,13 @@ public abstract class FusekiQueryTemplates
    * @param %s Insert URI of the dataset
    * @param %s ID of the organization
    */
-  private static final String DELETE_MQA_DATASET_QUERY = "DELETE { ?s ?p ?o }\n" +
-      "WHERE {\n" +
-      "  ?r <http://www.w3.org/ns/dqv#computedOn> <%s> .\n"
-      +
-      "  ?r <http://govdata.de/mqa/#attributedTo> \"%s\" .\n" +
-      "  ?r (<>|!<>)* ?s .\n" +
-      "  ?s (<>|!<>)* ?o . \n" +
-      "  ?s ?p ?o\n" +
-      "}";
+  private static final String DELETE_MQA_DATASET_QUERY = "DELETE { ?s ?p ?o }\n"
+      + "WHERE {\n"
+      + "  ?r <http://www.w3.org/ns/dqv#computedOn> <%s> .\n"
+      + "  ?r (<>|!<>)* ?s .\n"
+      + "  ?s (<>|!<>)* ?o . \n"
+      + "  ?s ?p ?o\n"
+      + "}";
 
   /**
    * Gibt eine Query zum Löschen des Datensatzes mit der URI datasetUri. Diese Query muss an den
@@ -50,11 +48,10 @@ public abstract class FusekiQueryTemplates
    * Gibt eine Query zum Löschen des Mqa-Datensatzes mit der URI datasetUri. Diese Query muss an den
    * /update Endpunkt des Triplestores geschickt werden.
    * @param datasetUri URI des Datensatzes
-   * @param ownerOrg ID der zugehörigen Organisation
    * @return
    */
-  public static String getDeleteMqaDatasetQuery(String datasetUri, String ownerOrg)
+  public static String getDeleteMqaDatasetQuery(String datasetUri)
   {
-    return String.format(DELETE_MQA_DATASET_QUERY, datasetUri, ownerOrg);
+    return String.format(DELETE_MQA_DATASET_QUERY, datasetUri);
   }
 }

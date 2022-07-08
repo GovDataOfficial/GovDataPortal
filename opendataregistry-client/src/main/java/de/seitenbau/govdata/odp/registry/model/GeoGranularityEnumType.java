@@ -21,13 +21,13 @@ package de.seitenbau.govdata.odp.registry.model;
 
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum RoleEnumType.
  * 
  * @author sim
  */
-public enum GeoGranularityEnumType {
+public enum GeoGranularityEnumType
+{
 
     /** The germanfederation. */
     GERMANFEDERATION("bund", "Bund"),
@@ -55,7 +55,8 @@ public enum GeoGranularityEnumType {
      * @param displayName
      *            the display name
      */
-    private GeoGranularityEnumType(String field, String displayName) {
+    private GeoGranularityEnumType(String field, String displayName)
+    {
         this.field = field;
         this.displayName = displayName;
     }
@@ -65,7 +66,8 @@ public enum GeoGranularityEnumType {
      * 
      * @return the string
      */
-    public String toField() {
+    public String toField()
+    {
         return field;
     }
 
@@ -74,7 +76,8 @@ public enum GeoGranularityEnumType {
      * 
      * @return the display name
      */
-    public String getDisplayName() {
+    public String getDisplayName()
+    {
         return displayName;
     }
 
@@ -87,18 +90,28 @@ public enum GeoGranularityEnumType {
      * @throws OpenDataRegistryException
      *             the open data registry exception
      */
-    public static GeoGranularityEnumType fromField(String type) throws OpenDataRegistryException {
-        type = type.trim().toLowerCase();
-        if (GERMANFEDERATION.toField().equals(type)) {
-            return GERMANFEDERATION;
-        } else if (STATE.toField().equals(type)) {
-            return STATE;
-        } else if (MUNICIPALITY.toField().equals(type)) {
-            return MUNICIPALITY;
-        } else if (CITY.toField().equals(type)) {
-            return CITY;
-        } else {
-            throw new OpenDataRegistryException(type);
-        }
+    public static GeoGranularityEnumType fromField(String type) throws OpenDataRegistryException
+    {
+      type = type.trim().toLowerCase();
+      if (GERMANFEDERATION.toField().equals(type))
+      {
+        return GERMANFEDERATION;
+      }
+      else if (STATE.toField().equals(type))
+      {
+        return STATE;
+      }
+      else if (MUNICIPALITY.toField().equals(type))
+      {
+        return MUNICIPALITY;
+      }
+      else if (CITY.toField().equals(type))
+      {
+        return CITY;
+      }
+      else
+      {
+        throw new OpenDataRegistryException(type);
+      }
     }
 }

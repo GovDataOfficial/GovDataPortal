@@ -30,11 +30,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * Class for a user in CKAN.
+ * 
  * @author sim
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserBean implements Serializable {
+public class UserBean implements Serializable
+{
+  // CHECKSTYLE:OFF
 
     /**
      * 

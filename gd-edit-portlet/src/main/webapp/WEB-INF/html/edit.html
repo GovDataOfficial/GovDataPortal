@@ -1,4 +1,4 @@
-<div id="metadataEditForm" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<div id="metadataEditForm" xmlns:th="http://www.thymeleaf.org">
   <div class="row">
     <div class="column" th:unless="${userCanEditDataset}">
       <div class="alert alert-error" th:text="#{od.editform.accessdenied}" role="alert"></div>
@@ -47,18 +47,14 @@
           <tr>
             <th><label id="title_label" for="title">[[#{'od.title.name'}]]<span class="requiredmarker"> *</span></label></th>
             <td class="required-field">
-              <input type="text" aria-required="true" aria-labelledby="title_label title_error" th:field="*{title}" th:placeholder="#{'od.validation_required'}"/>
-              <div id="title_error" class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-              <div id="title_error" th:unless="${#fields.hasErrors('title')}"></div>
+              <div th:replace="fragments :: title(${editForm})"></div>
             </td>
           </tr>
 
           <tr class="highfield">
             <th><label id="notes_label" for="notes">[[#{'od.notes.name'}]]</label><span class="requiredmarker"> *</span></th>
             <td>
-              <textarea th:field="*{notes}" aria-required="true" th:placeholder="#{'od.validation_required'}" aria-labelledby="notes_label notes_error"></textarea>
-              <div id="notes_error" class="validation-error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></div>
-              <div id="notes_error" th:unless="${#fields.hasErrors('notes')}"></div>
+              <div th:replace="fragments :: notes(${editForm})"></div>
             </td>
           </tr>
 
@@ -109,19 +105,14 @@
           <tr>
             <th><label for="tags" id="tags_label">[[#{'od.tags.name'}]]</label></th>
             <td>
-              <input type="text" th:field="*{tags}" aria-labelledby="tags_label tags_error"/>
-              <div class="help-text" th:text="#{od.editform.listformathint}"></div>
-              <div id="tags_error" class="validation-error" th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}"></div>
-              <div id="tags_error" th:unless="${#fields.hasErrors('tags')}"></div>
+              <div th:replace="fragments :: tags(${editForm})"></div>
             </td>
           </tr>
 
           <tr>
             <th><label id="url_label" for="url">[[#{'od.url.name'}]]</label></th>
             <td>
-              <input type="text" th:field="*{url}" aria-labelledby="url_label url_error" />
-              <div id="url_error" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
-              <div id="url_error" th:unless="${#fields.hasErrors('url')}"></div>
+              <div th:replace="fragments :: url(${editForm})"></div>
             </td>
           </tr>
 
@@ -265,28 +256,7 @@
           <tr class="highfield">
             <th><label id="spatial_label" for="spatial">[[#{'od.gdsearch.filter.spatial.title'}]]</label></th>
             <td>
-              <div class="row">
-                <div class="column small-12 large-6 large-push-6">
-                  <p th:utext="${#messages.msg('od.spatial.help', #uris.escapeFragmentId(editForm.spatial))}"></p>
-                  <pre>{
-  "type": "Polygon",
-  "coordinates": [
-    [
-      [11.598079, 51.29537],
-      [11.598079, 53.89386],
-      [6.654667, 53.89386],
-      [6.654667, 51.29537],
-      [11.598079, 51.29537]
-    ]
-  ]
-}</pre>
-                </div>
-                <div class="column small-12 large-6 large-pull-6">
-                  <textarea th:field="*{spatial}" aria-labelledby="spatial_label spatial_error"></textarea>
-                  <div id="spatial_error" class="validation-error" th:if="${#fields.hasErrors('spatial')}" th:errors="*{spatial}"></div>
-                  <div id="spatial_error" th:unless="${#fields.hasErrors('spatial')}"></div>
-                </div>
-              </div>
+              <div th:replace="fragments :: spatial(${editForm})"></div>
             </td>
           </tr>
 
@@ -300,7 +270,6 @@
             </td>
           </tr>
         </table>
-      <input id="additionalParameterField" type="hidden" name="additionalFieldUsedForParameters" value="" />
       </form>
     </div>
   </div>

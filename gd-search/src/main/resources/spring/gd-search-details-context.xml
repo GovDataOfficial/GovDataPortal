@@ -14,7 +14,8 @@
       depends-on="registryClient,redisClientAdapter" />
   
   <bean class="de.seitenbau.govdata.search.common.NotificationMailSender" />
-  
+  <bean id="showcaseClientFactory" class="de.seitenbau.govdata.db.api.ShowcaseClientFactory" />
+  <bean id="showcaseResource" factory-bean="showcaseClientFactory" factory-method="createShowcaseClient" />
   <bean id="redisClientAdapter" class="de.seitenbau.govdata.redis.adapter.RedisClientAdapter" />
 
 </beans>

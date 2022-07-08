@@ -1,8 +1,8 @@
 package de.seitenbau.govdata.odp.boxes.model;
 
+import de.seitenbau.govdata.search.gui.model.HitViewModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import de.seitenbau.govdata.search.gui.model.HitViewModel;
 
 /**
  * The model for displaying.

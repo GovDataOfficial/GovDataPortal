@@ -2,7 +2,7 @@ package de.seitenbau.govdata.search.filter;
 
 import java.text.SimpleDateFormat;
 
-import org.elasticsearch.index.query.FilterBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 
 public abstract class BaseFilter
 {
@@ -13,6 +13,11 @@ public abstract class BaseFilter
   protected String elasticSearchField;
   protected String filterFragmentName;
 
+  /**
+   * Base Filter
+   * @param elasticSearchField
+   * @param filterFragmentName
+   */
   public BaseFilter(String elasticSearchField, String filterFragmentName)
   {
     this.elasticSearchField = elasticSearchField;
@@ -24,7 +29,7 @@ public abstract class BaseFilter
     return filterFragmentName;
   }
   
-  public abstract FilterBuilder createFilter();
+  public abstract QueryBuilder createFilter();
   
   public abstract String getLabel();
   

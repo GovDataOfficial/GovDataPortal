@@ -19,23 +19,16 @@
 
 package de.seitenbau.govdata.odp.registry.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 
 /**
  * The Enum SpatialEnumType.
  */
-public enum SpatialEnumType {
+public enum SpatialEnumType
+{
 
     /** The polygon. */
     POLYGON("polygon", "Polygon");
-
-    /**
-     * The Constant log.
-     */
-    private static final Logger log = LoggerFactory.getLogger(SpatialEnumType.class);
 
     /** The field. */
     private String field;
@@ -51,7 +44,8 @@ public enum SpatialEnumType {
      * @param displayName
      *            the display name
      */
-    private SpatialEnumType(String field, String displayName) {
+    private SpatialEnumType(String field, String displayName)
+    {
         this.field = field;
         this.displayName = displayName;
     }
@@ -61,7 +55,8 @@ public enum SpatialEnumType {
      * 
      * @return the string
      */
-    public String toField() {
+    public String toField()
+    {
         return field;
     }
 
@@ -70,7 +65,8 @@ public enum SpatialEnumType {
      * 
      * @return the display name
      */
-    public String getDisplayName() {
+    public String getDisplayName()
+    {
         return displayName;
     }
 
@@ -83,12 +79,16 @@ public enum SpatialEnumType {
      * @throws OpenDataRegistryException
      *             the open data registry exception
      */
-    public static SpatialEnumType fromField(String type) throws OpenDataRegistryException {
-        type = type.trim().toLowerCase();
-        if (POLYGON.toField().equals(type)) {
-            return POLYGON;
-        } else {
-            throw new OpenDataRegistryException(type);
-        }
+    public static SpatialEnumType fromField(String type) throws OpenDataRegistryException
+    {
+      type = type.trim().toLowerCase();
+      if (POLYGON.toField().equals(type))
+      {
+        return POLYGON;
+      }
+      else
+      {
+        throw new OpenDataRegistryException(type);
+      }
     }
 }

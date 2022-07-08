@@ -2,9 +2,9 @@ package de.seitenbau.govdata.search.common;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Objects;
 
-import org.jsoup.Jsoup;
-
+import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.date.DateUtil;
 
 /**
@@ -22,12 +22,15 @@ public abstract class QuerySanatizer
    * diesen String zurück.
    * 
    * @param q der zu säubernde String.
-   * @return der gesäuberte String.
+   * @return der gesäuberte String oder null, falls der Parameter <b>q</b> null ist.
    */
   public static String sanatizeQuery(String q)
   {
-    q = Jsoup.parse(q).text(); // remove html
-    q = q.replaceAll(BLACKLISTED_QUERY_CHARS, " ");
+    if (Objects.nonNull(q))
+    {
+      q = StringCleaner.trimAndFilterString(q); // remove html
+      q = q.replaceAll(BLACKLISTED_QUERY_CHARS, " ");
+    }
 
     return q;
   }

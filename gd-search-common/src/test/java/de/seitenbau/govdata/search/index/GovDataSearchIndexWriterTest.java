@@ -1,7 +1,7 @@
 package de.seitenbau.govdata.search.index;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.google.gson.Gson;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
@@ -41,12 +41,12 @@ import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 
+import de.seitenbau.govdata.common.api.RestUserMetadata;
+import de.seitenbau.govdata.common.messaging.Document;
+import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
+import de.seitenbau.govdata.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
 import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.index.filter.FilterProxy;
-import de.seitenbau.govdata.search.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
-import de.seitenbau.serviceportal.common.api.RestUserMetadata;
-import de.seitenbau.serviceportal.common.messaging.Document;
-import de.seitenbau.serviceportal.common.messaging.SearchIndexEntry;
 
 @RunWith(MockitoJUnitRunner.class)
 @Ignore("Wegen java.lang.NoClassDefFoundError: com/liferay/petra/sql/dsl/query/DSLQuery nach "
@@ -117,7 +117,7 @@ public class GovDataSearchIndexWriterTest
     ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<SearchIndexEntry> searchIndexEntryCaptor = ArgumentCaptor.forClass(SearchIndexEntry.class);
     
-    verify(indexQueueServiceMock, times(2)).delete(
+    verify(indexQueueServiceMock, times(2)).deleteAndSendDeleteMessage(
         any(RestUserMetadata.class), 
         idCaptor.capture(), 
         searchIndexEntryCaptor.capture());
@@ -129,13 +129,13 @@ public class GovDataSearchIndexWriterTest
     assertThat(firstSearchIndexEntry.getDocument().getId()).isEqualTo(uid1);
     assertThat(firstSearchIndexEntry.getDocument().getMandant()).isEqualTo(DEFAULT_MANDANT);
     assertThat(firstSearchIndexEntry.getIndexName()).isEqualTo(DEFAULT_INDEXNAME);
-    assertThat(firstSearchIndexEntry.getType()).isEqualTo(PortalIndexConstants.INDEX_TYPE_PORTAL);
+    assertThat(firstSearchIndexEntry.getType()).isEqualTo(IndexConstants.INDEX_TYPE_PORTAL);
     
     SearchIndexEntry secondSearchIndexEntry = searchIndexEntryCaptor.getAllValues().get(1);
     assertThat(secondSearchIndexEntry.getDocument().getId()).isEqualTo(uid2);
     assertThat(secondSearchIndexEntry.getDocument().getMandant()).isEqualTo(DEFAULT_MANDANT);
     assertThat(secondSearchIndexEntry.getIndexName()).isEqualTo(DEFAULT_INDEXNAME);
-    assertThat(secondSearchIndexEntry.getType()).isEqualTo(PortalIndexConstants.INDEX_TYPE_PORTAL);
+    assertThat(secondSearchIndexEntry.getType()).isEqualTo(IndexConstants.INDEX_TYPE_PORTAL);
   }
   
   @Test
@@ -149,7 +149,7 @@ public class GovDataSearchIndexWriterTest
     
     sutWriter.deleteEntityDocuments(searchContextMock, portletId);
     
-    verify(indexQueueServiceMock, never()).delete(
+    verify(indexQueueServiceMock, never()).deleteAndSendDeleteMessage(
         any(RestUserMetadata.class), 
         any(String.class), 
         any(SearchIndexEntry.class));
@@ -174,7 +174,7 @@ public class GovDataSearchIndexWriterTest
 
     /* verify */
     Assertions.assertThat(result).isNotNull();
-    Assertions.assertThat(result.getType()).isEqualTo(PortalIndexConstants.INDEX_TYPE_PORTAL);
+    Assertions.assertThat(result.getType()).isEqualTo(IndexConstants.INDEX_TYPE_PORTAL);
     Assertions.assertThat(result.getIndexName()).isEqualTo(DEFAULT_INDEXNAME);
     Assertions.assertThat(result.getVersion()).isNull();
     Document searchEntryDocument = result.getDocument();
@@ -240,7 +240,7 @@ public class GovDataSearchIndexWriterTest
 
     /* verify */
     Assertions.assertThat(result).isNotNull();
-    Assertions.assertThat(result.getType()).isEqualTo(PortalIndexConstants.INDEX_TYPE_PORTAL);
+    Assertions.assertThat(result.getType()).isEqualTo(IndexConstants.INDEX_TYPE_PORTAL);
     Assertions.assertThat(result.getIndexName()).isEqualTo(DEFAULT_INDEXNAME);
     Assertions.assertThat(result.getVersion()).isEqualTo(version);
     Document searchEntryDocument = result.getDocument();

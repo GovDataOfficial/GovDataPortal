@@ -29,12 +29,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
+ * Class for a group in CKAN.
+ * 
  * @author sim
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class GroupBean implements Serializable {
+public class GroupBean implements Serializable
+{
+  // CHECKSTYLE:OFF
 
     /**
      * 

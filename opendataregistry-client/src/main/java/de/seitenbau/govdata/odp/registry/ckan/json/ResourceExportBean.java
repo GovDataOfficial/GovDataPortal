@@ -19,20 +19,22 @@
 
 package de.seitenbau.govdata.odp.registry.ckan.json;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 @Data
-public class ResourceExportBean implements Serializable {
+public class ResourceExportBean implements Serializable
+{
     private static final long serialVersionUID = -1474098456725033104L;
 
     @JsonProperty

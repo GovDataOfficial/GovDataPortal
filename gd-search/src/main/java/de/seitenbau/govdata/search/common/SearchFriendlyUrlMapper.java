@@ -20,11 +20,11 @@ import com.liferay.portal.kernel.util.Validator;
 
 public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
 {
-  final String[] validParameters = {"q", "f", "s", "boundingbox", "start", "end"};
-  final Pattern findParameterRegex = Pattern.compile("/([^/]*)/([^/]*)");
-  final String renderParameterPrefix = "p_r_p_x_http://portlet.govdata.dev.seitenbau.net_";
-  
-  private static final StringEncoder _urlEncoder = new URLStringEncoder();
+  private final String[] validParameters = {"q", "f", "s", "boundingbox", "start", "end"};
+  private final Pattern findParameterRegex = Pattern.compile("/([^/]*)/([^/]*)");
+  private final String renderParameterPrefix = "p_r_p_x_http://portlet.govdata.dev.seitenbau.net_";
+
+  private static final StringEncoder URLENCODER = new URLStringEncoder();
 
   @Override
   public String buildPath(LiferayPortletURL liferayPortletURL)
@@ -39,8 +39,9 @@ public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
     {
       if (routeParameters.containsKey(param))
       {
-        if(StringUtils.isNotEmpty(routeParameters.get(param)) || param == "q") {
-          String paramVal = _urlEncoder.encode(routeParameters.get(param));
+        if (StringUtils.isNotEmpty(routeParameters.get(param)) || "q".equals(param))
+        {
+          String paramVal = URLENCODER.encode(routeParameters.get(param));
           sb.append(StringPool.SLASH).append(param).append(StringPool.SLASH).append(paramVal);
         }
         
@@ -79,19 +80,22 @@ public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
     
     // extract existing valid parameters
     Matcher matcher = findParameterRegex.matcher(friendlyURLPath);
-    while(matcher.find()) {
+    while (matcher.find())
+    {
       String name = matcher.group(1).toLowerCase();
       String value = matcher.group(2);
       
-      if(ArrayUtils.contains(validParameters, name)) {
-        String valueDecoded = _urlEncoder.decode(value);
+      if (ArrayUtils.contains(validParameters, name))
+      {
+        String valueDecoded = URLENCODER.decode(value);
         routeParameters.put(name,  valueDecoded);
         remainingParameters.remove(name);
       }
     }
     
     // fill remaining valid parameters with null
-    for(String param : remainingParameters) {
+    for (String param : remainingParameters)
+    {
       routeParameters.put(param, "");
     }
     

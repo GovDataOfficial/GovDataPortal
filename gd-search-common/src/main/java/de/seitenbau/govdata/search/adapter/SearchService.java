@@ -5,6 +5,7 @@ import java.util.List;
 import org.elasticsearch.search.SearchHits;
 
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
+import de.seitenbau.govdata.search.common.SearchQuery;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import de.seitenbau.govdata.search.sort.Sort;
 
@@ -26,8 +27,17 @@ public interface SearchService
    * @return das Ergebnis der Suche.
    */
   public SearchResultContainer search(
-      String q, Integer numResults, SearchFilterBundle searchFilterBundle, Sort sort);
+      SearchQuery q, Integer numResults, SearchFilterBundle searchFilterBundle, Sort sort);
   
+  /**
+   * Gibt die neuesten Einträge zum angegebenen Typ zurück. Wenn der Typ null ist wird nicht
+   * gefiltert.
+   * @param numResults
+   * @param typeFilter
+   * @return
+   */
+  public SearchResultContainer searchLatest(Integer numResults, String typeFilter);
+
   /**
    * Versucht anhand der übergebenen ScrollId weitere Treffer zu finden. Ist die ScrollId nicht mehr
    * vorhanden oder gültig, wird eine neue Suche gestartet.
@@ -44,6 +54,14 @@ public interface SearchService
    * @return das Ergebnis der Suche.
    */
   public SearchResultContainer scrollNextHits(String scrollId);
+
+  /**
+   * Lifert die Datensätze zu den übergebenen Identifiern.
+   * 
+   * @param datasetIds
+   * @return
+   */
+  public SearchResultContainer singleSearch(List<String> ids, String[] searchIndexes);
 
   /**
    * Sucht die ContentIds zu der übergebenen PortletId.
@@ -79,4 +97,10 @@ public interface SearchService
    * @return Json response from elastic-search
    */
   public SearchHits getMetrics();
+
+  /**
+   * Get the numbers for gd-search.
+   * @return Json response from elastic-search
+   */
+  public SearchResultContainer getNumbers();
 }

@@ -22,27 +22,33 @@
 @import "aui/responsive-767px-max";
 @import "aui/responsive-768px-979px";
 
+@import 'liferayvars';
+
 @import "dockbar";
 
-@import "categories-grid-portlet";
-@import "boxes-portlet";
-@import "developers-corner-portlet";
-@import "metadata-quality-portlet";
-@import "dataset";
 @import "govdata-header";
 @import "offcanvas-mainmenu";
-@import "metadata-quality-nav";
-
 @import "footer";
 @import "common-design";
+
 @import "information-pages";
 @import "blog";
 @import "comments";
 @import "sitemap";
 @import "contact-form";
 
+@import "categories-grid-portlet";
+@import "boxes-portlet";
+@import "developers-corner-portlet";
+@import "metadata-quality-portlet";
+@import "dataset";
+
 @import "searchresult";
 @import "searchdetails";
+@import "searchnumbers";
+@import "search-states-portlet";
+@import "featured-showcase-portlet";
+@import "featured-datasets-portlet";
 
 @import "verify_email";
 @import "map";

@@ -1,0 +1,343 @@
+.gd-search-numbers-portlet {
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .numbers-list {
+    text-align:center;
+
+    @media #{$small-only} {
+      margin: 0 rem-calc(15);
+    }
+  }
+
+  .numbers-box {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+
+    a {
+      display: block;
+      color: $dark-gray;
+      text-align: initial;
+    }
+
+    .inline-block {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .number-data {
+        display: block;
+    }
+
+    @media #{$large-up} {
+      width: rem-calc(300);
+
+      .number-data {
+          margin-bottom: rem-calc(10);
+      }
+
+      .type-img {
+          width: 46px;
+          height: 46px;
+      }
+    }
+
+    @media #{$medium-up} {
+      margin: rem-calc(10) rem-calc(5);
+
+      a {
+        padding: rem-calc(10);
+        min-width: rem-calc(200);
+        height: rem-calc(113);
+
+        span {
+          font-size: 50px;
+          font-family: 'Source Sans Pro';
+          font-weight: bold;
+        }
+      }
+
+      .numbers-list-item {
+        display: none;
+      }
+      .numbers-grid-item {
+        position: relative;
+
+        .grid-box {
+          height: rem-calc(113);
+          .type-img-inverted {
+              display: none;
+            }
+
+          &:hover,
+          &:active,
+          &:focus {
+            .type-img-inverted {
+              display: inline;
+            }
+
+            .type-img-normal {
+              display: none;
+            }
+          }
+        }
+
+        .type-name {
+          color: white;
+          font-size: 28px;
+          font-family: 'Source Sans Pro';
+          font-weight: bold;
+          line-height: 36px;
+          background-color: $dark-gray;
+          padding: 0px 10px;
+          display: inline-block;
+        }
+
+        .number-type-name {
+          display: block;
+        }
+      }
+    }
+
+    @media #{$medium-only} {
+      width: rem-calc(225);
+
+      a {
+        span {
+          font-size: 37px;
+        }
+      }
+
+      .grid-box {
+        width: rem-calc(225);
+      }
+
+      .numbers-grid-item {
+        .type-name {
+            font-size: 21px;
+            line-height: 28px;
+          }
+        }
+
+      .number-data {
+          margin-bottom: rem-calc(5);
+      }
+
+      .type-img {
+          width: 38px;
+          height: 38px;
+        }
+    }
+
+    @media #{$small-only} {
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      background-color: #fff;
+      border-color: #c5c5c5;
+      border-style: solid;
+      border-width: 0 1px 1px 0;
+      margin-bottom: rem-calc(4);
+      margin-top: rem-calc(4);
+
+      a {
+        padding: rem-calc(10);
+      }
+
+      .type-img {
+        width: 30px;
+        height: 30px;
+      }
+
+      .numbers-grid-item {
+        display: none;
+      }
+
+      .numbers-list-item {
+        .number-label {
+          font-weight: bold;
+          word-break: break-word;
+          display: inline;
+        }
+
+        .number-label-number {
+          font-size: 28px;
+          margin: 0px 5px;
+          line-height: 30px;
+        }
+
+        .number-label-type {
+          font-size: 18px;
+          background-color: $dark-gray;
+          color: white;
+          padding: 3px 10px;
+          position: relative;
+        }
+
+        .type-img-inverted {
+          display: none;
+        }
+
+        &:hover,
+        &:active,
+        &:focus,
+        a:focus  {
+          .type-img-inverted {
+            display: inline;
+          }
+
+          .type-img-normal {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .twitter-included-list {
+    @media #{$medium-only} {
+      // only two boxes per row
+      margin-left: auto;
+      margin-right: auto;
+      width: rem-calc(600);
+    }
+
+    .numbers-box {
+      @media #{$large-up} {
+          width: rem-calc(222);
+      }
+
+      @media #{$medium-up} {
+        a {
+          span {
+            font-size: 47px;
+          }
+        }
+      }
+
+      @media #{$medium-only} {
+        .number-data {
+          margin-bottom: rem-calc(10);
+        }
+
+        .type-img {
+          width: 46px;
+          height: 46px;
+        }
+
+        .type-name {
+          font-size: 28px;
+          line-height: 36px;
+        }
+      }
+    }
+
+    .type-twitter {
+
+      .tweet-header {
+        font-size: 25px;
+        float: left;
+        width: 100%;
+        margin-bottom: 5px;
+      }
+  
+      .tweet-icon {
+        float: left;
+        font-size: 20px;
+        background-color: $twitter-blue;
+        padding: 5px;
+        border-radius: 50%;
+      }
+  
+      .tweet-author {
+        float: left;
+        margin-left: 7px;
+      }
+  
+      .tweet-user {
+        font-size: 12px;
+        line-height: 14px;
+        float: left;
+        clear: left;
+      }
+  
+      .tweet-username {
+        font-weight: 300;
+      }
+  
+      .tweet-date {
+        font-size: 12px;
+        font-weight: 300;
+        float: right;
+      }
+  
+      .tweet-body {
+        font-size: 12px;
+        line-height: 20px;
+        display: block;
+        clear: both;
+        word-wrap: break-word;
+      }
+  
+      .design-box a {
+        font-size: 1.5em;
+        background-color: $dark-gray;
+        color: $white;
+
+        &:hover,
+        &:active,
+        &:focus {
+          background-color: darken($dark-gray, 10%);
+        }
+      }
+    }
+  }
+
+  .type-dataset {
+    a {
+      &:hover,
+      &:active,
+      &:focus {
+        color: $data-green;
+        background-color: inherit;
+
+        .type-name {
+          background-color: $data-green;
+        }
+      }
+    }
+  }
+
+  .type-anwendung {
+    a {
+      &:hover,
+      &:active,
+      &:focus {
+        color: $showcase-blue;
+        background-color: inherit;
+
+        .type-name {
+          background-color: $showcase-blue;
+        }
+      }
+    }
+  }
+
+  .type-blog {
+    a {
+      &:hover,
+      &:active,
+      &:focus {
+        color: $blog-red;
+        background-color: inherit;
+
+        .type-name {
+          background-color: $blog-red
+        }
+      }
+    }
+  }
+}

@@ -20,6 +20,7 @@
 package de.seitenbau.govdata.odp.registry.ckan;
 
 import static de.seitenbau.govdata.odp.registry.ckan.Constants.OPEN_DATA_PROVIDER_NAME;
+
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
 
@@ -28,7 +29,8 @@ import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
  * 
  * @author sim
  */
-public class OpenDataRegistryProvider extends OpenDataRegistry {
+public class OpenDataRegistryProvider extends OpenDataRegistry
+{
 
     /*
      * (non-Javadoc)
@@ -36,11 +38,14 @@ public class OpenDataRegistryProvider extends OpenDataRegistry {
      * @see de.seitenbau.govdata.odp.spi.OpenDataRegistry#getName()
      */
     @Override
-    public String getName() {
+    public String getName()
+    {
         return OPEN_DATA_PROVIDER_NAME;
     }
 
-    public ODRClient createClient() {
+    @Override
+    public ODRClient createClient()
+    {
         return new ODRClientImpl();
     }
 

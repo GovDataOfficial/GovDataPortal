@@ -9,12 +9,12 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Constraint(validatedBy = LicenceIdValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD })
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LicenceId {
   String message();
-  
-  Class<?>[] groups() default { };
-  
+
+  Class<?>[] groups() default {};
+
   Class<? extends Payload>[] payload() default {};
 }

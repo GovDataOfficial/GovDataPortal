@@ -60,13 +60,13 @@ public class ShaclValidatorImpl implements ShaclValidator
   }
 
   @Override
-  public Model validate(String uri, Model model, String ownerOrgId)
+  public Model validate(String uri, Model model, String ownerOrgId, String contributorId)
   {
     final String method = "validate() : ";
     LOG.trace("{}Start SHACL Validation. uri: {}, ownerOrgId: {}.", method, uri, ownerOrgId);
 
     Model rdfModel = null;
-    String reportQuery = ShaclQueryTemplates.getReportQuery(uri, ownerOrgId);
+    String reportQuery = ShaclQueryTemplates.getReportQuery(uri, ownerOrgId, contributorId);
 
     StringWriter sr = new StringWriter();
     RDFDataMgr.write(sr, model, RDFFormat.RDFXML_ABBREV);

@@ -1,14 +1,17 @@
 package de.seitenbau.govdata.edit.model;
 
+import java.io.Serializable;
+
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.URL;
+
+import de.seitenbau.govdata.constants.CommonConstants;
 import de.seitenbau.govdata.edit.validator.LicenceId;
 import de.seitenbau.govdata.edit.validator.StringDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.URL;
-
-import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
@@ -35,7 +38,7 @@ public class Resource implements Serializable
 
   private String licenseAttributionByText;
 
-  @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
+  @StringDate(format=CommonConstants.DATE_PATTERN, regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String modified;
 
   @URL

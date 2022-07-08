@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.portlet.PortletSession;
@@ -21,6 +22,7 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,12 +32,17 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.util.KeyValuePair;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.KeyValuePair;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
+import de.seitenbau.govdata.common.model.exception.UnknownShowcasePlatformException;
+import de.seitenbau.govdata.common.model.exception.UnknownShowcaseTypeException;
+import de.seitenbau.govdata.common.showcase.model.ShowcasePlatformEnum;
+import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
@@ -48,11 +55,14 @@ import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.odr.ODRTools;
 import de.seitenbau.govdata.odr.RegistryClient;
+import de.seitenbau.govdata.permission.PermissionUtil;
 import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
+import de.seitenbau.govdata.search.common.SearchQuery;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
+import de.seitenbau.govdata.search.geostate.cache.GeoStateCache;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.FilterViewListModel;
 import de.seitenbau.govdata.search.gui.model.FilterViewModel;
@@ -66,6 +76,8 @@ import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import de.seitenbau.govdata.search.index.model.SuggestionOption;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.sort.SortType;
+import de.seitenbau.govdata.search.util.RequestUtil;
+import de.seitenbau.govdata.search.util.states.StateContainer;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,7 +101,11 @@ public class SearchresultController extends AbstractBaseController
 
   private static final String MODEL_KEY_SCROLL_RESOURCE_URL = "scrollResourceURL";
 
-  public static final String NEXT_HITS_RESOURCE_URL_ID = "nextHits";
+  private static final String NEXT_HITS_RESOURCE_URL_ID = "nextHits";
+
+  private static final String MODEL_KEY_SHOW_DATASET_OPTIONS = "showDatasetOptions";
+
+  private static final String MODEL_KEY_SHOW_SHOWCASE_OPTIONS = "showShowcaseOptions";
 
   @Inject
   private LicenceCache licenceCache;
@@ -109,6 +125,17 @@ public class SearchresultController extends AbstractBaseController
   @Inject
   private RegistryClient registryClient;
 
+  @Inject
+  private GeoStateCache geoStateCache;
+
+  /**
+   * Display search result.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws SystemException
+   */
   @RenderMapping
   public String showSearchResults(
       RenderRequest request,
@@ -120,7 +147,7 @@ public class SearchresultController extends AbstractBaseController
 
     // Nur Trefferliste rendern, wenn das FriendlyUrlMapping für das Searchresult-Portlet in der URL
     // steht.
-    if (!isResponsible(request))
+    if (!RequestUtil.isResponsible(request, SearchConsts.FRIENDLY_URL_MAPPING_RESULTS))
     {
       log.debug(method + "End, do nothing.");
       return null;
@@ -133,6 +160,17 @@ public class SearchresultController extends AbstractBaseController
     // preprocessing for parameters
     PreparedParameters preparm =
         ParameterProcessing.prepareParameters(request.getParameterMap(), currentPage);
+
+    // Get current liferay-user
+    com.liferay.portal.kernel.model.User liferayUser = null;
+    try
+    {
+      liferayUser = PortalUtil.getUser(request);
+    }
+    catch (PortalException e2)
+    {
+      // pass, no user found
+    }
 
     // Get Organizations for this user from CKAN - or fail / get an empty list.
     List<Organization> editorOrganizationList = new ArrayList<>();
@@ -196,6 +234,15 @@ public class SearchresultController extends AbstractBaseController
           urlbuilder.createFulloptionUrlOrNull(navigationHelper, "bearbeiten", "gdeditportlet");
     }
 
+    // add show-private-showcases filter to authorized users
+    if (liferayUser != null && PermissionUtil.hasEditShowcasePermission(liferayUser))
+    {
+      FilterViewListModel editorFacet = new FilterViewListModel();
+      editorFacet.setSingletonFiltergroup(true);
+      editorFacet.add(new FilterViewModel(-1L, QueryParamNames.PARAM_SHOW_ONLY_PRIVATE_SHOWCASES));
+      filterViewModelMap.put(QueryParamNames.PARAM_SHOW_ONLY_PRIVATE_SHOWCASES, editorFacet);
+    }
+
     long totalHits =
         getTotalHitsForCurrentType(
             filterViewModelMap.get(SearchConsts.FILTER_KEY_TYPE), preparm.getType());
@@ -229,20 +276,10 @@ public class SearchresultController extends AbstractBaseController
     String clearDateUntilUrl =
         urlbuilder.createUrl(response, new String[] {QueryParamNames.PARAM_END}).toString();
 
-    // prepare flag for hiding filter options not usable on liferay-results (basically: check if
-    // ckan types are there)
-    boolean canContainCkanData = false;
-    if (Arrays.asList(SearchConsts.CKAN_TYPES_ALL).contains(preparm.getType()))
-    {
-      for (FilterViewModel filterView : filterViewModelMap.get("type"))
-      {
-        if (Arrays.asList(SearchConsts.CKAN_TYPES).contains(filterView.getName())
-            && filterView.getDocCount() > 0)
-        {
-          canContainCkanData = true;
-        }
-      }
-    }
+    boolean canContainCkanData = isFilterRequired(preparm.getType(), SearchConsts.CKAN_TYPES_ALL,
+        SearchConsts.CKAN_TYPES, filterViewModelMap);
+    boolean canContainSpatialData = isFilterRequired(preparm.getType(), SearchConsts.SPATIAL_TYPES_ALL,
+        SearchConsts.SPATIAL_TYPES, filterViewModelMap);
 
     // Prepare URL for switching to other search views
     String searchMapUrlString =
@@ -308,14 +345,20 @@ public class SearchresultController extends AbstractBaseController
         .pageSize(result.getPageSize())
         .scrollId(result.getScrollId())
         .type(preparm.getType())
-        .q(preparm.getQuery())
+        .q(preparm.getQuery().getQueryString())
         .suggestions(preparedSuggestions)
         .atomFeedUrl(selfurl)
         .searchMapUrl(searchMapUrlString)
         .searchExtUrl(searchExtUrlString)
         .newDatasetUrl(newDatasetUrlString)
+        .canContainSpatialData(canContainSpatialData)
         .canContainCkanData(canContainCkanData)
         .build();
+
+    model.addAttribute(MODEL_KEY_SHOW_DATASET_OPTIONS,
+        ArrayUtils.contains(SearchConsts.CKAN_TYPES_ALL, preparm.getType()));
+    model.addAttribute(MODEL_KEY_SHOW_SHOWCASE_OPTIONS, ArrayUtils
+        .contains(new String[] {SearchConsts.TYPE_ALL, SearchConsts.TYPE_SHOWCASE}, preparm.getType()));
 
     model.addAttribute(MODEL_KEY_SEARCH_RESULT, searchResultsViewModel);
     model.addAttribute("themeDisplay", themeDisplay);
@@ -330,10 +373,9 @@ public class SearchresultController extends AbstractBaseController
   }
 
   @SuppressWarnings("unchecked")
-  private void recordSearchPhrase(String query, PortletSession portletSession)
+  private void recordSearchPhrase(SearchQuery query, PortletSession portletSession)
   {
-    String toSave = StringUtils.trim(query);
-    if (StringUtils.isEmpty(toSave))
+    if (Objects.isNull(query) || query.isEmpty())
     {
       return;
     }
@@ -350,13 +392,14 @@ public class SearchresultController extends AbstractBaseController
       usedPhrases = new HashSet<>();
     }
 
-    if (!usedPhrases.contains(query))
+    String toSave = StringUtils.trim(query.getQueryString());
+    if (!usedPhrases.contains(toSave))
     {
       // Save new phrase
-      indexService.recordSearchPhrase(query);
+      indexService.recordSearchPhrase(toSave);
 
       // Store new phrase in history
-      usedPhrases.add(query);
+      usedPhrases.add(toSave);
       portletSession.setAttribute("searchphrases", usedPhrases);
     }
   }
@@ -395,7 +438,7 @@ public class SearchresultController extends AbstractBaseController
     String scrollId = request.getParameter(QueryParamNames.PARAM_SCROLL_ID);
     log.debug(method + "scrollId: {}", scrollId);
 
-    SearchResultContainer result = new SearchResultContainer();
+    SearchResultContainer result;
     try
     {
       result = indexService.scroll(scrollId);
@@ -535,7 +578,8 @@ public class SearchresultController extends AbstractBaseController
         }
 
         // i18n filter name
-        filter.setDisplayName(ViewUtil.getShortenedFormatRef(translateFilterName(filter.getName(), key, locale)));
+        filter.setDisplayName(
+            ViewUtil.getShortenedFormatRef(translateFilterName(filter.getName(), key, locale)));
 
         // if this is a singleton-filter, remove all active filter instances
         String modifiedFilter;
@@ -619,21 +663,19 @@ public class SearchresultController extends AbstractBaseController
 
     if (StringUtils.equals(filterType, SearchConsts.FACET_LICENCE))
     {
-      Map<String, Licence> licenceMap = licenceCache.getLicenceMap();
-      Licence licence = licenceMap.get(filterName);
+      Licence licence = licenceCache.getLicenceMap().get(filterName);
       if (licence != null)
       {
-        return licenceMap.get(filterName).getTitle();
+        return licence.getTitle();
       }
     }
 
     if (StringUtils.equals(filterType, SearchConsts.FACET_SOURCEPORTAL))
     {
-      Map<String, Organization> organizationMap = organizationCache.getOrganizationMap();
-      Organization organization = organizationMap.get(filterName);
+      Organization organization = organizationCache.getOrganizationMap().get(filterName);
       if (organization != null)
       {
-        return organizationMap.get(filterName).getTitle();
+        return organization.getTitle();
       }
     }
 
@@ -645,6 +687,46 @@ public class SearchresultController extends AbstractBaseController
     if (StringUtils.equals(filterType, QueryParamNames.PARAM_SHOW_ONLY_EDITOR_METADATA))
     {
       return LanguageUtil.get(locale, "od.gdsearch.searchresult.facet.onlyEditorMetadata.option");
+    }
+
+    if (StringUtils.equals(filterType, QueryParamNames.PARAM_SHOW_ONLY_PRIVATE_SHOWCASES))
+    {
+      return LanguageUtil.get(locale, "od.gdsearch.searchresult.facet.onlyPrivateShowcases.option");
+    }
+
+    if (StringUtils.equals(filterType, SearchConsts.FACET_PLATFORMS))
+    {
+      try
+      {
+        return ShowcasePlatformEnum.fromField(filterName).getDisplayName();
+      }
+      catch (UnknownShowcasePlatformException e)
+      {
+        // pass, use fallback name
+      }
+    }
+
+    if (StringUtils.equals(filterType, SearchConsts.FACET_SHOWCASE_TYPE))
+    {
+      try
+      {
+        return ShowcaseTypeEnum.fromField(filterName).getDisplayName();
+      }
+      catch (UnknownShowcaseTypeException e)
+      {
+        // pass, use fallback name
+      }
+    }
+
+    if (StringUtils.equals(filterType, SearchConsts.FACET_STATE))
+    {
+      List<StateContainer> stateList = geoStateCache.getStateList();
+      StateContainer state =
+          stateList.stream().filter(s -> filterName.equals(s.getId())).findFirst().orElse(null);
+      if (state != null)
+      {
+        return state.getName();
+      }
     }
 
     // fallback to raw name
@@ -667,20 +749,24 @@ public class SearchresultController extends AbstractBaseController
     return result;
   }
 
-  private boolean isResponsible(RenderRequest request)
+  /**
+   * Check if filters for spatial/date are displayed.
+   */
+  private boolean isFilterRequired(String type, String[] allowedTypes, String[] allowedFilterViewTypes,
+      Map<String, FilterViewListModel> filterViewModelMap)
   {
-    final String method = "isResponsible() : ";
-    log.trace(method + "Start");
-
-    String friendlyUrlMapping = PortletUtil.extractFriendlyUrlMappingFromRequestUrl(request);
-    log.debug(method + "friendlyUrlMapping: {}", friendlyUrlMapping);
-    if (StringUtils.isNotEmpty(friendlyUrlMapping)
-        && !SearchConsts.FRIENDLY_URL_MAPPING_RESULTS.equals(friendlyUrlMapping))
+    boolean ret = false;
+    if (Arrays.asList(allowedTypes).contains(type))
     {
-      return false;
+      for (FilterViewModel filterView : filterViewModelMap.get(SearchConsts.FILTER_KEY_TYPE))
+      {
+        if (Arrays.asList(allowedFilterViewTypes).contains(filterView.getName())
+            && filterView.getDocCount() > 0)
+        {
+          ret = true;
+        }
+      }
     }
-
-    log.trace(method + "End");
-    return true;
+    return ret;
   }
 }

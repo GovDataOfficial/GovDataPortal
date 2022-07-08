@@ -34,6 +34,7 @@
   <portlet>
     <portlet-name>gd-search-ext</portlet-name>
     <icon>/icon.png</icon>
+    <configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
     <friendly-url-mapper-class>de.seitenbau.govdata.search.common.SearchFriendlyUrlMapper</friendly-url-mapper-class>
     <friendly-url-mapping>searchext</friendly-url-mapping>
     <friendly-url-routes>searchresult-friendly-url-routes.xml</friendly-url-routes>
@@ -89,7 +90,51 @@
     <requires-namespaced-parameters>false</requires-namespaced-parameters>
     <ajaxable>false</ajaxable>
     <header-portlet-javascript>/js/comments.js</header-portlet-javascript>
+    <footer-portlet-javascript>/js/appdetails.js</footer-portlet-javascript>
     <css-class-wrapper>gd-search-details-portlet</css-class-wrapper>
+  </portlet>
+  <portlet>
+    <portlet-name>gd-search-numbers</portlet-name>
+    <icon>/icon.png</icon>
+    <configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
+    <instanceable>false</instanceable>
+    <css-class-wrapper>gd-search-numbers-portlet</css-class-wrapper>
+  </portlet>
+    <portlet>
+    <portlet-name>gd-search-states</portlet-name>
+    <icon>/icon.png</icon>
+    <configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
+    <friendly-url-mapper-class>de.seitenbau.govdata.search.common.SearchFriendlyUrlMapper</friendly-url-mapper-class>
+    <friendly-url-mapping>searchstates</friendly-url-mapping>
+    <instanceable>false</instanceable>
+    <private-session-attributes>true</private-session-attributes>
+    <requires-namespaced-parameters>false</requires-namespaced-parameters>
+    <ajaxable>false</ajaxable>
+    <css-class-wrapper>gd-search-states-portlet</css-class-wrapper>
+  </portlet>
+  <portlet>
+    <portlet-name>gd-featured-showcase-portlet</portlet-name>
+    <icon>/icon.png</icon>
+    <configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
+    <instanceable>false</instanceable>
+    <private-session-attributes>true</private-session-attributes>
+    <!-- Without this passing parameters in resource requests would not work in Liferay 6.2 See:
+        http://www.coderexception.com/C36B1z3bPXQSxXJi/spring-portlet-ajax-call-no-parameter-found -->
+    <requires-namespaced-parameters>false</requires-namespaced-parameters>
+    <ajaxable>false</ajaxable>
+    <css-class-wrapper>featured-showcase-portlet</css-class-wrapper>
+  </portlet>
+  <portlet>
+    <portlet-name>gd-featured-datasets-portlet</portlet-name>
+    <icon>/icon.png</icon>
+    <configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
+    <instanceable>false</instanceable>
+    <private-session-attributes>true</private-session-attributes>
+    <!-- Without this passing parameters in resource requests would not work in Liferay 6.2 See:
+        http://www.coderexception.com/C36B1z3bPXQSxXJi/spring-portlet-ajax-call-no-parameter-found -->
+    <requires-namespaced-parameters>false</requires-namespaced-parameters>
+    <ajaxable>false</ajaxable>
+    <css-class-wrapper>featured-datasets-portlet</css-class-wrapper>
   </portlet>
   <role-mapper>
     <role-name>administrator</role-name>

@@ -7,6 +7,7 @@ import lombok.Getter;
  */
 public enum MetadataListExtraFields
 {
+  // CHECKSTYLE:OFF
 
   HAS_VERSION("has_version"),
   IS_VERSION_OF("is_version_of"),

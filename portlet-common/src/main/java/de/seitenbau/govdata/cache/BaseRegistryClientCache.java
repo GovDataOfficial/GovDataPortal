@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import lombok.Getter;
 import lombok.Setter;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.odr.RegistryClient;
 
 /**

@@ -17,7 +17,6 @@
 
 package de.seitenbau.govdata.odp.boxes;
 
-import java.io.Serializable;
 // imports
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,9 +48,8 @@ import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
  */
 @Component
 @Scope("request")
-public class Blogs extends BaseBoxesBean<BlogsEntry> implements Serializable
+public class Blogs extends BaseBoxesBean<BlogsEntry>
 {
-  private static final long serialVersionUID = 5336951701667722369L;
 
   /** The log. */
   private static final Logger LOG = LoggerFactory.getLogger(Blogs.class);
@@ -85,6 +83,9 @@ public class Blogs extends BaseBoxesBean<BlogsEntry> implements Serializable
     LOG.debug("Initialize complete");
   }
 
+  /**
+   * Closes all open resources.
+   */
   @PreDestroy
   public void close()
   {
@@ -129,7 +130,8 @@ public class Blogs extends BaseBoxesBean<BlogsEntry> implements Serializable
         @Override
         public int compare(BlogsEntry a, BlogsEntry b)
         {
-          return -(a.getCreateDate().compareTo(b.getCreateDate()));
+          // create date ascending (newest on top)
+          return b.getCreateDate().compareTo(a.getCreateDate());
         }
       });
 

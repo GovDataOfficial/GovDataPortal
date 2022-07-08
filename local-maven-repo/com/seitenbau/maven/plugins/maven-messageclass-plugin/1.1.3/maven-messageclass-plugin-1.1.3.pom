@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.seitenbau.common</groupId>
+    <artifactId>sb-common-parent</artifactId>
+    <version>1.0.7</version>
+  </parent>
+  <groupId>com.seitenbau.maven.plugins</groupId>
+  <artifactId>maven-messageclass-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
+  <version>1.1.3</version>
+
+  <scm>
+    <connection>scm:svn:https://svn1.seitenbau.net/entwicklung/java/seitenbau/maven/maven-messageclass-plugin/trunk</connection>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <version>2.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.seitenbau.common</groupId>
+      <artifactId>sb-common</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- maven-printheader-helper -->
+    <dependency>
+      <groupId>com.seitenbau.common.codegen</groupId>
+      <artifactId>printheader-helper</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <!--  
+            Kompiliert den Testcase, der das neu erzeugte Mojo laufen lässt.
+          -->
+          <execution>
+            <id>compileGenerationTest</id>
+            <phase>generate-test-sources</phase>
+            <configuration>
+              <testIncludes>
+                <include>**/TestCreateSource.java</include>
+              </testIncludes>
+            </configuration>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/generated/**/*</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <!--  
+              Lässt das zu testende Mojo laufen 
+              (i.e. generiert die nachher zu testende Klasse).
+            -->
+            <id>generateTestCode</id>
+            <phase>process-test-sources</phase>
+            <configuration>
+              <includes>
+                <include>**/TestCreateSource.class</include>
+              </includes>
+              <excludes>
+              </excludes>
+            </configuration>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

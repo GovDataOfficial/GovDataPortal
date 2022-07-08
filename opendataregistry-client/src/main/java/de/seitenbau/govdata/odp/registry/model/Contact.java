@@ -28,6 +28,7 @@ import de.seitenbau.govdata.odp.registry.ckan.impl.ContactAddress;
  */
 public interface Contact
 {
+  // CHECKSTYLE:OFF
 
   ContactAddress getAddress();
 

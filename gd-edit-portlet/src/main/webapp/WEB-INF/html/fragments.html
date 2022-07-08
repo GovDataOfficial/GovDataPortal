@@ -1,5 +1,61 @@
-<div xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<div xmlns:th="http://www.thymeleaf.org">
 
+  <!-- Title -->
+  <div th:fragment="title(editForm)">
+    <input type="text" aria-required="true" aria-labelledby="title_label title_error" th:field="*{title}" th:placeholder="#{'od.validation_required'}"/>
+    <div id="title_error" class="validation-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+    <div id="title_error" th:unless="${#fields.hasErrors('title')}"></div>
+  </div>
+
+  <!-- Notes -->
+  <div th:fragment="notes(editForm)">
+    <textarea th:field="*{notes}" aria-required="true" th:placeholder="#{'od.validation_required'}" aria-labelledby="notes_label notes_error"></textarea>
+    <div id="notes_error" class="validation-error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}"></div>
+    <div id="notes_error" th:unless="${#fields.hasErrors('notes')}"></div>
+  </div>
+
+  <!-- Tags -->
+  <div th:fragment="tags(editForm)">
+    <input type="text" th:field="*{tags}" aria-labelledby="tags_label tags_error"/>
+    <div class="help-text" th:text="#{od.editform.listformathint}"></div>
+    <div id="tags_error" class="validation-error" th:if="${#fields.hasErrors('tags')}" th:errors="*{tags}"></div>
+    <div id="tags_error" th:unless="${#fields.hasErrors('tags')}"></div>
+  </div>
+
+  <!-- Website URL -->
+  <div th:fragment="url(editForm)">
+    <input type="text" th:field="*{url}" aria-labelledby="url_label url_error" />
+    <div id="url_error" class="validation-error" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+    <div id="url_error" th:unless="${#fields.hasErrors('url')}"></div>
+  </div>
+
+  <!-- Spatial -->
+  <div th:fragment="spatial(editForm)">
+    <div class="row">
+    <div class="column small-12 large-6 large-push-6">
+      <p th:utext="${#messages.msg('od.spatial.help', #uris.escapeFragmentId(editForm.spatial))}"></p>
+      <pre>{
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [11.598079, 51.29537],
+              [11.598079, 53.89386],
+              [6.654667, 53.89386],
+              [6.654667, 51.29537],
+              [11.598079, 51.29537]
+            ]
+          ]
+        }</pre>
+      </div>
+      <div class="column small-12 large-6 large-pull-6">
+        <textarea th:field="*{spatial}" aria-labelledby="spatial_label spatial_error"></textarea>
+        <div id="spatial_error" class="validation-error" th:if="${#fields.hasErrors('spatial')}" th:errors="*{spatial}"></div>
+        <div id="spatial_error" th:unless="${#fields.hasErrors('spatial')}"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact (Multicontacts) -->
   <div th:fragment="contact(editForm, cname)" class="editform-detailscontainer">
     <fieldset th:object="${editForm.contacts[__${cname}__]}">
       <legend th:text="#{'od.contacts.' + ${cname}}" class="contact-legend"></legend>
@@ -68,26 +124,50 @@
                 <span th:text="#{od.editform.contact.addressee}"></span>
                 <input type="text" th:field="*{addressee}"/>
               </label>
+              <div th:if="${#fields.hasErrors('addressee')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{addressee}"></span>
+              </div>
               <label class="editform_details">
                 <span th:text="#{od.editform.contact.details}"></span>
                 <input type="text" th:field="*{details}"/>
               </label>
+              <div th:if="${#fields.hasErrors('details')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{details}"></span>
+              </div>
               <label class="editform_street">
                 <span th:text="#{od.editform.contact.street}"></span>
                 <input type="text" th:field="*{street}"/>
               </label>
+              <div th:if="${#fields.hasErrors('street')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{street}"></span>
+              </div>
               <label class="editform_city">
                 <span th:text="#{od.editform.contact.city}"></span>
                 <input type="text" th:field="*{city}"/>
               </label>
+              <div th:if="${#fields.hasErrors('city')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{city}"></span>
+              </div>
               <label class="editform_zip">
                 <span th:text="#{od.editform.contact.zip}"></span>
                 <input type="text" th:field="*{zip}"/>
               </label>
+              <div th:if="${#fields.hasErrors('zip')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{zip}"></span>
+              </div>
               <label class="editform_country">
                 <span th:text="#{od.editform.contact.country}"></span>
                 <input type="text" th:field="*{country}"/>
               </label>
+              <div th:if="${#fields.hasErrors('country')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{country}"></span>
+              </div>
             </div>
           </fieldset>
         </div>
@@ -96,6 +176,127 @@
     </fieldset>
   </div>
 
+  <!-- Contact -->
+  <div th:fragment="singleContact(editForm)">
+    <fieldset th:object="${editForm.contact}">
+
+      <div class="css-table">
+        <!--/* name */-->
+        <div class="css-row">
+          <label th:id="'contact_name_label'"
+                 th:for="'contact.name'">[[#{'od.name.name'}]]</label>
+          <div>
+            <input type="text"
+                   th:attr="aria-labelledby='contact_name_label contact_name_error'"
+                   th:field="*{name}"/>
+            <div class="validation-error"
+                 th:if="${#fields.hasErrors('name')}"
+                 th:id="'contact_name_error'"
+                 th:errors="*{name}"></div>
+            <div th:unless="${#fields.hasErrors('name')}"
+                 th:id="'contact_name_error'"></div>
+          </div>
+        </div>
+
+        <!--/* email */-->
+        <div class="css-row">
+          <label th:id="'contact_email_label'"
+                 th:for="'contact.email'">[[#{'od.email.name'}]]</label>
+          <div>
+            <input type="text"
+                   th:attr="aria-labelledby='contact_email_label contact_email_error'"
+                   th:field="*{email}"/>
+            <div class="validation-error"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:id="'contact_email_error'"
+                 th:errors="*{email}"></div>
+            <div th:unless="${#fields.hasErrors('email')}"
+                 th:id="'contact_email_error'"></div>
+          </div>
+        </div>
+
+        <!--/* url */-->
+        <div class="css-row">
+          <label th:id="'contact_url_label'"
+                 th:for="'contact.url'">[[#{'od.url.name'}]]</label>
+          <div>
+            <input type="text"
+                   th:attr="aria-labelledby='contact_url_label contact_url_error'"
+                   th:field="*{url}"/>
+            <div class="validation-error"
+                 th:if="${#fields.hasErrors('url')}"
+                 th:id="'contact_url_error'"
+                 th:errors="*{url}"></div>
+            <div th:unless="${#fields.hasErrors('url')}"
+                 th:id="'contact_url_error'"></div>
+          </div>
+        </div>
+
+        <!--/* address */-->
+        <div class="css-row">
+          <div>
+            [[#{'od.address.name'}]]
+          </div>
+          <fieldset>
+            <legend class="offscreen" th:text="#{'od.address.name'}"></legend>
+            <div class="editform_contact" th:object="${editForm.contact.address}">
+              <label class="editform_addressee">
+                <span th:text="#{od.editform.contact.addressee}"></span>
+                <input type="text" th:field="*{addressee}"/>
+              </label>
+              <div th:if="${#fields.hasErrors('addressee')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{addressee}"></span>
+              </div>
+              <label class="editform_details">
+                <span th:text="#{od.editform.contact.details}"></span>
+                <input type="text" th:field="*{details}"/>
+              </label>
+              <div th:if="${#fields.hasErrors('details')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{details}"></span>
+              </div>
+              <label class="editform_street">
+                <span th:text="#{od.editform.contact.street}"></span>
+                <input type="text" th:field="*{street}"/>
+              </label>
+              <div th:if="${#fields.hasErrors('street')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{street}"></span>
+              </div>
+              <label class="editform_city">
+                <span th:text="#{od.editform.contact.city}"></span>
+                <input type="text" th:field="*{city}"/>
+              </label>
+              <div th:if="${#fields.hasErrors('city')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{city}"></span>
+              </div>
+              <label class="editform_zip">
+                <span th:text="#{od.editform.contact.zip}"></span>
+                <input type="text" th:field="*{zip}"/>
+              </label>
+              <div th:if="${#fields.hasErrors('zip')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{zip}"></span>
+              </div>
+              <label class="editform_country">
+                <span th:text="#{od.editform.contact.country}"></span>
+                <input type="text" th:field="*{country}"/>
+              </label>
+              <div th:if="${#fields.hasErrors('country')}">
+                <span></span>
+                <span class="validation-error" th:errors="*{country}"></span>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+      </div>
+    </fieldset>
+  </div>
+
+  <!-- Resource -->
   <div th:fragment="resource(editForm, row, rowStat)" class="editform-detailscontainer">
     <fieldset th:object="${editForm.resources[__${rowStat.index}__]}"
               th:with="idp='resources'+${rowStat.index}">

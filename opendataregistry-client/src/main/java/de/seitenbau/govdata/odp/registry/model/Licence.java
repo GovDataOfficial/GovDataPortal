@@ -19,111 +19,111 @@
 
 package de.seitenbau.govdata.odp.registry.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Licence.
  */
-public interface Licence {
+public interface Licence
+{
 
-	/**
-	 * Gets the title.
-	 * 
-	 * @return the title
-	 */
-	String getTitle();
+  /**
+   * Gets the title.
+   * 
+   * @return the title
+   */
+  String getTitle();
 
-	/**
-	 * Gets the name.
-	 * 
-	 * @return the name
-	 */
-	String getName();
+  /**
+   * Gets the name.
+   * 
+   * @return the name
+   */
+  String getName();
 
-	/**
-	 * Gets the url.
-	 * 
-	 * @return the url
-	 */
-	String getUrl();
+  /**
+   * Gets the url.
+   * 
+   * @return the url
+   */
+  String getUrl();
 
-	/**
-	 * Gets the other.
-	 * 
-	 * @return the other
-	 */
-	String getOther();
+  /**
+   * Gets the other.
+   * 
+   * @return the other
+   */
+  String getOther();
 
-	/**
-	 * True if the license is included in the current version of DCAT-AP.de
-	 *
-	 * @return
-	 */
-	boolean isActive();
+  /**
+   * True if the license is included in the current version of DCAT-AP.de
+   *
+   * @return
+   */
+  boolean isActive();
 
-	/**
-	 * Checks if is domain content.
-	 * 
-	 * @return true, if is domain content
-	 */
-	boolean isDomainContent();
+  /**
+   * Checks if is domain content.
+   * 
+   * @return true, if is domain content
+   */
+  boolean isDomainContent();
 
-	/**
-	 * Checks if is domain data.
-	 * 
-	 * @return true, if is domain data
-	 */
-	boolean isDomainData();
+  /**
+   * Checks if is domain data.
+   * 
+   * @return true, if is domain data
+   */
+  boolean isDomainData();
 
-	/**
-	 * Checks if is domain software.
-	 * 
-	 * @return true, if is domain software
-	 */
-	boolean isDomainSoftware();
+  /**
+   * Checks if is domain software.
+   * 
+   * @return true, if is domain software
+   */
+  boolean isDomainSoftware();
 
-	/**
-	 * Checks if is okd compliant.
-	 * 
-	 * @return true, if is okd compliant
-	 */
-	boolean isOkdCompliant();
+  /**
+   * Checks if is okd compliant.
+   * 
+   * @return true, if is okd compliant
+   */
+  boolean isOkdCompliant();
 
-	/**
-	 * Checks if is osi compliant.
-	 * 
-	 * @return true, if is osi compliant
-	 */
-	boolean isOsiCompliant();
+  /**
+   * Checks if is osi compliant.
+   * 
+   * @return true, if is osi compliant
+   */
+  boolean isOsiCompliant();
 
-	/**
-	 * Checks if is open.
-	 * 
-	 * @return true, if is open
-	 */
-	boolean isOpen();
+  /**
+   * Checks if is open.
+   * 
+   * @return true, if is open
+   */
+  boolean isOpen();
 
-	/**
-	 * Sets the other.
-	 * 
-	 * @param other
-	 *            the new other
-	 */
-	void setOther(String other);
+  /**
+   * Sets the other.
+   * 
+   * @param other
+   *            the new other
+   */
+  void setOther(String other);
 
-	/**
-	 * Sets the title.
-	 * 
-	 * @param title
-	 *            the new title
-	 */
-	void setTitle(String title);
+  /**
+   * Sets the title.
+   * 
+   * @param title
+   *            the new title
+   */
+  void setTitle(String title);
 
-	/**
-	 * Sets the url.
-	 * 
-	 * @param url
-	 *            the new url
-	 */
-	void setUrl(String url);
+  /**
+   * Sets the url.
+   * 
+   * @param url
+   *            the new url
+   */
+  void setUrl(String url);
 
 }

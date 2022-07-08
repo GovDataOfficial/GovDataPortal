@@ -1,8 +1,11 @@
 package de.seitenbau.govdata.fuseki.impl;
 
+import static org.apache.jena.rdf.model.ModelFactory.createDefaultModel;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.ReadWrite;
 import org.apache.jena.rdf.model.Model;
@@ -10,7 +13,8 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
-import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFParser;
 import org.apache.jena.riot.web.HttpOp;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
@@ -21,14 +25,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.liferay.portal.kernel.util.PropsUtil;
 
-import de.seitenbau.govdata.constants.FileExtension;
 import de.seitenbau.govdata.constants.GovDataConfigParam;
 import de.seitenbau.govdata.fuseki.FusekiClient;
 import de.seitenbau.govdata.fuseki.FusekiEndpoint;
 import de.seitenbau.govdata.fuseki.util.FusekiQueryTemplates;
 import de.seitenbau.govdata.navigation.PortletUtil;
+import de.seitenbau.govdata.odp.registry.model.FormatEnumType;
+import de.seitenbau.govdata.odp.registry.model.User;
+import de.seitenbau.govdata.odr.RegistryClient;
 import de.seitenbau.govdata.shacl.ShaclValidator;
 
 /**
@@ -58,6 +65,9 @@ public class FusekiClientImpl implements FusekiClient
   @Inject
   private ShaclValidator shaclValidatorClient;
 
+  @Inject
+  private RegistryClient registryClient;
+
   /**
    * Zusätzliche Checks nach Initialisierung der Klasse.
    */
@@ -81,8 +91,7 @@ public class FusekiClientImpl implements FusekiClient
   }
 
   @Override
-  public void deleteDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier,
-      String ownerOrgId)
+  public void deleteDataset(User user, String ckanTechnicalId, String identifier)
   {
     final String method = "deleteDataset() : ";
     LOG.trace("{}Start. ckanTechnicalId: {}, Identifier: {}.", method, ckanTechnicalId, identifier);
@@ -94,10 +103,10 @@ public class FusekiClientImpl implements FusekiClient
       return;
     }
 
-    Model model = loadModelFromCkanRdf(ckanDatasetBaseUrl, ckanTechnicalId);
+    Model model = loadModelFromCkanRdf(user, ckanTechnicalId);
     String datasetUri = getUriFromModel(model, identifier);
     deleteDataset(datasetUri, identifier);
-    deleteMqaDataset(datasetUri, identifier, ownerOrgId);
+    deleteMqaDataset(datasetUri, identifier);
 
     LOG.trace(method + "End");
   }
@@ -113,13 +122,13 @@ public class FusekiClientImpl implements FusekiClient
     LOG.trace(method + "End");
   }
 
-  private void deleteMqaDataset(String datasetUri, String identifier, String ownerOrgId)
+  private void deleteMqaDataset(String datasetUri, String identifier)
   {
     final String method = "deleteMqaDataset() : ";
     LOG.trace("{}Start.", method);
 
     deleteDatasetBase(datasetUri, identifier,
-        FusekiQueryTemplates.getDeleteMqaDatasetQuery(datasetUri, ownerOrgId), getMqaUpdateEndpoint());
+        FusekiQueryTemplates.getDeleteMqaDatasetQuery(datasetUri), getMqaUpdateEndpoint());
 
     LOG.trace(method + "End");
   }
@@ -165,8 +174,8 @@ public class FusekiClientImpl implements FusekiClient
   }
 
   @Override
-  public void updateOrCreateDataset(String ckanDatasetBaseUrl, String ckanTechnicalId, String identifier,
-      String ownerOrgId)
+  public void updateOrCreateDataset(User user, String ckanTechnicalId, String identifier,
+      String ownerOrgId, String contributorId)
   {
     final String method = "updateOrCreateDataset() : ";
     LOG.trace(method + "Start");
@@ -178,15 +187,15 @@ public class FusekiClientImpl implements FusekiClient
       return;
     }
 
-    Model model = loadModelFromCkanRdf(ckanDatasetBaseUrl, ckanTechnicalId);
+    Model model = loadModelFromCkanRdf(user, ckanTechnicalId);
     String datasetUri = getUriFromModel(model, identifier);
     // delete existing dataset if possible before creating it
     deleteDataset(datasetUri, identifier);
     createInTriplestore(model);
-    deleteMqaDataset(datasetUri, identifier, ownerOrgId);
+    deleteMqaDataset(datasetUri, identifier);
     if (shaclSupport)
     {
-      Model validationModel = shaclValidatorClient.validate(datasetUri, model, ownerOrgId);
+      Model validationModel = shaclValidatorClient.validate(datasetUri, model, ownerOrgId, contributorId);
       if (validationModel != null)
       {
         createInMqaTriplestore(validationModel);
@@ -248,17 +257,19 @@ public class FusekiClientImpl implements FusekiClient
     LOG.trace(method + "End");
   }
 
-  private Model loadModelFromCkanRdf(String ckanDatasetBaseUrl, String ckanTechnicalId)
+  private Model loadModelFromCkanRdf(User user, String ckanTechnicalId)
   {
     final String method = "loadModelFromCkanRdf() : ";
     LOG.trace(method + "Start");
 
-    Model result = null;
+    Model result = createDefaultModel();
     try
     {
-      String uri = ckanDatasetBaseUrl + ckanTechnicalId + FileExtension.RDF;
-      LOG.debug("Load Apache Jena RDF model from uri {}", uri);
-      result = RDFDataMgr.loadModel(uri); // read rdf from ckan-uri and load it as model
+      JsonNode jsonNode =
+          registryClient.getInstance().getDcatDataset(user, ckanTechnicalId, FormatEnumType.XML,
+              ArrayUtils.EMPTY_STRING_ARRAY);
+      String xmlString = jsonNode.path("result").asText();
+      RDFParser.fromString(xmlString).lang(Lang.RDFXML).parse(result);
     }
     catch (Exception ex)
     {

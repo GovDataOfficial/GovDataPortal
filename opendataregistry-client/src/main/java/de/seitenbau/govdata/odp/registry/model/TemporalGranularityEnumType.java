@@ -21,11 +21,12 @@ package de.seitenbau.govdata.odp.registry.model;
 
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum TemporalGranularityEnumType.
  */
-public enum TemporalGranularityEnumType {
+public enum TemporalGranularityEnumType
+{
+  // CHECKSTYLE:OFF
 
     /**
      * The second.
@@ -72,7 +73,8 @@ public enum TemporalGranularityEnumType {
      * @param displayName
      *            the display name
      */
-    private TemporalGranularityEnumType(String field, String displayName) {
+    private TemporalGranularityEnumType(String field, String displayName)
+    {
         this.field = field;
         this.displayName = displayName;
     }
@@ -82,7 +84,8 @@ public enum TemporalGranularityEnumType {
      * 
      * @return the string
      */
-    public String toField() {
+    public String toField()
+    {
         return field;
     }
 
@@ -91,7 +94,8 @@ public enum TemporalGranularityEnumType {
      * 
      * @return the display name
      */
-    public String getDisplayName() {
+    public String getDisplayName()
+    {
         return displayName;
     }
 
@@ -104,26 +108,44 @@ public enum TemporalGranularityEnumType {
      * @throws OpenDataRegistryException
      *             the open data registry exception
      */
-    public static TemporalGranularityEnumType fromField(String type) throws OpenDataRegistryException {
-        type = type.trim().toLowerCase();
-        if (SECOND.toField().equals(type)) {
-            return SECOND;
-        } else if (MINUTE.toField().equals(type)) {
-            return MINUTE;
-        } else if (HOUR.toField().equals(type)) {
-            return HOUR;
-        } else if (DAY.toField().equals(type)) {
-            return DAY;
-        } else if (WEEK.toField().equals(type)) {
-            return WEEK;
-        } else if (MONTH.toField().equals(type)) {
-            return MONTH;
-        } else if (YEAR.toField().equals(type)) {
-            return YEAR;
-        } else if (NO_MATCH.toField().equals(type)) {
-            return NO_MATCH;
-        } else {
-            throw new OpenDataRegistryException(type);
-        }
+    public static TemporalGranularityEnumType fromField(String type) throws OpenDataRegistryException
+    {
+      type = type.trim().toLowerCase();
+      if (SECOND.toField().equals(type))
+      {
+        return SECOND;
+      }
+      else if (MINUTE.toField().equals(type))
+      {
+        return MINUTE;
+      }
+      else if (HOUR.toField().equals(type))
+      {
+        return HOUR;
+      }
+      else if (DAY.toField().equals(type))
+      {
+        return DAY;
+      }
+      else if (WEEK.toField().equals(type))
+      {
+        return WEEK;
+      }
+      else if (MONTH.toField().equals(type))
+      {
+        return MONTH;
+      }
+      else if (YEAR.toField().equals(type))
+      {
+        return YEAR;
+      }
+      else if (NO_MATCH.toField().equals(type))
+      {
+        return NO_MATCH;
+      }
+      else
+      {
+        throw new OpenDataRegistryException(type);
+      }
     }
 }

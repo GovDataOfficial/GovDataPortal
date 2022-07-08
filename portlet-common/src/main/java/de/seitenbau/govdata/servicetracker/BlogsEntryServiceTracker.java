@@ -8,6 +8,11 @@ import com.liferay.blogs.service.BlogsEntryLocalService;
 public class BlogsEntryServiceTracker extends ServiceTracker<BlogsEntryLocalService, BlogsEntryLocalService>
 {
 
+  /**
+   * Constructor with host.
+   * 
+   * @param host
+   */
   public BlogsEntryServiceTracker(Object host)
   {
     super(

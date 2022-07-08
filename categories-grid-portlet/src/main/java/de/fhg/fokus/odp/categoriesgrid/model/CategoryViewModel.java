@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class CategoryViewModel {
-
+public class CategoryViewModel
+{
   private String name;
   
   private String title;

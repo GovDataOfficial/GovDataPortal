@@ -58,6 +58,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientAction;
 import de.seitenbau.govdata.odp.registry.ckan.impl.CategoryImpl;
@@ -78,6 +79,7 @@ import de.seitenbau.govdata.odp.registry.ckan.json.StatusBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.TagBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.UserBean;
 import de.seitenbau.govdata.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.FormatEnumType;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.MetadataEnumType;
@@ -113,7 +115,7 @@ public class ODRClientImpl implements ODRClient
 
   private static final ObjectNode ALL_FIELDS = OM.createObjectNode();
 
-  private List<Licence> licencesCache = null;
+  private LicenceCache licenceCache = new LicenceCache();
 
   /*
    * (non-Javadoc)
@@ -265,24 +267,7 @@ public class ODRClientImpl implements ODRClient
   @Override
   public List<Licence> listLicenses()
   {
-    // Use the cache if possible.
-    if (licencesCache == null)
-    {
-      licencesCache = new ArrayList<>();
-
-      LOG.trace("REST > calling action api 'licence_list' with nothing");
-      long start = System.currentTimeMillis();
-      JsonNode result = action.listLicences(OM.createObjectNode());
-      LOG.debug("/api/3/action/licence_list: {}ms", System.currentTimeMillis() - start);
-      LOG.trace("REST < returns: {}", result);
-
-      JsonNode list = getResultList(result);
-      for (JsonNode entry : list)
-      {
-        licencesCache.add(new LicenceImpl(convert(entry, LicenceBean.class)));
-      }
-    }
-    return licencesCache;
+    return licenceCache.getLicenses();
   }
 
   /*
@@ -1125,6 +1110,47 @@ public class ODRClientImpl implements ODRClient
     }
   }
 
+  @Override
+  public JsonNode getDcatDataset(User user, String identifier, FormatEnumType format, String[] profileList)
+  {
+    final String method = "getDcatDataset() : ";
+    LOG.trace(method + "Start");
+
+    ObjectNode body = OM.createObjectNode();
+    body.put("id", identifier);
+    ArrayNode profiles = OM.createArrayNode();
+    for (String pro : profileList)
+    {
+      profiles.add(pro);
+    }
+    body.set("profiles", profiles);
+    body.put("format", format.getKey());
+    String key = getApiKeyFromUser(user);
+
+    LOG.trace("REST > calling action api 'dcat_dataset_show' with: {}", body);
+    long start = System.currentTimeMillis();
+    JsonNode node;
+    try
+    {
+      node = action.showDcatDataset(key, body);
+
+    }
+    catch (ClientErrorException e)
+    {
+      LOG.info(method + e.getMessage());
+      return null;
+    }
+    catch (Exception e)
+    {
+      LOG.error(method + "Unexpected error. Details: " + e.getMessage());
+      return null;
+    }
+    LOG.debug("/api/3/action/dcat_dataset_show: {}ms",
+        System.currentTimeMillis() - start);
+    LOG.trace(method + "End");
+    return node;
+  }
+
   /**
    * Parses the given input as JSON-LD schema.org graph and replaces the dataset and catalog URL with
    * the given ones.
@@ -1185,32 +1211,9 @@ public class ODRClientImpl implements ODRClient
   {
     final String method = "getJsonLdMetadata() : ";
     LOG.trace(method + "Start");
+    String[] profiles = {"schemaorg"};
+    JsonNode node = getDcatDataset(user, name, FormatEnumType.JSONLD, profiles);
 
-    ObjectNode body = OM.createObjectNode();
-    body.put("id", name);
-    ArrayNode profiles = OM.createArrayNode();
-    profiles.add("schemaorg");
-    body.set("profiles", profiles);
-    body.put("format", "jsonld");
-    String key = getApiKeyFromUser(user);
-
-    LOG.trace("REST > calling action api 'dcat_dataset_show' with: {}", body);
-    long start = System.currentTimeMillis();
-    JsonNode node;
-    try
-    {
-      node = action.showDcatDataset(key, body);
-    }
-    catch (ClientErrorException e)
-    {
-      LOG.info(method + e.getMessage());
-      return null;
-    }
-    catch (Exception e)
-    {
-      LOG.error(method + "Unexpected error. Details: " + e.getMessage());
-      return null;
-    }
     if (node == null)
     {
       LOG.info(method + "Node is null. METADATA not found.");
@@ -1218,8 +1221,6 @@ public class ODRClientImpl implements ODRClient
     }
     else
     {
-      LOG.debug("/api/3/action/dcat_dataset_show: {}ms",
-          System.currentTimeMillis() - start);
       LOG.trace("REST < returns: {}", node);
 
       JsonNode result = node.path("result");
@@ -1541,6 +1542,39 @@ public class ODRClientImpl implements ODRClient
       {
         response.close();
       }
+    }
+  }
+
+  private class LicenceCache extends BaseCache
+  {
+    private List<Licence> licences = null;
+
+    public LicenceCache()
+    {
+      setMaxCacheTimeAmount(12);
+    }
+
+    public List<Licence> getLicenses()
+    {
+      // Use the cache if possible.
+      if (licences == null || isCacheExpired())
+      {
+        licences = new ArrayList<>();
+
+        LOG.trace("REST > calling action api 'licence_list' with nothing");
+        long start = System.currentTimeMillis();
+        JsonNode result = action.listLicences(OM.createObjectNode());
+        LOG.debug("/api/3/action/licence_list: {}ms", System.currentTimeMillis() - start);
+        LOG.trace("REST < returns: {}", result);
+
+        JsonNode list = getResultList(result);
+        for (JsonNode entry : list)
+        {
+          licences.add(new LicenceImpl(convert(entry, LicenceBean.class)));
+        }
+        cacheUpdated();
+      }
+      return licences;
     }
   }
 }

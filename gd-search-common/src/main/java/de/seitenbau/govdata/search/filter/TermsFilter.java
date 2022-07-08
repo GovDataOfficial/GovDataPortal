@@ -2,14 +2,20 @@ package de.seitenbau.govdata.search.filter;
 
 import java.util.List;
 
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 
 public class TermsFilter extends BaseFilter
 {
 
   private List<String> terms;
 
+  /**
+   * Data structure to hold terms-filter information
+   * @param elasticSearchField
+   * @param filterFragmentName
+   * @param terms
+   */
   public TermsFilter(String elasticSearchField, String filterFragmentName, List<String> terms)
   {
     super(elasticSearchField, filterFragmentName);
@@ -17,9 +23,9 @@ public class TermsFilter extends BaseFilter
   }
 
   @Override
-  public FilterBuilder createFilter()
+  public QueryBuilder createFilter()
   {
-    return FilterBuilders.termsFilter(elasticSearchField, terms);
+    return QueryBuilders.boolQuery().must(QueryBuilders.termsQuery(elasticSearchField, terms));
   }
 
   @Override

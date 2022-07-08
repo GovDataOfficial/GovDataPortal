@@ -1,4 +1,4 @@
-<div class="row" id="contentPane" xmlns:th="http://www.thymeleaf.org" th:inline="text" th:if="${searchResult.totalHits} > 0" th:object="${searchResult}">
+<div class="row" id="contentPane" xmlns:th="http://www.thymeleaf.org" th:if="${searchResult.totalHits} > 0" th:object="${searchResult}">
   <div class="column small-12 medium-6 large-4">
     <div class="flex-container">
       <h2 class="hitscount">
@@ -11,7 +11,7 @@
         <a th:href="${searchResult.searchExtUrl}" class="btn square" th:text="#{od.extended_search}"></a>
       </div>
     </div>
-    <div class="newdatasetbutton show-for-large-up" th:if="${searchResult.newDatasetUrl != null}">
+    <div class="newdatasetbutton show-for-large-up" th:if="${searchResult.newDatasetUrl != null and showDatasetOptions}">
       <a th:href="${searchResult.newDatasetUrl}" class="btn" th:text="#{od.datasets_add_new_dataset}"></a>
     </div>
   </div>
@@ -83,12 +83,10 @@
         <strong>[[#{'od.gdsearch.filter.date.title'}]]:</strong> [[#{'od.gdsearch.filter.date.until.label'}]] [[${searchResult.dateUntil}]]<a th:href="${searchResult.clearDateUntilUrl}" class="filter-tag-remove">✕</a>
       </div>
     </div>
-
-
   </div>
 </div>
 
-<div class="row" xmlns:th="http://www.thymeleaf.org" th:inline="text" th:if="${searchResult.totalHits} > 0">
+<div class="row" xmlns:th="http://www.thymeleaf.org" th:if="${searchResult.totalHits} > 0">
 
   <div class="column large-4" id="filterarea-container">
     <div class="filterarea design-box design-box-padding">
@@ -96,13 +94,25 @@
         [[#{'od.gdsearch.filter.title'}]]
         <a th:href="${searchResult.clearFilterUrl}" class="label label-inverse more-linklabel">[[#{'od.gdsearch.filter.reset_short'}]]</a>
       </h2>
-      
-      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('onlyEditorMetadata'))}">
+
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('onlyEditorMetadata')) or !showDatasetOptions}">
         <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('onlyEditorMetadata')}, 'onlyEditorMetadata', #{'od.gdsearch.searchresult.facet.onlyEditorMetadata'}, false)"></dl>
+      </th:block>
+
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('onlyPrivateShowcases')) or !showShowcaseOptions}">
+        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('onlyPrivateShowcases')}, 'onlyPrivateShowcases', #{'od.gdsearch.searchresult.facet.onlyPrivateShowcases'}, false)"></dl>
+      </th:block>
+
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('showcase_types'))}">
+        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('showcase_types')}, 'showcase_types', #{'od.datasets_metadata_showcase_types'}, false)"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('groups'))}">
         <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('groups')}, 'groups', #{'od.datasets_metadata_categories'}, false)"></dl>
+      </th:block>
+
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('platforms'))}">
+        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('platforms')}, 'platforms', #{'od.datasets_metadata_platform'}, false)"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('sourceportal'))}">
@@ -126,13 +136,13 @@
         <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('licence')}, 'licence', #{'od.datasets_metadata_license'}, true)"></dl>
       </th:block>
 
-      <dl class="filtergroup spatial-filter" th:if="${searchResult.canContainCkanData}">
+      <dl class="filtergroup spatial-filter" th:if="${searchResult.canContainSpatialData}">
         <dt class="filtergroup-title" th:text="#{'od.gdsearch.filter.spatial.title'}"></dt>
         <dd><a th:href="${searchResult.searchMapUrl}" class="spatial-edit-link" th:text="#{'od.gdsearch.filter.spatial.linktext'}"></a></dd>
       </dl>
 
       <form enctype="application/x-www-form-urlencoded" th:action="${searchResult.actionUrl}" method="post" action="" th:if="${searchResult.canContainCkanData}">
-        <input type="hidden" th:each="param : ${searchResult.dateFilterPassthroughParams}" th:name="${param.key}" th:value="${param.value}" />
+        <input type="hidden" th:each="hiddenParam : ${searchResult.dateFilterPassthroughParams}" th:name="${hiddenParam.key}" th:value="${hiddenParam.value}" />
         <dl class="filtergroup date-filter">
           <dt class="filtergroup-title" th:text="#{'od.gdsearch.filter.date.title'}"></dt>
           <dd class="checkboxrow">
@@ -184,7 +194,7 @@
     <div id="searchresults-more-block" class="searchresults-more">
       <button id="searchresults-more-btn" class="searchresults-more-button btn btn-primary"
           th:if="${searchResult.moreNextHitsAvailable}"
-          th:onclick="'scrollNextHits(\'' + ${scrollResourceURL} + '\',\'' + ${searchResult.scrollId} + '\',' +  ${searchResult.pageSize} + ');'"
+          th:attr="onclick='scrollNextHits(\'' + ${scrollResourceURL} + '\',\'' + ${searchResult.scrollId} + '\',' +  ${searchResult.pageSize} + ');'"
           th:utext="#{od.gdsearch.searchresult.label.showmore}">
         [[#{'od.gdsearch.searchresult.label.showmore'}]]
       </button>
@@ -193,7 +203,7 @@
 
 </div>
 
-<div id="searchresult-container" class="row empty-search" xmlns:th="http://www.thymeleaf.org" th:inline="text" th:if="${searchResult.totalHits} == 0">
+<div id="searchresult-container" class="row empty-search" xmlns:th="http://www.thymeleaf.org" th:if="${searchResult.totalHits} == 0">
   <div class="column small-12 small-centered max-width-as-searchbox">
     <h1 class="emptyresultstitle">[[#{od_datasets_search_empty_resultset_title}]]</h1>
     <p>[[#{od_datasets_search_empty_resultset_note}]]</p>

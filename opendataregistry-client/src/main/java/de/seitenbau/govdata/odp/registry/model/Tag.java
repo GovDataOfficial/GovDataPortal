@@ -19,13 +19,13 @@
 
 package de.seitenbau.govdata.odp.registry.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Tag.
  * 
  * @author sim
  */
-public interface Tag {
+public interface Tag
+{
 
     /**
      * Gets the name. The name is the tag itself.

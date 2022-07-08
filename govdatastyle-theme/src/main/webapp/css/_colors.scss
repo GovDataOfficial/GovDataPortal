@@ -7,6 +7,7 @@ $data-green: #1e5a5a;
 $dokument-violett: #503278;
 $app-blue: #284664;
 $blog-red: #5a0a0a;
+$showcase-blue: #002D62;
 
 $devcorner-green: #064300;
 $devcorner-green-light: rgba(6, 67, 0, 0.3);
@@ -20,6 +21,8 @@ $white: #fff;
 $black: #000;
 
 $deletered: #f2341f;
+
+$twitter-blue: #1da1f2;
 
 // own colors
 $checkbox-border: darken($kontur-gray, 10%);
@@ -49,8 +52,8 @@ $checkbox-border: darken($kontur-gray, 10%);
   @include navcolor($dokument-violett);
 }
 
-#layout_7 { // Apps
-  @include navcolor($app-blue);
+#layout_7 { // Showcases
+  @include navcolor($showcase-blue);
 }
 
 #layout_8 { // Neues
@@ -70,27 +73,25 @@ $checkbox-border: darken($kontur-gray, 10%);
 }
 
 
-// colors for mediatype-icons (could have been an elegant for-loop, but liferay uses OLD sass-compiler)
-.mediatype-icon {
-  &.mediatype-app {
-    background-color: $app-blue;
-  }
-  &.mediatype-article {
-    background-color: $dark-gray;
-  }
-  &.mediatype-blog {
-    background-color: $blog-red;
-  }
-  &.mediatype-dataset {
-    background-color: $data-green;
-  }
-  &.mediatype-dokument {
-    background-color: $dokument-violett;
-  }
-  &.mediatype-devcorner {
-    background-color: $devcorner-green;
-  }
-  &.mediatype-metadataquality {
-    background-color: $metadataquality-pink;
+// colors for mediatype-icons
+$mediatypes: (
+  "article": $dark-gray,
+  "blog": $blog-red,
+  "dataset": $data-green,
+  "dokument": $dokument-violett,
+  "concept": $showcase-blue,
+  "publication": $showcase-blue,
+  "visualization": $showcase-blue,
+  "website": $showcase-blue,
+  "tool": $showcase-blue,
+  "mobile_app": $showcase-blue,
+  "other": $showcase-blue,
+);
+
+@each $suffix, $typeColor in $mediatypes {
+  .mediatype-icon {
+    &.mediatype-#{$suffix} {
+      background-color: #{$typeColor};
+    }
   }
 }

@@ -15,7 +15,7 @@ import org.elasticsearch.search.SearchHits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.seitenbau.govdata.cache.BaseCache;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 
 public class MetricsParser extends BaseCache
 {
@@ -56,7 +56,7 @@ public class MetricsParser extends BaseCache
 
       for (SearchHit searchHit : hitArray)
       {
-        Map<String, Object> hit = searchHit.getSource();
+        Map<String, Object> hit = searchHit.getSourceAsMap();
 
         if (hit.get("name").equals(type))
         {
@@ -111,7 +111,7 @@ public class MetricsParser extends BaseCache
 
       for (SearchHit searchHit : hitArray)
       {
-        Map<String, Object> hit = searchHit.getSource();
+        Map<String, Object> hit = searchHit.getSourceAsMap();
         // Get the publisher max doc count value
         Long hitValue = Long.parseLong(Objects.toString(hit.getOrDefault("total_count", 0)));
         if (!publishers.containsKey(hit.get(PUBLISHER)) || publishers.get(hit.get(PUBLISHER)) < hitValue)

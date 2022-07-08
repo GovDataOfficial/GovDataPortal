@@ -5,11 +5,16 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.4.0</version>
+    <version>5.0.0</version>
   </parent>
   <groupId>de.seitenbau.govdata.gd-captcha-api</groupId>
   <artifactId>gd-captcha-api</artifactId>
   <modelVersion>4.0.0</modelVersion>
+
+  <properties>
+    <checkstyle.suppressions>${basedir}/src/main/plugin-config/checkstyle-suppressions.xml</checkstyle.suppressions>
+  </properties>
+
   <build>
     <plugins>
       <plugin>

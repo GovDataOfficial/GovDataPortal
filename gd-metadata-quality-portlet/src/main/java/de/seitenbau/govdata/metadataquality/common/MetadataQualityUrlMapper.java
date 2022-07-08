@@ -11,7 +11,7 @@ import com.liferay.portal.kernel.util.Validator;
 
 public class MetadataQualityUrlMapper extends DefaultFriendlyURLMapper
 {
-  private final String renderParameterPrefix = "p_r_p_x_http://portlet.govdata.dev.seitenbau.net_";
+  private static final String RENDER_PARAMETER_PREFIX = "p_r_p_x_http://portlet.govdata.dev.seitenbau.net_";
 
   @Override
   public String buildPath(LiferayPortletURL liferayPortletURL)
@@ -29,7 +29,7 @@ public class MetadataQualityUrlMapper extends DefaultFriendlyURLMapper
 
     // filter namespaced param(s)
     liferayPortletURL.addParameterIncludedInPath(
-        renderParameterPrefix + MetadataQualityConstants.PORTLET_PARAM_FILTER);
+        RENDER_PARAMETER_PREFIX + MetadataQualityConstants.PORTLET_PARAM_FILTER);
 
     addParametersIncludedInPath(liferayPortletURL, routeParameters);
 

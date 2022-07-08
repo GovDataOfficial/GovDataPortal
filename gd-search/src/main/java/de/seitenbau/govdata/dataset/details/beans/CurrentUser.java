@@ -22,9 +22,7 @@ package de.seitenbau.govdata.dataset.details.beans;
 
 import java.util.List;
 
-import lombok.Data;
-
-import org.elasticsearch.common.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.kernel.exception.SystemException;
 
@@ -33,6 +31,7 @@ import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.permission.PermissionUtil;
+import lombok.Data;
 
 /**
  * The Class CurrentUser.

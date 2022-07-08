@@ -3,6 +3,7 @@ package de.seitenbau.govdata.metadataquality.controller;
 import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstants.LABELS;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.portlet.PortletURL;
 
@@ -20,9 +22,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import com.google.common.collect.Lists;
 import com.liferay.portal.kernel.portlet.DummyPortletURL;
 
 import de.seitenbau.govdata.cache.LicenceCache;
@@ -137,7 +138,7 @@ public class MetadataQualityControllerTest
 
     Mockito.when(metricsParser.getValuesForType(TOP_LICENSES)).thenReturn(topLicences);
 
-    for (String licenceId : Lists.newArrayList(licenceIdsArray))
+    for (String licenceId : Arrays.stream(licenceIdsArray).collect(Collectors.toList()))
     {
       licenceMap.put(licenceId, createLicence(licenceId, "name-" + licenceId));
     }
@@ -175,7 +176,7 @@ public class MetadataQualityControllerTest
   private Map<String, List<?>> createLicenceMap(String... licenceIds)
   {
     Map<String, List<?>> result = new HashMap<>();
-    result.put(LABELS, Collections.unmodifiableList(Lists.newArrayList(licenceIds)));
+    result.put(LABELS, Collections.unmodifiableList(Arrays.stream(licenceIds).collect(Collectors.toList())));
     return Collections.unmodifiableMap(result);
   }
 

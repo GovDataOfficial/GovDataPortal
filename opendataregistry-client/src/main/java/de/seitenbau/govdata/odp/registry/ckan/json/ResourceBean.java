@@ -26,13 +26,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import de.seitenbau.govdata.odp.registry.date.DateDeserializer;
 import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 @Data
-public class ResourceBean implements Serializable {
+public class ResourceBean implements Serializable
+{
     private static final long serialVersionUID = -1474098456725033104L;
 
     @JsonProperty
@@ -54,9 +57,11 @@ public class ResourceBean implements Serializable {
     private String language;
 
     @JsonProperty
+    @JsonDeserialize(using = DateDeserializer.class)
     private Date created;
 
     @JsonProperty
+    @JsonDeserialize(using = DateDeserializer.class)
     private Date last_modified;
 
     @JsonProperty
@@ -75,9 +80,11 @@ public class ResourceBean implements Serializable {
     private String license;
     
     @JsonProperty
+    @JsonDeserialize(using = DateDeserializer.class)
     private Date issued;
     
     @JsonProperty
+    @JsonDeserialize(using = DateDeserializer.class)
     private Date modified;
     
     @JsonProperty
@@ -106,4 +113,5 @@ public class ResourceBean implements Serializable {
     
     @JsonProperty
     private String hash_algorithm;
+
 }

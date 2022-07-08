@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.4.0</version>
+    <version>5.0.0</version>
   </parent>
   
   <artifactId>odp-common</artifactId>
@@ -39,7 +39,7 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -50,6 +50,17 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- com.liferay.portal.impl/META-INF/services/javax.imageio.spi.ImageReaderSpi -->
+    <dependency>
+      <groupId>ch.randelshofer</groupId>
+      <artifactId>monte-cc</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

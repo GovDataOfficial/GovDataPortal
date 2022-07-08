@@ -25,7 +25,8 @@ package de.seitenbau.govdata.odp.registry.model;
  * 
  * @author sim
  */
-public interface User {
+public interface User
+{
 
     /**
      * Gets the apikey.
@@ -61,7 +62,12 @@ public interface User {
      * @return the email
      */
     String getEmail();
-    
+
+    /**
+     * Gets the ID.
+     * 
+     * @return the ID
+     */
     String getId();
 
     /**

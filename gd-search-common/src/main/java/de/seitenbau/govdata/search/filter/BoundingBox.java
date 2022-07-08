@@ -2,9 +2,11 @@ package de.seitenbau.govdata.search.filter;
 
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.geo.ShapeRelation;
-import org.elasticsearch.common.geo.builders.ShapeBuilder;
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.GeoBoundingBoxQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+
+import de.seitenbau.govdata.search.util.states.BoundingBoxContainer;
 
 /**
  * data structure to hold a rectangular box, defined by its topleft (1) and bottomright (2) points.
@@ -17,14 +19,18 @@ public class BoundingBox extends BaseFilter
   private Double topleft_lon;
   private Double bottomright_lat;
   private Double bottomright_lon;
+
+  private ShapeRelation shapeRelation;
   
   /**
    * Create a BoundingBox from OpenLayers3 "extent" coordinates.
    * @param bbox
+   * @param relation: intersect or within
    * @throws NumberFormatException if the coordinates are not well formatted
    * @throws ArrayIndexOutOfBoundsException if there are not exactly 4 parameters
    */
-  public BoundingBox(String elasticSearchField, String filterFragmentName, String bbox)
+  public BoundingBox(String elasticSearchField, String filterFragmentName, String bbox,
+      ShapeRelation relation)
       throws NumberFormatException, ArrayIndexOutOfBoundsException
   {
     
@@ -37,6 +43,7 @@ public class BoundingBox extends BaseFilter
     topleft_lat = Double.parseDouble(parts[3]);
     bottomright_lon = Double.parseDouble(parts[2]);
     bottomright_lat = Double.parseDouble(parts[1]);
+    shapeRelation = relation;
   }
   
   @Override
@@ -46,20 +53,33 @@ public class BoundingBox extends BaseFilter
   }
 
   @Override
-  public FilterBuilder createFilter()
+  public QueryBuilder createFilter()
   {
-    return FilterBuilders.geoShapeFilter(
-        elasticSearchField, // special field in EC-index containing a Geo Shape Type
-        ShapeBuilder.newEnvelope()
-          .topLeft(topleft_lon, topleft_lat)
-          .bottomRight(bottomright_lon, bottomright_lat),
-          ShapeRelation.INTERSECTS);
+    GeoBoundingBoxQueryBuilder geoShapeBuilder = QueryBuilders.geoBoundingBoxQuery(elasticSearchField);
+    geoShapeBuilder.setCorners(new GeoPoint(topleft_lat, topleft_lon),
+        new GeoPoint(bottomright_lat, bottomright_lon));
+    return geoShapeBuilder;
   }
 
   @Override
   public String getLabel()
   {
     return this.toString();
+  }
+
+  /**
+   * Create a BoundingBox from OpenLayers3 "extent" coordinates.
+   * @param bbox
+   */
+  public BoundingBox(String elasticSearchField, String filterFragmentName, BoundingBoxContainer bbox,
+      ShapeRelation relation)
+  {
+    super(elasticSearchField, filterFragmentName);
+    topleft_lon = bbox.getLongitudeMin();
+    topleft_lat = bbox.getLatitudeMax();
+    bottomright_lon = bbox.getLongitudeMax();
+    bottomright_lat = bbox.getLatitudeMin();
+    shapeRelation = relation;
   }
 
   public GeoPoint getCenter()

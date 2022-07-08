@@ -5,18 +5,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.util.Maps;
 import org.elasticsearch.search.SearchHit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
+import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.search.index.model.HitDto;
+import de.seitenbau.govdata.search.test.util.IndexName;
 
 /**
  * Tests für @link {@link SearchHitMapper}.
@@ -36,6 +39,8 @@ public class SearchHitMapperTest
   public void setup()
   {
     target = new SearchHitMapper();
+    ReflectionTestUtils.setField(target, "showcaseIndexName", IndexName.SHOWCASES.getIndex());
+    ReflectionTestUtils.setField(target, "liferayIndexName", IndexName.LIFERAY.getIndex());
   }
 
   @Test
@@ -46,7 +51,8 @@ public class SearchHitMapperTest
     Map<String, Object> metadataMap = new LinkedHashMap<>();
     sourceMap.put("metadata", metadataMap);
     Mockito.when(searchHit.getId()).thenReturn("test-id");
-    Mockito.when(searchHit.getSource()).thenReturn(sourceMap);
+    Mockito.when(searchHit.getIndex()).thenReturn(IndexName.CKAN.getIndex());
+    Mockito.when(searchHit.getSourceAsMap()).thenReturn(sourceMap);
 
     /* execute */
     HitDto result = target.mapToHitDto(searchHit);
@@ -60,6 +66,7 @@ public class SearchHitMapperTest
     Assertions.assertThat(result.getName()).isEqualTo("test-id");
     Assertions.assertThat(result.getContact()).isNull();
     Assertions.assertThat(result.getContactEmail()).isNull();
+    Assertions.assertThat(result.getLastModified()).isNull();
   }
 
   @Test
@@ -77,7 +84,8 @@ public class SearchHitMapperTest
     metadataMap.put("extras", extras);
     sourceMap.put("metadata", metadataMap);
     Mockito.when(searchHit.getId()).thenReturn("test-id");
-    Mockito.when(searchHit.getSource()).thenReturn(sourceMap);
+    Mockito.when(searchHit.getIndex()).thenReturn(IndexName.CKAN.getIndex());
+    Mockito.when(searchHit.getSourceAsMap()).thenReturn(sourceMap);
 
     /* execute */
     HitDto result = target.mapToHitDto(searchHit);
@@ -115,7 +123,8 @@ public class SearchHitMapperTest
     metadataMap.put("extras", extras);
     sourceMap.put("metadata", metadataMap);
     Mockito.when(searchHit.getId()).thenReturn("test-id");
-    Mockito.when(searchHit.getSource()).thenReturn(sourceMap);
+    Mockito.when(searchHit.getIndex()).thenReturn(IndexName.CKAN.getIndex());
+    Mockito.when(searchHit.getSourceAsMap()).thenReturn(sourceMap);
 
     /* execute */
     HitDto result = target.mapToHitDto(searchHit);
@@ -129,5 +138,128 @@ public class SearchHitMapperTest
     Assertions.assertThat(result.getName()).isEqualTo("metadata-name");
     Assertions.assertThat(result.getContact()).isEqualTo("publisher-name");
     Assertions.assertThat(result.getContactEmail()).isEqualTo("publisher@test.de");
+  }
+
+  @Test
+  public void test_sortDate_showcase() throws Exception
+  {
+    /* prepare */
+    Map<String, Object> sourceMap = new LinkedHashMap<>();
+    String sortDateDateString = "2021-04-10 5:34";
+    sourceMap.put("sort_date", sortDateDateString);
+    String sortDateDctDateString = "2021-04-10 6:34";
+    sourceMap.put("sort_date_dct", sortDateDctDateString);
+    String title = "title 1";
+    sourceMap.put("title", title);
+    String notes = "the notes";
+    sourceMap.put("preamble", notes);
+    Map<String, Object> metadataMap = new LinkedHashMap<>();
+    String modifiedShowcaseDateString = "2021-04-10 7:34";
+    metadataMap.put("modified_fallback_showcase_modified", modifiedShowcaseDateString);
+    String modifiedDatePortalString = "2021-04-11 7:34";
+    metadataMap.put("modified", modifiedDatePortalString);
+    String modifiedCkanDateString = "2021-04-12 7:34";
+    metadataMap.put("dct_modified_fallback_ckan", modifiedCkanDateString);
+    String type = "showcase";
+    metadataMap.put("type", type);
+    sourceMap.put("metadata", metadataMap);
+    Mockito.when(searchHit.getId()).thenReturn("test-id");
+    Mockito.when(searchHit.getIndex()).thenReturn(IndexName.SHOWCASES.getIndex());
+    Mockito.when(searchHit.getSourceAsMap()).thenReturn(sourceMap);
+
+    /* execute */
+    HitDto result = target.mapToHitDto(searchHit);
+
+    /* verify */
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result.getId()).isEqualTo("test-id");
+    Assertions.assertThat(result.getType()).isEqualTo(type);
+    Assertions.assertThat(result.getTitle()).isEqualTo(title);
+    Assertions.assertThat(result.getContent()).isEqualTo(notes);
+    Assertions.assertThat(result.getName()).isEqualTo("test-id");
+    Assertions.assertThat(result.getLastModified())
+        .isEqualTo(DateUtil.parseDateString(modifiedShowcaseDateString));
+  }
+
+  @Test
+  public void test_sortDate_portal() throws Exception
+  {
+    /* prepare */
+    Map<String, Object> sourceMap = new LinkedHashMap<>();
+    String sortDateDateString = "2021-04-10 5:34";
+    sourceMap.put("sort_date", sortDateDateString);
+    String sortDateDctDateString = "2021-04-10 6:34";
+    sourceMap.put("sort_date_dct", sortDateDctDateString);
+    String title = "title 1";
+    sourceMap.put("title", title);
+    String notes = "the notes";
+    sourceMap.put("preamble", notes);
+    Map<String, Object> metadataMap = new LinkedHashMap<>();
+    String modifiedShowcaseDateString = "2021-04-10 7:34";
+    metadataMap.put("modified_fallback_showcase_modified", modifiedShowcaseDateString);
+    String modifiedDatePortalString = "2021-04-11 7:34";
+    metadataMap.put("modified", modifiedDatePortalString);
+    String modifiedCkanDateString = "2021-04-12 7:34";
+    metadataMap.put("dct_modified_fallback_ckan", modifiedCkanDateString);
+    String type = "portal";
+    metadataMap.put("type", type);
+    sourceMap.put("metadata", metadataMap);
+    Mockito.when(searchHit.getId()).thenReturn("test-id");
+    Mockito.when(searchHit.getIndex()).thenReturn(IndexName.LIFERAY.getIndex());
+    Mockito.when(searchHit.getSourceAsMap()).thenReturn(sourceMap);
+
+    /* execute */
+    HitDto result = target.mapToHitDto(searchHit);
+
+    /* verify */
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result.getId()).isEqualTo("test-id");
+    Assertions.assertThat(result.getType()).isEqualTo(type);
+    Assertions.assertThat(result.getTitle()).isEqualTo(title);
+    Assertions.assertThat(result.getContent()).isEqualTo(notes);
+    Assertions.assertThat(result.getName()).isEqualTo("test-id");
+    Assertions.assertThat(result.getLastModified())
+        .isEqualTo(DateUtil.parseDateString(modifiedDatePortalString));
+  }
+
+  @Test
+  public void test_sortDate_ckan() throws Exception
+  {
+    /* prepare */
+    Map<String, Object> sourceMap = new LinkedHashMap<>();
+    String sortDateDateString = "2021-04-10 5:34";
+    sourceMap.put("sort_date", sortDateDateString);
+    String sortDateDctDateString = "2021-04-10 6:34";
+    sourceMap.put("sort_date_dct", sortDateDctDateString);
+    String title = "title 1";
+    sourceMap.put("title", title);
+    String notes = "the notes";
+    sourceMap.put("preamble", notes);
+    Map<String, Object> metadataMap = new LinkedHashMap<>();
+    String modifiedShowcaseDateString = "2021-04-10 7:34";
+    metadataMap.put("modified_fallback_showcase_modified", modifiedShowcaseDateString);
+    String modifiedDatePortalString = "2021-04-11 7:34";
+    metadataMap.put("modified", modifiedDatePortalString);
+    String modifiedCkanDateString = "2021-04-12 7:34";
+    metadataMap.put("dct_modified_fallback_ckan", modifiedCkanDateString);
+    String type = "dataset";
+    metadataMap.put("type", type);
+    sourceMap.put("metadata", metadataMap);
+    Mockito.when(searchHit.getId()).thenReturn("test-id");
+    Mockito.when(searchHit.getIndex()).thenReturn(IndexName.CKAN.getIndex());
+    Mockito.when(searchHit.getSourceAsMap()).thenReturn(sourceMap);
+
+    /* execute */
+    HitDto result = target.mapToHitDto(searchHit);
+
+    /* verify */
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result.getId()).isEqualTo("test-id");
+    Assertions.assertThat(result.getType()).isEqualTo(type);
+    Assertions.assertThat(result.getTitle()).isEqualTo(title);
+    Assertions.assertThat(result.getContent()).isEqualTo(notes);
+    Assertions.assertThat(result.getName()).isEqualTo("test-id");
+    Assertions.assertThat(result.getLastModified())
+        .isEqualTo(DateUtil.parseDateString(modifiedCkanDateString));
   }
 }

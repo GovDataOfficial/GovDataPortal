@@ -21,17 +21,27 @@ public abstract class BasePersonalMenuEntry implements PersonalMenuEntry
 {
   protected static final String FRIENDLY_URL_PAGE_CREATE_METADATA = "/bearbeiten";
 
+  protected static final String FRIENDLY_URL_PAGE_CREATE_SHOWCASE = "/showcase-bearbeiten";
+
   public boolean canEditDatasets(PortletRequest portletRequest, PermissionChecker permissionChecker,
       LayoutLocalService layoutLocalService, GroupLocalService groupLocalService) throws PortalException
   {
+    return hasPermissions(portletRequest, permissionChecker, layoutLocalService, groupLocalService,
+        FRIENDLY_URL_PAGE_CREATE_METADATA);
+  }
+
+  public boolean hasPermissions(PortletRequest portletRequest, PermissionChecker permissionChecker,
+      LayoutLocalService layoutLocalService, GroupLocalService groupLocalService, String friendlyURL)
+      throws PortalException
+  {
     ThemeDisplay themeDisplay = (ThemeDisplay) portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
     Group defaultSiteGroup = groupLocalService.getFriendlyURLGroup(themeDisplay.getCompanyId(), "/guest");
-    Layout editDatasetLayout = layoutLocalService.getFriendlyURLLayout(defaultSiteGroup.getGroupId(), false,
-        FRIENDLY_URL_PAGE_CREATE_METADATA);
-    boolean canEditDatasets =
-        LayoutPermissionUtil.contains(permissionChecker, editDatasetLayout, ActionKeys.VIEW);
+    Layout friendlyURLLayout = layoutLocalService.getFriendlyURLLayout(defaultSiteGroup.getGroupId(), false,
+        friendlyURL);
+    boolean hasAccess =
+        LayoutPermissionUtil.contains(permissionChecker, friendlyURLLayout, ActionKeys.VIEW);
 
-    return canEditDatasets;
+    return hasAccess;
   }
 
 }

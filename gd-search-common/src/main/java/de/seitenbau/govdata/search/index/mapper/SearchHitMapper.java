@@ -9,11 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
-import de.seitenbau.govdata.search.index.PortalIndexConstants;
+import de.seitenbau.govdata.search.index.IndexConstants;
 import de.seitenbau.govdata.search.index.model.HitDto;
 import de.seitenbau.govdata.search.index.model.ResourceDto;
 
@@ -33,6 +34,12 @@ public class SearchHitMapper
 
   private static final String CONTACT_EMAIL_SUFFIX = "_email";
 
+  @Value("${elasticsearch.search.index.showcases}")
+  private String showcaseIndexName;
+
+  @Value("${elasticsearch.liferay.index.name}")
+  private String liferayIndexName;
+
   /** this is the order in which the contact is searched. The first available is taken. */
   private final RoleEnumType[] roles = new RoleEnumType[] {RoleEnumType.PUBLISHER};
 
@@ -48,21 +55,30 @@ public class SearchHitMapper
     final String method = "mapToHitDto() : ";
     logger.trace(method + "Start");
 
-    Map<String, Object> data = searchHit.getSource();
+    Map<String, Object> data = searchHit.getSourceAsMap();
     Map<String, Object> metadata = (Map<String, Object>) data.get("metadata");
 
+    // The sort date field is not available in source in fetched hit
+    // It should work when "store": "yes" is set for the sort_date fields, but then needs a mapping
+    // upgrade and a complete reindex from scratch.
+    // String lastModified = getFieldValueString(data, ESFieldConsts.SORT_DATE, "");
+    // Date lastModifiedDate = DateUtil.parseDateString(lastModified);
     String lastModified;
     Date lastModifiedDate;
-    if (StringUtils.equals(searchHit.getType(), PortalIndexConstants.INDEX_TYPE_PORTAL))
+    if (StringUtils.equals(searchHit.getIndex(), liferayIndexName))
     {
-      lastModified = getFieldValueString(metadata, "modified", "");
-      lastModifiedDate = DateUtil.parseDateString(lastModified);
+      lastModified = getFieldValueString(metadata, IndexConstants.METADATA_FIELD_MODIFIED, "");
+    }
+    else if (StringUtils.equals(searchHit.getIndex(), showcaseIndexName))
+    {
+      lastModified =
+          getFieldValueString(metadata, IndexConstants.METADATA_FIELD_MODIFIED_FALLBACK_SHOWCASE, "");
     }
     else
     {
       lastModified = getFieldValueString(metadata, "dct_modified_fallback_ckan", "");
-      lastModifiedDate = DateUtil.parseDateString(lastModified);
     }
+    lastModifiedDate = DateUtil.parseDateString(lastModified);
 
     String temporalCoverageFrom = getFieldValueString(metadata, "temporal_start", null);
     Date temporalCoverageFromDate = null;
@@ -76,14 +92,27 @@ public class SearchHitMapper
     {
       temporalCoverageToDate = DateUtil.parseDateString(temporalCoverageTo);
     }
+    String releaseDateRaw = getFieldValueString(metadata, "showcase_created", null);
+    Date releaseDate = null;
+    if (releaseDateRaw != null)
+    {
+      releaseDate = DateUtil.parseDateString(releaseDateRaw);
+    }
 
     // find the correct publisher to use
     String[] contactNameAndEmail = extractContact(metadata);
 
+    List<String> showcaseTypes = getFieldValueAsStringList(metadata, "showcase_types");
+    String primaryShowcaseType = getFieldValueString(metadata, "primary_showcase_type", "");
+    if (!primaryShowcaseType.isEmpty())
+    {
+      showcaseTypes.add(primaryShowcaseType);
+    }
+
     HitDto mappedHit = HitDto.builder()
         .id(searchHit.getId())
         .name(getFieldValueString(metadata, "name", searchHit.getId()))
-        .type(getFieldValueString(metadata, "type", ""))
+        .type(getFieldValueString(metadata, IndexConstants.METADATA_FIELD_TYPE, ""))
         .title(getFieldValueString(data, "title", ""))
         .content(getFieldValueString(data, "preamble", ""))
         .lastModified(lastModifiedDate)
@@ -99,6 +128,12 @@ public class SearchHitMapper
         .hasClosed((Boolean) metadata.get("has_closed"))
         .ownerOrg(getFieldValueString(metadata, "owner_org", ""))
         .resources(extractResources(metadata.get("resources")))
+        .primaryShowcaseType(primaryShowcaseType)
+        .releaseDate(releaseDate)
+        .displayImage(getFieldValueString(metadata, "image", ""))
+        .platforms(getFieldValueAsStringList(metadata, "platforms"))
+        .usedDatasets(getFieldValueAsStringList(metadata, "used_datasets"))
+        .allShowcaseTypes(showcaseTypes)
         .build();
 
     logger.trace(method + "End");

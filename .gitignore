@@ -1,6 +1,7 @@
 .classpath
 .project
 .settings
+.checkstyle
 target
 build
 .DS_Store
@@ -8,6 +9,6 @@ build
 *.iml
 .tern-project
 .metadata
-/.pydevproject
+.pydevproject
 .factorypath
-bin
+/bin/

@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface CKANClientAction
 {
+  // CHECKSTYLE:OFF
 
   @POST
   @Path("/api/3/action/status_show")
@@ -170,10 +171,12 @@ public interface CKANClientAction
   @GET
   @Path("/api/3/action/organization_list_for_user")
   @Produces("application/json")
-  public Response getOrganisationsForUser(@HeaderParam("Authorization") String authenticationKey, @QueryParam("permission") String permission);
+  public Response getOrganisationsForUser(@HeaderParam("Authorization") String authenticationKey,
+      @QueryParam("permission") String permission);
 
   @GET
   @Path("/api/3/action/organization_list")
   @Produces("application/json")
-  public Response getOrganisations(@QueryParam("all_fields") boolean allfields, @QueryParam("include_extras") boolean includeextras);
+  public Response getOrganisations(@QueryParam("all_fields") boolean allfields,
+      @QueryParam("include_extras") boolean includeextras);
 }

@@ -1,13 +1,19 @@
 package de.seitenbau.govdata.search.filter;
 
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 
 public class TermFilter extends BaseFilter
 {
   
   private final String term;
 
+  /**
+   * Data structure to hold term-filter information
+   * @param elasticSearchField
+   * @param filterFragmentName
+   * @param term
+   */
   public TermFilter(String elasticSearchField, String filterFragmentName, String term)
   {
     super(elasticSearchField, filterFragmentName);
@@ -15,9 +21,9 @@ public class TermFilter extends BaseFilter
   }
 
   @Override
-  public FilterBuilder createFilter()
+  public QueryBuilder createFilter()
   {
-    return FilterBuilders.termFilter(elasticSearchField, term);
+    return QueryBuilders.boolQuery().must(QueryBuilders.termQuery(elasticSearchField, term));
   }
 
   @Override

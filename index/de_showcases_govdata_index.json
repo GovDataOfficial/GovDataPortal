@@ -1,0 +1,113 @@
+{
+  "settings": {
+    "number_of_shards": 2,
+    "number_of_replicas": 1,
+    "max_ngram_diff": 67,
+    "analysis": {
+      "char_filter": {
+        "search_mappings": {
+          "type": "mapping",
+          "mappings" : [",=> "]
+        }
+      },
+      "filter": {
+        "german_stop": {
+          "type": "stop",
+          "stopwords": "_german_"
+        },
+        "german_stemmer": {
+          "type": "stemmer",
+          "language": "light_german"
+        },
+        "ngram": {
+          "type": "ngram",
+          "min_gram": 3,
+          "max_gram": 70
+        },
+        "edge_ngram": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 70
+        },
+        "word_delimiter_preserve" : {
+          "type" : "word_delimiter",
+          "preserve_original": "true"
+        }
+      },
+      "analyzer": {
+        "de_query_analyzer": {
+          "type": "custom",
+          "char_filter": [
+            "html_strip"
+          ],
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "german_normalization",
+            "german_stemmer"
+          ]
+        },
+        "de_stemmed_analyzer": {
+          "type": "custom",
+          "char_filter": [
+            "html_strip"
+          ],
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "german_normalization",
+            "german_stemmer"
+          ]
+        },
+        "de_ngram_analyzer": {
+          "type": "custom",
+          "char_filter": [
+            "html_strip"
+          ],
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "german_stop",
+            "german_normalization",
+            "ngram"
+          ]
+        },
+        "de_edge_ngram_analyzer": {
+          "type": "custom",
+          "char_filter": [
+            "html_strip"
+          ],
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "german_stop",
+            "german_normalization",
+            "edge_ngram"
+          ]
+        },
+        "word_delimiter_analyzer": {
+            "tokenizer": "keyword",
+            "filter": [
+                "lowercase",
+                "word_delimiter_preserve"
+            ]
+        }
+      },
+      "normalizer": {
+        "facet": {
+          "type": "custom",
+          "char_filter": ["search_mappings"],
+          "filter": ["lowercase"]
+        },
+        "sortable": {
+          "type": "custom",
+          "filter": [
+            "lowercase",
+            "german_normalization"
+          ]
+        }
+      }
+    }
+  }
+}
+  

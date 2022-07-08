@@ -37,7 +37,6 @@ public class OdCompliantScreenNameValidator implements ScreenNameValidator
   /** The log. */
   private final Logger log = LoggerFactory.getLogger(getClass());
 
-
   /**
    * Validate the screen name provided by the user
    * @see com.liferay.portal.security.auth.ScreenNameValidator#validate(long, String)
@@ -45,7 +44,7 @@ public class OdCompliantScreenNameValidator implements ScreenNameValidator
   @Override
   public boolean validate(long loginId, String screenName)
   {
-    
+
     String stringPattern = getStringPattern();
 
     log.debug("Using [" + stringPattern + "] as pattern for new registered user with screen name: "
@@ -58,17 +57,17 @@ public class OdCompliantScreenNameValidator implements ScreenNameValidator
   }
 
   /**
-   * Provides the JavaScript validations for the UI 
+   * Provides the JavaScript validations for the UI
    */
   @Override
   public String getAUIValidatorJS()
   {
-    
+
     String jsStringPattern = getStringPattern().replace("\\", "\\\\");
-    
+
     log.debug("Using [" + jsStringPattern + "] as pattern in Javascript AUI-Validator.");
-    
-    return "function(val) {var pattern = new RegExp('" + jsStringPattern 
+
+    return "function(val) {var pattern = new RegExp('" + jsStringPattern
         + "');if (val.match(pattern)) {return true;}return false;}";
   }
 
@@ -80,21 +79,21 @@ public class OdCompliantScreenNameValidator implements ScreenNameValidator
   {
     return LanguageUtil.get(locale, "please-enter-a-valid-screen-name");
   }
-  
+
   /**
    * 
    * @return regex-pattern
    */
   private String getStringPattern()
   {
-    
+
     String stringPattern = PropsUtil.get("users.screen.name.validator.regexpattern");
 
     if (StringUtils.isBlank(stringPattern))
     {
       stringPattern = "^[a-zA-Z]+\\w*$";
     }
-    
+
     return stringPattern;
   }
 

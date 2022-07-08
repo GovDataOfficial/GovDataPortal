@@ -13,7 +13,9 @@
       de.seitenbau.govdata.navigation,
       de.seitenbau.govdata.odr,
       de.seitenbau.govdata.cache,
-      de.seitenbau.govdata.search.cache" />
+      de.seitenbau.govdata.search.cache,
+      de.seitenbau.govdata.search.geostate.cache,
+      de.seitenbau.govdata.search.util" />
       
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchExtController" /> 
 

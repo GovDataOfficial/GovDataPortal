@@ -8,26 +8,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.common.geo.ShapeRelation;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.common.ESFieldConsts;
 import de.seitenbau.govdata.search.common.QuerySanatizer;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
+import de.seitenbau.govdata.search.common.SearchQuery;
+import de.seitenbau.govdata.search.filter.BaseFilter;
+import de.seitenbau.govdata.search.filter.BoolQueryFilter;
 import de.seitenbau.govdata.search.filter.BooleanFilter;
 import de.seitenbau.govdata.search.filter.BoundingBox;
+import de.seitenbau.govdata.search.filter.OrFilter;
 import de.seitenbau.govdata.search.filter.QueryFilter;
 import de.seitenbau.govdata.search.filter.TemporalCoverageFrom;
 import de.seitenbau.govdata.search.filter.TemporalCoverageTo;
 import de.seitenbau.govdata.search.filter.TermFilter;
 import de.seitenbau.govdata.search.filter.TermsFilter;
+import de.seitenbau.govdata.search.filter.WildcardFilter;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.sort.SortType;
+import de.seitenbau.govdata.search.util.GeoStateParser;
+import de.seitenbau.govdata.search.util.states.StateContainer;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Verarbeitet die Parameter für die Suche.
@@ -37,6 +46,8 @@ import de.seitenbau.govdata.search.sort.SortType;
 @Slf4j
 public final class ParameterProcessing
 {
+  private static GeoStateParser geoStateParser = new GeoStateParser();
+
   private ParameterProcessing()
   {
     // no instance allowed
@@ -56,10 +67,7 @@ public final class ParameterProcessing
 
     // Query
     String q = getSingleString(parameterMap, QueryParamNames.PARAM_PHRASE);
-    if (q != null)
-    {
-      preparedParameters.setQuery(QuerySanatizer.sanatizeQuery(q));
-    }
+    preparedParameters.setQuery(new SearchQuery(QuerySanatizer.sanatizeQuery(q)));
 
     // Facet Filters
     String filterRequestParam = getSingleString(parameterMap, QueryParamNames.PARAM_FILTER);
@@ -87,7 +95,7 @@ public final class ParameterProcessing
       try
       {
         preparedParameters.setBoundingBox(new BoundingBox(ESFieldConsts.BOUNDINGBOX,
-            QueryParamNames.PARAM_BOUNDINGBOX, boundingBoxParam));
+            QueryParamNames.PARAM_BOUNDINGBOX, boundingBoxParam, ShapeRelation.INTERSECTS));
       }
       catch (Exception e)
       {
@@ -184,6 +192,7 @@ public final class ParameterProcessing
     // 2. try to guess the type by the page we are on
     HashMap<String, String> pageMapping = new HashMap<>();
     pageMapping.put("/daten", SearchConsts.TYPE_DATASET);
+    pageMapping.put("/showroom", SearchConsts.TYPE_SHOWCASE);
     if (pageMapping.containsKey(currentPage))
     {
       log.trace(method + "End");
@@ -258,6 +267,11 @@ public final class ParameterProcessing
         }
 
       }
+      else if (StringUtils.equals(key, QueryParamNames.PARAM_SHOW_ONLY_PRIVATE_SHOWCASES))
+      {
+        // show only private showcases
+        bundle.setShowOnlyPrivateShowcases(true);
+      }
       else
       {
         // add a new filter for each active filter
@@ -265,7 +279,19 @@ public final class ParameterProcessing
         {
           if (ESFieldConsts.FACET_MAP.containsKey(key))
           {
-            bundle.addFilter(new TermFilter(ESFieldConsts.FACET_MAP.get(key), key, filter));
+            if (StringUtils.equals(key, SearchConsts.FACET_SHOWCASE_TYPE))
+            {
+              // Showcase Types need an or-filter to check both fields: primary and additional
+              TermFilter primaryFilter =
+                  new TermFilter(ESFieldConsts.FIELD_PRIMARY_SHOWCASE_TYPE, key, filter);
+              TermFilter additionalFilter =
+                  new TermFilter(ESFieldConsts.FIELD_ADDITIONAL_SHOWCASE_TYPE, key, filter);
+              bundle.addFilter(new OrFilter(key, primaryFilter, additionalFilter));
+            }
+            else
+            {
+              bundle.addFilter(new TermFilter(ESFieldConsts.FACET_MAP.get(key), key, filter));
+            }
           }
           else if (ESFieldConsts.EXT_SEARCH_MAP.containsKey(key))
           {
@@ -277,6 +303,25 @@ public final class ParameterProcessing
             // this can be done since the "value" of this filter is always "true".
             // it is merely a bunch of boolean filters disguised as list.
             bundle.addFilter(new BooleanFilter(ESFieldConsts.BOOL_FACET_MAP.get(filter), key, true));
+          }
+          else if (StringUtils.equals(key, SearchConsts.FACET_STATE))
+          {
+            StateContainer state = geoStateParser.getStateList().stream()
+                .filter(s -> filter.equals(s.getId())).findFirst().orElse(null);
+            if (state != null)
+            {
+              BaseFilter[] filters = createBasicGeoStateFilters(key, filter, state);
+              if (state.getBoundingBox() != null && state.isFilterSpatial())
+              {
+                // Add filter for map-search
+                BoundingBox mapFilter = new BoundingBox(ESFieldConsts.BOUNDINGBOX,
+                    QueryParamNames.PARAM_BOUNDINGBOX, state.getBoundingBox(), ShapeRelation.WITHIN);
+                bundle.setBoostSpatialRelevance(true);
+                ArrayUtils.add(filters, mapFilter);
+              }
+              bundle.addFilter(new OrFilter(key, filters));
+              bundle.setForceRelevanceSort(true);
+            }
           }
         }
       }
@@ -308,5 +353,68 @@ public final class ParameterProcessing
     // }
 
     return bundle;
+  }
+
+  private static BaseFilter[] createBasicGeoStateFilters(String key, String stateId, StateContainer state)
+  {
+    List<BaseFilter> filters = new ArrayList<>();
+    // Filter for title (needs lower case to match case-insensitive)
+    if (CollectionUtils.isNotEmpty(state.getFilterTitle()))
+    {
+      BoolQueryFilter titleFilter = new BoolQueryFilter(ESFieldConsts.FIELD_TITLE_SEARCH_WORD,
+          key, GovDataCollectionUtils.convertStringListToLowerCase(state.getFilterTitle()));
+      filters.add(titleFilter);
+    }
+
+    // Filter for description (needs lower case to match case-insensitive)
+    if (CollectionUtils.isNotEmpty(state.getFilterDescription()))
+    {
+      BoolQueryFilter descriptionFilter =
+          new BoolQueryFilter(ESFieldConsts.FIELD_DESCRIPTION_SEARCH_WORD, key,
+              GovDataCollectionUtils.convertStringListToLowerCase(state.getFilterDescription()));
+      filters.add(descriptionFilter);
+    }
+
+    // Filter for tags (needs lower case to match case-insensitive)
+    if (CollectionUtils.isNotEmpty(state.getFilterTags()))
+    {
+      TermsFilter tagsFilter =
+          new TermsFilter(ESFieldConsts.FIELD_TAGS_SEARCH, key,
+              GovDataCollectionUtils.convertStringListToLowerCase(state.getFilterTags()));
+      filters.add(tagsFilter);
+    }
+
+    // Filter for contributor IDs
+    if (CollectionUtils.isNotEmpty(state.getFilterContributorIds()))
+    {
+      TermsFilter contributorFilter = new TermsFilter(ESFieldConsts.FIELD_CONTRIBUTOR_ID_RAW, key,
+          state.getFilterContributorIds());
+      filters.add(contributorFilter);
+    }
+
+    // Filter for geopolitical URI (use wildcard filter)
+    WildcardFilter geoUriFilter =
+        new WildcardFilter(ESFieldConsts.FIELD_GEOCODING_URI_RAW, key, "*/" + stateId + "*");
+    filters.add(geoUriFilter);
+
+    // Filter for geopolitical description (needs lower case to match case-insensitive)
+    if (CollectionUtils.isNotEmpty(state.getFilterGeocodingDescription()))
+    {
+      BoolQueryFilter geoTextFilter =
+          new BoolQueryFilter(ESFieldConsts.FIELD_GEOCODING_TEXT, key,
+              GovDataCollectionUtils.convertStringListToLowerCase(state.getFilterGeocodingDescription()));
+      filters.add(geoTextFilter);
+    }
+
+    // Filter for geopolitical level URI
+    if (CollectionUtils.isNotEmpty(state.getFilterGeocodingLevelUri()))
+    {
+      TermsFilter geoLevelUriFilter =
+          new TermsFilter(ESFieldConsts.FIELD_GEOCODING_LEVEL_URI_RAW, key,
+              state.getFilterGeocodingLevelUri());
+      filters.add(geoLevelUriFilter);
+    }
+
+    return GovDataCollectionUtils.collectionToStream(filters).toArray(BaseFilter[]::new);
   }
 }

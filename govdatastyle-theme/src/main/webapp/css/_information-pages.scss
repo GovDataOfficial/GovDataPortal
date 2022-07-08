@@ -50,6 +50,17 @@
       margin-bottom: rem-calc(30);
       padding: rem-calc(15);
     }
+    
+    &.content-centered-design {
+
+      .portlet-header {
+        text-align: center;
+      }
+
+      .portlet-content-container {
+        @extend .row-small;
+      }
+    }
   }
 }
 
@@ -61,5 +72,44 @@
     @extend .design-box;
     margin-bottom: rem-calc(30);
     padding: rem-calc(15);
+  }
+}
+
+.modern-information-nav {
+  @extend .modern-nav;
+
+  .navbar-nav {
+    @extend .row-small;
+    max-width: rem-calc(980);
+    text-align: center;
+  }
+
+  .portlet-body {
+    line-height: 0em;
+    font-size: 0px; // remove whitespaces between <li>
+  }
+
+  li {
+    line-height: rem-calc(45);
+    position: relative;
+    margin-right: -1px; // remove overlapping borders
+
+    &.selected {
+        border-left: 1px;
+        border-left-style: solid;
+    }
+  }
+
+  li:after { // horizontal line
+    content: '';
+    height: 1px;
+    background: white;
+    width: 2000%;
+    position: absolute;
+    left: -800%;
+}
+
+  @media #{$medium-down} {
+    display: none; // we have this navigation in off-canvas menu...
   }
 }

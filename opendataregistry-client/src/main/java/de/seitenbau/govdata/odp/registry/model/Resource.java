@@ -19,10 +19,10 @@
 
 package de.seitenbau.govdata.odp.registry.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * The Interface Resource.
@@ -31,7 +31,7 @@ import java.util.List;
  */
 public interface Resource
 {
-
+  // CHECKSTYLE:OFF
   String getId();
 
   String getUrl();
@@ -50,6 +50,8 @@ public interface Resource
 
   String getDescription();
 
+  String getDescriptionOnlyText();
+
   void setDescription(String description);
 
   List<String> getLanguage();
@@ -64,6 +66,8 @@ public interface Resource
    * Name of the Resource (not OGD-Standard, but CKAN supported).
    */
   String getName();
+
+  String getNameOnlyText();
 
   void setName(String name);
 

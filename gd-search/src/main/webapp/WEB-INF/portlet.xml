@@ -94,6 +94,10 @@
     <display-name>Extended Search</display-name>
     <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
     <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/searchext-configuration.jsp</value>
+    </init-param>
+    <init-param>
       <name>contextConfigLocation</name>
       <value>classpath:/spring/gd-search-ext-context.xml</value>
     </init-param>
@@ -242,6 +246,151 @@
     </security-role-ref>
     <supported-public-render-parameter>metadata</supported-public-render-parameter>
   </portlet>
+
+  <portlet>
+    <portlet-name>gd-search-numbers</portlet-name>
+    <display-name>GovData in Zahlen</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/searchnumbers-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-numbers-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData in Zahlen</title>
+      <short-title>GovData in Zahlen</short-title>
+      <keywords>Numbers</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+  </portlet>
+
+  <portlet>
+    <portlet-name>gd-search-states</portlet-name>
+    <display-name>Suche nach Bundesländern</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/searchstates-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-search-states-context.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Bundesländersuche</title>
+      <short-title>GovData Bundesländersuche</short-title>
+      <keywords>Suche Karte</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+  </portlet>
+
+  <portlet>
+    <portlet-name>gd-featured-showcase-portlet</portlet-name>
+    <display-name>Featured Showcase</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/featuredshowcase-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-featured-showcase.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Featured Showcase</title>
+      <short-title>GovData Featured Showcase</short-title>
+      <keywords>Showcase</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+  </portlet>
+
+  <portlet>
+    <portlet-name>gd-featured-datasets-portlet</portlet-name>
+    <display-name>Featured Datasets</display-name>
+    <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+    <init-param>
+      <name>config-template</name>
+      <value>/portlet-config/featureddatasets-configuration.jsp</value>
+    </init-param>
+    <init-param>
+      <name>contextConfigLocation</name>
+      <value>classpath:/spring/gd-featured-datasets.xml</value>
+    </init-param>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>view</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>GovData Featured Datasets</title>
+      <short-title>GovData Featured Datasets</short-title>
+      <keywords>Datasets</keywords>
+    </portlet-info>
+    <security-role-ref>
+      <role-name>administrator</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>guest</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>power-user</role-name>
+    </security-role-ref>
+    <security-role-ref>
+      <role-name>user</role-name>
+    </security-role-ref>
+  </portlet>
+
   <public-render-parameter>
     <identifier>q</identifier>
     <qname xmlns:x="http://portlet.govdata.dev.seitenbau.net">x:q</qname>

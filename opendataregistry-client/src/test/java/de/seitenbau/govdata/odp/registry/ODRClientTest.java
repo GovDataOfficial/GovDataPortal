@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -30,13 +31,20 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.ContactAddress;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
 import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
+import de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean;
 import de.seitenbau.govdata.odp.registry.common.TestBase;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.odp.registry.model.Contact;
+import de.seitenbau.govdata.odp.registry.model.FormatEnumType;
 import de.seitenbau.govdata.odp.registry.model.GeoGranularityEnumType;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
@@ -49,6 +57,7 @@ import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryExcepti
 import de.seitenbau.govdata.odp.registry.queries.Query;
 import de.seitenbau.govdata.odp.registry.queries.QueryModeEnumType;
 import de.seitenbau.govdata.odp.registry.queries.QueryResult;
+
 
 public class ODRClientTest extends TestBase
 {
@@ -66,6 +75,7 @@ public class ODRClientTest extends TestBase
     stopHttpServer();
   }
   
+
   /*
    * Most important tests: listLicences(), getMetadata(), rateMetadata(), queryMetadata(),
    * listCategories(), userShow()
@@ -95,7 +105,91 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(licence.isOpen()).isTrue();
     Assertions.assertThat(licence.isOsiCompliant()).isFalse();
   }
-  
+
+  @Test
+  public void listLicences_cached()
+  {
+    /* execute */
+    List<Licence> licences = odrClient.listLicenses();
+    List<Licence> licences2 = odrClient.listLicenses();
+
+    /* assert */
+    Assertions.assertThat(licences).isNotNull().isSameAs(licences2);
+  }
+
+  private JsonNode getJsonNodeWithDate(String date) {
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.createObjectNode();
+
+
+    ((ObjectNode) jsonNode).put("id", "11a18249-447c-4fa6-89b5-9c5a239af94b");
+    ((ObjectNode) jsonNode).put("metadata_modified", date);
+    ((ObjectNode) jsonNode).put("metadata_created", date);
+    ObjectNode resourcesNode = objectMapper.createObjectNode();
+    resourcesNode.put("created", date);
+    resourcesNode.put("issued", date);
+    resourcesNode.put("modified", date);
+    resourcesNode.put("last_modified", date);
+
+    ArrayNode arrayNode = objectMapper.createArrayNode();
+    arrayNode.add(resourcesNode);
+    ((ObjectNode) jsonNode).set("resources", arrayNode);
+
+    return jsonNode;
+  }
+
+  @Test
+  public void dateDeserialization_validValues()
+  {
+    //prepare
+    String[] testDates = {"2015-11-10", "10.11.2015", "10.11.2015 2:10:55", "10.11.2015T2:10:55",
+        "10.11.2015T2:10:55+02:00", "2017-08-16T11:01:06+02:00", "10.07.2015T2:10:55+0200",
+        "2022-02-07T10:44:05.247974", "2022-02-07T10:44:05.247974+0100"};
+    JsonNode jsonNode;
+    MetadataBean metadata;
+
+    //check if date has been parsed correctly
+    for (String date : testDates)
+    {
+      jsonNode = this.getJsonNodeWithDate(date);
+
+      metadata = ODRClientImpl.convert(jsonNode, MetadataBean.class);
+
+      Assertions.assertThat(metadata.getMetadata_modified()).isNotNull();
+      Assertions.assertThat(metadata.getMetadata_created()).isNotNull();
+
+      metadata.getResources().stream().forEach(resource -> {
+        Assertions.assertThat(resource.getIssued()).isNotNull();
+        Assertions.assertThat(resource.getCreated()).isNotNull();
+        Assertions.assertThat(resource.getLast_modified()).isNotNull();
+        Assertions.assertThat(resource.getModified()).isNotNull();
+      });
+    }
+  }
+
+  @Test
+  public void dateDeserialization_invalidValues()
+  {
+    //prepare
+    String date = "Wrong date";
+    JsonNode jsonNode =  this.getJsonNodeWithDate(date);
+    MetadataBean metadata;
+
+    //execute
+    metadata = ODRClientImpl.convert(jsonNode, MetadataBean.class);
+
+    //check if date could not be parsed
+    Assertions.assertThat(metadata.getMetadata_modified()).isNull();
+    Assertions.assertThat(metadata.getMetadata_created()).isNull();
+    metadata.getResources().stream().forEach(resource -> {
+      Assertions.assertThat(resource.getIssued()).isNull();
+      Assertions.assertThat(resource.getCreated()).isNull();
+      Assertions.assertThat(resource.getLast_modified()).isNull();
+      Assertions.assertThat(resource.getModified()).isNull();
+    });
+  }
+
   // ODR: getMetadata() - CKAN: package_show
   @Test
   public void getMetadata() throws OpenDataRegistryException
@@ -136,6 +230,24 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(result).contains("Metadaten zur WMS Kartenebene");
     Assertions.assertThat(result).contains("http://test-portal.com/dataset");
     Assertions.assertThat(result).contains("http://test-portal.com/results");
+  }
+
+  // ODR: getDcatDataset - CKAN: dcat_dataset_show
+  @Test
+  public void getDcatDataset_XML()
+  {
+    JsonNode result = odrClient.getDcatDataset(null, "13dfb16a-c4f1-36b4-eda2-01ff5b1b294f",
+        FormatEnumType.XML, ArrayUtils.EMPTY_STRING_ARRAY);
+
+    Assertions.assertThat(result).isNotNull();
+
+    String xmlString = result.path("result").asText();
+    Assertions.assertThat(xmlString).contains("<rdf:RDF");
+    Assertions.assertThat(xmlString).contains(
+        "<dcat:Dataset rdf:about=\"https://www.opendata-hro.de/dataset/a4bc37fd-6e7c-450a-b783-5bc201174d3a\">");
+    Assertions.assertThat(xmlString).contains("Karte nach Schmettau 1788");
+    Assertions.assertThat(xmlString).contains("<dcat:keyword>karte</dcat:keyword>");
+    Assertions.assertThat(xmlString).contains("<dcat:Distribution");
   }
 
   // ODR: queryMetadata() - CKAN: package_search

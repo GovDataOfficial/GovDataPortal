@@ -1,0 +1,56 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <ul>
+    <li th:fragment="displayNumber(numberValues, displayName, type, themeDisplay)" th:class="'numbers-box type-' + ${type}">
+      <div class="numbers-grid-item">
+        <div th:id="'number-id-' +${type}" class="design-box grid-box">
+          <a th:href="@{${numberValues.actionURL}}" th:id="'linkTo_' + ${displayName}">
+            <span class="number-data">
+              <img class="inline-block type-img type-img-normal" th:src="${themeDisplay.getPathThemeImages()} + '/mediatypes/typ_' + ${type} + '_gray.svg'" alt=""/>
+              <img class="inline-block type-img type-img-inverted" th:src="${themeDisplay.getPathThemeImages()} + '/mediatypes/typ_' + ${type} + '_typecolor.svg'" alt=""/>
+              <span class="inline-block" th:text="${numberValues.docCount}"></span>
+            </span>
+            <span class="number-type-name">
+              <span class="type-name" th:text="${displayName}"></span>
+            </span>
+          </a>
+        </div>
+      </div>
+      <div class="numbers-list-item">
+        <a th:href="@{${numberValues.actionURL}}">
+          <img class="inline-block type-img type-img-normal" th:src="${themeDisplay.getPathThemeImages()} + '/mediatypes/typ_' + ${type} + '_gray.svg'" alt=""/>
+          <img class="inline-block type-img type-img-inverted" th:src="${themeDisplay.getPathThemeImages()} + '/mediatypes/typ_' + ${type} + '_typecolor.svg'" alt=""/>
+          <span class="inline-block number-data number-label number-label-number" th:text="${numberValues.docCount}"></span>
+          <span class="inline-block number-label number-label-type type-name" th:text="${displayName}"></span>
+        </a>
+      </div>
+    </li>
+  
+    <li th:fragment="displayTwitter(latestTweet)">
+      <div class="numbers-grid-item">
+       <div id="number-id-twitter" class="design-box grid-box">
+        <a id="linkTo_twitter" target="_blank" th:href="${latestTweet.url}" th:include="fragments/numbers :: displayTwitterHeader(${latestTweet}, 90)">
+        </a>
+       </div>
+      </div>
+      <div class="numbers-list-item">
+        <div class="design-box grid-box">
+        <a th:href="${latestTweet.url}" target="_blank" th:include="fragments/numbers :: displayTwitterHeader(${latestTweet}, 135)">
+        </a>
+       </div>
+      </div>
+    </li>
+  </ul>
+
+  <div th:fragment="displayTwitterHeader(latestTweet, textLength)">
+    <div class="tweet-header">
+      <i class="icon-twitter tweet-icon"></i>
+      <div class="tweet-author">
+        <span th:text="${latestTweet.name}" class="tweet-user"></span>
+        <span th:text="${latestTweet.isRetweet()} ? #{od.numbers.twitter.hasRetweetet} : '@' + ${latestTweet.username}" class="tweet-user tweet-username"></span>
+      </div>
+      <span th:text="${#temporals.format(latestTweet.timestamp, 'dd. MMM. yyyy')}" class="tweet-date"></span>
+    </div>
+    <span class="tweet-body" th:text="${#strings.abbreviate(latestTweet.text, textLength)}"></span>
+  </div>
+
+</div>

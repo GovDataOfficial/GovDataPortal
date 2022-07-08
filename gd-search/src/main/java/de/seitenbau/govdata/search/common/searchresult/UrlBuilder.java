@@ -1,9 +1,7 @@
 package de.seitenbau.govdata.search.common.searchresult;
 
-import de.seitenbau.govdata.constants.QueryParamNames;
-import de.seitenbau.govdata.navigation.GovDataNavigation;
-import de.seitenbau.govdata.navigation.PortletUtil;
-import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
+import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,12 +9,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletURL;
+
 import org.apache.commons.lang3.ArrayUtils;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.KeyValuePair;
+
+import de.seitenbau.govdata.constants.QueryParamNames;
+import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.navigation.PortletUtil;
+import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 
 /**
  * Baut verschiedene URLs zusammen.
@@ -39,7 +45,7 @@ public class UrlBuilder
   {
     // initialize map with all values filled in
     parameters = new HashMap<>();
-    parameters.put(QueryParamNames.PARAM_PHRASE, preparm.getQuery());
+    parameters.put(QueryParamNames.PARAM_PHRASE, preparm.getQuery().getQueryString());
 
     if (preparm.getSelectedSorting() == null)
     {
@@ -107,13 +113,13 @@ public class UrlBuilder
   public PortletURL createRedirectToResultsUrl(GovDataNavigation navigationHelper, String target)
       throws SystemException, PortalException
   {
-    return createFulloptionUrl(navigationHelper, target, "gdsearchresult");
+    return createFulloptionUrl(navigationHelper, target, PORTLET_NAME_SEARCHRESULT);
   }
 
   public PortletURL createAtomFeedUrl(GovDataNavigation navigationHelper) throws SystemException,
       PortalException
   {
-    return createFulloptionUrl(navigationHelper, "suchen", "gdsearchatomfeed");
+    return createFulloptionUrl(navigationHelper, FRIENDLY_URL_NAME_SEARCHRESULT_PAGE, "gdsearchatomfeed");
   }
 
   public PortletURL createFulloptionUrl(GovDataNavigation navigationHelper, String target, String portletid)

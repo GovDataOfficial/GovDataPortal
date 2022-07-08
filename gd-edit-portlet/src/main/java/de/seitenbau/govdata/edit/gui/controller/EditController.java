@@ -1,5 +1,8 @@
 package de.seitenbau.govdata.edit.gui.controller;
 
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
+import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +44,7 @@ import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.constants.CommonConstants;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.edit.gui.common.Constants;
@@ -51,7 +55,6 @@ import de.seitenbau.govdata.edit.model.Resource;
 import de.seitenbau.govdata.fuseki.FusekiClient;
 import de.seitenbau.govdata.messages.MessageType;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
-import de.seitenbau.govdata.navigation.PortletUtil;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.ResourceImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.TagImpl;
@@ -85,7 +88,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("VIEW")
 public class EditController
 {
-  private static final String DATE_PATTERN = "dd.MM.yyyy";
 
   private static final String DEFAULT_LICENCE = "http://dcat-ap.de/def/licenses/dl-by-de/2.0";
 
@@ -144,7 +146,7 @@ public class EditController
           registryClient.getInstance().getOrganizationsForUser(ckanuserFromRequest, "create_dataset");
 
       if (!organizationsForUser.isEmpty())
-      { // user needs at least 1 organisation to be able to edit datasets
+      { // user needs at least 1 organization to be able to edit datasets
         userCanEditDataset = true;
         List<Licence> licenceList = licenceCache.getLicenceListSortedByTitle();
 
@@ -159,7 +161,7 @@ public class EditController
           log.debug("data: loading dataset: " + metadataName);
           editForm = loadDataset(ckanuserFromRequest, metadataName);
 
-          // check if the user is part of the organisation that this dataset belongs to
+          // check if the user is part of the organization that this dataset belongs to
           if (!new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId()))
           {
             throw new OpenDataRegistryException("User does not belong to the datasets organisation");
@@ -215,7 +217,9 @@ public class EditController
         }
         else
         {
-          abortUrl = gdNavigation.createLinkForSearchResults("suchen", "gdsearchresult", "").toString();
+          abortUrl = gdNavigation
+              .createLinkForSearchResults(FRIENDLY_URL_NAME_SEARCHRESULT_PAGE, PORTLET_NAME_SEARCHRESULT, "")
+              .toString();
         }
         model.addAttribute("metadataUrl", abortUrl);
       }
@@ -354,12 +358,14 @@ public class EditController
       {
         if (registryClient.getInstance().deleteMetadata(ckanuserFromRequest, editForm.getName()))
         {
-          response.sendRedirect(
-              gdNavigation.createLinkForSearchResults("suchen", "gdsearchresult", "").toString());
-
           String identifier = metadata.getIdentifierWithFallback();
-          fusekiClient.deleteDataset(PortletUtil.getCkanDatasetBaseLink(), metadata.getId(), identifier,
-              metadata.getOwnerOrg());
+          // After deletion of the metadata this is only possible because the dataset is only marked
+          // as deleted and is not purged from the database.
+          fusekiClient.deleteDataset(ckanuserFromRequest, metadata.getId(), identifier);
+
+          response.sendRedirect(gdNavigation
+              .createLinkForSearchResults(FRIENDLY_URL_NAME_SEARCHRESULT_PAGE, PORTLET_NAME_SEARCHRESULT, "")
+              .toString());
         }
         else
         {
@@ -393,7 +399,7 @@ public class EditController
     for (RoleEnumType role : new RoleEnumType[] {RoleEnumType.CREATOR, RoleEnumType.MAINTAINER,
         RoleEnumType.PUBLISHER})
     {
-      contacts.put(role.getField(), new Contact("", "", "", new ContactAddress()));
+      contacts.put(role.getField(), new Contact(null, "", "", "", new ContactAddress()));
     }
     form.setContacts(contacts);
 
@@ -515,13 +521,13 @@ public class EditController
       if (contact != null)
       {
         contacts.put(role.getField(),
-            new Contact(contact.getName(), contact.getUrl(), contact.getEmail(),
+            new Contact(null, contact.getName(), contact.getUrl(), contact.getEmail(),
                 mapContactAddress(contact.getAddress())));
       }
       else
       {
         // we need to have that contact, so the form can show the row.
-        contacts.put(role.getField(), new Contact("", "", "", new ContactAddress()));
+        contacts.put(role.getField(), new Contact(null, "", "", "", new ContactAddress()));
       }
     }
     form.setContacts(contacts);
@@ -554,7 +560,7 @@ public class EditController
    */
   private String formatDate(Date date)
   {
-    return DateUtil.formatDate(date, DATE_PATTERN);
+    return DateUtil.formatDate(date, CommonConstants.DATE_PATTERN);
   }
 
   /**
@@ -738,14 +744,24 @@ public class EditController
     
     if (requestSuccess)
     {
-      try {
+      try
+      {
         Metadata createdMetadata = registryClient.getInstance().getMetadata(ckanUser, metadata.getName());
-        String ckanDatasetBaseUrl = PortletUtil.getCkanDatasetBaseLink();
         String identifier = createdMetadata.getIdentifierWithFallback();
-        fusekiClient.updateOrCreateDataset(ckanDatasetBaseUrl, createdMetadata.getId(), identifier,
-            createdMetadata.getOwnerOrg());
+        if (createdMetadata.isPrivate())
+        {
+          // Delete private dataset to make sure it is not available in triplestore
+          fusekiClient.deleteDataset(ckanUser, createdMetadata.getId(), identifier);
+        }
+        else
+        {
+          // Add or update only public datasets to the triplestore
+          fusekiClient.updateOrCreateDataset(ckanUser, createdMetadata.getId(), identifier,
+              createdMetadata.getOwnerOrg(), form.getContributorId());
+        }
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
         log.warn(e.getMessage());
       }
     }
@@ -835,7 +851,11 @@ public class EditController
 
   private List<String> listFromString(String s)
   {
-    return Arrays.stream(s.split(",")).map(String::trim).filter(StringUtils::isNotBlank)
-        .collect(Collectors.toList());
+    if (Objects.nonNull(s))
+    {
+      return Arrays.stream(s.split(",")).map(String::trim).filter(StringUtils::isNotBlank)
+          .collect(Collectors.toList());
+    }
+    return Collections.emptyList();
   }
 }

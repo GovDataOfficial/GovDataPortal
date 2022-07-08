@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.4.0</version>
+    <version>5.0.0</version>
   </parent>
   <artifactId>gd-search-common</artifactId>
   <name>GovData search common</name>
@@ -15,19 +15,31 @@
     </dependency>
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
+      <artifactId>opendataregistry-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>portlet-common</artifactId>
     </dependency>
 
     <!-- Microservices -->
     <dependency>
-      <groupId>de.seitenbau.serviceportal</groupId>
-      <artifactId>gui-common</artifactId>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-db-api</artifactId>
     </dependency>
-    
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>index-queue-adapter</artifactId>
+    </dependency>
+
     <!-- Elasticsearch -->
     <dependency>
       <groupId>org.elasticsearch</groupId>
       <artifactId>elasticsearch</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch.client</groupId>
+      <artifactId>elasticsearch-rest-high-level-client</artifactId>
     </dependency>
 
     <!-- Liferay -->
@@ -58,10 +70,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>com.liferay.util.slf4j</artifactId>
-    </dependency>
 
     <!-- Tools -->
     <dependency>
@@ -89,8 +97,23 @@
       <groupId>com.rometools</groupId>
       <artifactId>rome</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.locationtech.jts</groupId>
+      <artifactId>jts-core</artifactId>
+      <version>${jts.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.locationtech.jts.io</groupId>
+      <artifactId>jts-io-common </artifactId>
+      <version>${jts.version}</version>
+    </dependency>
 
     <!-- Testing -->
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>testing-common</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -98,7 +121,7 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

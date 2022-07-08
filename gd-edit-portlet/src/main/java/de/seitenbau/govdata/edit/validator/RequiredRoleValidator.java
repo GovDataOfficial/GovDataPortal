@@ -24,13 +24,16 @@ public class RequiredRoleValidator implements ConstraintValidator<RequiredRole, 
   public boolean isValid(Map<String, Contact> value, ConstraintValidatorContext context)
   {
     // if we have no map, but we need a map to have a required role
-    if(value == null) {
+    if (value == null)
+    {
       return false;
     }
     
     // test if role is present and has a non-empty string as Name
-    for(Entry<String, Contact> entry: value.entrySet()) {
-      if(StringUtils.equals(entry.getKey(), name) && StringUtils.isNotEmpty(entry.getValue().getName())) {
+    for (Entry<String, Contact> entry : value.entrySet())
+    {
+      if (StringUtils.equals(entry.getKey(), name) && StringUtils.isNotEmpty(entry.getValue().getName()))
+      {
         return true;
       }
     }

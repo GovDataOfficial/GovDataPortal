@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.stereotype.Repository;
 
-import de.seitenbau.govdata.cache.BaseRegistryClientCache;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.search.adapter.SearchService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Repository
-public class MetricDataCache extends BaseRegistryClientCache
+public class MetricDataCache extends BaseCache
 {
   private SearchHits rawMetricData;
 

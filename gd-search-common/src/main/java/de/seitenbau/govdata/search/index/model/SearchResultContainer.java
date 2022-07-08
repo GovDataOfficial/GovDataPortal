@@ -32,4 +32,6 @@ public class SearchResultContainer
   private Map<String, FilterListDto> filterMap;
   
   private Set<SuggestionOption> suggestions;
+
+  private long hitsTotal;
 }

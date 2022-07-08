@@ -1,0 +1,6 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <dl th:fragment="lastModified(lastModified)"  th:class="last-modified">
+    <dt>[[#{last-modified}]]:</dt>
+    <dd th:text="${#dates.format(lastModified, 'dd.MM.yyyy')}"></dd>
+  </dl>
+</div>

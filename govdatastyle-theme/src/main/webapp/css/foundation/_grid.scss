@@ -11,6 +11,7 @@ $include-html-grid-classes: $include-html-classes !default;
 $include-xl-html-grid-classes: false !default;
 
 $row-width: rem-calc(1000) !default;
+$row-width-small: rem-calc(930) !default;
 $total-columns: 12 !default;
 
 $last-child-float: $opposite-direction !default;

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions [
+<!ELEMENT suppressions (suppress*)>
+
+<!ELEMENT suppress EMPTY>
+<!ATTLIST suppress files CDATA #REQUIRED
+                   checks CDATA #IMPLIED
+                   id CDATA #IMPLIED
+                   lines CDATA #IMPLIED
+                   columns CDATA #IMPLIED>
+]>
+<suppressions>
+  <!-- Do not check properties files -->
+  <suppress files="statesearchcriteria.properties" checks="LineLength"/>
+</suppressions>

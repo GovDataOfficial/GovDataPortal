@@ -28,10 +28,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
+import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
@@ -110,6 +113,12 @@ public class ResourceImpl implements Resource, Serializable
   public String getDescription()
   {
     return resource.getDescription();
+  }
+
+  @Override
+  public String getDescriptionOnlyText()
+  {
+    return getOnlyText(getDescription());
   }
 
   @Override
@@ -228,6 +237,12 @@ public class ResourceImpl implements Resource, Serializable
   public String getName()
   {
     return resource.getName();
+  }
+
+  @Override
+  public String getNameOnlyText()
+  {
+    return getOnlyText(getName());
   }
 
   @Override
@@ -408,5 +423,15 @@ public class ResourceImpl implements Resource, Serializable
   public void setLast_modified(Date date)
   {
     resource.setLast_modified(date);
+  }
+
+  private String getOnlyText(String input)
+  {
+    String result = "";
+    if (StringUtils.isNotBlank(input))
+    {
+      result = StringCleaner.trimAndFilterString(input);
+    }
+    return result;
   }
 }

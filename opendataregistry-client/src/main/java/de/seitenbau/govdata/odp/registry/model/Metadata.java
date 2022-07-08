@@ -33,6 +33,7 @@ import java.util.Set;
  */
 public interface Metadata extends Serializable
 {
+  // CHECKSTYLE:OFF
   List<String> getExtraList(MetadataListExtraFields field);
 
   /**

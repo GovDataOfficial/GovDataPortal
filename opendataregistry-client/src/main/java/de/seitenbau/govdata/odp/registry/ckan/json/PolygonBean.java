@@ -33,45 +33,49 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.seitenbau.govdata.odp.registry.model.Coordinate;
 
 /**
+ * Class for a polygon.
+ * 
  * @author msg
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class PolygonBean implements Serializable {
+public class PolygonBean implements Serializable
+{
+  // CHECKSTYLE:OFF
 
-	/**
+  /**
      * 
      */
-	private static final long serialVersionUID = -4626804446948451352L;
+  private static final long serialVersionUID = -4626804446948451352L;
 
-	//private static final Logger log = LoggerFactory.getLogger(PolygonBean.class);
+  //private static final Logger log = LoggerFactory.getLogger(PolygonBean.class);
 
-	@JsonProperty
-	private List<Coordinate> coordinates;
+  @JsonProperty
+  private List<Coordinate> coordinates;
 
-	/**
-	 * @return the coordinates
-	 */
-	public List<Coordinate> getCoordinates() {
-		if (coordinates == null) {
-			coordinates = new ArrayList<Coordinate>();
-		}
-		return coordinates;
-	}
+  /**
+   * @return the coordinates
+   */
+  public List<Coordinate> getCoordinates() {
+    if (coordinates == null) {
+      coordinates = new ArrayList<Coordinate>();
+    }
+    return coordinates;
+  }
 
-	/**
-	 * @param coordinates
-	 *            the coordinates to set
-	 */
-	public void setCoordinates(List<Coordinate> coordinates) {
-		this.coordinates = coordinates;
-	}
+  /**
+   * @param coordinates
+   *            the coordinates to set
+   */
+  public void setCoordinates(List<Coordinate> coordinates) {
+    this.coordinates = coordinates;
+  }
 
-	public void addCoordinate(Coordinate coordinate) {
-		if (coordinates == null) {			
-			coordinates = new ArrayList<Coordinate>();
-		}
-		this.coordinates.add(coordinate);
-	}
+  public void addCoordinate(Coordinate coordinate) {
+    if (coordinates == null) {      
+      coordinates = new ArrayList<Coordinate>();
+    }
+    this.coordinates.add(coordinate);
+  }
 }

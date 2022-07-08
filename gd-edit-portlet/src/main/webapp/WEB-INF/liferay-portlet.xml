@@ -14,6 +14,23 @@
         http://www.coderexception.com/C36B1z3bPXQSxXJi/spring-portlet-ajax-call-no-parameter-found -->
     <requires-namespaced-parameters>false</requires-namespaced-parameters>
     <ajaxable>false</ajaxable>
+    <footer-portlet-javascript>/js/croppie.js</footer-portlet-javascript>
+    <footer-portlet-javascript>/js/editform.js</footer-portlet-javascript>
+  </portlet>
+  <portlet>
+    <portlet-name>gd-edit-showcase-portlet</portlet-name>
+    <icon>/icon.png</icon>
+    <friendly-url-mapper-class>de.seitenbau.govdata.portlet.common.search.common.DatasetDetailsFriendlyUrlMapper</friendly-url-mapper-class>
+    <friendly-url-mapping>showcase-bearbeiten</friendly-url-mapping>
+    <friendly-url-routes>edit-friendly-url-routes.xml</friendly-url-routes>
+    <instanceable>false</instanceable>
+    <private-session-attributes>true</private-session-attributes>
+    <!-- Without this passing parameters in resource requests would not work in Liferay 6.2 See: 
+        http://www.coderexception.com/C36B1z3bPXQSxXJi/spring-portlet-ajax-call-no-parameter-found -->
+    <requires-namespaced-parameters>false</requires-namespaced-parameters>
+    <ajaxable>false</ajaxable>
+    <header-portlet-css>/css/croppie.css</header-portlet-css>
+    <footer-portlet-javascript>/js/croppie.js</footer-portlet-javascript>
     <footer-portlet-javascript>/js/editform.js</footer-portlet-javascript>
   </portlet>
   <role-mapper>

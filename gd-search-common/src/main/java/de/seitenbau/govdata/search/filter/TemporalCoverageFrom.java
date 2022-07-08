@@ -2,13 +2,19 @@ package de.seitenbau.govdata.search.filter;
 
 import java.util.Date;
 
-import org.elasticsearch.index.query.FilterBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 
 public class TemporalCoverageFrom extends BaseFilter
 {
   private Date dateFrom;
 
+  /**
+   * Data structure to hold or-date information
+   * @param elasticSearchField
+   * @param filterFragmentName
+   * @param dateFrom
+   */
   public TemporalCoverageFrom(String elasticSearchField, String filterFragmentName, Date dateFrom)
   {
     super(elasticSearchField, filterFragmentName);
@@ -16,9 +22,10 @@ public class TemporalCoverageFrom extends BaseFilter
   }
 
   @Override
-  public FilterBuilder createFilter()
+  public QueryBuilder createFilter()
   {
-    return FilterBuilders.rangeFilter(elasticSearchField).gte(simpleDateFormat.format(dateFrom));
+    return QueryBuilders.boolQuery()
+        .must(QueryBuilders.rangeQuery(elasticSearchField).gte(simpleDateFormat.format(dateFrom)));
   }
 
   @Override

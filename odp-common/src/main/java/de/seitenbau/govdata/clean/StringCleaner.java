@@ -37,7 +37,7 @@ public abstract class StringCleaner
    * Eine Whitelist von HTML-Elementen und -Attributen für die Metadaten-Beschreibung.
    */
   public static final Whitelist WHITELIST_METADATA_NOTES = new Whitelist()
-      .addTags("a", "li", "ol", "p", "ul")
+      .addTags("a", "li", "ol", "p", "ul", "br", "b", "i", "u")
       .addAttributes("a", "href")
       .addProtocols("a", "href", "ftp", "http", "https", "mailto")
       .addEnforcedAttribute("a", "rel", "nofollow")
@@ -79,7 +79,9 @@ public abstract class StringCleaner
     {
       Cleaner cleaner = new Cleaner(whitelist);
       Document dirty = Jsoup.parse(value);
-      result = cleaner.clean(dirty).body().html();
+      Document cleaned = cleaner.clean(dirty);
+      cleaned.outputSettings().prettyPrint(false);
+      result = cleaned.body().html();
     }
     return result;
   }

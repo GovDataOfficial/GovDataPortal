@@ -1,4 +1,4 @@
-<div id="deleteUserArea" class="delete-user-area" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<div id="deleteUserArea" class="delete-user-area" xmlns:th="http://www.thymeleaf.org">
   <div class="row" th:unless="${#strings.isEmpty(message)}">
     <div class="column">
       <div th:class="'alert ' + ${messageType}" th:text="${#messages.msg(message)}" role="alert"></div>

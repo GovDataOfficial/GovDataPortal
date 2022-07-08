@@ -1,22 +1,19 @@
 package de.seitenbau.govdata.redis.adapter;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import com.lambdaworks.redis.RedisClient;
-import com.lambdaworks.redis.RedisConnection;
-import com.lambdaworks.redis.RedisConnectionPool;
-import com.lambdaworks.redis.RedisURI;
-
 import de.seitenbau.govdata.exception.RedisNotAvailableException;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.StatefulRedisConnection;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
@@ -35,7 +32,7 @@ public class RedisClientAdapter
 
   private RedisClient redisClient;
 
-  private RedisConnectionPool<RedisConnection<String, String>> connectionPool;
+  private StatefulRedisConnection<String, String> connection;
 
   @PostConstruct
   public void init()
@@ -56,10 +53,10 @@ public class RedisClientAdapter
     final String method = "destroy() : ";
     log.trace(method + "Start");
 
-    if (connectionPool != null)
+    if (connection != null)
     {
-      log.info("Closing redis connection pool...");
-      connectionPool.close();
+      log.info("Closing redis connection...");
+      connection.close();
     }
     if (redisClient != null)
     {
@@ -79,41 +76,18 @@ public class RedisClientAdapter
    * @return die Verbindung aus dem Verbindungs-Pool.
    * @throws RedisNotAvailableException
    */
-  public RedisConnection<String, String> getPooledConnection() throws RedisNotAvailableException
+  public StatefulRedisConnection<String, String> getConnection() throws RedisNotAvailableException
   {
-    RedisConnection<String, String> connection;
-    try
-    {
-      connection = connectionPool.allocateConnection();
-    }
-    catch (Exception e)
-    {
-      log.warn("Could not allocate connection from Redis database!");
-      throw new RedisNotAvailableException(e);
-    }
     return connection;
-  }
-
-  /**
-   * Gibt die übergebene Verbindung zur weiteren Verwendung wieder an den Verbindungs-Pool zurück.
-   * 
-   * @param connection die freizugebende Verbindung.
-   */
-  public void freeConnection(RedisConnection<String, String> connection)
-  {
-    if (connection != null)
-    {
-      connectionPool.freeConnection(connection);
-    }
   }
 
   private void connectToRedisClient()
   {
     log.info("Connecting to redis database...");
     redisClient =
-        new RedisClient(RedisURI.Builder.redis(redisHost, redisPort).withDatabase(redisDatabase)
-            .withTimeout(REDIS_CONNECTION_TIMEOUT, TimeUnit.SECONDS).build());
-    connectionPool = redisClient.pool();
+        RedisClient.create(RedisURI.Builder.redis(redisHost, redisPort).withDatabase(redisDatabase)
+            .withTimeout(Duration.ofSeconds(REDIS_CONNECTION_TIMEOUT)).build());
+    connection = redisClient.connect();
   }
 
   private void checkAvailability()
@@ -121,11 +95,11 @@ public class RedisClientAdapter
     final String method = "checkAvailability() : ";
     log.trace(method + "Start");
 
-    RedisConnection<String, String> connection = null;
+    StatefulRedisConnection<String, String> connection = null;
     try
     {
       connection = redisClient.connect();
-      String pingResponse = connection.ping();
+      String pingResponse = connection.sync().ping();
       log.debug(method + "ping response: {}", pingResponse);
       if (StringUtils.equalsIgnoreCase(pingResponse, "pong"))
       {

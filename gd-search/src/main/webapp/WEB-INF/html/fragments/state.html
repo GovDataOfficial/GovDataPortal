@@ -1,0 +1,6 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <li th:fragment="displayState(stateItem)">
+    <a th:if="${stateItem.blocked}" class="states-text action-button" th:text="${#strings.toUpperCase(stateItem.displayName)}" th:classappend="blocked + ' ' + ${#strings.toLowerCase(stateItem.name)}"></a>
+    <a th:unless="${stateItem.blocked}" class="states-text action-button" th:text="${#strings.toUpperCase(stateItem.displayName)}" th:href="${stateItem.url}" th:classappend="'color_' + ${stateItem.cssClass} + ' ' + ${#strings.toLowerCase(stateItem.name)}"></a>
+  </li>
+</div>

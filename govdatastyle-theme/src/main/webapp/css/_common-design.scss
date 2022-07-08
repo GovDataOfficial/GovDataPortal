@@ -17,10 +17,39 @@
   margin-bottom: rem-calc(30);
 }
 
+.featured-portlet {
+  @media #{$small-only} {
+    .portlet-header h1 {
+      margin-top: 10px;
+    }
+  }
+}
+
+.row-small {
+  @include grid-row;
+  max-width: $row-width-small;
+}
+
+.featured-box {
+  @extend .row-small;
+  text-align: left;
+  position: relative;
+}
+
+.centered-button {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
 .aui {
   .portlet-header-centered .portlet-header {
     text-align: center;
   }
+}
+
+.content-centered {
+  text-align: center;
 }
 
 // portlet header fix
@@ -372,7 +401,8 @@ h3.header-title {
 .portlet-journal-content,
 .portlet-blogs .widget-mode-detail-text p,
 .link-to-source,
-.searchdetails .h2-teaser {
+.searchdetails .h2-teaser,
+.mark-external-links p {
   a[href]::after {
     content: ' h';
     speak: none;
@@ -387,10 +417,7 @@ h3.header-title {
   a[href^="#"],
   a[href^="javascript:"],
   a[href^="https://govdata"],
-  a[href^="https://www.govdata"],
-  a[href^="http://localhost"], //TODO: Remove localhost, gd.swe... for production....
-  a[href^="https://localhost"],
-  a[href*="gd.bmi.dev.seitenbau.net"] {
+  a[href^="https://www.govdata"] {
     &::after {
       display: none;
     }
@@ -604,7 +631,7 @@ h3.header-title {
 .portlet-login,
 footer {
   .row {
-    @extend .row;
+    @include grid-row;
     max-width: $row-width;
   }
 }
@@ -618,16 +645,18 @@ footer {
 .gd-search-result-portlet .row,
 .gd-search-details-portlet .row,
 .gd-search-ext-portlet .row,
+.gd-search-numbers-portlet .row,
+.gd-search-states-portlet .row,
+.featured-showcase-portlet .row,
+.featured-datasets-portlet .row,
 .delete-user-area .row,
 .portlet-message-boards section,
 .portlet-site-map,
 .portlet-login,
 .portlet-forms-display,
 #metadataEditForm .row {
-  @extend .row;
+  @include grid-row;
   max-width: $row-width;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .portlet-users-admin {
@@ -735,5 +764,56 @@ table {
   th[class*="column"] + th[class*="column"]:last-child,
   td[class*="column"] + td[class*="column"]:last-child {
     float: none;
+  }
+}
+
+.modern-nav {
+  @extend .design-box;
+
+  .portlet-content-container {
+    background-color: $kontur-gray;
+  }
+
+  .navbar-nav {
+    a.nav-link {
+      padding: 0 rem-calc(15);
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    background-color: $kontur-gray;
+  }
+
+  li {
+    @extend .sb-chapter-sub;
+    display: inline-block;
+    border-left-style: solid;
+    border-right-style: solid;
+    border-width: 1px;
+    border-color: white;
+    line-height: rem-calc(52);
+    min-width: 10em;
+    text-align: center;
+    color: $black;
+
+    &.selected {
+      background-color: $black;
+      color: $white;
+      border-style: none;
+    }
+
+    // workaround: <a> in minimal navigation-bar is incorrectly not set to active in liferay 7.3
+    a {
+      color: inherit;
+      font-size: 16px;
+    }
+
+    a:hover {
+      background-color: $black;
+      color: $white;
+    }
   }
 }

@@ -1,15 +1,12 @@
 package de.seitenbau.govdata.search.index;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
@@ -25,15 +22,16 @@ import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 
+import de.seitenbau.govdata.common.api.RestUserMetadata;
+import de.seitenbau.govdata.common.client.impl.RestCallFailedException;
+import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
+import de.seitenbau.govdata.date.DateUtil;
+import de.seitenbau.govdata.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.index.filter.FilterProxy;
 import de.seitenbau.govdata.search.index.mapper.ClassToTypeMapper;
-import de.seitenbau.govdata.search.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
-import de.seitenbau.serviceportal.common.api.RestUserMetadata;
-import de.seitenbau.serviceportal.common.client.impl.RestCallFailedException;
-import de.seitenbau.serviceportal.common.messaging.SearchIndexEntry;
-import de.seitenbau.serviceportal.common.messaging.Section;
+import de.seitenbau.govdata.search.index.util.SearchIndexUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -57,6 +55,9 @@ public class GovDataSearchIndexWriter implements IndexWriter
   private FilterProxy filterProxy;
   
   private String indexName;
+
+  @Inject
+  private SearchIndexUtil searchIndexUtil;
   
   @Override
   public void addDocument(SearchContext searchContext, Document document)
@@ -108,23 +109,13 @@ public class GovDataSearchIndexWriter implements IndexWriter
   {
     log.debug("deleteDocument uid=" + uid);
     
-    SearchIndexEntry entry = createSearchIndexEntryWithBasicInformation();
-    de.seitenbau.serviceportal.common.messaging.Document msgDocument =
-        new de.seitenbau.serviceportal.common.messaging.Document();
-    
-    //set basic document information
-    msgDocument.setId(uid);
-    msgDocument.setMandant(PortalIndexConstants.INDEX_MANDANT);
-    // required, otherwise service call will fail
-    msgDocument.setTags(new String[0]);
-    msgDocument.setSections(new ArrayList<Section>());
-    entry.setDocument(msgDocument);
+    SearchIndexEntry entry = createSearchIndexEntryWithBasicInformation(uid);
 
-    RestUserMetadata ruMetadata = new RestUserMetadata(PortalIndexConstants.INDEX_MANDANT);
+    RestUserMetadata ruMetadata = new RestUserMetadata(IndexConstants.INDEX_MANDANT);
     
     try
     {
-      indexClient.delete(ruMetadata, uid, entry);
+      indexClient.deleteAndSendDeleteMessage(ruMetadata, uid, entry);
     }
     catch (RestCallFailedException restCallFailedException)
     {
@@ -174,7 +165,7 @@ public class GovDataSearchIndexWriter implements IndexWriter
 
     SearchIndexEntry entry = buildSearchIndexEntryFromLiferayDocument(document);
 
-    RestUserMetadata ruMetadata = new RestUserMetadata(PortalIndexConstants.INDEX_MANDANT);
+    RestUserMetadata ruMetadata = new RestUserMetadata(IndexConstants.INDEX_MANDANT);
     indexClient.save(ruMetadata, entry);
   }
 
@@ -267,26 +258,20 @@ public class GovDataSearchIndexWriter implements IndexWriter
     updateDocuments(searchContext, documents);
   }
 
-  private SearchIndexEntry createSearchIndexEntryWithBasicInformation()
+  private SearchIndexEntry createSearchIndexEntryWithBasicInformation(String uid)
   {
-    SearchIndexEntry entry = SearchIndexEntry.builder().build();
-    entry.setIndexName(indexName);
-    entry.setType(PortalIndexConstants.INDEX_TYPE_PORTAL);
+    SearchIndexEntry entry = searchIndexUtil.createSearchIndexEntryWithBasicInformation(uid, indexName,
+        IndexConstants.INDEX_TYPE_PORTAL);
     return entry;
   }
-  
+
   protected SearchIndexEntry buildSearchIndexEntryFromLiferayDocument(Document document)
   {
-    SearchIndexEntry entry = createSearchIndexEntryWithBasicInformation();
-    de.seitenbau.serviceportal.common.messaging.Document msgDocument =
-        new de.seitenbau.serviceportal.common.messaging.Document();
-    
-    msgDocument.setId(document.getUID());
-    msgDocument.setSections(new ArrayList<Section>());
-    msgDocument.setMandant(PortalIndexConstants.INDEX_MANDANT);
+    SearchIndexEntry entry = createSearchIndexEntryWithBasicInformation(document.getUID());
+    de.seitenbau.govdata.common.messaging.Document msgDocument = entry.getDocument();
 
     // Map document fields. Most are mapped to metadata, but some may be set on specific fields
-    HashMap<String, String> metadata = new HashMap<String, String>();
+    Map<String, String> metadata = new HashMap<>();
     Set<String> keys = document.getFields().keySet();
     for (String key : keys)
     {
@@ -306,9 +291,7 @@ public class GovDataSearchIndexWriter implements IndexWriter
       {
         try
         {
-          DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
-          df.setTimeZone(TimeZone.getTimeZone("UTC"));
-          metadata.put(Field.MODIFIED_DATE, df.format(document.getDate(key)));
+          metadata.put(Field.MODIFIED_DATE, DateUtil.formatDateUTC(document.getDate(key)));
         }
         catch (ParseException e)
         {
@@ -318,7 +301,7 @@ public class GovDataSearchIndexWriter implements IndexWriter
       else if (key.equals(Field.ENTRY_CLASS_NAME))
       {
         String type = new ClassToTypeMapper().getTypeForClass(document.get(Field.ENTRY_CLASS_NAME));
-        metadata.put("type", type);
+        metadata.put(IndexConstants.METADATA_FIELD_TYPE, type);
         metadata.put(Field.ENTRY_CLASS_NAME, document.get(key));
       }
       else

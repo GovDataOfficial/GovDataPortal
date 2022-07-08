@@ -8,8 +8,8 @@ public abstract class GovDataConfigParam
   /** Der Parameter "fusekiSparqlEndpoint". */
   public static final String FUSEKI_SPARQL_ENDPOINT = "fusekiSparqlEndpoint";
 
-  /** Der Parameter "cKANurl". */
-  public static final String CKAN_URL = "cKANurl";
+  /** Der Parameter "fusekiShaclSparqlEndpoint". */
+  public static final String FUSEKI_SHACL_SPARQL_ENDPOINT = "fusekiShaclSparqlEndpoint";
 
   /** Der Parameter "cKANurlFriendly". */
   public static final String CKAN_URL_FRIENDLY = "cKANurlFriendly";

@@ -25,7 +25,8 @@ import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 import lombok.Data;
 
 @Data
-public class ContactBean implements Serializable {
+public class ContactBean implements Serializable
+{
     private static final long serialVersionUID = 13998654793551790L;
 
     private RoleEnumType role;

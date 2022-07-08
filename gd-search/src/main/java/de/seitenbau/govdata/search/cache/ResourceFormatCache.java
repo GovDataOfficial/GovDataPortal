@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Repository;
 
-import de.seitenbau.govdata.cache.BaseCache;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.search.adapter.SearchService;
 
 /**

@@ -56,4 +56,17 @@ public class HitDto
   private String ownerOrg;
 
   private List<ResourceDto> resources;
+
+  // Showcase fields
+  private String primaryShowcaseType;
+
+  private List<String> platforms;
+
+  private List<String> usedDatasets;
+
+  private String displayImage;
+
+  private Date releaseDate;
+
+  private List<String> allShowcaseTypes;
 }

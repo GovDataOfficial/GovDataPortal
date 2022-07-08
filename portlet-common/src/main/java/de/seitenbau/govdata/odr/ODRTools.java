@@ -25,7 +25,8 @@ public class ODRTools
   /**
    * Tries to find the matching ckanUser for the currently logged in Liferay user (if somebody is
    * logged in...). If no user exists, a new one will be created.
-   * @param liferayUser
+   * @param liferayUserScreenname liferay screen name
+   * @param client the client for interacting with the CKAN instance
    * @return
    */
   public User findOrCreateCkanUser(String liferayUserScreenname, ODRClient client)
@@ -33,13 +34,17 @@ public class ODRTools
     final String method = "findOrCreateCkanUser() : ";
 
     User ckanUser = findCkanUser(liferayUserScreenname, client);
-    if (ckanUser != null) {
+    if (ckanUser != null)
+    {
       log.debug(method + "Using CKAN-User: " + ckanUser.getDisplayName());
       return ckanUser;
-    } else {
+    }
+    else
+    {
       // no user found, create a new ckan-user!
       ckanUser = createCkanUser(liferayUserScreenname, client);
-      if (ckanUser != null) {
+      if (ckanUser != null)
+      {
         log.debug(method + "CKAN-User was created: " + ckanUser.getDisplayName());
         return ckanUser;
       }
@@ -49,17 +54,43 @@ public class ODRTools
     return ckanUser;
   }
   
-  public User findCkanUser(String liferayUserScreenname, ODRClient client) {
+  /**
+   * Searches for the responding CKAN user to the given liferay screen name.
+   * 
+   * @param liferayUserScreenname liferay screen name
+   * @param client the client for interacting with the CKAN instance
+   * @return
+   */
+  public User findCkanUser(String liferayUserScreenname, ODRClient client)
+  {
     String nameFragment = liferayUserScreenname.toLowerCase();
     return client.findUser(nameFragment);
   }
   
-  public User createCkanUser(String liferayUserScreenname, ODRClient client) {
+  /**
+   * Creates a new user in CKAN for the given liferay screen name.
+   * 
+   * @param liferayUserScreenname liferay screen name
+   * @param client the client for interacting with the CKAN instance
+   * @return
+   */
+  public User createCkanUser(String liferayUserScreenname, ODRClient client)
+  {
     String nameFragment = liferayUserScreenname.toLowerCase();
     String password = RandomStringUtils.randomAlphanumeric(16);
     return client.createUser(nameFragment, "ckanuser-" + liferayUserScreenname + "@govdata.de", password);
   }
   
+  /**
+   * Reads the liferay user from the request and gets or creates a CKAN user for the liferay user.
+   * 
+   * @param request
+   * @param client
+   * @return
+   * @throws OpenDataRegistryException
+   * @throws PortalException
+   * @throws SystemException
+   */
   public User getCkanuserFromRequest(PortletRequest request, ODRClient client)
       throws OpenDataRegistryException, PortalException, SystemException
   {
@@ -74,16 +105,31 @@ public class ODRTools
     }
   }
   
+  /**
+   * Checks if the organization elements contain a organization with the given organization ID.
+   * 
+   * @param organizationsForUser
+   * @param organizationId
+   * @return
+   */
   public boolean containsOrganization(List<Organization> organizationsForUser, String organizationId)
   {
-    for(Organization org : organizationsForUser) {
-      if(StringUtils.equals(org.getId(), organizationId)) {
+    for (Organization org : organizationsForUser)
+    {
+      if (StringUtils.equals(org.getId(), organizationId))
+      {
         return true;
       }
     }
     return false;
   }
 
+  /**
+   * Extracts the IDs from the given organization elements.
+   * 
+   * @param organizationList list with organization objects.
+   * @return
+   */
   public List<String> extractIDsFromOrganizations(List<Organization> organizationList)
   {
     List<String> result = new ArrayList<String>();

@@ -31,10 +31,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import de.seitenbau.govdata.odp.registry.date.DateDeserializer;
 import lombok.Data;
 
 /**
+ * Class for a CKAN dataset.
+ * 
  * @author sim
  */
 @Data
@@ -42,6 +46,7 @@ import lombok.Data;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MetadataBean implements Serializable
 {
+  // CHECKSTYLE:OFF
   private static final long serialVersionUID = -2490565832054585931L;
 
   @JsonProperty
@@ -63,12 +68,14 @@ public class MetadataBean implements Serializable
    * CKAN-intern managing property
    */
   @JsonProperty
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date metadata_created;
 
   /**
    * CKAN-intern managing property
    */
   @JsonProperty
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date metadata_modified;
 
   /**

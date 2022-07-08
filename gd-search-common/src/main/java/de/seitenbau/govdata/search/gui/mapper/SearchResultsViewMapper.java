@@ -1,5 +1,8 @@
 package de.seitenbau.govdata.search.gui.mapper;
 
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
+import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SHOWROOM_PAGE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +20,8 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.common.model.exception.UnknownShowcaseTypeException;
+import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.model.Category;
@@ -114,10 +119,20 @@ public class SearchResultsViewMapper
       url = gdNavigation.getBlogEntryUrl(searchHit.getEntryClassPK(), searchHit.getGroupId());
       source = SearchConsts.SOURCE_PORTAL;
     }
+    else if (SearchConsts.TYPE_SHOWCASE.equals(type))
+    {
+      if (StringUtils.isEmpty(currentPage))
+      {
+        currentPage = FRIENDLY_URL_NAME_SHOWROOM_PAGE;
+      }
+
+      url = gdNavigation.createLinkForMetadata("gdsearchdetails", searchHit.getId(), currentPage).toString();
+      source = SearchConsts.SOURCE_SHOWCASE;
+    }
     else
     {
       String name = searchHit.getName();
-      if (name.isEmpty())
+      if (StringUtils.isEmpty(name))
       {
         name = searchHit.getId();
       }
@@ -125,7 +140,7 @@ public class SearchResultsViewMapper
 
       if (StringUtils.isEmpty(currentPage))
       {
-        currentPage = "suchen";
+        currentPage = FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
       }
 
       url = gdNavigation.createLinkForMetadata("gdsearchdetails", name, currentPage).toString();
@@ -149,6 +164,7 @@ public class SearchResultsViewMapper
             .source(source)
             .id(searchHit.getId())
             .title(StringCleaner.trimAndFilterString(searchHit.getTitle()))
+            .name(searchHit.getName())
             .content(content)
             .type(type)
             .lastModified(searchHit.getLastModified())
@@ -163,6 +179,12 @@ public class SearchResultsViewMapper
             .categories(mapCategories(searchHit.getGroups()))
             .ownerOrg(searchHit.getOwnerOrg())
             .resources(mapResources(searchHit.getResources()))
+            .primaryShowcaseType(searchHit.getPrimaryShowcaseType())
+            .displayImage(searchHit.getDisplayImage())
+            .platforms(searchHit.getPlatforms())
+            .usedDatasets(searchHit.getUsedDatasets())
+            .releaseDate(searchHit.getReleaseDate())
+            .allShowcaseTypes(mapShowcaseTypes(searchHit.getAllShowcaseTypes()))
             .build();
 
     return hitViewModel;
@@ -213,6 +235,26 @@ public class SearchResultsViewMapper
         if (groups.contains(cat.getName()))
         {
           result.add(cat);
+        }
+      }
+    }
+    return result;
+  }
+
+  private List<ShowcaseTypeEnum> mapShowcaseTypes(List<String> types)
+  {
+    List<ShowcaseTypeEnum> result = new ArrayList<>();
+    if (CollectionUtils.isNotEmpty(types))
+    {
+      for (String s : types)
+      {
+        try
+        {
+          result.add(ShowcaseTypeEnum.fromField(s));
+        }
+        catch (UnknownShowcaseTypeException e)
+        {
+          log.warn("mapShowcaseTypes() : Unexpected showcase-type: " + s);
         }
       }
     }

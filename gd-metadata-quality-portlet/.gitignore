@@ -24,3 +24,4 @@
 /plugins-sdk/dist
 /plugins-sdk/lib
 test-results
+/.checkstyle

@@ -245,6 +245,32 @@ public class DateUtilTest
     Assertions.assertThat(result).isEqualTo(DATE_POINT);
   }
 
+  @Test
+  public void formatDate_dateStringUTC_datetime_winter() throws Exception
+  {
+    /* prepare */
+    Date input = new GregorianCalendar(2015, Calendar.NOVEMBER, 10, 12, 15, 34).getTime();
+
+    /* execute */
+    String result = DateUtil.formatDateUTC(input);
+
+    /* verify */
+    Assertions.assertThat(result).isEqualTo("2015-11-10T11:15:34");
+  }
+
+  @Test
+  public void formatDate_dateStringUTC_datetime_summer() throws Exception
+  {
+    /* prepare */
+    Date input = new GregorianCalendar(2015, Calendar.MAY, 10, 12, 15, 34).getTime();
+
+    /* execute */
+    String result = DateUtil.formatDateUTC(input);
+
+    /* verify */
+    Assertions.assertThat(result).isEqualTo("2015-05-10T10:15:34");
+  }
+
   private Date parseDate(String dateString, String pattern) throws ParseException
   {
     DateFormat df = new SimpleDateFormat(pattern);

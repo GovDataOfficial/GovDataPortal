@@ -20,7 +20,10 @@ package de.seitenbau.govdata.odp.registry;
 import java.util.List;
 import java.util.Properties;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import de.seitenbau.govdata.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.FormatEnumType;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.Organization;
@@ -108,6 +111,16 @@ public interface ODRClient
   Metadata getMetadata(User user, String name) throws OpenDataRegistryException;
 
   /**
+   * Get a single dataset
+   * @param user
+   * @param identifier
+   * @param format
+   * @param profileList
+   * @return
+   */
+  public JsonNode getDcatDataset(User user, String identifier, FormatEnumType format, String[] profileList);
+
+  /**
    * Gets the JSON-LD schema.org representation for the metadata.
    *
    * @param user the user to authenticate with
@@ -165,6 +178,8 @@ public interface ODRClient
   List<String> showRoles(User user, String metadata);
 
   /**
+   * Update roles.
+   * 
    * @param user
    * @param object
    * @param roles
@@ -198,6 +213,8 @@ public interface ODRClient
   boolean persistMetadata(User user, Metadata metadata) throws OpenDataRegistryException;
 
   /**
+   * List users.
+   * 
    * @return
    */
   List<String> listUsers();

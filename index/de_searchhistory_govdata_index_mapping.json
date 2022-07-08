@@ -1,0 +1,10 @@
+{
+  "properties": {
+    "timestamp" : {
+      "type": "date"
+    },
+    "phrase": {
+      "type": "text"
+    }
+  }
+}

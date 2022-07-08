@@ -1,0 +1,150 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword",
+      "index": true
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "de_stemmed_analyzer",
+      "search_analyzer": "de_query_analyzer",
+      "fields": {
+        "ngram": {
+          "type": "text",
+          "analyzer": "de_ngram_analyzer",
+          "search_analyzer": "de_query_analyzer"
+        },
+        "edge_ngram": {
+          "type": "text",
+          "analyzer": "de_edge_ngram_analyzer",
+          "search_analyzer": "de_query_analyzer"
+        },
+        "sort": {
+          "type": "keyword",
+          "normalizer": "sortable"
+        },
+        "raw": {
+          "type": "keyword",
+          "index": true
+        }
+      }
+    },
+    "title_suggest": {
+      "type": "completion",
+      "analyzer": "simple",
+      "search_analyzer": "simple"
+    },
+    "preamble": {
+      "type": "text",
+      "analyzer": "de_stemmed_analyzer",
+      "search_analyzer": "de_query_analyzer",
+      "fields": {
+        "ngram": {
+          "type": "text",
+          "analyzer": "de_ngram_analyzer",
+          "search_analyzer": "de_query_analyzer"
+        },
+        "edge_ngram": {
+          "type": "text",
+          "analyzer": "de_edge_ngram_analyzer",
+          "search_analyzer": "de_query_analyzer"
+        },
+        "raw": {
+          "type": "text",
+          "index": false
+        }
+      }
+    },
+    "mandant": {
+      "type": "keyword",
+      "index": true
+    },
+    "sections": {
+      "type": "object",
+      "properties": {
+        "textblockid": {
+          "type": "text",
+          "index": false
+        },
+        "headline": {
+          "type": "text",
+          "analyzer": "de_stemmed_analyzer",
+          "search_analyzer": "de_query_analyzer",
+          "fields": {
+            "ngram": {
+              "type": "text",
+              "analyzer": "de_ngram_analyzer",
+              "search_analyzer": "de_query_analyzer"
+            },
+            "edge_ngram": {
+              "type": "text",
+              "analyzer": "de_edge_ngram_analyzer",
+              "search_analyzer": "de_query_analyzer"
+            },
+            "raw": {
+              "type": "keyword",
+              "index": true
+            }
+          }
+        },
+        "text": {
+          "type": "text",
+          "analyzer": "de_stemmed_analyzer",
+          "search_analyzer": "de_query_analyzer",
+          "fields": {
+            "ngram": {
+              "type": "text",
+              "analyzer": "de_ngram_analyzer",
+              "search_analyzer": "de_query_analyzer"
+            },
+            "edge_ngram": {
+              "type": "text",
+              "analyzer": "de_edge_ngram_analyzer",
+              "search_analyzer": "de_query_analyzer"
+            }
+          }
+        }
+      }
+    },
+    "tags": {
+      "type": "text",
+      "index": true,
+      "analyzer": "word_delimiter_analyzer",
+      "fields": {
+        "raw": {
+          "type": "keyword",
+          "index": true
+        },
+        "facet": {
+          "type": "keyword",
+          "normalizer": "facet"
+        }
+      }
+    },
+    "sort_date": {
+      "type": "date"
+    },
+    "sort_date_dct": {
+      "type": "date",
+      "format": "dateOptionalTime||yyyy-MM-dd HH:mm:ss"
+    },
+    "metadata": {
+      "properties": {
+        "modified" : {
+          "type": "date",
+          "copy_to" : ["sort_date", "sort_date_dct"]
+        },
+        "boundingbox": {
+          "type": "geo_shape",
+          "ignore_malformed": true
+        },
+        "spatial_area": {
+          "type": "double"
+        },
+        "spatial_center": {
+          "type": "geo_point"
+        }
+      }
+    }
+  }
+}

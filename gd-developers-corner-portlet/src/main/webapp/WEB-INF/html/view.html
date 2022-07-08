@@ -1,5 +1,24 @@
 
-<div id="devcorner" class="column" xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<div id="devcorner" class="column developers-corner-portlet" xmlns:th="http://www.thymeleaf.org">
+  <div th:if="${#lists.size(fusekiEndpoints)} gt 1" class="row row-margin">
+    <div class="formatselectarea">
+      <h2>[[#{'od.sparql.query.endpoint'}]]:</h2>
+      <div class="select-with-info-icon">
+        <select id="selectEndpoint" class="form-control" onchange="setEndpoint(fusekiEndpoints[this.selectedIndex]);">
+          <option th:each="endpoint : ${fusekiEndpoints}" th:value="${endpoint.url}" th:text="${endpoint.name}"></option>
+        </select>
+        <span class="show-full-text" th:title="#{od.developers.corner.endpoint.show.more}"
+          th:attr="onclick='toggleExtText(this, \'#description-ext\')'">
+          <svg aria-hidden="true" class="lexicon-icon lexicon-icon-info-panel-closed">
+            <use th:attr="'xlink:href'=@{${themeDisplay.pathThemeImages} + '/lexicon/icons.svg#info-panel-closed'}" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="endpointDescription" class="row row-margin mark-external-links">
+    <p id="description-ext" class="description-ext" th:utext="#{'od.sparql.query.endpoint.description.show.more'}" />
+  </div>
   <div id="exampleList" class="row row-margin"></div>
   <div id="prefixList" class="row row-margin"></div>
   <div class="row row-margin select-format-margin">
@@ -20,31 +39,59 @@
 
 <script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 /*<![CDATA[*/
-  
-  var fusekiUrl = [[${fusekiQueryUrl}]];
-  const yasgui = new Yasgui(document.getElementById("yasgui"), {
-      requestConfig: { endpoint: fusekiUrl, method: "GET" },
+
+  var fusekiEndpoints = [[${fusekiEndpoints}]];
+  setAvailableEndpoints(fusekiEndpoints);
+
+  // set default endpoint
+  currentEndpoint = fusekiEndpoints[0];
+
+  yasgui = new Yasgui(document.getElementById("yasgui"), {
+      requestConfig: { endpoint: currentEndpoint.url, method: "GET" },
       autofocus: false
     });
 
+  console.log("Set SPARQL endpoint to default type: " + currentEndpoint.type);
+  try {
+    // Try resolve endpoint from available endpoints by url from shared link
+    existentEndpointUrl = yasgui.config.requestConfig.endpoint;
+    console.log("Read existent SPARQL endpoint url: " + existentEndpointUrl);
+    endpointByUrl = getEndpointByUrl(existentEndpointUrl);
+    if (endpointByUrl) {
+      currentEndpoint = endpointByUrl;
+      console.log("Read existent SPARQL endpoint and set to resolved type: " + currentEndpoint.type);
+    }
+  } catch (err) {
+    if (err instanceof TypeError) {
+      // ignore type error
+      console.log("No yasgui config found, use default values.");
+    }
+  }
+
+  // Set endpoint in select
+  document.getElementById("selectEndpoint").value = currentEndpoint.url;
+
+  setSelectedEndpointType(currentEndpoint.type);
+
   yasqe = yasgui.getTab().yasqe;
   yasr = yasgui.getTab().yasr;
-  
-  // Build HTML for Query-Examples    
-  var listHtml = '<h2>Beispiel-Abfragen:</h2>';
-  var queries = getConfig().queries;
-  queries.forEach(function (q, i) {
-    listHtml += '<a id="sparqlExample' + i + '" class="btn btn-margin" onclick="loadExample(' + i + ')">' + q.name + '</a>';
-  });
-  document.getElementById("exampleList").innerHTML = listHtml;
 
    // Build list with prefixes
   var prefixesHtml = '<h2>Prefixes hinzufügen:</h2>';
   var prefixes = getConfig().prefixes;
   for(p in prefixes) {
-    prefixesHtml += '<a id="prefixButton_' + p + '" class="btn btn-margin" onclick="togglePrefix(\'' + p + '\', \'' + prefixes[p] + '\')">' + p + '</a>';
+    prefixesHtml += '<a id="prefixButton_' + p + '" class="btn btn-margin" onclick="togglePrefix(\'' + p
+        + '\', \'' + prefixes[p] + '\')">' + p + '</a>';
   }
   document.getElementById("prefixList").innerHTML = prefixesHtml;
+
+  // set default queries
+  setQueries(currentEndpoint.type);
+  // memorize endpoint as previous endpoint for caching query in editor
+  setPreviousEndpointType(currentEndpoint.type);
+
+  // init description to hidden
+  document.getElementById("description-ext").style.display = "none";
 
   /*]]>*/
 </script>

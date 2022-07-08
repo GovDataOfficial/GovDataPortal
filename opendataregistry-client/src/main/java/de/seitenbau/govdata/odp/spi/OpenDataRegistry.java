@@ -46,7 +46,8 @@ import de.seitenbau.govdata.odp.registry.ckan.Constants;
  * 
  * @see ODRClient
  */
-public abstract class OpenDataRegistry {
+public abstract class OpenDataRegistry
+{
 
     /** The odr loader. */
     private static ServiceLoader<OpenDataRegistry> odrLoader = ServiceLoader.load(OpenDataRegistry.class);
@@ -58,10 +59,14 @@ public abstract class OpenDataRegistry {
      *            the name of the provider implementation
      * @return the client interface
      */
-    public static synchronized ODRClient getClient(String name) {
-        if (name != null) {
-            for (OpenDataRegistry op : odrLoader) {
-                if (name.equals(op.getName())) {
+    public static synchronized ODRClient getClient(String name)
+    {
+        if (name != null)
+        {
+            for (OpenDataRegistry op : odrLoader)
+            {
+                if (name.equals(op.getName()))
+                {
                     return op.createClient();
                 }
             }
@@ -74,10 +79,13 @@ public abstract class OpenDataRegistry {
      * 
      * @return the client interface
      */
-    public static synchronized ODRClient getClient() {
+    public static synchronized ODRClient getClient()
+    {
         ODRClient client = getClient(Constants.OPEN_DATA_PROVIDER_NAME);
-        if (client == null) {
-            for (OpenDataRegistry op : odrLoader) {
+        if (client == null)
+        {
+            for (OpenDataRegistry op : odrLoader)
+            {
                 client = op.createClient();
                 // if there a several implementations available, check, if this
                 // is a suitable one

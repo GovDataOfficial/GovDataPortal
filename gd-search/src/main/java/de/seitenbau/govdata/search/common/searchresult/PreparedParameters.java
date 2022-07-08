@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import de.seitenbau.govdata.search.common.SearchQuery;
 import de.seitenbau.govdata.search.filter.BoundingBox;
 import de.seitenbau.govdata.search.sort.Sort;
 import lombok.Data;
@@ -17,7 +18,7 @@ import lombok.Data;
 public class PreparedParameters
 {
   // the query phrase
-  private String query;
+  private SearchQuery query;
 
   // active facet filters
   private Map<String, List<String>> activeFilters;

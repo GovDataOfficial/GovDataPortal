@@ -41,10 +41,10 @@ import lombok.extern.slf4j.Slf4j;
 public class SearchfieldController extends AbstractBaseController
 {
   private static final String SAYT_COMPLETION = "saytCompletion"; // search-as-you-type
-  
+
   @Inject
   private GovDataNavigation navigationHelper;
-  
+
   @Inject
   private SearchService indexService;
 
@@ -73,16 +73,16 @@ public class SearchfieldController extends AbstractBaseController
         themeDisplay.getPathThemeImages() + "/datavisuals/connectionmap" + backgroundFile + ".jpg";
     // get currentpage for type filter
     String currentPage = themeDisplay.getLayout().getFriendlyURL();
-    
+
     PreparedParameters preparm =
         ParameterProcessing.prepareParameters(request.getParameterMap(), currentPage);
     UrlBuilder urlbuilder = new UrlBuilder(preparm);
-    
+
     // List of hidden Fields to generate to pass through other fields
     List<KeyValuePair> passthroughParams = urlbuilder.parametersAsList(new String[] {
         QueryParamNames.PARAM_PHRASE
     });
-   
+
     String searchExtUrlString = null;
     try
     {
@@ -93,18 +93,18 @@ public class SearchfieldController extends AbstractBaseController
     {
       log.warn("Error on creating other search view urls! Reason: {}", e.getMessage());
     }
-    
+
     // prepare url for saytCompletion
     ResourceURL saytCompletionUrl = response.createResourceURL();
     saytCompletionUrl.setResourceID(SAYT_COMPLETION);
-    
+
     PortletURL actionUrl = response.createActionURL();
     SearchFieldViewModel viewModel = SearchFieldViewModel.builder()
         .actionUrl(actionUrl.toString())
         .showBigHeader(showBigHeader)
         .showSearch(showSearch)
         .backgroundImage(backgroundImageFull)
-        .q(preparm.getQuery())
+        .q(preparm.getQuery().getQueryString())
         .passthroughParams(passthroughParams)
         .extendedSearchUrl(searchExtUrlString)
         .saytCompletionUrl(saytCompletionUrl.toString())
@@ -115,7 +115,7 @@ public class SearchfieldController extends AbstractBaseController
     log.debug("showSearchInputField finished");
     return "searchfield";
   }
-  
+
   /**
    * AJAX-Endpoint for fetching search completions from elastic search.
    * @param request
@@ -134,26 +134,28 @@ public class SearchfieldController extends AbstractBaseController
     String phrase = request.getParameter(QueryParamNames.PARAM_PHRASE);
     String prefix = "";
     String suffix = phrase;
-    
+
     // separate last word (do the completion on that)
-    if(phrase.contains(" ")) {
+    if (phrase.contains(" "))
+    {
       int pos = phrase.lastIndexOf(' ');
       prefix = phrase.substring(0, pos);
-      suffix = phrase.substring(pos +1);
+      suffix = phrase.substring(pos + 1);
     }
 
     // fetch completion
     List<String> findSearchAsYouTypeSuggestions = indexService.findSearchAsYouTypeSuggestions(suffix);
-    
+
     // add prefix to all results
-    for(int i=0; i<findSearchAsYouTypeSuggestions.size(); i++) {
+    for (int i = 0; i < findSearchAsYouTypeSuggestions.size(); i++)
+    {
       findSearchAsYouTypeSuggestions.set(i, prefix + " " + findSearchAsYouTypeSuggestions.get(i));
     }
-    
+
     // render them into json object
     MappingJackson2JsonView view = new MappingJackson2JsonView();
     view.addStaticAttribute(QueryParamNames.PARAM_COMPLETION_SUGGESTIONS, findSearchAsYouTypeSuggestions);
-    
+
     return view;
   }
 }

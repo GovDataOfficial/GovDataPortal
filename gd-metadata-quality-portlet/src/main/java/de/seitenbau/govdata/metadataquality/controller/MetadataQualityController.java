@@ -24,7 +24,6 @@ import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstan
 import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstants.QUALITY_FEATURES;
 import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstants.TOPS;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,11 +63,8 @@ import de.seitenbau.govdata.search.gui.model.FilterViewModel;
  */
 @Controller
 @RequestMapping("VIEW")
-public class MetadataQualityController implements Serializable
+public class MetadataQualityController
 {
-  /** The Constant serialVersionUID. */
-  private static final long serialVersionUID = 1L;
-
   @Inject
   private MetricDataCache metricDataCache;
 
@@ -131,7 +127,11 @@ public class MetadataQualityController implements Serializable
     String clearFilterUrl = baseUrl.toString();
 
     // if no publisher is selected show data from all publishers
-    String selectedPortal = filterName != null ? filterName : ALL_PUBLISHERS;
+    String selectedPortal = ALL_PUBLISHERS;
+    if (filterName != null)
+    {
+      selectedPortal = filterName;
+    }
 
     // get metrics data from cache
     metricsParser.setData(metricDataCache.getRawMetricData());

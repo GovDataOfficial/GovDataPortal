@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Pattern.Flag;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
+import de.seitenbau.govdata.constants.CommonConstants;
 import de.seitenbau.govdata.edit.gui.common.Constants;
 import de.seitenbau.govdata.edit.validator.Categories;
 import de.seitenbau.govdata.edit.validator.GeoJSONPolygon;
@@ -63,17 +64,17 @@ public class EditForm implements Serializable
   private String spatial;
   
   // should be date, but Spring is amazingly stubborn and will not handle Date correctly
-  @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
+  @StringDate(format=CommonConstants.DATE_PATTERN, regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String temporalCoverageFrom;
   
-  @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
+  @StringDate(format=CommonConstants.DATE_PATTERN, regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String temporalCoverageUntil;
   
   // dates
-  @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
+  @StringDate(format=CommonConstants.DATE_PATTERN, regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String datesPublished;
   
-  @StringDate(format="dd.MM.yyyy", regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
+  @StringDate(format=CommonConstants.DATE_PATTERN, regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String datesModified;
   
   @Categories(message="{categories}")

@@ -38,4 +38,33 @@
 
 .show-full-text {
   cursor: pointer;
+
+  svg {
+    position: relative;
+    top: -4px;
+  }
+}
+
+.metadata-quality-nav {
+  @extend .modern-nav;
+
+  .portlet-content-container {
+    background-color: $metadataquality-pink-light;
+  }
+
+  ul {
+    background-color: $metadataquality-pink-light;
+  }
+
+  li {
+    border-width: 2px;
+
+    &.selected {
+        background-color: $metadataquality-pink;
+    }
+
+    a:hover {
+      background-color: $metadataquality-pink;
+    }
+  }
 }

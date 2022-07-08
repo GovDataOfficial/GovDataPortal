@@ -15,7 +15,7 @@ import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import de.seitenbau.govdata.cache.BaseCache;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.servicetracker.MultiVMPoolServiceTracker;
 
 public abstract class BaseBoxesBean<T>
@@ -26,7 +26,8 @@ public abstract class BaseBoxesBean<T>
   /** The time to live in seconds. */
   protected static final int CLUSTERED_CACHE_TTL_IN_SECONDS = 3600;
 
-  protected MultiVMPoolServiceTracker multiVMPoolTracker;
+  /** The MultiVMPoolServiceTracker. */
+  private MultiVMPoolServiceTracker multiVMPoolTracker;
 
   /**
    * An init method for all beans.
@@ -40,12 +41,20 @@ public abstract class BaseBoxesBean<T>
     LOG.debug("Initialize complete");
   }
 
+  /**
+   * Closes all open resources.
+   */
   @PreDestroy
   public void shutdown()
   {
     multiVMPoolTracker.close();
   }
 
+  /**
+   * Gets the ThemeDisplay.
+   * 
+   * @return
+   */
   public ThemeDisplay getThemeDisplay()
   {
     ThemeDisplay themeDisplay = (ThemeDisplay) FacesContext.getCurrentInstance().getExternalContext()

@@ -1,0 +1,44 @@
+.featured-datasets-portlet {
+  @extend .featured-portlet;
+
+  ul.row {
+    @include grid-row(nest);
+
+    list-style: none;
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  li.column {
+    display: block;
+  }
+  li:not(.column) {
+    margin-left: rem-calc(15);
+    margin-right: rem-calc(15);
+  }
+
+  .featured-datasets-box {
+    @extend .featured-box;
+    max-width: rem-calc(960);
+
+    ul > li {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .center-datasets-button {
+    @extend .centered-button;
+  }
+
+  .featured-small-box {
+    color: $black;
+    padding: rem-calc(15);
+    position: relative;
+    word-wrap: break-word;
+  
+    dl > dd {
+      margin: 5px 0px;
+    }
+  }
+}

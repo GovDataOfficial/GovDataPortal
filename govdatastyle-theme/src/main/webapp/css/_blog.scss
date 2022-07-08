@@ -32,7 +32,7 @@
       border: 0;
   
       .row {
-        @extend .row;
+        @include grid-row;
         display: flex;
       }
     }

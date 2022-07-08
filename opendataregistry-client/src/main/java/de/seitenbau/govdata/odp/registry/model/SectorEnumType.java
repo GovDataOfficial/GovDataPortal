@@ -27,7 +27,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author sim
  */
-public enum SectorEnumType {
+public enum SectorEnumType
+{
 
     /** The public. */
     PUBLIC("oeffentlich", "Öffentlich"),
@@ -41,7 +42,7 @@ public enum SectorEnumType {
     /**
      * The Constant log.
      */
-    private static final Logger log = LoggerFactory.getLogger(SectorEnumType.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SectorEnumType.class);
 
     /** The field. */
     private String field;
@@ -57,7 +58,8 @@ public enum SectorEnumType {
      * @param displayName
      *            the display name
      */
-    private SectorEnumType(String field, String displayName) {
+    private SectorEnumType(String field, String displayName)
+    {
         this.field = field;
         this.displayName = displayName;
     }
@@ -67,7 +69,8 @@ public enum SectorEnumType {
      * 
      * @return the string
      */
-    public String toField() {
+    public String toField()
+    {
         return field;
     }
 
@@ -76,7 +79,8 @@ public enum SectorEnumType {
      * 
      * @return the display name
      */
-    public String getDisplayName() {
+    public String getDisplayName()
+    {
         return displayName;
     }
 
@@ -87,17 +91,25 @@ public enum SectorEnumType {
      *            the type
      * @return the metadata enum type
      */
-    public static SectorEnumType fromField(String type) {
-        type = type.trim().toLowerCase();
-        if (PUBLIC.toField().equals(type)) {
-            return PUBLIC;
-        } else if (PRIVATE.toField().equals(type)) {
-            return PRIVATE;
-        } else if (OTHER.toField().equals(type)) {
-            return OTHER;
-        } else {
-            log.debug("Parsing SectorEnumType: " + type, new IllegalArgumentException(type));
-            return OTHER;
-        }
+    public static SectorEnumType fromField(String type)
+    {
+      type = type.trim().toLowerCase();
+      if (PUBLIC.toField().equals(type))
+      {
+        return PUBLIC;
+      }
+      else if (PRIVATE.toField().equals(type))
+      {
+        return PRIVATE;
+      }
+      else if (OTHER.toField().equals(type))
+      {
+        return OTHER;
+      }
+      else
+      {
+        LOG.debug("Parsing SectorEnumType: " + type, new IllegalArgumentException(type));
+        return OTHER;
+      }
     }
 }

@@ -217,7 +217,7 @@
 }
 
 // field specific designs
-.field-groups {
+.field-groups, .field-showcase_types, .field-platforms {
   @media #{$large-up} {
     .checkboxitem {
       display: inline-block;

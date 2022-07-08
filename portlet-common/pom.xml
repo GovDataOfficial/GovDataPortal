@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>4.4.0</version>
+    <version>5.0.0</version>
   </parent>
   <artifactId>portlet-common</artifactId>
   <name>Portlet Core GovData</name>
@@ -12,6 +12,10 @@
     <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>opendataregistry-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-db-api</artifactId>
     </dependency>
 
     <!-- Liferay -->
@@ -61,7 +65,7 @@
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
     </dependency>
-    
+
     <!--  JSF -->
     <dependency>
       <groupId>com.sun.faces</groupId>
@@ -97,8 +101,18 @@
 
     <!-- Redis -->
     <dependency>
-      <groupId>biz.paluch.redis</groupId>
-      <artifactId>lettuce</artifactId>
+      <groupId>io.lettuce</groupId>
+      <artifactId>lettuce-core</artifactId>
+    </dependency>
+
+    <!-- Validation -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.grundid.opendatalab</groupId>
+      <artifactId>geojson-jackson</artifactId>
     </dependency>
 
     <!-- Logging -->
@@ -109,6 +123,18 @@
     <dependency>
       <groupId>com.liferay.portal</groupId>
       <artifactId>com.liferay.util.slf4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-1.2-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
     </dependency>
 
     <!-- Tools -->
@@ -129,20 +155,13 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.vividsolutions</groupId>
-      <artifactId>jts</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.rometools</groupId>
-      <artifactId>rome</artifactId>
-    </dependency>
 
     <!-- Testing -->
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>testing-common</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -150,7 +169,7 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -161,6 +180,12 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- com.liferay.portal.impl/META-INF/services/javax.imageio.spi.ImageReaderSpi -->
+    <dependency>
+      <groupId>ch.randelshofer</groupId>
+      <artifactId>monte-cc</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -17,7 +17,6 @@
 
 package de.seitenbau.govdata.odp.boxes;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -36,14 +35,11 @@ import org.springframework.stereotype.Component;
 import de.seitenbau.govdata.odp.boxes.model.DatasetModel;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.search.adapter.SearchService;
-import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
 import de.seitenbau.govdata.search.gui.model.LicenseViewModel;
 import de.seitenbau.govdata.search.index.model.HitDto;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
-import de.seitenbau.govdata.search.sort.Sort;
-import de.seitenbau.govdata.search.sort.SortType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -56,10 +52,8 @@ import lombok.Setter;
  */
 @Component
 @Scope("request")
-public class Datasets extends BaseBoxesBean<DatasetModel> implements Serializable
+public class Datasets extends BaseBoxesBean<DatasetModel>
 {
-  private static final long serialVersionUID = 2779218730850295343L;
-
   /** The log. */
   private static final Logger LOG = LoggerFactory.getLogger(Datasets.class);
 
@@ -99,11 +93,8 @@ public class Datasets extends BaseBoxesBean<DatasetModel> implements Serializabl
 
   private List<DatasetModel> getLatestDatasets(int maximumNumberOfDatasets)
   {
-    Sort sorting = new Sort(SortType.LASTMODIFICATION, false);
-    SearchFilterBundle searchFilterBundle = new SearchFilterBundle();
-    searchFilterBundle.setTypeFilter(SearchConsts.TYPE_DATASET);
     SearchResultContainer searchResult =
-        searchService.search("", maximumNumberOfDatasets, searchFilterBundle, sorting);
+        searchService.searchLatest(maximumNumberOfDatasets, SearchConsts.TYPE_DATASET);
     List<HitDto> hits = searchResult.getHits();
     if (hits != null)
     {

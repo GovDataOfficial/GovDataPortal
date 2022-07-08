@@ -6,9 +6,17 @@ package de.seitenbau.govdata.edit.gui.common;
  * @author rnoerenberg
  *
  */
-public interface Constants
+public final class Constants
 {
-  String NAME_NEW_DATASET = "Neuer Datensatz";
+  private Constants()
+  {
+    // private
+  }
 
-  String CONTRIBUTOR_ID = "contributorId";
+  /** Default title for a new dataset. */
+  public static final String NAME_NEW_DATASET = "Neuer Datensatz";
+
+  /** Key for the ContributorID field. */
+  public static final String CONTRIBUTOR_ID = "contributorId";
+
 }
