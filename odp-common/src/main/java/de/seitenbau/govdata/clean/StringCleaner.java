@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 /**
  * Enthält Methoden zum Filtern von Strings.
@@ -36,7 +36,7 @@ public abstract class StringCleaner
   /**
    * Eine Whitelist von HTML-Elementen und -Attributen für die Metadaten-Beschreibung.
    */
-  public static final Whitelist WHITELIST_METADATA_NOTES = new Whitelist()
+  public static final Safelist WHITELIST_METADATA_NOTES = new Safelist()
       .addTags("a", "li", "ol", "p", "ul", "br", "b", "i", "u")
       .addAttributes("a", "href")
       .addProtocols("a", "href", "ftp", "http", "https", "mailto")
@@ -72,7 +72,7 @@ public abstract class StringCleaner
    * @return der gesäuberte String oder der String selbst, falls die Whitelist null ist, oder null,
    *         falls der übergebene String null ist.
    */
-  public static String trimAndFilterString(String value, Whitelist whitelist)
+  public static String trimAndFilterString(String value, Safelist whitelist)
   {
     String result = value;
     if (value != null && whitelist != null)

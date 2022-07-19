@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>5.2.1</version>
+    <version>5.2.2</version>
   </parent>
   <artifactId>gd-search-common</artifactId>
   <name>GovData search common</name>

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>5.2.1</version>
+  <version>5.2.2</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -19,20 +19,21 @@
     <mojarra.version>2.2.20</mojarra.version>
     <liferay.deploy.dir>/opt/app/portal-liferay/liferay-home/deploy</liferay.deploy.dir>
     <junit.version>4.13.2</junit.version>
-    <assertj.version>3.22.0</assertj.version>
+    <assertj.version>3.23.1</assertj.version>
     <portlet-api.version>3.0.1</portlet-api.version>
     <portletmvc4spring.version>5.3.2</portletmvc4spring.version>
-    <spring.version>5.3.19</spring.version>
+    <spring.version>5.3.21</spring.version>
     <thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
     <thymeleaf.java8time.version>3.0.4.RELEASE</thymeleaf.java8time.version>
-    <log4j.version>2.17.2</log4j.version>
+    <log4j.version>2.18.0</log4j.version>
     <slf4j.version>1.7.36</slf4j.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
     <commons-collections4.version>4.4</commons-collections4.version>
     <commons-io.version>2.11.0</commons-io.version>
     <joda-time.version>2.10.14</joda-time.version>
-    <gson.version>2.8.9</gson.version>
+    <gson.version>2.9.0</gson.version>
     <guava.version>31.1-jre</guava.version>
+    <jsoup.version>1.15.2</jsoup.version>
     <httpclient.version>4.5.13</httpclient.version>
     <elasticsearch.version>7.17.1</elasticsearch.version>
     <jetty.version>7.4.2.v20110526</jetty.version>
@@ -40,16 +41,16 @@
     <apache.jena.version>4.5.0</apache.jena.version>
     <resteasy.version>3.15.3.Final</resteasy.version>
     <resteasy.jaxrs.api.version>3.0.12.Final</resteasy.jaxrs.api.version>
-    <jackson.version>2.13.2</jackson.version>
-    <jts.version>1.18.2</jts.version>
+    <jackson.version>2.13.3</jackson.version>
+    <jts.version>1.19.0</jts.version>
     <junit.jupiter.version>5.8.2</junit.jupiter.version>
     <junit.platform.version>1.8.2</junit.platform.version>
-    <mockito.version>4.5.1</mockito.version>
+    <mockito.version>4.6.1</mockito.version>
     <sb-common.version>1.0.1</sb-common.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
     <hibernate.validator.version>6.2.3.Final</hibernate.validator.version>
     <hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
-    <gd-microservices.version>1.1.0</gd-microservices.version>
+    <gd-microservices.version>1.1.1</gd-microservices.version>
     <checkstyle.suppressions></checkstyle.suppressions>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- java -->
@@ -609,7 +610,7 @@
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
-        <version>1.14.3</version>
+        <version>${jsoup.version}</version>
       </dependency>
 
       <dependency>

@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.2.2 2022-07-19
+
+* Updates maven dependencies to the latest bugfix / security fix version
+
 ## v5.2.0 2022-05-31
 
 * Adds support for Java 11
