@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.6.0 2022-11-03
+
+* Updates maven dependencies to the latest bugfix / security fix version
+
 ## v5.5.0 2022-10-20
 
 * Overwrites pop-up template in govdatastyle-theme to include JQuery in IFrame

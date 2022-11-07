@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata</groupId>
-  <version>1.1.1</version>
+  <version>1.2.1</version>
   <artifactId>microservices</artifactId>
   <packaging>pom</packaging>
   <name>GovData Microservices</name>
@@ -18,38 +18,41 @@
     <commons-collections4.version>4.4</commons-collections4.version>
     <commons-io.version>2.11.0</commons-io.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
-    <groovy.version>2.5.16</groovy.version>
+    <groovy.version>2.5.19</groovy.version>
     <guava.version>31.1-jre</guava.version>
     <hibernate-jpa-2.1-api.version>1.0.2.Final</hibernate-jpa-2.1-api.version>
-    <hibernate.validator.version>6.2.3.Final</hibernate.validator.version>
+    <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
     <dozer.version>5.5.1</dozer.version>
     <elasticsearch.version>7.17.1</elasticsearch.version>
-    <gson.version>2.9.0</gson.version>
+    <gson.version>2.9.1</gson.version>
     <jsoup.version>1.15.2</jsoup.version>
     <jts.version>1.19.0</jts.version>
     <lombok.version>1.18.20</lombok.version>
     <junit.version>4.13.2</junit.version>
-    <junit.jupiter.version>5.8.2</junit.jupiter.version>
-    <junit.platform.version>1.8.2</junit.platform.version>
-    <mockito.version>4.6.1</mockito.version>
+    <junit.jupiter.version>5.9.1</junit.jupiter.version>
+    <junit.platform.version>1.9.1</junit.platform.version>
+    <mockito.version>4.8.0</mockito.version>
     <!-- byte-buddy >= 1.12 is required by mockito >= 4.5.x
          https://github.com/mockito/mockito/issues/2625 -->
     <byte-buddy.version>1.12.10</byte-buddy.version>
-    <nimbus-jose-jwt.version>9.21</nimbus-jose-jwt.version>
+    <nimbus-jose-jwt.version>9.25.6</nimbus-jose-jwt.version>
+    <rome.version>1.18.0</rome.version>
     <resteasy.version>3.15.3.Final</resteasy.version>
     <resteasy.jaxrs.api.version>3.0.12.Final</resteasy.jaxrs.api.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
-    <jackson.version>2.13.3</jackson.version>
+    <jackson.version>2.13.4</jackson.version>
+    <!-- jackson-databind requires a separate hotfix version -->
+    <jackson.databind.version>2.13.4.2</jackson.databind.version>
     <sb-common.version>1.0.1</sb-common.version>
-    <log4j.version>2.18.0</log4j.version>
+    <log4j.version>2.19.0</log4j.version>
     <slf4j.version>1.7.36</slf4j.version>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- JAXB -->
     <jaxb.runtime.version>2.3.6</jaxb.runtime.version>
     <!-- Spring -->
-    <spring-boot.version>2.6.7</spring-boot.version>
-    <spring.version>5.3.21</spring.version>
-    <spring-security.version>5.6.3</spring-security.version>
+    <spring-boot.version>2.6.12</spring-boot.version>
+    <spring.version>5.3.23</spring.version>
+    <spring-security.version>5.6.7</spring-security.version>
     <!-- Java -->
     <java.version>8</java.version>
     <project.source.version>${java.version}</project.source.version>
@@ -308,7 +311,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
+        <version>${jackson.databind.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>

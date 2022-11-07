@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>5.5.0</version>
+  <version>5.6.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -22,35 +22,37 @@
     <assertj.version>3.23.1</assertj.version>
     <portlet-api.version>3.0.1</portlet-api.version>
     <portletmvc4spring.version>5.3.2</portletmvc4spring.version>
-    <spring.version>5.3.21</spring.version>
+    <spring.version>5.3.23</spring.version>
     <thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
     <thymeleaf.java8time.version>3.0.4.RELEASE</thymeleaf.java8time.version>
-    <log4j.version>2.18.0</log4j.version>
+    <log4j.version>2.19.0</log4j.version>
     <slf4j.version>1.7.36</slf4j.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
     <commons-collections4.version>4.4</commons-collections4.version>
     <commons-io.version>2.11.0</commons-io.version>
-    <joda-time.version>2.10.14</joda-time.version>
-    <gson.version>2.9.0</gson.version>
+    <joda-time.version>2.12.0</joda-time.version>
+    <gson.version>2.9.1</gson.version>
     <guava.version>31.1-jre</guava.version>
     <jsoup.version>1.15.2</jsoup.version>
     <httpclient.version>4.5.13</httpclient.version>
     <elasticsearch.version>7.17.1</elasticsearch.version>
-    <jetty.version>7.4.2.v20110526</jetty.version>
-    <jersey.version>1.6</jersey.version>
+    <jetty.version>7.6.21.v20160908</jetty.version>
+    <jersey.version>1.9.1</jersey.version>
     <apache.jena.version>4.5.0</apache.jena.version>
     <resteasy.version>3.15.3.Final</resteasy.version>
     <resteasy.jaxrs.api.version>3.0.12.Final</resteasy.jaxrs.api.version>
-    <jackson.version>2.13.3</jackson.version>
+    <jackson.version>2.13.4</jackson.version>
+    <!-- jackson-databind requires a separate hotfix version -->
+    <jackson.databind.version>2.13.4.2</jackson.databind.version>
     <jts.version>1.19.0</jts.version>
-    <junit.jupiter.version>5.8.2</junit.jupiter.version>
-    <junit.platform.version>1.8.2</junit.platform.version>
-    <mockito.version>4.6.1</mockito.version>
+    <junit.jupiter.version>5.9.1</junit.jupiter.version>
+    <junit.platform.version>1.9.1</junit.platform.version>
+    <mockito.version>4.8.0</mockito.version>
     <sb-common.version>1.0.1</sb-common.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
-    <hibernate.validator.version>6.2.3.Final</hibernate.validator.version>
-    <hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
-    <gd-microservices.version>1.1.1</gd-microservices.version>
+    <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
+    <hibernate-jpa-2.1-api.version>1.0.2.Final</hibernate-jpa-2.1-api.version>
+    <gd-microservices.version>1.2.1</gd-microservices.version>
     <checkstyle.suppressions></checkstyle.suppressions>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- java -->
@@ -538,7 +540,7 @@
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>1.18.20</version>
+        <version>1.18.24</version>
         <scope>provided</scope>
       </dependency>
 
@@ -552,7 +554,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
+        <version>${jackson.databind.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
