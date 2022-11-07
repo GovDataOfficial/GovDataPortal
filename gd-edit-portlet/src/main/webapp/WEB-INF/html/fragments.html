@@ -423,26 +423,20 @@
 
         <!--/* verfügbarkeit (Select)*/-->
         <div class="css-row">
-          <label th:id="${idp}+'_plannedAvailability_label'" th:for="${idp}+'.plannedAvailability'">[[#{'od.plannedAvailability.name'}]]</label>
+          <label th:id="${idp}+'_availability_label'" th:for="${idp}+'.availability'">[[#{'od.availability.name'}]]</label>
           <div>
-            <select th:field="*{plannedAvailability}"
-                    th:attr="aria-labelledby=${idp}+'_plannedAvailability_label '+${idp}+'_plannedAvailability_error'">
+            <select th:field="*{availability}"
+                    th:attr="aria-labelledby=${idp}+'_availability_label '+${idp}+'_availability_error'">
               <option value=""
                       th:text="#{od.select.optional.item.text}"></option>
-              <option value="http://dcat-ap.de/def/plannedAvailability/stable"
-                      th:text="#{od.editform.plannedavailability.stable}"></option>
-              <option value="http://dcat-ap.de/def/plannedAvailability/available"
-                      th:text="#{od.editform.plannedavailability.available}"></option>
-              <option value="http://dcat-ap.de/def/plannedAvailability/experimental"
-                      th:text="#{od.editform.plannedavailability.experimental}"></option>
-              <option value="http://dcat-ap.de/def/plannedAvailability/temporary"
-                      th:text="#{od.editform.plannedavailability.temporary}"></option>
+              <option th:each="avail : ${T(de.seitenbau.govdata.odp.registry.ckan.DcatApAvailability).values()}"
+                  th:value="${avail.uri}" th:text="#{'od.editform.availability.' + ${#strings.toLowerCase(avail)}}"></option>
             </select>
-            <div th:id="${idp}+'_plannedAvailability_error'" class="validation-error"
-                 th:if="${#fields.hasErrors('plannedAvailability')}"
-                 th:errors="*{plannedAvailability}"></div>
-            <div th:id="${idp}+'_plannedAvailability_error'"
-                 th:unless="${#fields.hasErrors('plannedAvailability')}"></div>
+            <div th:id="${idp}+'_availability_error'" class="validation-error"
+                 th:if="${#fields.hasErrors('availability')}"
+                 th:errors="*{availability}"></div>
+            <div th:id="${idp}+'_availability_error'"
+                 th:unless="${#fields.hasErrors('availability')}"></div>
           </div>
         </div>
 

@@ -475,12 +475,14 @@ public class EditController
           resource.getLicense().getName(),
           resource.getLicenseAttributionByText(),
           formatDate(resource.getLast_modified()),
-          resource.getPlannedAvailability()));
+          resource.getPlannedAvailability(),
+          resource.getAvailability()));
     }
     if (resources.isEmpty()) // make sure there is at least one row!
     {
       resources.add(new Resource());
     }
+
     form.setResources(resources);
 
     // flatten list using commas as delimiters
@@ -685,6 +687,7 @@ public class EditController
         resourceImpl.setLicense(res.getLicenseId());
         resourceImpl.setLicenseAttributionByText(res.getLicenseAttributionByText());
         resourceImpl.setPlannedAvailability(convertBlankStringToNull(res.getPlannedAvailability()));
+        resourceImpl.setAvailability(convertBlankStringToNull(res.getAvailability()));
         resources.add(resourceImpl);
       }
     }

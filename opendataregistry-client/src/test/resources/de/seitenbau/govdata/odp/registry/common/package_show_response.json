@@ -45,7 +45,8 @@
         "mimetype_inner":null,
         "position":0,
         "revision_id":"01d40b79-5f54-4a7b-b73c-1147ee601c3c",
-        "resource_type":"visualization"
+        "resource_type":"visualization",
+        "plannedAvailability": "http://dcat-ap.de/def/plannedAvailability/available"
       },
       {
         "cache_last_updated":null,
@@ -72,7 +73,8 @@
         "mimetype_inner":null,
         "position":1,
         "revision_id":"01d40b79-5f54-4a7b-b73c-1147ee601c3c",
-        "resource_type":"visualization"
+        "resource_type":"visualization",
+        "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
       },
       {
         "cache_last_updated":null,
@@ -99,7 +101,9 @@
         "mimetype_inner":null,
         "position":2,
         "revision_id":"01d40b79-5f54-4a7b-b73c-1147ee601c3c",
-        "resource_type":"metadata"
+        "resource_type":"metadata",
+        "plannedAvailability": "http://dcat-ap.de/def/plannedAvailability/temporary",
+        "availability": "http://publications.europa.eu/resource/authority/planned-availability/TEMPORARY"
       }
     ],
     "num_resources":3,

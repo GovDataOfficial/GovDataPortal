@@ -121,6 +121,51 @@ public class ResourceImplTest
     assertThat(result).isFalse();
   }
 
+  @Test
+  public void availibility() throws Exception
+  {
+    /* prepare */
+    ResourceImpl target = createDefaultResource(null);
+    assertThat(target.getAvailability()).isNotEmpty();
+    assertThat(target.getPlannedAvailability()).isNotEmpty();
+
+    /* execute */
+    String result = target.getAvailabilityDisplay();
+
+    /* verify */
+    assertThat(result).isEqualTo("availability");
+  }
+
+  @Test
+  public void availibility_onlyAvailability() throws Exception
+  {
+    /* prepare */
+    ResourceImpl target = createDefaultResource(null);
+    assertThat(target.getAvailability()).isNotEmpty();
+    target.setPlannedAvailability(null);
+
+    /* execute */
+    String result = target.getAvailabilityDisplay();
+
+    /* verify */
+    assertThat(result).isEqualTo("availability");
+  }
+
+  @Test
+  public void availibility_onlyPlannedAvailability() throws Exception
+  {
+    /* prepare */
+    ResourceImpl target = createDefaultResource(null);
+    target.setAvailability(null);
+    assertThat(target.getPlannedAvailability()).isNotEmpty();
+
+    /* execute */
+    String result = target.getAvailabilityDisplay();
+
+    /* verify */
+    assertThat(result).isEqualTo("plannedAvailability");
+  }
+
   private ResourceImpl createDefaultResource(String licenseId)
   {
     return new ResourceImpl(this.odrClient, createDefaultResourceBean(licenseId));
@@ -135,6 +180,8 @@ public class ResourceImplTest
   {
     ResourceBean bean = new ResourceBean();
     bean.setLicense(license);
+    bean.setAvailability("availability");
+    bean.setPlannedAvailability("plannedAvailability");
     return bean;
   }
 

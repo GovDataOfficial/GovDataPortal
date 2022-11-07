@@ -94,6 +94,9 @@ public class ResourceBean implements Serializable
     private String plannedAvailability;
     
     @JsonProperty
+    private String availability;
+
+    @JsonProperty
     private String documentation;
     
     @JsonProperty

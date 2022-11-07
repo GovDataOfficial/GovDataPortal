@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.5.0 2022-10-20
+
+* Overwrites pop-up template in govdatastyle-theme to include JQuery in IFrame
+* Updates the search criterias for the state search portlet
+* Adds support for dcatap:availability in Distribution to the metadata edit form and details view
+* Displays the availability text instead of the URI for the distributions in the metadata details view
+* Fixes text for TOP 5 formats in the metadata quality dashboard
+
+## v5.4.0 2022-09-12
+
+* Internal release: Updating deployment scripts
+
 ## v5.2.2 2022-07-19
 
 * Updates maven dependencies to the latest bugfix / security fix version

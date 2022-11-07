@@ -43,4 +43,7 @@ public class Resource implements Serializable
 
   @URL
   private String plannedAvailability;
+
+  @URL
+  private String availability;
 }

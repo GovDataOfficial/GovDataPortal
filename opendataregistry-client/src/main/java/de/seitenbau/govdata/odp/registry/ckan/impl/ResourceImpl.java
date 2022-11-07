@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.ckan.DcatApAvailability;
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
 import de.seitenbau.govdata.odp.registry.ckan.Util;
 import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
@@ -219,6 +221,7 @@ public class ResourceImpl implements Resource, Serializable
     }
 
     addIfNotNull(extras, "plannedAvailability", resource.getPlannedAvailability());
+    addIfNotNull(extras, "availability", resource.getAvailability());
     addIfNotNull(extras, "licenseAttributionByText", resource.getLicenseAttributionByText());
     bean.set__extras(extras);
 
@@ -433,5 +436,52 @@ public class ResourceImpl implements Resource, Serializable
       result = StringCleaner.trimAndFilterString(input);
     }
     return result;
+  }
+
+  @Override
+  public String getAvailability()
+  {
+    return resource.getAvailability();
+  }
+
+  @Override
+  public void setAvailability(String text)
+  {
+    resource.setAvailability(text);
+  }
+
+  /**
+   * Returns the value for the field "availability" if there is a value present, otherwise the value
+   * for the field "plannedAvailability".
+   * 
+   * @return the value to display for the availability.
+   */
+  public String getAvailabilityDisplay()
+  {
+    if (StringUtils.isNotEmpty(getAvailability()))
+    {
+      return getAvailability();
+    }
+    return getPlannedAvailability();
+  }
+
+  /**
+   * Returns the code value for availability if a value is present and represents a valid URI.
+   *
+   * @return the code value of the availability, otherwise null.
+   */
+  public String getShortendAvailability()
+  {
+
+    Optional<DcatApAvailability> shortendAvailability =
+        DcatApAvailability.getFromAvailability(this.getAvailabilityDisplay());
+
+    if (shortendAvailability.isPresent())
+    {
+      return shortendAvailability.get().name();
+    }
+
+    return null;
+
   }
 }

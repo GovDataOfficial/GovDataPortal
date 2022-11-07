@@ -78,8 +78,11 @@
               <dd th:if="${res.last_modified == null}">-</dd>
 
               <dt>[[#{od.gdsearch.details.res.availability}]]:</dt>
-              <dd th:unless="${res.plannedAvailability == null}" th:text="${res.plannedAvailability}"></dd>
-              <dd th:if="${res.plannedAvailability == null}">-</dd>
+              <dd th:unless="${res.availabilityDisplay == null or res.shortendAvailability == null}"
+                  th:text="#{'od.gdsearch.details.res.availability.' + ${#strings.toLowerCase(res.shortendAvailability)}}"></dd>
+              <dd th:if="${res.availabilityDisplay != null and res.shortendAvailability == null}"
+                  th:text="#{res.availabilityDisplay}"></dd>
+              <dd th:if="${res.availabilityDisplay == null}">-</dd>
 
               <dt>[[#{od.datasets_open_licence}]]:</dt>
               <dd class="sbi-freie-nutzung"

@@ -85,6 +85,10 @@ public interface Resource
 
   void setPlannedAvailability(String text);
 
+  String getAvailability();
+
+  void setAvailability(String text);
+
   String getDocumentation();
 
   List<String> getConformsTo();

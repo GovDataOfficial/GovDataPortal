@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.Response;
@@ -75,6 +76,7 @@ import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.RelationshipBean;
+import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.StatusBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.TagBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.UserBean;
@@ -1248,6 +1250,14 @@ public class ODRClientImpl implements ODRClient
       case DATASET:
       case UNKNOWN:
       default:
+        // Map
+        List<ResourceBean> resources = new ArrayList<>(metadata.getResources());
+        List<ResourceBean> mapped = resources
+                              .stream()
+                              .map(res -> mapAvailability(res))
+                              .collect(Collectors.toList());
+
+        metadata.setResources(mapped);
         impl = new MetadataImpl(metadata, this);
         break;
       }
@@ -1259,6 +1269,29 @@ public class ODRClientImpl implements ODRClient
     }
 
     return impl;
+  }
+
+  private ResourceBean mapAvailability(ResourceBean resource)
+  {
+    if (resource.getAvailability() == null && resource.getPlannedAvailability() != null)
+    {
+      try
+      {
+        DcatApAvailability candidate = DcatApAvailability.getFromUriDcatAp(resource.getPlannedAvailability());
+        resource.setAvailability(candidate.getUri());
+      }
+      catch (IllegalArgumentException ex)
+      {
+        // do nothing
+      }
+
+      if (resource.getAvailability() != null)
+      {
+        resource.setPlannedAvailability(null);
+      }
+    }
+
+    return resource;
   }
 
   public List<RelationshipBean> listRelationships(String name, String type)

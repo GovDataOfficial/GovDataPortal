@@ -216,6 +216,53 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(metadata.isOpen()).isFalse();
   }
 
+  @Test
+  public void getMetadata_availabilityMapping() throws OpenDataRegistryException
+  {
+    //prepare
+    final String stableReourceId = "eadc92ac-dfd3-4860-a508-7ada3a4c6aaf";
+    final String availableReourceId = "b4db736e-46ae-406d-91a4-99d45942a700";
+
+    //execute
+    Metadata metadata = odrClient.getMetadata(null, "metadata_max");
+
+    Assertions.assertThat(metadata).isNotNull();
+
+    // Tests if subset of response data is correct
+    Assertions.assertThat(metadata.getAuthor()).isEqualTo("Landesamt f\u00fcr Geologie und Bergbau");
+
+    // 3 resources
+    Assertions.assertThat(metadata.getResources()).hasSize(3);
+
+    metadata.getResources().stream().forEach(resource -> {
+
+      switch(resource.getId()) 
+      {
+        // only planned_availability is provided 
+        case stableReourceId:
+          Assertions.assertThat(resource.getAvailability())
+          .isEqualTo("http://publications.europa.eu/resource/authority/planned-availability/STABLE");
+          // planned_availability has to be set to null after the mapping
+          Assertions.assertThat(resource.getPlannedAvailability()).isNull();
+        break;
+        case availableReourceId:
+          // only availability is already provided
+          Assertions.assertThat(resource.getAvailability())
+          .isEqualTo("http://publications.europa.eu/resource/authority/planned-availability/AVAILABLE");
+          // planned_availability has to be set to null after the mapping
+          Assertions.assertThat(resource.getPlannedAvailability()).isNull();
+        break;
+        default:
+          // planned_availability and availability are provided
+          Assertions.assertThat(resource.getAvailability())
+          .isEqualTo("http://publications.europa.eu/resource/authority/planned-availability/TEMPORARY");
+          // planned_availability is provided and should not be null
+          Assertions.assertThat(resource.getPlannedAvailability()).isNotNull();
+      }
+    });
+
+  }
+
   // ODR: getJsonLdMetadata - CKAN: dcat_dataset_show
   @Test
   public void getJsonLdMetadata()
