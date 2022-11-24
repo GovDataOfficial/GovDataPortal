@@ -91,6 +91,11 @@ public class MetadataCommentWrapper
 		}
 	}
 
+	@Override
+	public MetadataComment cloneWithOriginalValues() {
+		return wrap(model.cloneWithOriginalValues());
+	}
+
 	/**
 	 * Returns the _id of this metadata comment.
 	 *

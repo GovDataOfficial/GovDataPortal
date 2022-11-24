@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>5.6.0</version>
+    <version>5.7.0</version>
   </parent>
   <artifactId>boxes-portlet</artifactId>
   <packaging>war</packaging>
@@ -46,6 +46,26 @@
     <dependency>
       <groupId>com.liferay</groupId>
       <artifactId>com.liferay.blogs.api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.sql.dsl.api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.function</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.string</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.lang</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -103,11 +123,6 @@
     <dependency>
       <groupId>com.liferay</groupId>
       <artifactId>com.liferay.blogs.service</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay</groupId>
-      <artifactId>com.liferay.petra.sql.dsl.api</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

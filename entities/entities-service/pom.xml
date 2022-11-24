@@ -5,7 +5,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>entities</artifactId>
-    <version>5.6.0</version>
+    <version>5.7.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -17,7 +17,7 @@
       <plugin>
         <groupId>com.liferay</groupId>
         <artifactId>com.liferay.portal.tools.service.builder</artifactId>
-        <version>1.0.337</version>
+        <version>1.0.423</version>
         <configuration>
           <apiDirName>../entities-api/src/main/java</apiDirName>
           <autoNamespaceTables>true</autoNamespaceTables>
@@ -79,6 +79,16 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.sql.dsl.spi</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.portal.aop.api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.service.component.annotations</artifactId>
       <scope>provided</scope>
@@ -92,10 +102,6 @@
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay</groupId>
-      <artifactId>com.liferay.portal.aop.api</artifactId>
     </dependency>
   </dependencies>
 </project>

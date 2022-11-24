@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>5.6.0</version>
+    <version>5.7.0</version>
   </parent>
   <artifactId>od-platform-packaging</artifactId>
   <packaging>deb</packaging>
@@ -43,11 +43,10 @@
                     <src>${project.basedir}/../</src>
                     <type>directory</type>
                     <includes>**/*.war,**/language-hook/target/*.jar,**/gd-user-menu/target/*.jar,**/gd-users-admin-fragment/target/*.jar,**/gd-login-web-fragment/target/*.jar,**/gd-comment-taglib-fragment/target/*.jar,**/gd-captcha-api/target/*.jar,**/gd-captcha-fragment/target/*.jar</includes>
-                    <excludes>**/entities/**/*.war,**/liferay-core-portlets/*.war</excludes>
                     <mapper>
                       <type>perm</type>
                       <strip>2</strip>
-                      <prefix>/opt/app/portal-liferay/liferay-home/deploy</prefix>
+                      <prefix>${liferay.deploy.dir}</prefix>
                       <user>${tomcat.user}</user>
                       <group>${tomcat.group}</group>
                       <filemode>600</filemode>
@@ -60,7 +59,20 @@
                     <mapper>
                       <type>perm</type>
                       <strip>2</strip>
-                      <prefix>/opt/app/portal-liferay/liferay-home/deploy</prefix>
+                      <prefix>${liferay.deploy.dir}</prefix>
+                      <user>${tomcat.user}</user>
+                      <group>${tomcat.group}</group>
+                      <filemode>600</filemode>
+                    </mapper>
+                  </data>
+                  <data>
+                    <src>${project.basedir}/../</src>
+                    <type>directory</type>
+                    <includes>**/gd-blogs-service-override/target/*.jar,**/gd-subscription-web-override/target/*.jar</includes>
+                    <mapper>
+                      <type>perm</type>
+                      <strip>2</strip>
+                      <prefix>${liferay.home.dir}/osgi/marketplace/override</prefix>
                       <user>${tomcat.user}</user>
                       <group>${tomcat.group}</group>
                       <filemode>600</filemode>

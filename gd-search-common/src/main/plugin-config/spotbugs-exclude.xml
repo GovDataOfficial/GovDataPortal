@@ -1,0 +1,6 @@
+<FindBugsFilter>
+  <Match>
+    <!-- Ignore external files -->
+    <Package name="~com\.liferay\.portal\.kernel\.search\.suggest.*" />
+  </Match>
+</FindBugsFilter>

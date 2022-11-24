@@ -9,14 +9,8 @@ AUI.add('lang/autocomplete-list', function (e) {
 
 
 AUI().ready(
-	'liferay-hudcrumbs', 'liferay-navigation-interaction', 'liferay-sign-in-modal',
+	'liferay-navigation-interaction', 'liferay-sign-in-modal',
 	function(A) {
-		var siteBreadcrumbs = A.one('#breadcrumbs');
-
-		if (siteBreadcrumbs) {
-			siteBreadcrumbs.plug(A.Hudcrumbs);
-		}
-
 		var signIn = A.one('li.sign-in a');
 
 		if (signIn && signIn.getData('redirect') !== 'true') {

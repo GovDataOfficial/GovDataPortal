@@ -14,9 +14,17 @@
 
 package de.fhg.fokus.odp.entities.service;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.util.tracker.ServiceTracker;
+import com.liferay.petra.sql.dsl.query.DSLQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.util.OrderByComparator;
+
+import de.fhg.fokus.odp.entities.model.MetadataComment;
+
+import java.io.Serializable;
+
+import java.util.List;
 
 /**
  * Provides the local service utility for MetadataComment. This utility wraps
@@ -41,12 +49,15 @@ public class MetadataCommentLocalServiceUtil {
 	/**
 	 * Adds the metadata comment to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was added
 	 */
-	public static de.fhg.fokus.odp.entities.model.MetadataComment
-		addMetadataComment(
-			de.fhg.fokus.odp.entities.model.MetadataComment metadataComment) {
+	public static MetadataComment addMetadataComment(
+		MetadataComment metadataComment) {
 
 		return getService().addMetadataComment(metadataComment);
 	}
@@ -57,18 +68,16 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param _id the primary key for the new metadata comment
 	 * @return the new metadata comment
 	 */
-	public static de.fhg.fokus.odp.entities.model.MetadataComment
-		createMetadataComment(long _id) {
-
+	public static MetadataComment createMetadataComment(long _id) {
 		return getService().createMetadataComment(_id);
 	}
 
 	/**
 	 * @throws PortalException
 	 */
-	public static com.liferay.portal.kernel.model.PersistedModel
-			createPersistedModel(java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static PersistedModel createPersistedModel(
+			Serializable primaryKeyObj)
+		throws PortalException {
 
 		return getService().createPersistedModel(primaryKeyObj);
 	}
@@ -76,13 +85,16 @@ public class MetadataCommentLocalServiceUtil {
 	/**
 	 * Deletes the metadata comment with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param _id the primary key of the metadata comment
 	 * @return the metadata comment that was removed
 	 * @throws PortalException if a metadata comment with the primary key could not be found
 	 */
-	public static de.fhg.fokus.odp.entities.model.MetadataComment
-			deleteMetadataComment(long _id)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static MetadataComment deleteMetadataComment(long _id)
+		throws PortalException {
 
 		return getService().deleteMetadataComment(_id);
 	}
@@ -90,12 +102,15 @@ public class MetadataCommentLocalServiceUtil {
 	/**
 	 * Deletes the metadata comment from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was removed
 	 */
-	public static de.fhg.fokus.odp.entities.model.MetadataComment
-		deleteMetadataComment(
-			de.fhg.fokus.odp.entities.model.MetadataComment metadataComment) {
+	public static MetadataComment deleteMetadataComment(
+		MetadataComment metadataComment) {
 
 		return getService().deleteMetadataComment(metadataComment);
 	}
@@ -103,17 +118,22 @@ public class MetadataCommentLocalServiceUtil {
 	/**
 	 * @throws PortalException
 	 */
-	public static com.liferay.portal.kernel.model.PersistedModel
-			deletePersistedModel(
-				com.liferay.portal.kernel.model.PersistedModel persistedModel)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static PersistedModel deletePersistedModel(
+			PersistedModel persistedModel)
+		throws PortalException {
 
 		return getService().deletePersistedModel(persistedModel);
 	}
 
-	public static com.liferay.portal.kernel.dao.orm.DynamicQuery
-		dynamicQuery() {
+	public static <T> T dslQuery(DSLQuery dslQuery) {
+		return getService().dslQuery(dslQuery);
+	}
 
+	public static int dslQueryCount(DSLQuery dslQuery) {
+		return getService().dslQueryCount(dslQuery);
+	}
+
+	public static DynamicQuery dynamicQuery() {
 		return getService().dynamicQuery();
 	}
 
@@ -123,9 +143,7 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param dynamicQuery the dynamic query
 	 * @return the matching rows
 	 */
-	public static <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
-
+	public static <T> List<T> dynamicQuery(DynamicQuery dynamicQuery) {
 		return getService().dynamicQuery(dynamicQuery);
 	}
 
@@ -141,9 +159,8 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param end the upper bound of the range of model instances (not inclusive)
 	 * @return the range of matching rows
 	 */
-	public static <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end) {
+	public static <T> List<T> dynamicQuery(
+		DynamicQuery dynamicQuery, int start, int end) {
 
 		return getService().dynamicQuery(dynamicQuery, start, end);
 	}
@@ -161,10 +178,9 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching rows
 	 */
-	public static <T> java.util.List<T> dynamicQuery(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery, int start,
-		int end,
-		com.liferay.portal.kernel.util.OrderByComparator<T> orderByComparator) {
+	public static <T> List<T> dynamicQuery(
+		DynamicQuery dynamicQuery, int start, int end,
+		OrderByComparator<T> orderByComparator) {
 
 		return getService().dynamicQuery(
 			dynamicQuery, start, end, orderByComparator);
@@ -176,9 +192,7 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param dynamicQuery the dynamic query
 	 * @return the number of rows matching the dynamic query
 	 */
-	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery) {
-
+	public static long dynamicQueryCount(DynamicQuery dynamicQuery) {
 		return getService().dynamicQueryCount(dynamicQuery);
 	}
 
@@ -190,15 +204,13 @@ public class MetadataCommentLocalServiceUtil {
 	 * @return the number of rows matching the dynamic query
 	 */
 	public static long dynamicQueryCount(
-		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
+		DynamicQuery dynamicQuery,
 		com.liferay.portal.kernel.dao.orm.Projection projection) {
 
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
-	public static de.fhg.fokus.odp.entities.model.MetadataComment
-		fetchMetadataComment(long _id) {
-
+	public static MetadataComment fetchMetadataComment(long _id) {
 		return getService().fetchMetadataComment(_id);
 	}
 
@@ -208,9 +220,8 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param metadataName the metadata name
 	 * @return the java.util. list
 	 */
-	public static java.util.List
-		<de.fhg.fokus.odp.entities.model.MetadataComment> findBymetadataName(
-			String metadataName) {
+	public static List<MetadataComment> findBymetadataName(
+		String metadataName) {
 
 		return getService().findBymetadataName(metadataName);
 	}
@@ -221,9 +232,8 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param userLiferayId the user liferay id
 	 * @return the list<de.fhg.fokus.odp.entities.model. metadata comment>
 	 */
-	public static java.util.List
-		<de.fhg.fokus.odp.entities.model.MetadataComment> findByuserLiferayId(
-			long userLiferayId) {
+	public static List<MetadataComment> findByuserLiferayId(
+		long userLiferayId) {
 
 		return getService().findByuserLiferayId(userLiferayId);
 	}
@@ -248,9 +258,8 @@ public class MetadataCommentLocalServiceUtil {
 	 * @return the metadata comment
 	 * @throws PortalException if a metadata comment with the primary key could not be found
 	 */
-	public static de.fhg.fokus.odp.entities.model.MetadataComment
-			getMetadataComment(long _id)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static MetadataComment getMetadataComment(long _id)
+		throws PortalException {
 
 		return getService().getMetadataComment(_id);
 	}
@@ -266,9 +275,8 @@ public class MetadataCommentLocalServiceUtil {
 	 * @param end the upper bound of the range of metadata comments (not inclusive)
 	 * @return the range of metadata comments
 	 */
-	public static java.util.List
-		<de.fhg.fokus.odp.entities.model.MetadataComment> getMetadataComments(
-			int start, int end) {
+	public static List<MetadataComment> getMetadataComments(
+		int start, int end) {
 
 		return getService().getMetadataComments(start, end);
 	}
@@ -294,9 +302,8 @@ public class MetadataCommentLocalServiceUtil {
 	/**
 	 * @throws PortalException
 	 */
-	public static com.liferay.portal.kernel.model.PersistedModel
-			getPersistedModel(java.io.Serializable primaryKeyObj)
-		throws com.liferay.portal.kernel.exception.PortalException {
+	public static PersistedModel getPersistedModel(Serializable primaryKeyObj)
+		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
 	}
@@ -304,38 +311,23 @@ public class MetadataCommentLocalServiceUtil {
 	/**
 	 * Updates the metadata comment in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was updated
 	 */
-	public static de.fhg.fokus.odp.entities.model.MetadataComment
-		updateMetadataComment(
-			de.fhg.fokus.odp.entities.model.MetadataComment metadataComment) {
+	public static MetadataComment updateMetadataComment(
+		MetadataComment metadataComment) {
 
 		return getService().updateMetadataComment(metadataComment);
 	}
 
 	public static MetadataCommentLocalService getService() {
-		return _serviceTracker.getService();
+		return _service;
 	}
 
-	private static ServiceTracker
-		<MetadataCommentLocalService, MetadataCommentLocalService>
-			_serviceTracker;
-
-	static {
-		Bundle bundle = FrameworkUtil.getBundle(
-			MetadataCommentLocalService.class);
-
-		ServiceTracker<MetadataCommentLocalService, MetadataCommentLocalService>
-			serviceTracker =
-				new ServiceTracker
-					<MetadataCommentLocalService, MetadataCommentLocalService>(
-						bundle.getBundleContext(),
-						MetadataCommentLocalService.class, null);
-
-		serviceTracker.open();
-
-		_serviceTracker = serviceTracker;
-	}
+	private static volatile MetadataCommentLocalService _service;
 
 }

@@ -37,17 +37,17 @@ public class MetadataCommentCacheModel
 	implements CacheModel<MetadataComment>, Externalizable {
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof MetadataCommentCacheModel)) {
+		if (!(object instanceof MetadataCommentCacheModel)) {
 			return false;
 		}
 
 		MetadataCommentCacheModel metadataCommentCacheModel =
-			(MetadataCommentCacheModel)obj;
+			(MetadataCommentCacheModel)object;
 
 		if (_id == metadataCommentCacheModel._id) {
 			return true;

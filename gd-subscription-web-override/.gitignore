@@ -1,0 +1,6 @@
+.gradle/
+.sass-cache/
+.mvn/
+build/
+target/
+/target/

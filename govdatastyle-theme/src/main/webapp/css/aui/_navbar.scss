@@ -247,6 +247,7 @@
   color: $navbarLinkColor;
   text-decoration: none;
   //text-shadow: 0 1px 0 $navbarBackgroundHighlight;
+  display: block;
 }
 .navbar .nav .dropdown-toggle .caret {
   margin-top: 8px;

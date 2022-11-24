@@ -14,6 +14,15 @@
 
 .taglib-discussion {
   @extend .design-box, .design-box-padding;
+
+  .cke_contents {
+    border-top: 0;
+    border-bottom: 0;
+  }
+
+  .cke_focus .cke_contents {
+    border-color: transparent;
+  }
 }
 
 .taglib-discussion .lfr-discussion,
@@ -54,6 +63,10 @@
     padding-left: .1em;
     position: relative;
     top: .4em;
+  }
+
+  p:last-of-type {
+    display: inline;
   }
 }
 
@@ -103,5 +116,9 @@
 
   .taglib-discussion .lfr-discussion-controls .autofit-col:first-of-type > .btn-outline-borderless {
     margin-left: initial;
+  }
+
+  .cke_editable, .cke_editable:focus {
+    background-color: transparent;
   }
 }

@@ -142,4 +142,7 @@ public interface MetadataCommentModel extends BaseModel<MetadataComment> {
 	 */
 	public void setCreated(Date created);
 
+	@Override
+	public MetadataComment cloneWithOriginalValues();
+
 }

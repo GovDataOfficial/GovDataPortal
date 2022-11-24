@@ -1,0 +1,6 @@
+<FindBugsFilter>
+  <Match>
+    <!-- Ignore external files -->
+    <Package name="~org\.apache\.commons\.lang3.*" />
+  </Match>
+</FindBugsFilter>

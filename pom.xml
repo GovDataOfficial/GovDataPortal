@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>5.6.0</version>
+  <version>5.7.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -12,12 +12,13 @@
   </organization>
 
   <properties>
-    <liferay.version>7.3.2</liferay.version>
+    <liferay.version>7.4.3.41</liferay.version>
     <faces.api.version>2.2</faces.api.version>
     <liferay.faces.bridge.ext.version>6.0.0</liferay.faces.bridge.ext.version>
     <liferay.faces.bridge.version>4.1.4</liferay.faces.bridge.version>
     <mojarra.version>2.2.20</mojarra.version>
-    <liferay.deploy.dir>/opt/app/portal-liferay/liferay-home/deploy</liferay.deploy.dir>
+    <liferay.home.dir>/opt/app/portal-liferay/liferay-home</liferay.home.dir>
+    <liferay.deploy.dir>${liferay.home.dir}/deploy</liferay.deploy.dir>
     <junit.version>4.13.2</junit.version>
     <assertj.version>3.23.1</assertj.version>
     <portlet-api.version>3.0.1</portlet-api.version>
@@ -287,6 +288,8 @@
     <module>gd-developers-corner-portlet</module>
     <module>gd-metadata-quality-portlet</module>
     <module>gd-user-menu</module>
+    <module>gd-blogs-service-override</module>
+    <module>gd-subscription-web-override</module>
     <module>gd-users-admin-fragment</module>
     <module>gd-comment-taglib-fragment</module>
     <module>gd-login-web-fragment</module>
@@ -776,6 +779,11 @@
       <url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
     </repository>
     <repository>
+      <id>liferay-releases-ce</id>
+      <name>Liferay Releases CE</name>
+      <url>https://repository.liferay.com/nexus/content/repositories/liferay-releases-ce/</url>
+    </repository>
+    <repository>
       <id>additional-deps-repo</id>
       <name>Additional Maven Repository</name>
       <url>file:./local-maven-repo</url>
@@ -786,6 +794,11 @@
       <id>additional-plugin-repo</id>
       <name>Additional Maven Plugin Repository</name>
       <url>file:./local-maven-repo</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>liferay-releases-ce</id>
+      <name>Liferay Releases CE</name>
+      <url>https://repository.liferay.com/nexus/content/repositories/liferay-releases-ce/</url>
     </pluginRepository>
   </pluginRepositories>
   <reporting>

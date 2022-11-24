@@ -27,6 +27,10 @@ public class MetadataCommentLocalServiceWrapper
 	implements MetadataCommentLocalService,
 			   ServiceWrapper<MetadataCommentLocalService> {
 
+	public MetadataCommentLocalServiceWrapper() {
+		this(null);
+	}
+
 	public MetadataCommentLocalServiceWrapper(
 		MetadataCommentLocalService metadataCommentLocalService) {
 
@@ -35,6 +39,10 @@ public class MetadataCommentLocalServiceWrapper
 
 	/**
 	 * Adds the metadata comment to the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was added
@@ -73,6 +81,10 @@ public class MetadataCommentLocalServiceWrapper
 	/**
 	 * Deletes the metadata comment with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param _id the primary key of the metadata comment
 	 * @return the metadata comment that was removed
 	 * @throws PortalException if a metadata comment with the primary key could not be found
@@ -87,6 +99,10 @@ public class MetadataCommentLocalServiceWrapper
 
 	/**
 	 * Deletes the metadata comment from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was removed
@@ -110,6 +126,18 @@ public class MetadataCommentLocalServiceWrapper
 
 		return _metadataCommentLocalService.deletePersistedModel(
 			persistedModel);
+	}
+
+	@Override
+	public <T> T dslQuery(com.liferay.petra.sql.dsl.query.DSLQuery dslQuery) {
+		return _metadataCommentLocalService.dslQuery(dslQuery);
+	}
+
+	@Override
+	public int dslQueryCount(
+		com.liferay.petra.sql.dsl.query.DSLQuery dslQuery) {
+
+		return _metadataCommentLocalService.dslQueryCount(dslQuery);
 	}
 
 	@Override
@@ -317,6 +345,10 @@ public class MetadataCommentLocalServiceWrapper
 
 	/**
 	 * Updates the metadata comment in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was updated

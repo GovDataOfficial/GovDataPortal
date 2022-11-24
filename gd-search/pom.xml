@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>5.6.0</version>
+    <version>5.7.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
   <properties>
@@ -33,6 +33,11 @@
     <dependency>
       <groupId>com.liferay</groupId>
       <artifactId>com.liferay.petra.string</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.lang</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>

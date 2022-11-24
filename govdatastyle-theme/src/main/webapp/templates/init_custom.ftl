@@ -11,11 +11,11 @@
   showcontrolmenu = false
 />
 
-<#if show_sign_in>
-  <#assign
-    sign_in_register_text = languageUtil.get(locale, "sign-in-register")
-  />
-</#if>
+<#assign
+  sign_in_register_text = languageUtil.get(locale, "sign-in-register")
+  sign_in_text = languageUtil.get(locale, "sign-in")
+  sign_in_url = htmlUtil.escape(theme_display.getURLSignIn())
+/>
 
 <#if is_signed_in>
   <#assign

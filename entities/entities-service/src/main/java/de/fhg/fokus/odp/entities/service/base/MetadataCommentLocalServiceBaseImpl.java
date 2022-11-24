@@ -14,6 +14,7 @@
 
 package de.fhg.fokus.odp.entities.service.base;
 
+import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -40,14 +41,18 @@ import com.liferay.portal.kernel.util.PortalUtil;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.fhg.fokus.odp.entities.service.MetadataCommentLocalService;
+import de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil;
 import de.fhg.fokus.odp.entities.service.persistence.MetadataCommentPersistence;
 
 import java.io.Serializable;
+
+import java.lang.reflect.Field;
 
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -69,11 +74,15 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never modify or reference this class directly. Use <code>MetadataCommentLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil</code>.
+	 * Never modify or reference this class directly. Use <code>MetadataCommentLocalService</code> via injection or a <code>org.osgi.util.tracker.ServiceTracker</code> or use <code>MetadataCommentLocalServiceUtil</code>.
 	 */
 
 	/**
 	 * Adds the metadata comment to the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was added
@@ -101,6 +110,10 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	/**
 	 * Deletes the metadata comment with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param _id the primary key of the metadata comment
 	 * @return the metadata comment that was removed
 	 * @throws PortalException if a metadata comment with the primary key could not be found
@@ -116,6 +129,10 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	/**
 	 * Deletes the metadata comment from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was removed
 	 */
@@ -125,6 +142,18 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 		MetadataComment metadataComment) {
 
 		return metadataCommentPersistence.remove(metadataComment);
+	}
+
+	@Override
+	public <T> T dslQuery(DSLQuery dslQuery) {
+		return metadataCommentPersistence.dslQuery(dslQuery);
+	}
+
+	@Override
+	public int dslQueryCount(DSLQuery dslQuery) {
+		Long count = dslQuery(dslQuery);
+
+		return count.intValue();
 	}
 
 	@Override
@@ -275,6 +304,7 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	/**
 	 * @throws PortalException
 	 */
+	@Override
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException {
 
@@ -293,6 +323,7 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 			(MetadataComment)persistedModel);
 	}
 
+	@Override
 	public BasePersistence<MetadataComment> getBasePersistence() {
 		return metadataCommentPersistence;
 	}
@@ -336,6 +367,10 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	/**
 	 * Updates the metadata comment in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MetadataCommentLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param metadataComment the metadata comment
 	 * @return the metadata comment that was updated
 	 */
@@ -345,6 +380,11 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 		MetadataComment metadataComment) {
 
 		return metadataCommentPersistence.update(metadataComment);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_setLocalServiceUtilService(null);
 	}
 
 	@Override
@@ -358,6 +398,8 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	@Override
 	public void setAopProxy(Object aopProxy) {
 		metadataCommentLocalService = (MetadataCommentLocalService)aopProxy;
+
+		_setLocalServiceUtilService(metadataCommentLocalService);
 	}
 
 	/**
@@ -399,6 +441,23 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
+		}
+	}
+
+	private void _setLocalServiceUtilService(
+		MetadataCommentLocalService metadataCommentLocalService) {
+
+		try {
+			Field field =
+				MetadataCommentLocalServiceUtil.class.getDeclaredField(
+					"_service");
+
+			field.setAccessible(true);
+
+			field.set(null, metadataCommentLocalService);
+		}
+		catch (ReflectiveOperationException reflectiveOperationException) {
+			throw new RuntimeException(reflectiveOperationException);
 		}
 	}
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## v5.7.0 2022-11-24
+
+* Reduces the blacklisted liferay components
+* Supports Liferay version 7.4.3.41 GA41 now
+* Fixes URLs in info mails from the blog module: Generates URLs without port if no port is configured
+
 ## v5.6.0 2022-11-03
 
 * Updates maven dependencies to the latest bugfix / security fix version

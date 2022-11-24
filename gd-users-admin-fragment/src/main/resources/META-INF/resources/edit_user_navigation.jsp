@@ -27,41 +27,41 @@ User selUser = PortalUtil.getSelectedUser(request);
 request.setAttribute(UsersAdminWebKeys.SELECTED_USER, selUser);
 
 if (selUser != null) {
-  PortalUtil.setPageSubtitle(selUser.getFullName(), request);
+	PortalUtil.setPageSubtitle(selUser.getFullName(), request);
 }
 
 long selUserId = (selUser != null) ? selUser.getUserId() : 0;
 
 String screenNavigationCategoryKey = ParamUtil.getString(request, "screenNavigationCategoryKey", UserScreenNavigationEntryConstants.CATEGORY_KEY_GENERAL);
 String screenNavigationEntryKey = ParamUtil.getString(request, "screenNavigationEntryKey");
-%>
 
-<%
 PortletURL viewURL = renderResponse.createRenderURL();
 
 String backURL = ParamUtil.getString(request, "backURL", viewURL.toString());
 
 if (!portletName.equals(UsersAdminPortletKeys.MY_ACCOUNT)) {
-  portletDisplay.setShowBackIcon(true);
-  portletDisplay.setURLBack(backURL);
+	portletDisplay.setShowBackIcon(true);
+	portletDisplay.setURLBack(backURL);
 
-  renderResponse.setTitle((selUser == null) ? LanguageUtil.get(request, "add-user") : LanguageUtil.format(request, "edit-user-x", selUser.getFullName(), false));
+	renderResponse.setTitle((selUser == null) ? LanguageUtil.get(request, "add-user") : LanguageUtil.format(request, "edit-user-x", selUser.getFullName(), false));
 }
 
 String redirect = ParamUtil.getString(request, "redirect");
 
 if (Validator.isNull(redirect)) {
-  PortletURL redirectURL = renderResponse.createRenderURL();
-
-  redirectURL.setParameter("p_u_i_d", String.valueOf(selUserId));
-  redirectURL.setParameter("mvcRenderCommandName", "/users_admin/edit_user");
-  redirectURL.setParameter("backURL", backURL);
-
-  redirect = redirectURL.toString();
+	redirect = PortletURLBuilder.createRenderURL(
+		renderResponse
+	).setMVCRenderCommandName(
+		"/users_admin/edit_user"
+	).setBackURL(
+		backURL
+	).setParameter(
+		"p_u_i_d", selUserId
+	).buildString();
 }
 
-redirect = HttpUtil.addParameter(redirect, renderResponse.getNamespace() + "screenNavigationCategoryKey", screenNavigationCategoryKey);
-redirect = HttpUtil.addParameter(redirect, renderResponse.getNamespace() + "screenNavigationEntryKey", screenNavigationEntryKey);
+redirect = HttpComponentsUtil.addParameter(redirect, liferayPortletResponse.getNamespace() + "screenNavigationCategoryKey", screenNavigationCategoryKey);
+redirect = HttpComponentsUtil.addParameter(redirect, liferayPortletResponse.getNamespace() + "screenNavigationEntryKey", screenNavigationEntryKey);
 %>
 
 <liferay-ui:success key="userAdded" message="the-user-was-created-successfully" />
@@ -69,31 +69,31 @@ redirect = HttpUtil.addParameter(redirect, renderResponse.getNamespace() + "scre
 <portlet:actionURL name="<%= actionCommandName %>" var="actionCommandURL" />
 
 <aui:form action="<%= actionCommandURL %>" cssClass="portlet-users-admin-edit-user" data-senna-off="true" method="post" name="fm">
-  <aui:input name="p_u_i_d" type="hidden" value="<%= selUserId %>" />
-  <aui:input name="redirect" type="hidden" value="<%= redirect %>" />
-  <aui:input name="screenNavigationCategoryKey" type="hidden" value="<%= screenNavigationCategoryKey %>" />
-  <aui:input name="screenNavigationEntryKey" type="hidden" value="<%= screenNavigationEntryKey %>" />
+	<aui:input name="p_u_i_d" type="hidden" value="<%= selUserId %>" />
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="screenNavigationCategoryKey" type="hidden" value="<%= screenNavigationCategoryKey %>" />
+	<aui:input name="screenNavigationEntryKey" type="hidden" value="<%= screenNavigationEntryKey %>" />
 
-  <div class="sheet sheet-lg">
-    <c:if test="<%= (boolean)request.getAttribute(UsersAdminWebKeys.SHOW_TITLE) %>">
-      <div class="sheet-header">
-        <h2 class="sheet-title"><%= formLabel %></h2>
-      </div>
-    </c:if>
+	<clay:sheet>
+		<c:if test="<%= (boolean)request.getAttribute(UsersAdminWebKeys.SHOW_TITLE) %>">
+			<clay:sheet-header>
+				<h2 class="sheet-title"><%= formLabel %></h2>
+			</clay:sheet-header>
+		</c:if>
 
-    <div class="sheet-section">
-      <liferay-util:include page="<%= jspPath %>" servletContext="<%= application %>" />
-    </div>
+		<clay:sheet-section>
+			<liferay-util:include page="<%= jspPath %>" servletContext="<%= application %>" />
+		</clay:sheet-section>
 
-    <c:if test="<%= editable && (boolean)request.getAttribute(UsersAdminWebKeys.SHOW_CONTROLS) %>">
-      <div class="sheet-footer">
-        <aui:button primary="<%= true %>" type="submit" />
+		<c:if test="<%= editable && (boolean)request.getAttribute(UsersAdminWebKeys.SHOW_CONTROLS) %>">
+			<clay:sheet-footer>
+				<aui:button primary="<%= true %>" type="submit" />
 
-        <c:if test="<%= !portletName.equals(UsersAdminPortletKeys.MY_ACCOUNT) %>">
-          <aui:button href="<%= backURL %>" type="cancel" />
-        </c:if>
-        <a class="btn btn-danger" id="delete-account-button" href="/web/guest/konto-loeschen" target="_parent"><liferay-ui:message key="od.user.delete.button" /></a>
-      </div>
-    </c:if>
-  </div>
+				<c:if test="<%= !portletName.equals(UsersAdminPortletKeys.MY_ACCOUNT) %>">
+					<aui:button href="<%= backURL %>" type="cancel" />
+				</c:if>
+				<a class="btn btn-danger" id="delete-account-button" href="/web/guest/konto-loeschen" target="_parent"><liferay-ui:message key="od.user.delete.button" /></a>
+			</clay:sheet-footer>
+		</c:if>
+	</clay:sheet>
 </aui:form>

@@ -9,7 +9,7 @@
 
   <bean id="messageListener.govdata_index_listener" class="de.seitenbau.govdata.search.index.listener.IndexListener" />
 
-  <bean id="messagingConfigurator" class="com.liferay.portal.kernel.messaging.config.PluginMessagingConfigurator">
+  <bean id="messagingConfigurator" class="com.liferay.portal.kernel.messaging.config.DefaultMessagingConfigurator">
     <property name="messageListeners">
       <map key-type="java.lang.String" value-type="java.util.List">
         <entry key="liferay/search_writer/SYSTEM_ENGINE">

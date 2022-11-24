@@ -25,15 +25,16 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.fhg.fokus.odp.entities.model.MetadataCommentModel;
 
 import java.io.Serializable;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 
+import java.sql.Blob;
 import java.sql.Types;
 
 import java.util.Collections;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -101,20 +103,43 @@ public class MetadataCommentModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
 	public static final long METADATANAME_COLUMN_BITMASK = 1L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
 	public static final long USERLIFERAYID_COLUMN_BITMASK = 2L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
 	public static final long UUID_COLUMN_BITMASK = 4L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *		#getColumnBitmask(String)}
+	 */
+	@Deprecated
 	public static final long CREATED_COLUMN_BITMASK = 8L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public MetadataCommentModelImpl() {
@@ -169,9 +194,6 @@ public class MetadataCommentModelImpl
 				attributeGetterFunction.apply((MetadataComment)this));
 		}
 
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
-
 		return attributes;
 	}
 
@@ -203,34 +225,6 @@ public class MetadataCommentModelImpl
 		getAttributeSetterBiConsumers() {
 
 		return _attributeSetterBiConsumers;
-	}
-
-	private static Function<InvocationHandler, MetadataComment>
-		_getProxyProviderFunction() {
-
-		Class<?> proxyClass = ProxyUtil.getProxyClass(
-			MetadataComment.class.getClassLoader(), MetadataComment.class,
-			ModelWrapper.class);
-
-		try {
-			Constructor<MetadataComment> constructor =
-				(Constructor<MetadataComment>)proxyClass.getConstructor(
-					InvocationHandler.class);
-
-			return invocationHandler -> {
-				try {
-					return constructor.newInstance(invocationHandler);
-				}
-				catch (ReflectiveOperationException
-							reflectiveOperationException) {
-
-					throw new InternalError(reflectiveOperationException);
-				}
-			};
-		}
-		catch (NoSuchMethodException noSuchMethodException) {
-			throw new InternalError(noSuchMethodException);
-		}
 	}
 
 	private static final Map<String, Function<MetadataComment, Object>>
@@ -291,17 +285,20 @@ public class MetadataCommentModelImpl
 
 	@Override
 	public void setUuid(String uuid) {
-		_columnBitmask |= UUID_COLUMN_BITMASK;
-
-		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
 		}
 
 		_uuid = uuid;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
 	public String getOriginalUuid() {
-		return GetterUtil.getString(_originalUuid);
+		return getColumnOriginalValue("uuid_");
 	}
 
 	@Override
@@ -311,6 +308,10 @@ public class MetadataCommentModelImpl
 
 	@Override
 	public void set_id(long _id) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
 		__id = _id;
 	}
 
@@ -321,19 +322,21 @@ public class MetadataCommentModelImpl
 
 	@Override
 	public void setUserLiferayId(long userLiferayId) {
-		_columnBitmask |= USERLIFERAYID_COLUMN_BITMASK;
-
-		if (!_setOriginalUserLiferayId) {
-			_setOriginalUserLiferayId = true;
-
-			_originalUserLiferayId = _userLiferayId;
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
 		}
 
 		_userLiferayId = userLiferayId;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
 	public long getOriginalUserLiferayId() {
-		return _originalUserLiferayId;
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("userLiferayId"));
 	}
 
 	@Override
@@ -348,17 +351,20 @@ public class MetadataCommentModelImpl
 
 	@Override
 	public void setMetadataName(String metadataName) {
-		_columnBitmask |= METADATANAME_COLUMN_BITMASK;
-
-		if (_originalMetadataName == null) {
-			_originalMetadataName = _metadataName;
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
 		}
 
 		_metadataName = metadataName;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
 	public String getOriginalMetadataName() {
-		return GetterUtil.getString(_originalMetadataName);
+		return getColumnOriginalValue("metadataName");
 	}
 
 	@Override
@@ -373,6 +379,10 @@ public class MetadataCommentModelImpl
 
 	@Override
 	public void setText(String text) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
 		_text = text;
 	}
 
@@ -383,12 +393,34 @@ public class MetadataCommentModelImpl
 
 	@Override
 	public void setCreated(Date created) {
-		_columnBitmask = -1L;
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
 
 		_created = created;
 	}
 
 	public long getColumnBitmask() {
+		if (_columnBitmask > 0) {
+			return _columnBitmask;
+		}
+
+		if ((_columnOriginalValues == null) ||
+			(_columnOriginalValues == Collections.EMPTY_MAP)) {
+
+			return 0;
+		}
+
+		for (Map.Entry<String, Object> entry :
+				_columnOriginalValues.entrySet()) {
+
+			if (!Objects.equals(
+					entry.getValue(), getColumnValue(entry.getKey()))) {
+
+				_columnBitmask |= _columnBitmasks.get(entry.getKey());
+			}
+		}
+
 		return _columnBitmask;
 	}
 
@@ -437,6 +469,25 @@ public class MetadataCommentModelImpl
 	}
 
 	@Override
+	public MetadataComment cloneWithOriginalValues() {
+		MetadataCommentImpl metadataCommentImpl = new MetadataCommentImpl();
+
+		metadataCommentImpl.setUuid(
+			this.<String>getColumnOriginalValue("uuid_"));
+		metadataCommentImpl.set_id(this.<Long>getColumnOriginalValue("_id"));
+		metadataCommentImpl.setUserLiferayId(
+			this.<Long>getColumnOriginalValue("userLiferayId"));
+		metadataCommentImpl.setMetadataName(
+			this.<String>getColumnOriginalValue("metadataName"));
+		metadataCommentImpl.setText(
+			this.<String>getColumnOriginalValue("text_"));
+		metadataCommentImpl.setCreated(
+			this.<Date>getColumnOriginalValue("created"));
+
+		return metadataCommentImpl;
+	}
+
+	@Override
 	public int compareTo(MetadataComment metadataComment) {
 		int value = 0;
 
@@ -450,16 +501,16 @@ public class MetadataCommentModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof MetadataComment)) {
+		if (!(object instanceof MetadataComment)) {
 			return false;
 		}
 
-		MetadataComment metadataComment = (MetadataComment)obj;
+		MetadataComment metadataComment = (MetadataComment)object;
 
 		long primaryKey = metadataComment.getPrimaryKey();
 
@@ -476,31 +527,29 @@ public class MetadataCommentModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
 	public void resetOriginalValues() {
-		MetadataCommentModelImpl metadataCommentModelImpl = this;
+		_columnOriginalValues = Collections.emptyMap();
 
-		metadataCommentModelImpl._originalUuid = metadataCommentModelImpl._uuid;
-
-		metadataCommentModelImpl._originalUserLiferayId =
-			metadataCommentModelImpl._userLiferayId;
-
-		metadataCommentModelImpl._setOriginalUserLiferayId = false;
-
-		metadataCommentModelImpl._originalMetadataName =
-			metadataCommentModelImpl._metadataName;
-
-		metadataCommentModelImpl._columnBitmask = 0;
+		_columnBitmask = 0;
 	}
 
 	@Override
@@ -554,7 +603,7 @@ public class MetadataCommentModelImpl
 			attributeGetterFunctions = getAttributeGetterFunctions();
 
 		StringBundler sb = new StringBundler(
-			4 * attributeGetterFunctions.size() + 2);
+			(5 * attributeGetterFunctions.size()) + 2);
 
 		sb.append("{");
 
@@ -565,9 +614,26 @@ public class MetadataCommentModelImpl
 			Function<MetadataComment, Object> attributeGetterFunction =
 				entry.getValue();
 
+			sb.append("\"");
 			sb.append(attributeName);
-			sb.append("=");
-			sb.append(attributeGetterFunction.apply((MetadataComment)this));
+			sb.append("\": ");
+
+			Object value = attributeGetterFunction.apply((MetadataComment)this);
+
+			if (value == null) {
+				sb.append("null");
+			}
+			else if (value instanceof Blob || value instanceof Date ||
+					 value instanceof Map || value instanceof String) {
+
+				sb.append(
+					"\"" + StringUtil.replace(value.toString(), "\"", "'") +
+						"\"");
+			}
+			else {
+				sb.append(value);
+			}
+
 			sb.append(", ");
 		}
 
@@ -586,7 +652,7 @@ public class MetadataCommentModelImpl
 			attributeGetterFunctions = getAttributeGetterFunctions();
 
 		StringBundler sb = new StringBundler(
-			5 * attributeGetterFunctions.size() + 4);
+			(5 * attributeGetterFunctions.size()) + 4);
 
 		sb.append("<model><model-name>");
 		sb.append(getModelClassName());
@@ -614,23 +680,93 @@ public class MetadataCommentModelImpl
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, MetadataComment>
-			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
+			_escapedModelProxyProviderFunction =
+				ProxyUtil.getProxyProviderFunction(
+					MetadataComment.class, ModelWrapper.class);
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private String _uuid;
-	private String _originalUuid;
 	private long __id;
 	private long _userLiferayId;
-	private long _originalUserLiferayId;
-	private boolean _setOriginalUserLiferayId;
 	private String _metadataName;
-	private String _originalMetadataName;
 	private String _text;
 	private Date _created;
+
+	public <T> T getColumnValue(String columnName) {
+		columnName = _attributeNames.getOrDefault(columnName, columnName);
+
+		Function<MetadataComment, Object> function =
+			_attributeGetterFunctions.get(columnName);
+
+		if (function == null) {
+			throw new IllegalArgumentException(
+				"No attribute getter function found for " + columnName);
+		}
+
+		return (T)function.apply((MetadataComment)this);
+	}
+
+	public <T> T getColumnOriginalValue(String columnName) {
+		if (_columnOriginalValues == null) {
+			return null;
+		}
+
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		return (T)_columnOriginalValues.get(columnName);
+	}
+
+	private void _setColumnOriginalValues() {
+		_columnOriginalValues = new HashMap<String, Object>();
+
+		_columnOriginalValues.put("uuid_", _uuid);
+		_columnOriginalValues.put("_id", __id);
+		_columnOriginalValues.put("userLiferayId", _userLiferayId);
+		_columnOriginalValues.put("metadataName", _metadataName);
+		_columnOriginalValues.put("text_", _text);
+		_columnOriginalValues.put("created", _created);
+	}
+
+	private static final Map<String, String> _attributeNames;
+
+	static {
+		Map<String, String> attributeNames = new HashMap<>();
+
+		attributeNames.put("uuid_", "uuid");
+		attributeNames.put("text_", "text");
+
+		_attributeNames = Collections.unmodifiableMap(attributeNames);
+	}
+
+	private transient Map<String, Object> _columnOriginalValues;
+
+	public static long getColumnBitmask(String columnName) {
+		return _columnBitmasks.get(columnName);
+	}
+
+	private static final Map<String, Long> _columnBitmasks;
+
+	static {
+		Map<String, Long> columnBitmasks = new HashMap<>();
+
+		columnBitmasks.put("uuid_", 1L);
+
+		columnBitmasks.put("_id", 2L);
+
+		columnBitmasks.put("userLiferayId", 4L);
+
+		columnBitmasks.put("metadataName", 8L);
+
+		columnBitmasks.put("text_", 16L);
+
+		columnBitmasks.put("created", 32L);
+
+		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
+	}
+
 	private long _columnBitmask;
 	private MetadataComment _escapedModel;
 

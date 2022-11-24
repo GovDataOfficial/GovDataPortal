@@ -52,6 +52,15 @@
   text-align: center;
 }
 
+// portlet tilte fix (liferay 7.4.x)
+.hide-accessible {
+  clip: rect(0 0 0 0) !important;
+  position: absolute !important;
+  -webkit-transform: scale(0);
+  -webkit-transform-origin-x: 0;
+  -webkit-transform-origin-y: 0;
+}
+
 // portlet header fix
 .aui {
   .portlet-header {
@@ -162,7 +171,8 @@ h3.header-title {
   }
 }
 
-.aui .btn:not(.btn-unstyled) {
+.aui .btn:not(.btn-unstyled),
+.portlet-message-boards .input-group  .btn{
   @extend .h2-metainfo;
   background: $dark-gray;
   border: 1px solid $dark-gray;
@@ -703,6 +713,33 @@ footer {
 .portlet-message-boards {
   .main-content-body {
     padding-bottom: 20px;
+
+    .list-group-header  {
+      background-color: #f8f9fa;
+      padding: 0.75rem 1.25rem;
+      border: 1px solidrgba(0,0,0,0.125);
+    }
+
+    .list-group-item {
+      padding: 0.75rem 1.25rem;
+    }
+
+    .list-group-item-flex {
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
+    }
+
+    a strong {
+      font-weight: normal;
+    }
+
+  }
+
+  h3.component-title {
+    font-size: 22px;
+  }
+  .mt-4 {
+    margin-top: 0 !important;
   }
 
   .statistics-panel {
@@ -721,17 +758,28 @@ footer {
     }
   }
 
-  .basic-search {
+  .input-group {
     margin-top: 20px;
 
-    .input-group-btn {
+    .input-group-inset-item {
       margin-left: 5px;
-      padding-bottom: 10px;
+      align-items: normal;
+      padding-left: 0px;
+      padding-right: 0px;
+      border-color: transparent;
+      background-color: transparent;
 
+      .btn .c-inner {
+        margin-left: -1rem;
+        margin-right: -1rem;
+      }
       > button:nth-child(1) {
         line-height: 1;
         padding: 0 1em;
       }
+    }
+     .input-group-item .input-group-inset-after.form-control {
+        border-right-width: 1px;
     }
   }
 
@@ -739,9 +787,22 @@ footer {
     .list-group-item {
       .h5, h4 {
         font-size: 1.5rem;
+        margin-top: 10px;
       }
       h5 {
         font-size: 1rem;
+      }
+    }
+
+    .autofit-col-expand {
+      a {
+        font-size: 1.5rem;
+        margin-top: .71em;
+        margin-bottom: 0.8em;
+        color: #000;
+      }
+      a:hover {
+        color: #FFF;
       }
     }
   }
@@ -787,7 +848,7 @@ table {
     background-color: $kontur-gray;
   }
 
-  li {
+  li.nav-item {
     @extend .sb-chapter-sub;
     display: inline-block;
     border-left-style: solid;

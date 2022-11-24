@@ -116,4 +116,27 @@
       }
     }
   }
+
+  // fix hidding control elements
+  .controls-hidden .portlet-topper-toolbar {
+    display: none !important;
+  }
+
+  // fix for liferay 7.4.3.X: fix problems with asterisk in create_account form
+  @media (min-width: 576px) {
+    .form-inline label {
+      display: block;
+    }
+  }
+}
+
+// fix for liferay 7.4.3.X: fix display configurations in portlet admin menues
+.modal-open .modal {
+    position: fixed;
+}
+
+html#{$cadmin-selector} {
+  .cadmin.portal-popup {
+    height: inherit;
+  }
 }

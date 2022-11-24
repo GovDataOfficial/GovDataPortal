@@ -4,6 +4,10 @@
     @extend .design-box-padding;
   }
 
+  .text-secondary {
+    display: none;
+  }
+
   .portlet {
     padding-left: rem-calc(15);
     padding-right: rem-calc(15);
@@ -73,9 +77,12 @@
     .liferay-ddm-form-field-paragraph {
       color: inherit;
     }
-    p.ddm-label {
+    label.ddm-label {
+      cursor: default;
       display: block;
       font-family: inherit;
+      font-weight: 600;
+      font-size: .875rem;
     }
     input[type="text"].ddm-field-text {
       max-width: 30rem;
@@ -83,6 +90,9 @@
   }
 }
 
+.lfr-ddm__default-page-header {
+    display: none;
+}
 .form-field-required {
   .control-label::after {
     color: $red;
