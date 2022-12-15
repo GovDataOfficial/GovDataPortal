@@ -28,6 +28,11 @@ public abstract class ESFieldConsts
   public static final String HAS_CLOSED = "metadata.has_closed";
 
   /**
+   * Key for field HAS_DATASERVICE in search index.
+   */
+  public static final String HAS_DATASERVICE = "metadata.has_data_service";
+
+  /**
    * Key for field TEMPORAL_START in search index.
    */
   public static final String TEMPORAL_START = "metadata.temporal_start";
@@ -203,5 +208,6 @@ public abstract class ESFieldConsts
 
     BOOL_FACET_MAP.put(SearchConsts.FACET_HAS_OPEN, HAS_OPEN);
     BOOL_FACET_MAP.put(SearchConsts.FACET_HAS_CLOSED, HAS_CLOSED);
+    BOOL_FACET_MAP.put(SearchConsts.FACET_HAS_DATA_SERVICE, HAS_DATASERVICE);
   }
 }

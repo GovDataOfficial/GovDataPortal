@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,12 +37,11 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.odp.registry.ODRClient;
-import de.seitenbau.govdata.odp.registry.ckan.DcatApAvailability;
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
 import de.seitenbau.govdata.odp.registry.ckan.Util;
-import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceExportBean;
+import de.seitenbau.govdata.odp.registry.model.AccessService;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +79,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getUrl();
   }
 
-  @Override
+  /**
+   * Sets the value for the field url.
+   * 
+   * @param url
+   */
   public void setUrl(String url)
   {
     resource.setUrl(url);
@@ -93,7 +95,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getFormat();
   }
 
-  @Override
+  /**
+   * Sets the value for the field format.
+   * 
+   * @param format
+   */
   public void setFormat(String format)
   {
     resource.setFormat(format);
@@ -123,7 +129,11 @@ public class ResourceImpl implements Resource, Serializable
     return getOnlyText(getDescription());
   }
 
-  @Override
+  /**
+   * Sets the value for the field description.
+   * 
+   * @param description
+   */
   public void setDescription(String description)
   {
     resource.setDescription(description);
@@ -140,7 +150,11 @@ public class ResourceImpl implements Resource, Serializable
     return Util.readJsonList(new TextNode(resource.getLanguage()));
   }
 
-  @Override
+  /**
+   * Sets the value for the field language.
+   * 
+   * @param list
+   */
   public void setLanguage(List<String> list)
   {
     try
@@ -159,7 +173,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getHash();
   }
 
-  @Override
+  /**
+   * Sets the value for the field hash.
+   * 
+   * @param hash
+   */
   public void setHash(String hash)
   {
     resource.setHash(hash);
@@ -174,6 +192,16 @@ public class ResourceImpl implements Resource, Serializable
   public String getId()
   {
     return resource.getId();
+  }
+
+  /**
+   * Sets the value for the field id.
+   * 
+   * @param id
+   */
+  public void setId(String id)
+  {
+    resource.setId(id);
   }
 
   /**
@@ -193,7 +221,6 @@ public class ResourceImpl implements Resource, Serializable
     bean.setFormat(resource.getFormat());
     bean.setHash(resource.getHash());
     bean.setId(resource.getId());
-    bean.setLast_modified(resource.getLast_modified());
     bean.setName(resource.getName());
     bean.setResource_type(resource.getResource_type());
     bean.setSize(resource.getSize());
@@ -248,7 +275,11 @@ public class ResourceImpl implements Resource, Serializable
     return getOnlyText(getName());
   }
 
-  @Override
+  /**
+   * Sets the value for the field name.
+   * 
+   * @param name
+   */
   public void setName(String name)
   {
     resource.setName(name);
@@ -257,11 +288,15 @@ public class ResourceImpl implements Resource, Serializable
   @Override
   public Licence getLicense()
   {
-    initLicense(resource.getLicense());
+    this.license = Util.initLicense(license, resource.getLicense(), odrClient);
     return license;
   }
 
-  @Override
+  /**
+   * Sets the value for the field license.
+   * 
+   * @param license
+   */
   public void setLicense(String license)
   {
     resource.setLicense(license);
@@ -271,33 +306,8 @@ public class ResourceImpl implements Resource, Serializable
   @Override
   public Boolean isOpen()
   {
-    initLicense(resource.getLicense());
+    this.license = Util.initLicense(license, resource.getLicense(), odrClient);
     return license != null && license.isOpen();
-  }
-
-  private void initLicense(String license)
-  {
-    if (this.license == null)
-    {
-      if (license != null)
-      {
-        Licence licenceIfUnknown = createLicence(license);
-        List<Licence> licences = odrClient.listLicenses();
-        this.license =
-            licences.stream().filter(l -> l.getName().equals(license)).findFirst().orElse(licenceIfUnknown);
-      }
-      else
-      {
-        this.license = createLicence("license-id-not-set");
-      }
-    }
-  }
-  
-  private Licence createLicence(String licenceId)
-  {
-    LicenceBean bean = new LicenceBean();
-    bean.setId(licenceId);
-    return new LicenceImpl(bean);
   }
 
   @Override
@@ -306,7 +316,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getLicenseAttributionByText();
   }
 
-  @Override
+  /**
+   * Sets the value for the field licenseAttributionByText.
+   * 
+   * @param text
+   */
   public void setLicenseAttributionByText(String text)
   {
     resource.setLicenseAttributionByText(text);
@@ -318,7 +332,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getPlannedAvailability();
   }
 
-  @Override
+  /**
+   * Sets the value for the field planned_availability.
+   * 
+   * @param text
+   */
   public void setPlannedAvailability(String text)
   {
     resource.setPlannedAvailability(text);
@@ -331,19 +349,17 @@ public class ResourceImpl implements Resource, Serializable
   }
 
   @Override
-  public void SetDocumentation(String text)
-  {
-    resource.setPlannedAvailability(text);
-  }
-
-  @Override
   public List<String> getConformsTo()
   {
     return Util.readJsonList(new TextNode(resource.getConforms_to()));
   }
 
-  @Override
-  public void SetDocumentation(List<String> list) throws JsonProcessingException
+  /**
+   * Sets the value for the field conforms_to.
+   * 
+   * @param list
+   */
+  public void setConformsTo(List<String> list) throws JsonProcessingException
   {
     resource.setConforms_to(Util.writeJsonList(list));
   }
@@ -354,7 +370,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getDownload_url();
   }
 
-  @Override
+  /**
+   * Sets the value for the field download_url.
+   * 
+   * @param text
+   */
   public void setDownload_url(String text)
   {
     resource.setDownload_url(text);
@@ -366,7 +386,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getStatus();
   }
 
-  @Override
+  /**
+   * Sets the value for the field status.
+   * 
+   * @param text
+   */
   public void setStatus(String text)
   {
     resource.setStatus(text);
@@ -378,7 +402,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getMimetype();
   }
 
-  @Override
+  /**
+   * Sets the value for the field mimetype.
+   * 
+   * @param text
+   */
   public void setMimetype(String text)
   {
     resource.setMimetype(text);
@@ -390,7 +418,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getRights();
   }
 
-  @Override
+  /**
+   * Sets the value for the field rights.
+   * 
+   * @param text
+   */
   public void setRights(String text)
   {
     resource.setRights(text);
@@ -402,14 +434,34 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getHash_algorithm();
   }
 
-  @Override
+  /**
+   * Sets the value for the field hash_algorithm.
+   * 
+   * @param text
+   */
   public void setHash_algorithm(String text)
   {
     resource.setHash_algorithm(text);
   }
 
   @Override
-  public Date getLast_modified()
+  public Date getIssued()
+  {
+    return resource.getIssued();
+  }
+
+  /**
+   * Sets the value for the field issued.
+   * 
+   * @param date
+   */
+  public void setIssued(Date date)
+  {
+    resource.setIssued(date);
+  }
+
+  @Override
+  public Date getModified()
   {
     // Prefer the explicitly set modified-date over the ckan-induced one.
     if (resource.getModified() != null)
@@ -422,10 +474,14 @@ public class ResourceImpl implements Resource, Serializable
     }
   }
 
-  @Override
-  public void setLast_modified(Date date)
+  /**
+   * Sets the value for the field modified.
+   * 
+   * @param date
+   */
+  public void setModified(Date date)
   {
-    resource.setLast_modified(date);
+    resource.setModified(date);
   }
 
   private String getOnlyText(String input)
@@ -444,7 +500,11 @@ public class ResourceImpl implements Resource, Serializable
     return resource.getAvailability();
   }
 
-  @Override
+  /**
+   * Sets the value for the field availability.
+   * 
+   * @param text
+   */
   public void setAvailability(String text)
   {
     resource.setAvailability(text);
@@ -472,16 +532,36 @@ public class ResourceImpl implements Resource, Serializable
    */
   public String getShortendAvailability()
   {
+    return Util.getShortendAvailability(this.getAvailabilityDisplay());
+  }
 
-    Optional<DcatApAvailability> shortendAvailability =
-        DcatApAvailability.getFromAvailability(this.getAvailabilityDisplay());
-
-    if (shortendAvailability.isPresent())
+  @Override
+  public List<AccessService> getAccessServices()
+  {
+    if (resource.getAccessServices() == null)
     {
-      return shortendAvailability.get().name();
+      return new ArrayList<>();
     }
 
-    return null;
+    return Util.readJsonAccessServiceList(new TextNode(resource.getAccessServices()), odrClient);
+  }
+
+  /**
+   * Sets the value for the field accessServices.
+   *
+   * @param list
+   */
+  public void setAccessServices(List<AccessService> list)
+  {
+    try
+    {
+      resource.setAccessServices(Util.writeJsonAccessServiceList(list));
+    }
+    catch (JsonProcessingException e)
+    {
+      log.error("Resource: Could not write access_services: ", e);
+    }
 
   }
+
 }

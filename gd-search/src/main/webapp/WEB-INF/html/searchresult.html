@@ -136,6 +136,10 @@
         <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('licence')}, 'licence', #{'od.datasets_metadata_license'}, true)"></dl>
       </th:block>
 
+      <th:block th:if="${searchResult.filterMap.get('dataservice').get(0).docCount > 0}">
+        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('dataservice')}, 'dataservice', #{'od.gdsearch.searchresult.facet.dataservice'}, false)"></dl>
+      </th:block>
+
       <dl class="filtergroup spatial-filter" th:if="${searchResult.canContainSpatialData}">
         <dt class="filtergroup-title" th:text="#{'od.gdsearch.filter.spatial.title'}"></dt>
         <dd><a th:href="${searchResult.searchMapUrl}" class="spatial-edit-link" th:text="#{'od.gdsearch.filter.spatial.linktext'}"></a></dd>

@@ -117,4 +117,7 @@ public class ResourceBean implements Serializable
     @JsonProperty
     private String hash_algorithm;
 
+    @JsonProperty(value = "access_services")
+    private String accessServices;
+
 }

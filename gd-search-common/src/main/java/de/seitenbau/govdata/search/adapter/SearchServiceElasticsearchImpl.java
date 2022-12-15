@@ -438,6 +438,8 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
     activeFilterMap.put(SearchConsts.FACET_OPENNESS, buildIsOpenFacet(agsResult));
 
+    activeFilterMap.put(SearchConsts.FACET_DATASERVICE, buildHasDataServiceFacet(agsResult));
+
     activeFilterMap.put(
         SearchConsts.FACET_SOURCEPORTAL,
         buildListFacet(
@@ -942,6 +944,23 @@ public class SearchServiceElasticsearchImpl implements SearchService
     return aggIsOpenResult;
   }
 
+  /**
+   * Builder for HasDataService Facet - only 1 possible fixed option
+   *
+   * @param agsResult
+   * @return
+   */
+  private FilterListDto buildHasDataServiceFacet(Aggregations agsResult)
+  {
+    FilterListDto aggHasDataServiceResult = new FilterListDto();
+
+    long datasetsWithDataService =
+        ((Filter) agsResult.get(SearchConsts.FACET_HAS_DATA_SERVICE)).getDocCount();
+    aggHasDataServiceResult.add(buildFacetDto(SearchConsts.FACET_HAS_DATA_SERVICE, datasetsWithDataService));
+
+    return aggHasDataServiceResult;
+  }
+
   private QueryBuilder createTypeFilter(String typeFilterString)
   {
     QueryBuilder typeFilter = null;
@@ -1003,6 +1022,11 @@ public class SearchServiceElasticsearchImpl implements SearchService
     aggregations.add(AggregationBuilders
         .filter(SearchConsts.FACET_HAS_CLOSED, QueryBuilders.boolQuery().must(
             QueryBuilders.termQuery(ESFieldConsts.BOOL_FACET_MAP.get(SearchConsts.FACET_HAS_CLOSED),
+                "true"))));
+
+    aggregations.add(AggregationBuilders
+        .filter(SearchConsts.FACET_HAS_DATA_SERVICE, QueryBuilders.boolQuery().must(
+            QueryBuilders.termQuery(ESFieldConsts.BOOL_FACET_MAP.get(SearchConsts.FACET_HAS_DATA_SERVICE),
                 "true"))));
 
     aggregations.add(AggregationBuilders

@@ -37,6 +37,7 @@ import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.constants.FileExtension;
 import de.seitenbau.govdata.edit.model.Link;
 import de.seitenbau.govdata.navigation.PortletUtil;
+import de.seitenbau.govdata.odp.registry.model.AccessService;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
@@ -230,6 +231,21 @@ public class SelectedMetadata implements ISelectedObject
     if (metadata != null)
     {
       result = metadata.getResources();
+    }
+    return result;
+  }
+
+  /**
+   * Gets all data services from the resources in one list
+   *
+   * @return the data services
+   */
+  public List<AccessService> getDataServices()
+  {
+    List<AccessService> result = new ArrayList<>();
+    for (Resource resource : this.getResources())
+    {
+      result.addAll(resource.getAccessServices());
     }
     return result;
   }

@@ -306,9 +306,9 @@ public class MetadataImpl implements Metadata, Serializable
   }
 
   @Override
-  public Resource newResource()
+  public ResourceImpl newResource()
   {
-    Resource resource = new ResourceImpl(this.odrClient, new ResourceBean());
+    ResourceImpl resource = new ResourceImpl(this.odrClient, new ResourceBean());
     getResources().add(resource);
     return resource;
   }

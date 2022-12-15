@@ -126,6 +126,7 @@ public class SearchHitMapper
         .entryClassPK(getFieldValueString(metadata, "entryClassPK", ""))
         .hasOpen((Boolean) metadata.get("has_open"))
         .hasClosed((Boolean) metadata.get("has_closed"))
+        .hasDataService((Boolean) metadata.get("has_data_service"))
         .ownerOrg(getFieldValueString(metadata, "owner_org", ""))
         .resources(extractResources(metadata.get("resources")))
         .primaryShowcaseType(primaryShowcaseType)

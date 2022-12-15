@@ -1,0 +1,13 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <div th:fragment="description(ds, numberChars, idx)">
+    <p th:id="'dataService' + ${idx} + '_description_small'" th:unless="${#strings.isEmpty(ds.description) or #strings.length(ds.description) <= numberChars}">
+      <span th:id="'dataService' + ${idx} + '_description'" th:text="${#strings.abbreviate(ds.description, numberChars)}" ></span>
+      <span th:id="'dataService' + ${idx} + '_description_ext'">
+        <a th:attr="onclick=|showFullDescription('dataService' + ${idx} + '_description')|">[[#{od.gdsearch.details.description.show.more}]]</a>
+      </span>
+    </p>
+    <p th:id="'dataService' + ${idx} + '_description_full'" th:unless="${#strings.isEmpty(ds.description)}" th:style="${#strings.length(ds.description) <= numberChars ? '' : 'display:none'}">
+      <span th:id="'dataService' + ${idx} + '_description'" th:text="${ds.description}" ></span>
+    </p>
+  </div>
+</div>

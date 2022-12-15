@@ -297,7 +297,8 @@ public final class ParameterProcessing
           {
             bundle.addFilter(new QueryFilter(ESFieldConsts.EXT_SEARCH_MAP.get(key), key, filter));
           }
-          else if (StringUtils.equals(key, SearchConsts.FACET_OPENNESS))
+          else if (StringUtils.equals(key, SearchConsts.FACET_OPENNESS)
+              || StringUtils.equals(key, SearchConsts.FACET_DATASERVICE))
           {
             // use the "key" as grouping mechanism, effectively the "filter" is the key for this filter.
             // this can be done since the "value" of this filter is always "true".

@@ -467,6 +467,7 @@ public class EditController
     {
       String languageString = resource.getLanguage().stream().collect(Collectors.joining(", "));
       resources.add(new Resource(
+          resource.getId(),
           resource.getUrl(),
           resource.getFormat(),
           resource.getDescription(),
@@ -474,7 +475,8 @@ public class EditController
           languageString,
           resource.getLicense().getName(),
           resource.getLicenseAttributionByText(),
-          formatDate(resource.getLast_modified()),
+          formatDate(resource.getIssued()),
+          formatDate(resource.getModified()),
           resource.getPlannedAvailability(),
           resource.getAvailability()));
     }
@@ -670,26 +672,37 @@ public class EditController
     }
 
     // resources
-    List<de.seitenbau.govdata.odp.registry.model.Resource> resources = metadata.getResources();
-    resources.clear();
+    List<de.seitenbau.govdata.odp.registry.model.Resource> resourcesToSave = new ArrayList<>();
     if (form.getResources() != null)
     {
       for (Resource res : form.getResources())
       {
         ResourceImpl resourceImpl =
             new ResourceImpl(((MetadataImpl) metadata).getOdrClient(), new ResourceBean());
+        resourceImpl.setId(res.getId());
         resourceImpl.setName(res.getName());
         resourceImpl.setDescription(res.getDescription());
         resourceImpl.setUrl(res.getUrl());
         resourceImpl.setFormat(res.getFormat());
         resourceImpl.setLanguage(listFromString(res.getLanguage()));
-        resourceImpl.setLast_modified(DateUtil.parseDateString(res.getModified()));
+        resourceImpl.setIssued(DateUtil.parseDateString(res.getIssued()));
+        resourceImpl.setModified(DateUtil.parseDateString(res.getModified()));
         resourceImpl.setLicense(res.getLicenseId());
         resourceImpl.setLicenseAttributionByText(res.getLicenseAttributionByText());
         resourceImpl.setPlannedAvailability(convertBlankStringToNull(res.getPlannedAvailability()));
         resourceImpl.setAvailability(convertBlankStringToNull(res.getAvailability()));
-        resources.add(resourceImpl);
+
+        if (form.isNewDataset() && resourceImpl.getIssued() == null)
+        {
+          // set creation date for new resources
+          resourceImpl.setIssued(new Date());
+        }
+        resourcesToSave.add(resourceImpl);
       }
+      // replace resources with modified resources
+      List<de.seitenbau.govdata.odp.registry.model.Resource> resources = metadata.getResources();
+      resources.clear();
+      resources.addAll(resourcesToSave);
     }
 
     // contacts

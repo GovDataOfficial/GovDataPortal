@@ -11,19 +11,37 @@ import java.util.stream.Stream;
  */
 public abstract class SearchConsts
 {
+  /**
+   * Configuration parameter name for the Liferay index name in Elasticsearch.
+   */
   public static final String PARAM_ELASTICSEARCH_LIFERAY_INDEX_NAME = "elasticsearch.liferay.index.name";
 
+  /**
+   * Liferay index name in Elasticsearch.
+   */
   public static final String CONFIG_ELASTICSEARCH_LIFERAY_INDEX_NAME = "${"
       + PARAM_ELASTICSEARCH_LIFERAY_INDEX_NAME + "}";
 
+  /**
+   * Configuration parameter name for the index name with the showcases in Elasticsearch.
+   */
   public static final String PARAM_ELASTICSEARCH_SHOWCASES_INDEX_NAME =
       "elasticsearch.search.index.showcases";
 
+  /**
+   * Showcases index name in Elasticsearch.
+   */
   public static final String CONFIG_ELASTICSEARCH_SHOWCASES_INDEX_NAME = "${"
       + PARAM_ELASTICSEARCH_SHOWCASES_INDEX_NAME + "}";
 
+  /**
+   * Configuration parameter name for the index names in Elasticsearch to search in.
+   */
   public static final String PARAM_ELASTICSEARCH_SEARCH_INDEX_NAMES = "elasticsearch.search.index.names";
 
+  /**
+   * Search index names in Elasticsearch.
+   */
   public static final String CONFIG_ELASTICSEARCH_SEARCH_INDEX_NAMES = "${"
       + PARAM_ELASTICSEARCH_SEARCH_INDEX_NAMES + "}";
 
@@ -103,51 +121,130 @@ public abstract class SearchConsts
         .collect(Collectors.toSet());
   }
 
+  /**
+   * Filter key for the type.
+   */
   public static final String FILTER_KEY_TYPE = "type";
 
+  /**
+   * Facet key for the groups.
+   */
   public static final String FACET_GROUPS = "groups";
 
+  /**
+   * Facet key for the tags.
+   */
   public static final String FACET_TAGS = "tags";
 
+  /**
+   * Facet key for the format.
+   */
   public static final String FACET_FORMAT = "format";
 
+  /**
+   * Facet key for the openness.
+   */
   public static final String FACET_OPENNESS = "openness";
 
+  /**
+   * Facet key for has open license.
+   */
   public static final String FACET_HAS_OPEN = "has_open";
 
+  /**
+   * Facet key for has closed license.
+   */
   public static final String FACET_HAS_CLOSED = "has_closed";
 
+  /**
+   * Facet key for the license.
+   */
   public static final String FACET_LICENCE = "licence";
 
+  /**
+   * Facet key for the sourceportal.
+   */
   public static final String FACET_SOURCEPORTAL = "sourceportal";
 
+  /**
+   * Facet key for the showcase type.
+   */
   public static final String FACET_SHOWCASE_TYPE = "showcase_types";
 
+  /**
+   * Facet key for the showcase platform.
+   */
   public static final String FACET_PLATFORMS = "platforms";
 
-  public final static String FACET_STATE = "state";
+  /**
+   * Facet key for the state.
+   */
+  public static final String FACET_STATE = "state";
+
+  /**
+   * Facet key for the dataservice.
+   */
+  public static final String FACET_DATASERVICE = "dataservice";
+
+  /**
+   * Facet key for has data service.
+   */
+  public static final String FACET_HAS_DATA_SERVICE = "has_data_service";
 
   // fields used in extended search
+  /**
+   * Extended search field "title".
+   */
   public static final String FILTER_EXT_TITLE = "title";
 
+  /**
+   * Extended search field "publisher".
+   */
   public static final String FILTER_EXT_PUBLISHER = "publisher";
 
+  /**
+   * Extended search field "maintainer".
+   */
   public static final String FILTER_EXT_MAINTAINER = "maintainer";
 
+  /**
+   * Extended search field "notes".
+   */
   public static final String FILTER_EXT_NOTES = "notes";
 
+  /**
+   * Friendly URL mapping for the search result page.
+   */
   public static final String FRIENDLY_URL_MAPPING_RESULTS = "searchresult";
 
+  /**
+   * Friendly URL mapping for the details page.
+   */
   public static final String FRIENDLY_URL_MAPPING_DETAILS = "details";
 
+  /**
+   * Ascending sort.
+   */
   public static final String SEARCH_ASCENDING = "asc";
 
+  /**
+   * Descending sort.
+   */
   public static final String SEARCH_DESCENDING = "desc";
 
+  /**
+   * Field for the organization in the metadata.
+   */
   public static final String FIELD_OWNER_ORG = "metadata.owner_org";
 
+  /**
+   * Field for the metric data latest date group.
+   */
   public static final String METRIC_GROUP_DATA_NAME = "group_latest_date";
 
+  /**
+   * Field for the metric data latest date hit name.
+   */
   public static final String METRICS_TOP_HIT_NAME = "newest_data";
 
 }

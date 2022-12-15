@@ -120,7 +120,8 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
     {name: 'groups', data: categoryList},
     {name: 'format', data: formatList},
     {name: 'platforms', data: platformList},
-    {name: 'showcase_types', data: showcaseTypeList}
+    {name: 'showcase_types', data: showcaseTypeList},
+    {name: 'dataservice', data: dataserviceList}
   ]
   .forEach(function(item) {
     fieldTypes[item.name] = {
@@ -494,7 +495,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
     }
 
     // Dropdown-Fields / Multiselect (same Model-Structure)
-    ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format', 'showcase_types', 'platforms', 'state'].forEach(function(item) {
+    ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format', 'showcase_types', 'platforms', 'state', 'dataservice'].forEach(function(item) {
       if (param.activeFilters.hasOwnProperty(item)) {
         fieldList.add(Y.merge(fieldTypes[item], {
           selected: param.activeFilters[item]

@@ -78,7 +78,7 @@ public enum DcatApAvailability
   /**
    * Searches for an enum with an uri matching the given availability string.
    *
-   * @param availability availability string.
+   * @param availability string.
    * @return the enum corresponds to the given URI.
    */
   public static Optional<DcatApAvailability> getFromAvailability(String availability)

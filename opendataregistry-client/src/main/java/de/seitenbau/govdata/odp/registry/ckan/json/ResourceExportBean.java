@@ -56,9 +56,6 @@ public class ResourceExportBean implements Serializable
     private Date created;
 
     @JsonProperty
-    private Date last_modified;
-
-    @JsonProperty
     private String url;
 
     @JsonProperty

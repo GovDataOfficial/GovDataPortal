@@ -37,6 +37,8 @@ public class SearchExtViewModel
 
   private List<Map<String, String>> stateList;
 
+  private List<Map<String, String>> dataserviceList;
+
   private Map<String, String> translationMap;
   
   private List<KeyValuePair> passthroughParams;

@@ -271,6 +271,8 @@ public class MetadataImplTest {
     assertThat(res.getHash()).isEqualTo("5bcc814127be171c75595d419f371c74c9cf041419c45d6e8d2c789e5c303b47");
     assertThat(res.getLicense().getName()).isEqualTo("http://dcat-ap.de/def/licenses/dl-by-de/2.0");
     assertThat(res.getLanguage()).containsExactly("de");
+    assertThat(res.getIssued()).isEqualTo("2017-02-27");
+    assertThat(res.getModified()).isEqualTo("2017-03-07T10:00:00");
 
 
     // categories
@@ -334,7 +336,7 @@ public class MetadataImplTest {
     metadata.setExtraList(MetadataListExtraFields.POLITICAL_GEOCODING_URI, Collections.singletonList("politicalGeocodingURI"));
 
     // resources
-    Resource resource = metadata.newResource();
+    ResourceImpl resource = metadata.newResource();
     resource.setName("resource name");
     resource.setDescription("resource desc");
     resource.setFormat("resource format");
@@ -342,6 +344,8 @@ public class MetadataImplTest {
     resource.setLanguage(Collections.singletonList("resource lang"));
     resource.setLicense("resource license");
     resource.setUrl("resource url");
+    resource.setIssued(DateUtil.parseDateString("2017-11-28T12:20:00"));
+    resource.setModified(DateUtil.parseDateString("2017-12-08T11:10:00"));
 
     // ### call write on metadataimpl
     JsonNode jsonNode = metadata.write(false);
@@ -392,7 +396,9 @@ public class MetadataImplTest {
     assertThat(serializedMetadata).contains("\"format\":\"resource format\"");
     assertThat(serializedMetadata).contains("\"hash\":\"resource hash\"");
     assertThat(serializedMetadata)
-        .contains("\"__extras\":{\"license\":\"resource license\",\"language\":\"[\\\"resource lang\\\"]\"}");
+        .contains(
+            "\"__extras\":{\"license\":\"resource license\",\"modified\":\"2017-12-08T11:10:00\","
+                + "\"language\":\"[\\\"resource lang\\\"]\",\"issued\":\"2017-11-28T12:20:00\"}");
     assertThat(serializedMetadata).contains("\"url\":\"resource url\"");
   }
 
@@ -476,7 +482,7 @@ public class MetadataImplTest {
     /* prepare */
     MetadataImpl target = createMetadataImplFromJson();
     assertThat(target.getResources()).isNotEmpty();
-    target.getResources().stream().forEach(r -> r.setLicense(null));
+    target.getResources().stream().forEach(r -> ((ResourceImpl) r).setLicense(null));
 
     /* execute */
     boolean result = target.isOpen();

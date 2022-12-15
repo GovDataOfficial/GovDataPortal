@@ -53,6 +53,8 @@ public class HitDto
 
   private Boolean hasClosed;
 
+  private Boolean hasDataService;
+
   private String ownerOrg;
 
   private List<ResourceDto> resources;

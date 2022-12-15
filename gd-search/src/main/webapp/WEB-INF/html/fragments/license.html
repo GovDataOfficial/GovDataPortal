@@ -1,0 +1,23 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <th:block th:fragment="license (index, object, idPrefix)">
+    <dt>[[#{od.datasets_open_licence}]]:</dt>
+    <dd class="sbi-freie-nutzung" th:id="${idPrefix} + ${index} + '_openess'"
+        th:if="${object.open}" th:title="#{od.usage_agreement.free.description}">
+        [[#{od.usage_agreement.free}]]
+    </dd>
+    <dd class="sbi-eingeschraenkte-nutzung" th:id="${idPrefix} + ${index} + '_openess'"
+        th:unless="${object.open}" th:title="#{od.usage_agreement.restricted.description}">
+        [[#{od.usage_agreement.restricted}]]
+    </dd>
+
+    <dt th:unless="${object.license == null or #strings.isEmpty(object.license.url)}">[[#{od.usage_agreement}]]:</dt>
+    <dd th:unless="${object.license == null or #strings.isEmpty(object.license.url)}">
+      <a th:unless="${#strings.isEmpty(object.license.url)}" th:href="${object.license.url}"
+         th:text="${object.license.title}" th:id="${idPrefix} + ${index} + '_licenselink'"></a>
+    </dd>
+
+    <dt th:unless="${#strings.isEmpty(object.licenseAttributionByText)}">[[#{od.usage_attribution_by_text}]]:</dt>
+    <dd th:unless="${#strings.isEmpty(object.licenseAttributionByText)}" th:id="${idPrefix} + ${index} + '_licensetext'"
+        th:text="${object.licenseAttributionByText}"></dd>
+  </th:block>
+</div>

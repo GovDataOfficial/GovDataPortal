@@ -685,6 +685,11 @@ public class SearchresultController extends AbstractBaseController
       return LanguageUtil.get(locale, "od.usage_agreement." + filterName); // "free" or "restricted"
     }
 
+    if (StringUtils.equals(filterType, SearchConsts.FACET_DATASERVICE))
+    {
+      return LanguageUtil.get(locale, "od.dataservice.has_data_service");
+    }
+
     if (StringUtils.equals(filterType, QueryParamNames.PARAM_SHOW_ONLY_EDITOR_METADATA))
     {
       return LanguageUtil.get(locale, "od.gdsearch.searchresult.facet.onlyEditorMetadata.option");

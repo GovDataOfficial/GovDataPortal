@@ -22,8 +22,6 @@ package de.seitenbau.govdata.odp.registry.model;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 /**
  * The Interface Resource.
  *
@@ -36,11 +34,7 @@ public interface Resource
 
   String getUrl();
 
-  void setUrl(String url);
-
   String getFormat();
-
-  void setFormat(String format);
 
   /**
    * Helper method to get a abbreviated format string.
@@ -52,15 +46,9 @@ public interface Resource
 
   String getDescriptionOnlyText();
 
-  void setDescription(String description);
-
   List<String> getLanguage();
 
-  void setLanguage(List<String> list);
-
   String getHash();
-
-  void setHash(String hash);
 
   /**
    * Name of the Resource (not OGD-Standard, but CKAN supported).
@@ -69,55 +57,34 @@ public interface Resource
 
   String getNameOnlyText();
 
-  void setName(String name);
-
   Licence getLicense();
-
-  void setLicense(String license);
 
   Boolean isOpen();
 
   String getLicenseAttributionByText();
 
-  void setLicenseAttributionByText(String text);
-
   String getPlannedAvailability();
 
-  void setPlannedAvailability(String text);
-
   String getAvailability();
-
-  void setAvailability(String text);
 
   String getDocumentation();
 
   List<String> getConformsTo();
 
-  void SetDocumentation(String text);
-
-  void SetDocumentation(List<String> list) throws JsonProcessingException;
-
   String getDownload_url();
-
-  void setDownload_url(String text);
 
   String getStatus();
 
-  void setStatus(String text);
-
   String getMimetype();
-
-  void setMimetype(String text);
 
   String getRights();
 
-  void setRights(String text);
-
   String getHash_algorithm();
 
-  void setHash_algorithm(String text);
+  Date getModified();
 
-  Date getLast_modified();
+  Date getIssued();
 
-  void setLast_modified(Date date);
+  List<AccessService> getAccessServices();
+
 }

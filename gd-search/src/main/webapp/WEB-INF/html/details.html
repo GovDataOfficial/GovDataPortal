@@ -10,7 +10,7 @@
        itemtype="http://schema.org/Dataset">
 
     <div class="column small-12 large-8">
-      <div class="design-box design-box-padding">
+      <div id="metadata_details" class="design-box design-box-padding">
         <div th:if="${userCanEditDataset}" class="show-for-large-up"><a th:href="${editDatasetUrl}"
                                                                         th:text="#{'od-datasets_edit-dataset'}"
                                                                         class="action-button"></a></div>
@@ -36,12 +36,108 @@
           </dd>
         </dl>
 
+      </div>
+
+      <div id="dataservice_details" class="design-box design-box-padding" th:unless="${#lists.isEmpty(selectedMetadata.dataServices)}">
+        <h2>[[#{od.gdsearch.details.ds.header}]]</h2>
+
+        <ul class="resource-list h2-metainfo" th:unless="${#lists.isEmpty(selectedMetadata.dataServices)}">
+          <li th:each="ds,iterStat : ${selectedMetadata.dataServices}">
+            <h3>
+              <span th:unless="${#strings.isEmpty(ds.title)}" th:text="${ds.title}" th:id="'dataService' + ${iterStat.index} + '_name'"></span>
+            </h3>
+            <div th:replace="fragments/details_fragments :: description(${ds}, 200, ${iterStat.index})"></div>
+
+            <dl class="inline-list">
+              <dt th:unless="${ds.availability == null}">[[#{od.gdsearch.details.dcatap.availability}]]:</dt>
+              <dd th:unless="${ds.availability == null}" th:id="'dataService' + ${iterStat.index} + '_availability'"
+                  th:text="#{'od.gdsearch.details.dcatap.availability.' + ${#strings.toLowerCase(ds.shortendAvailability)}}"></dd>
+
+              <th:block th:replace="fragments/license :: license(${iterStat.index}, ${ds}, 'dataService')"/>
+
+              <dt>[[#{od.gdsearch.details.urls}]]:</dt>
+              <ul class="urllist" th:unless="${#lists.isEmpty(ds.endpointUrls)}">
+                <li th:each="endpointUrl : ${ds.endpointUrls}">
+                  <a th:href="${endpointUrl}" target="_blank" th:id="'dataService' + ${iterStat.index} + '_url'"
+                     th:text="${endpointUrl}"></a>
+                </li>
+              </ul>
+              <dd th:if="${#lists.isEmpty(ds.endpointUrls)}">-</dd>
+
+              <dt th:unless="${#strings.isEmpty(ds.endpointDescription)}">[[#{od.gdsearch.details.ds.endpoint_description}]]:</dt>
+              <dd th:unless="${#strings.isEmpty(ds.endpointDescription)}" th:id="'dataService' + ${iterStat.index} + '_urldescription'"
+                  th:text="${ds.endpointDescription}"></dd>
+
+              <dt th:unless="${#lists.isEmpty(ds.servesDataset)}">[[#{od.gdsearch.details.ds.serves_dataset}]]:</dt>
+              <ul class="urllist" th:unless="${#lists.isEmpty(ds.servesDataset)}">
+                <li th:each="servesDataset : ${ds.servesDataset}">
+                  <a th:href="${servesDataset}" target="_blank" th:id="'dataService' + ${iterStat.index} + '_endpointurl'"
+                     th:text="${servesDataset}"></a>
+                </li>
+              </ul>
+            </dl>
+          </li>
+        </ul>
+      </div>
+
+      <div id="distribution_details" class="design-box design-box-padding" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
+        <h2>[[#{od.gdsearch.details.res.header}]]</h2>
+
+        <ul class="resource-list h2-metainfo" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
+          <li th:each="res,iterStat : ${selectedMetadata.resources}">
+            <h3>
+              <span th:replace="fragments/icons :: resourceicon(${res.formatShort})"></span>
+              <span th:unless="${#strings.isEmpty(res.name)}" th:id="'resource' + ${iterStat.index} + '_name'"
+                    th:text="${res.nameOnlyText}"></span>
+              <span th:if="${#strings.isEmpty(res.name)}" th:id="'resource' + ${iterStat.index} + '_name'"
+                    th:text="${res.url}"></span>
+            </h3>
+            <p th:unless="${#strings.isEmpty(res.description)}" th:id="'resource' + ${iterStat.index} + '_description'"
+               th:text="${res.descriptionOnlyText}"></p>
+            <span class="alert alert-warning" role="alert"
+                  th:if="${#sets.contains(selectedMetadata.notAvailableResourceLinks, res.url)}">
+              <img class="alert-icon-resource" th:src="@{${themeDisplay.pathThemeImages} + '/svgicons/alert.svg'}"
+                   alt=""/>
+              <strong th:text="#{od.metadata.validation.url.unavailable}"></strong>
+            </span>
+            <dl class="inline-list">
+              <dt>[[#{last-modified}]]:</dt>
+              <dd th:unless="${res.modified == null}" th:id="'resource' + ${iterStat.index} + '_modified'"
+                  th:text="${#dates.format(res.modified, 'dd.MM.yyyy')}"></dd>
+              <dd th:if="${res.modified == null}" th:id="'resource' + ${iterStat.index} + '_modified'">-</dd>
+
+              <dt>[[#{od.gdsearch.details.dcatap.availability}]]:</dt>
+              <dd th:unless="${res.availabilityDisplay == null or res.shortendAvailability == null}" th:id="'resource' + ${iterStat.index} + '_availability'"
+                  th:text="#{'od.gdsearch.details.dcatap.availability.' + ${#strings.toLowerCase(res.shortendAvailability)}}"></dd>
+              <dd th:if="${res.availabilityDisplay != null and res.shortendAvailability == null}"
+                  th:text="#{res.availabilityDisplay}" th:id="'resource' + ${iterStat.index} + '_availability'"></dd>
+              <dd th:if="${res.availabilityDisplay == null}" th:id="'resource' + ${iterStat.index} + '_availability'">-</dd>
+
+              <th:block th:replace="fragments/license :: license(${iterStat.index}, ${res}, 'resource')"/>
+
+              <dt>[[#{od.gdsearch.details.url}]]:</dt>
+              <dd>
+                <a th:href="${res.url}" target="_blank" th:id="'resource' + ${iterStat.index} + '_url'"
+                   th:text="${res.url}"></a>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+
+        <div th:if="${#lists.isEmpty(selectedMetadata.resources)}"
+             th:text="#{od.gdsearch.details.res.emptymsg}"></div>
+      </div>
+
+      <div id="metadata_urls" class="design-box design-box-padding">
+        <h2>
+          <span th:text="#{od.detail.metadata.header}"></span>
+        </h2>
         <ul class="resource-list h2-metainfo">
           <li>
-            <h2>
+            <h3>
               <span class="resource-icon">[[#{od.gdsearch.details.rdf}]]</span>
               <span th:text="#{od.detail.metadata.linktockan}"></span>
-            </h2>
+            </h3>
             <dl class="inline-list">
               <dt>[[#{od.gdsearch.details.url}]]:</dt>
               <dd>
@@ -51,71 +147,6 @@
             </dl>
           </li>
         </ul>
-
-      </div>
-
-      <div class="design-box design-box-padding" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
-        <h2>[[#{od.gdsearch.details.res.header}]]:</h2>
-
-        <ul class="resource-list h2-metainfo" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
-          <li th:each="res,iterStat : ${selectedMetadata.resources}">
-            <h3>
-              <span th:replace="fragments/icons :: resourceicon(${res.formatShort})"></span>
-              <span th:unless="${#strings.isEmpty(res.name)}" th:text="${res.nameOnlyText}"></span>
-              <span th:if="${#strings.isEmpty(res.name)}" th:text="${res.url}"></span>
-            </h3>
-            <p th:unless="${#strings.isEmpty(res.description)}" th:text="${res.descriptionOnlyText}"></p>
-            <span class="alert alert-warning" role="alert"
-                  th:if="${#sets.contains(selectedMetadata.notAvailableResourceLinks, res.url)}">
-              <img class="alert-icon-resource" th:src="@{${themeDisplay.pathThemeImages} + '/svgicons/alert.svg'}"
-                   alt=""/>
-              <strong th:text="#{od.metadata.validation.url.unavailable}"></strong>
-            </span>
-            <dl class="inline-list">
-              <dt>[[#{last-modified}]]:</dt>
-              <dd th:unless="${res.last_modified == null}"
-                  th:text="${#dates.format(res.last_modified, 'dd.MM.yyyy')}"></dd>
-              <dd th:if="${res.last_modified == null}">-</dd>
-
-              <dt>[[#{od.gdsearch.details.res.availability}]]:</dt>
-              <dd th:unless="${res.availabilityDisplay == null or res.shortendAvailability == null}"
-                  th:text="#{'od.gdsearch.details.res.availability.' + ${#strings.toLowerCase(res.shortendAvailability)}}"></dd>
-              <dd th:if="${res.availabilityDisplay != null and res.shortendAvailability == null}"
-                  th:text="#{res.availabilityDisplay}"></dd>
-              <dd th:if="${res.availabilityDisplay == null}">-</dd>
-
-              <dt>[[#{od.datasets_open_licence}]]:</dt>
-              <dd class="sbi-freie-nutzung"
-                  th:if="${res.open}" th:title="#{od.usage_agreement.free.description}">
-                [[#{od.usage_agreement.free}]]
-              </dd>
-              <dd class="sbi-eingeschraenkte-nutzung"
-                  th:unless="${res.open}" th:title="#{od.usage_agreement.restricted.description}">
-                [[#{od.usage_agreement.restricted}]]
-              </dd>
-
-              <dt>[[#{od.usage_agreement}]]:</dt>
-              <dd th:unless="${res.license == null}">
-                <a th:unless="${#strings.isEmpty(res.license.url)}" th:href="${res.license.url}" th:text="${res.license.title}"></a>
-                <span th:if="${#strings.isEmpty(res.license.url)}" th:text="${res.license.title}">></span>
-              </dd>
-              <dd th:if="${res.license == null}">-</dd>
-
-              <dt>[[#{od.usage_attribution_by_text}]]:</dt>
-              <dd th:unless="${#strings.isEmpty(res.licenseAttributionByText)}" th:text="${res.licenseAttributionByText}"></dd>
-              <dd th:if="${#strings.isEmpty(res.licenseAttributionByText)}">-</dd>
-
-              <dt>[[#{od.gdsearch.details.url}]]:</dt>
-              <dd>
-                <a th:href="${res.url}" target="_blank" th:id="'resource'+${iterStat.index}+'_url'"
-                   th:text="${res.url}"></a>
-              </dd>
-            </dl>
-          </li>
-        </ul>
-
-        <div th:if="${#lists.isEmpty(selectedMetadata.resources)}"
-             th:text="#{od.gdsearch.details.res.emptymsg}"></div>
       </div>
 
     </div>
@@ -291,3 +322,10 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript" th:inline="javascript" >
+  function showFullDescription(id) {
+    document.getElementById(id + "_small").style.display = 'none';
+    document.getElementById(id + "_full").style.removeProperty('display');
+  }
+</script>

@@ -1,5 +1,10 @@
 # Changelog
 
+## v5.8.0 2022-12-15
+
+* Adds support for dcat:accessService in Distribution to the search and the details view
+* Writes modified date in resources into field `modified` now
+
 ## v5.7.0 2022-11-24
 
 * Reduces the blacklisted liferay components

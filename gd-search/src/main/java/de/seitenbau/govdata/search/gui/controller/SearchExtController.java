@@ -121,6 +121,7 @@ public class SearchExtController extends AbstractBaseController
         .showcaseTypeList(prepareShowcaseTypeList())
         .opennessList(prepareOpennessList(locale))
         .stateList(prepareStateList())
+        .dataserviceList(prepareDataserviceList(locale))
         .passthroughParams(passthroughParams)
         .hiddenFields(hiddenFields)
         .actionUrl(actionUrl.toString())
@@ -225,6 +226,13 @@ public class SearchExtController extends AbstractBaseController
     return translateList(locale, "od.usage_agreement.", new String[] {
         SearchConsts.FACET_HAS_OPEN,
         SearchConsts.FACET_HAS_CLOSED,
+    });
+  }
+
+  private List<Map<String, String>> prepareDataserviceList(Locale locale)
+  {
+    return translateList(locale, "od.dataservice.", new String[] {
+        SearchConsts.FACET_HAS_DATA_SERVICE
     });
   }
 

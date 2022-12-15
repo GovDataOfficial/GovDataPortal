@@ -19,7 +19,9 @@ import lombok.NoArgsConstructor;
 public class Resource implements Serializable
 {
   private static final long serialVersionUID = -516410984434917647L;
-  
+
+  private String id;
+
   @URL
   @NotEmpty
   private String url;
@@ -37,6 +39,10 @@ public class Resource implements Serializable
   private String licenseId;
 
   private String licenseAttributionByText;
+
+  @StringDate(format = CommonConstants.DATE_PATTERN, regex = "\\d{1,2}.\\d{1,2}.\\d{4}",
+      message = "{dateFormat}")
+  private String issued;
 
   @StringDate(format=CommonConstants.DATE_PATTERN, regex="\\d{1,2}.\\d{1,2}.\\d{4}", message="{dateFormat}")
   private String modified;

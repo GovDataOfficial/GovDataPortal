@@ -29,7 +29,9 @@ import com.liferay.portletmvc4spring.test.mock.web.portlet.MockActionRequest;
 import com.liferay.portletmvc4spring.test.mock.web.portlet.MockActionResponse;
 
 import de.seitenbau.govdata.cache.OrganizationCache;
+import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.edit.model.EditForm;
+import de.seitenbau.govdata.edit.model.Resource;
 import de.seitenbau.govdata.fuseki.FusekiClient;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.registry.ODRClient;
@@ -141,6 +143,14 @@ public class EditControllerTest
     editForm.setOrganizationId(organizationId);
     String contributorID = "contributorID-1";
     editForm.setContributorId(contributorID);
+    // resources
+    Resource res = new Resource();
+    res.setName("res name");
+    res.setDescription("res description");
+    res.setUrl("res url");
+    res.setIssued("2022-10-20");
+    res.setModified("2022-11-222");
+    editForm.setResources(Lists.newArrayList(res));
 
     MockActionResponse response = new MockActionResponse();
     MockActionRequest request = new MockActionRequest();
@@ -165,6 +175,14 @@ public class EditControllerTest
     Mockito.verify(odrClient, Mockito.times(2)).getMetadata(ckanUser, titleMunged);
     Mockito.verify(fusekiClient).updateOrCreateDataset(ckanUser, metadata.getId(), metadata.getId(),
         metadata.getOwnerOrg(), contributorID);
+    Assertions.assertThat(metadata.getResources()).extracting("name").containsExactly("res name");
+    Assertions.assertThat(metadata.getResources()).extracting("description")
+        .containsExactly("res description");
+    Assertions.assertThat(metadata.getResources()).extracting("url").containsExactly("res url");
+    Assertions.assertThat(metadata.getResources()).extracting("issued").containsExactly(
+        DateUtil.parseDateString(editForm.getResources().stream().findFirst().get().getIssued()));
+    Assertions.assertThat(metadata.getResources()).extracting("modified").containsExactly(
+        DateUtil.parseDateString(editForm.getResources().stream().findFirst().get().getModified()));
   }
 
   @Test
