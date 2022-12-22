@@ -238,6 +238,26 @@ function togglePrefix(prefixKey, prefixValue) {
   }
 }
 
+function getShowName() {
+  return Liferay.Language.get('od.developers.corner.mobile.list.show');
+}
+
+function getHideName() {
+  return Liferay.Language.get('od.developers.corner.mobile.list.hide');
+}
+
+function toggleList(id, cssClass) {
+  var list = document.getElementById(id);
+  var btn = document.getElementById(id + "Btn");
+  if (list.classList.contains(cssClass)) {
+    list.classList.remove(cssClass);
+    btn.innerHTML = getHideName();
+  } else {
+    list.classList.add(cssClass);
+    btn.innerHTML = getShowName();
+  }
+}
+
 function setContentType(value) {
   var tab = yasgui.getTab();
   tab.setRequestConfig({ acceptHeaderSelect: value });
@@ -282,11 +302,13 @@ function setQueries(type) {
     // unknown value
     return false;
   }
-  var listHtml = '<h2>Beispiel-Abfragen:</h2>';
+  var listHtml = '<div class="mobileList"><h2>Beispiel-Abfragen:</h2><a id="exampleListElementsBtn" class="btn btn-small" onclick="toggleList(\'exampleListElements\', \'listElements\')">' + getHideName() + '</a></div>';
+  listHtml += '<div id="exampleListElements">'
   queries.forEach(function (q, i) {
     listHtml += '<a id="sparqlExample' + i + '" class="btn btn-margin" onclick="loadExample(' + i + ')">'
       + q.name + '</a>';
   });
+  listHtml += '</div>'
   document.getElementById("exampleList").innerHTML = listHtml;
   return true;
 }

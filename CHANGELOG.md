@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.8.1 2022-12-22
+
+* Improves the user interface of the SPARQL editor for mobile clients
+
 ## v5.8.0 2022-12-15
 
 * Adds support for dcat:accessService in Distribution to the search and the details view

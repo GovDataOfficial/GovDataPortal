@@ -28,6 +28,30 @@
     float: right;
   }
 
+  .mobileList {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .btn-small {
+      width: 33%;
+      padding: .3em .5em !important;
+  
+      @media #{$medium-up} {
+        display: none;
+      }
+    }
+  }
+
+  .listElements {
+    @media #{$small-only} {
+      display: none;
+    }
+    @media #{$medium-up} {
+      display: block;
+    }
+  }
+
   .prefix-textbox {
     width: 100%;
   }

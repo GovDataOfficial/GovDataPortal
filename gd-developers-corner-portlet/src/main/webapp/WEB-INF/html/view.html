@@ -77,12 +77,14 @@
   yasr = yasgui.getTab().yasr;
 
    // Build list with prefixes
-  var prefixesHtml = '<h2>Prefixes hinzufügen:</h2>';
+  var prefixesHtml = '<div class="mobileList"><h2>Prefixes hinzufügen:</h2><a id="prefixListElementsBtn" class="btn btn-small" onclick="toggleList(\'prefixListElements\', \'listElements\')">' + getHideName() + '</a></div>';
   var prefixes = getConfig().prefixes;
+  prefixesHtml += '<div id="prefixListElements">'
   for(p in prefixes) {
     prefixesHtml += '<a id="prefixButton_' + p + '" class="btn btn-margin" onclick="togglePrefix(\'' + p
         + '\', \'' + prefixes[p] + '\')">' + p + '</a>';
   }
+  prefixesHtml += '</div>'
   document.getElementById("prefixList").innerHTML = prefixesHtml;
 
   // set default queries
@@ -93,6 +95,10 @@
   // init description to hidden
   document.getElementById("description-ext").style.display = "none";
 
-  /*]]>*/
+  // init displaying lists to avoid not displaying without javascript
+  toggleList("exampleListElements", "listElements");
+  toggleList("prefixListElements", "listElements");
+
+/*]]>*/
 </script>
   
