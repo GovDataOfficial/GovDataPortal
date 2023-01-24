@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.9.0 2023-01-23
+
+* Updates Apache Jena Fuseki client library to version 4.7.0
+
 ## v5.8.1 2022-12-22
 
 * Improves the user interface of the SPARQL editor for mobile clients

@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.fhg.fokus.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>5.8.1</version>
+    <version>5.9.0</version>
   </parent>
   
   <artifactId>odp-common</artifactId>
