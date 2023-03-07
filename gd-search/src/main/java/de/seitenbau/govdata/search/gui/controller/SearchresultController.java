@@ -63,6 +63,7 @@ import de.seitenbau.govdata.search.common.SearchQuery;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
+import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.geostate.cache.GeoStateCache;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.FilterViewListModel;
@@ -129,6 +130,9 @@ public class SearchresultController extends AbstractBaseController
   @Inject
   private GeoStateCache geoStateCache;
 
+  @Inject
+  private FilterUtil filterUtil;
+
   /**
    * Display search result.
    * @param request
@@ -192,7 +196,8 @@ public class SearchresultController extends AbstractBaseController
     // execute search
     SearchFilterBundle searchFilterBundle = ParameterProcessing.createFilterBundle(
         preparm,
-        new ODRTools().extractIDsFromOrganizations(editorOrganizationList));
+        new ODRTools().extractIDsFromOrganizations(editorOrganizationList),
+        filterUtil.getFilterDisabledList());
 
     SearchResultContainer result = indexService.search(
         preparm.getQuery(),
@@ -688,6 +693,11 @@ public class SearchresultController extends AbstractBaseController
     if (StringUtils.equals(filterType, SearchConsts.FACET_DATASERVICE))
     {
       return LanguageUtil.get(locale, "od.dataservice.has_data_service");
+    }
+
+    if (StringUtils.equals(filterType, SearchConsts.FACET_HIGH_VALUE_DATASET))
+    {
+      return LanguageUtil.get(locale, "od.dataset.is_hvd");
     }
 
     if (StringUtils.equals(filterType, QueryParamNames.PARAM_SHOW_ONLY_EDITOR_METADATA))

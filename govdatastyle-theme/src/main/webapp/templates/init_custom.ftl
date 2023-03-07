@@ -1,13 +1,13 @@
 <#assign
   root_css_class = "aui " + root_css_class
   nav_css_class = nav_css_class + " navbar site-navigation"
-  logo_govdata_src = images_folder + "/logo_govdata.png"
+  logo_govdata_src = images_folder + "/logo.png"
   groupService = serviceLocator.findService("com.liferay.portal.kernel.service.GroupLocalService")
   layoutService = serviceLocator.findService("com.liferay.portal.kernel.service.LayoutLocalService")
   defaultSiteGroup = groupService.getFriendlyURLGroup(theme_display.getCompanyId(), "/guest")
-  checklistsLayout = layoutService.getFriendlyURLLayout(defaultSiteGroup.getGroupId(), false, "/checklisten")
+  checklistsLayout = (layoutService.fetchLayoutByFriendlyURL(defaultSiteGroup.getGroupId(), false, "/checklisten"))!""
   permission_checker = theme_display.getPermissionChecker()
-  hasChecklistViewPermission = layoutPermission.contains(permission_checker, checklistsLayout, "VIEW")
+  hasChecklistViewPermission = false
   showcontrolmenu = false
 />
 
@@ -16,6 +16,12 @@
   sign_in_text = languageUtil.get(locale, "sign-in")
   sign_in_url = htmlUtil.escape(theme_display.getURLSignIn())
 />
+
+<#if checklistsLayout?has_content>
+  <#assign
+    hasChecklistViewPermission = layoutPermission.contains(permission_checker, checklistsLayout, "VIEW")
+  />
+</#if>
 
 <#if is_signed_in>
   <#assign
@@ -27,5 +33,5 @@
         <#assign showcontrolmenu = true />
         <#break>
     </#if>
-  </#list> 
+  </#list>
 </#if>

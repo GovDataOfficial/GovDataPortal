@@ -18,17 +18,17 @@ import lombok.NoArgsConstructor;
 public class SearchExtViewModel
 {
   private PreparedParameters preparedParameters;
-  
+
   private List<Map<String, String>> categoryList;
-  
+
   private List<Map<String, String>> licenceList;
-  
+
   private List<Map<String, String>> organizationList;
-  
+
   private List<Map<String, String>> typeList;
-  
+
   private List<Map<String, String>> formatList;
-  
+
   private List<Map<String, String>> platformList;
 
   private List<Map<String, String>> showcaseTypeList;
@@ -39,12 +39,16 @@ public class SearchExtViewModel
 
   private List<Map<String, String>> dataserviceList;
 
+  private List<Map<String, String>> highValueDatasetList;
+
   private Map<String, String> translationMap;
-  
+
   private List<KeyValuePair> passthroughParams;
-  
+
   private String[] hiddenFields;
-  
+
   private String actionUrl;
+
+  private List<String> filterdisabledList;
 }
 

@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import javax.naming.ConfigurationException;
 import javax.net.ssl.SSLContext;
 
@@ -94,10 +95,10 @@ import de.seitenbau.govdata.search.common.ESFieldConsts;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.common.SearchQuery;
 import de.seitenbau.govdata.search.filter.BaseFilter;
+import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.index.IndexConstants;
 import de.seitenbau.govdata.search.index.mapper.SearchHitMapper;
 import de.seitenbau.govdata.search.index.model.FacetDto;
-import de.seitenbau.govdata.search.index.model.FacetDto.FacetDtoBuilder;
 import de.seitenbau.govdata.search.index.model.FilterListDto;
 import de.seitenbau.govdata.search.index.model.HitDto;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
@@ -163,7 +164,10 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
   private int minutesKeepAliveScroll;
 
-  private String[] defaultTypeFilterValues;
+  @Inject
+  private FilterUtil filterUtil;
+
+  private String[] highValueDatasetTags;
 
   @Autowired
   private SearchHitMapper searchHitMapper;
@@ -404,7 +408,8 @@ public class SearchServiceElasticsearchImpl implements SearchService
     {
       totalHitsAllTypes =
           countHits(baseQuery,
-              QueryBuilders.termsQuery(ESFieldConsts.FIELD_METADATA_TYPE, defaultTypeFilterValues),
+              QueryBuilders.termsQuery(ESFieldConsts.FIELD_METADATA_TYPE,
+                  filterUtil.getDefaultTypeFilterValues()),
               filters);
     }
 
@@ -438,7 +443,11 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
     activeFilterMap.put(SearchConsts.FACET_OPENNESS, buildIsOpenFacet(agsResult));
 
-    activeFilterMap.put(SearchConsts.FACET_DATASERVICE, buildHasDataServiceFacet(agsResult));
+    activeFilterMap.put(SearchConsts.FACET_DATASERVICE,
+        buildBoolFilterFacet(agsResult, SearchConsts.FACET_HAS_DATA_SERVICE));
+
+    activeFilterMap.put(SearchConsts.FACET_HIGH_VALUE_DATASET,
+        buildBoolFilterFacet(agsResult, SearchConsts.FACET_IS_HIGH_VALUE_DATASET));
 
     activeFilterMap.put(
         SearchConsts.FACET_SOURCEPORTAL,
@@ -945,20 +954,18 @@ public class SearchServiceElasticsearchImpl implements SearchService
   }
 
   /**
-   * Builder for HasDataService Facet - only 1 possible fixed option
+   * Builder for buildBoolFilterFacet Facet - only 1 possible fixed option
    *
    * @param agsResult
+   * @param facet
    * @return
    */
-  private FilterListDto buildHasDataServiceFacet(Aggregations agsResult)
+  private FilterListDto buildBoolFilterFacet(Aggregations agsResult, String facet)
   {
-    FilterListDto aggHasDataServiceResult = new FilterListDto();
-
-    long datasetsWithDataService =
-        ((Filter) agsResult.get(SearchConsts.FACET_HAS_DATA_SERVICE)).getDocCount();
-    aggHasDataServiceResult.add(buildFacetDto(SearchConsts.FACET_HAS_DATA_SERVICE, datasetsWithDataService));
-
-    return aggHasDataServiceResult;
+    FilterListDto agg = new FilterListDto();
+    long datasetsCount = ((Filter) agsResult.get(facet)).getDocCount();
+    agg.add(buildFacetDto(facet, datasetsCount));
+    return agg;
   }
 
   private QueryBuilder createTypeFilter(String typeFilterString)
@@ -978,12 +985,15 @@ public class SearchServiceElasticsearchImpl implements SearchService
   {
     FilterListDto typeFilterList = new FilterListDto();
     typeFilterList.setSingletonFiltergroup(true); // there can be only one type filter
-    typeFilterList.add(
-        buildFacetDto(
-            new String[] {SearchConsts.TYPE_DATASET}, baseQuery, filters));
-    typeFilterList.add(buildFacetDto(SearchConsts.TYPE_SHOWCASE, baseQuery, filters));
-    typeFilterList.add(buildFacetDto(SearchConsts.TYPE_ARTICLE, baseQuery, filters));
-    typeFilterList.add(buildFacetDto(SearchConsts.TYPE_BLOG, baseQuery, filters));
+
+    for (String filterTypeValue : SearchConsts.VALID_FILTER_TYPES_WITHOUT_ALL_ORDERED)
+    {
+      if (filterUtil.getDefaultTypeFilterValues().contains(filterTypeValue))
+      {
+        typeFilterList.add(buildFacetDto(filterTypeValue, baseQuery, filters));
+      }
+    }
+
     return typeFilterList;
   }
 
@@ -1028,6 +1038,13 @@ public class SearchServiceElasticsearchImpl implements SearchService
         .filter(SearchConsts.FACET_HAS_DATA_SERVICE, QueryBuilders.boolQuery().must(
             QueryBuilders.termQuery(ESFieldConsts.BOOL_FACET_MAP.get(SearchConsts.FACET_HAS_DATA_SERVICE),
                 "true"))));
+
+    if (ArrayUtils.isNotEmpty(highValueDatasetTags))
+    {
+      aggregations.add(AggregationBuilders.filter(SearchConsts.FACET_IS_HIGH_VALUE_DATASET,
+          QueryBuilders.termsQuery(ESFieldConsts.FACET_MAP.get(SearchConsts.FACET_TAGS),
+              highValueDatasetTags)));
+    }
 
     aggregations.add(AggregationBuilders
         .terms(SearchConsts.FACET_LICENCE)
@@ -1239,34 +1256,6 @@ public class SearchServiceElasticsearchImpl implements SearchService
     return buildFacetDto(type, countHits(baseQuery, typeFilter, filters));
   }
 
-  /**
-   * Erzeugt ein {@link FacetDto}-Objekt aus den übergebenen Parametern. Es werden alle Treffer zu
-   * den übergebenen Typen (<code>typeArray</code>) ermittelt, ein Filter mit dem Namen des ersten
-   * Typs erstellt und zurückgegeben.
-   *
-   * @param typeArray das Array mit den Typen.
-   * @param baseQuery die Base-Query.
-   * @return der erstellte Filter.
-   */
-  private FacetDto buildFacetDto(String[] typeArray, QueryBuilder baseQuery, BoolQueryBuilder filters)
-  {
-    FacetDtoBuilder builder = FacetDto.builder();
-    if (ArrayUtils.isNotEmpty(typeArray))
-    {
-      long hitsCount = 0;
-      String name = typeArray[0];
-      // counting hits
-      for (String type : typeArray)
-      {
-        QueryBuilder typeFilter =
-            QueryBuilders.boolQuery().must(QueryBuilders.termQuery(ESFieldConsts.FIELD_METADATA_TYPE, type));
-        hitsCount += countHits(baseQuery, typeFilter, filters);
-      }
-      builder.name(name).docCount(hitsCount);
-    }
-    return builder.build();
-  }
-
   private FacetDto buildFacetDto(String name, long docCount)
   {
     return FacetDto.builder().name(name).docCount(docCount).build();
@@ -1361,14 +1350,15 @@ public class SearchServiceElasticsearchImpl implements SearchService
     this.minutesKeepAliveScroll = minutesKeepAliveScroll;
   }
 
-  public String[] getDefaultTypeFilterValues()
+  /**
+   * Setzt welche Tags einen Datensatz als High-Value-Dataset beschreiben.
+   *
+   * @param highValueDatasetTags die Tags, z.B. "hvd,highvaluedataset".
+   */
+  @Value("${elasticsearch.high.value.dataset.tags}")
+  public void setHighValueDatasetTags(String highValueDatasetTags)
   {
-    return defaultTypeFilterValues;
-  }
-
-  @Value("${elasticsearch.default.filter.type}")
-  public void setDefaultTypeFilterValues(String[] defaultTypeFilterValues)
-  {
-    this.defaultTypeFilterValues = defaultTypeFilterValues;
+    this.highValueDatasetTags =
+        StringUtils.stripAll(StringUtils.splitByWholeSeparator(highValueDatasetTags, ","));
   }
 }

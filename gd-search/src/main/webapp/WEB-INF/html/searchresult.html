@@ -25,7 +25,7 @@
   </div>
 
   <div class="column small-12 large-8 typefilterarea">
-    <ul th:replace="fragments/filter :: typeFilter(${searchResult.filterMap.get('type')})"></ul>
+    <ul th:replace="~{fragments/filter :: typeFilter(${searchResult.filterMap.get('type')})}"></ul>
 
     <div class="document-type-list-mobile mobile-dropdown show-for-small-only">
       <label for="typeFilter" class="offscreen" th:text="#{od.gdsearch.filter.type.title}"></label>
@@ -96,48 +96,52 @@
       </h2>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('onlyEditorMetadata')) or !showDatasetOptions}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('onlyEditorMetadata')}, 'onlyEditorMetadata', #{'od.gdsearch.searchresult.facet.onlyEditorMetadata'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('onlyEditorMetadata')}, 'onlyEditorMetadata', #{'od.gdsearch.searchresult.facet.onlyEditorMetadata'}, false)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('onlyPrivateShowcases')) or !showShowcaseOptions}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('onlyPrivateShowcases')}, 'onlyPrivateShowcases', #{'od.gdsearch.searchresult.facet.onlyPrivateShowcases'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('onlyPrivateShowcases')}, 'onlyPrivateShowcases', #{'od.gdsearch.searchresult.facet.onlyPrivateShowcases'}, false)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('showcase_types'))}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('showcase_types')}, 'showcase_types', #{'od.datasets_metadata_showcase_types'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('showcase_types')}, 'showcase_types', #{'od.datasets_metadata_showcase_types'}, false)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('groups'))}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('groups')}, 'groups', #{'od.datasets_metadata_categories'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('groups')}, 'groups', #{'od.datasets_metadata_categories'}, false)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('platforms'))}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('platforms')}, 'platforms', #{'od.datasets_metadata_platform'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('platforms')}, 'platforms', #{'od.datasets_metadata_platform'}, false)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('sourceportal'))}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('sourceportal')}, 'sourceportal', #{'od.gdsearch.searchresult.facet.sourceportal'}, true)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('sourceportal')}, 'sourceportal', #{'od.gdsearch.searchresult.facet.sourceportal'}, true)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('tags'))}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('tags')}, 'tags', #{'od.datasets_metadata_tags'}, true)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('tags')}, 'tags', #{'od.datasets_metadata_tags'}, true)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('format'))}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('format')}, 'format', #{'od.datasets_metadata_format'}, true)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('format')}, 'format', #{'od.datasets_metadata_format'}, true)}"></dl>
       </th:block>
 
       <!--/* there are only two options. These are always in the list, so we have to check if any of them is > 0 */-->
       <th:block th:if="${searchResult.filterMap.get('openness').get(0).docCount > 0 || searchResult.filterMap.get('openness').get(1).docCount > 0}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('openness')}, 'openness', #{'od.gdsearch.searchresult.facet.openness'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('openness')}, 'openness', #{'od.gdsearch.searchresult.facet.openness'}, false)}"></dl>
       </th:block>
 
       <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('licence'))}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('licence')}, 'licence', #{'od.datasets_metadata_license'}, true)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('licence')}, 'licence', #{'od.datasets_metadata_license'}, true)}"></dl>
       </th:block>
 
       <th:block th:if="${searchResult.filterMap.get('dataservice').get(0).docCount > 0}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('dataservice')}, 'dataservice', #{'od.gdsearch.searchresult.facet.dataservice'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('dataservice')}, 'dataservice', #{'od.gdsearch.searchresult.facet.dataservice'}, false)}"></dl>
+      </th:block>
+
+      <th:block th:if="${searchResult.filterMap.get('hvd').get(0).docCount > 0}">
+        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('hvd')}, 'hvd', #{'od.gdsearch.searchresult.facet.hvd'}, false)"></dl>
       </th:block>
 
       <dl class="filtergroup spatial-filter" th:if="${searchResult.canContainSpatialData}">
@@ -192,7 +196,7 @@
     <ul id="searchresult-list" class="flat-list">
       <!--/* iterate results */-->
       <th:block th:each="hit : ${searchResult.hits}">
-        <li th:replace="fragments/hits :: resultTile(${hit}, ${themeDisplay})"></li>
+        <li th:replace="~{fragments/hits :: resultTile(${hit}, ${themeDisplay})}"></li>
       </th:block>
     </ul>
     <div id="searchresults-more-block" class="searchresults-more">

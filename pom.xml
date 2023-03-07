@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>5.9.0</version>
+  <version>5.10.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -20,40 +20,37 @@
     <liferay.home.dir>/opt/app/portal-liferay/liferay-home</liferay.home.dir>
     <liferay.deploy.dir>${liferay.home.dir}/deploy</liferay.deploy.dir>
     <junit.version>4.13.2</junit.version>
-    <assertj.version>3.23.1</assertj.version>
+    <assertj.version>3.24.2</assertj.version>
     <portlet-api.version>3.0.1</portlet-api.version>
     <portletmvc4spring.version>5.3.2</portletmvc4spring.version>
-    <spring.version>5.3.23</spring.version>
-    <thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
-    <thymeleaf.java8time.version>3.0.4.RELEASE</thymeleaf.java8time.version>
+    <spring.version>5.3.25</spring.version>
+    <thymeleaf.version>3.1.1.RELEASE</thymeleaf.version>
     <log4j.version>2.19.0</log4j.version>
     <slf4j.version>1.7.36</slf4j.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
     <commons-collections4.version>4.4</commons-collections4.version>
     <commons-io.version>2.11.0</commons-io.version>
-    <joda-time.version>2.12.0</joda-time.version>
-    <gson.version>2.9.1</gson.version>
+    <joda-time.version>2.12.2</joda-time.version>
+    <gson.version>2.10.1</gson.version>
     <guava.version>31.1-jre</guava.version>
-    <jsoup.version>1.15.2</jsoup.version>
-    <httpclient.version>4.5.13</httpclient.version>
-    <elasticsearch.version>7.17.1</elasticsearch.version>
+    <jsoup.version>1.15.3</jsoup.version>
+    <httpclient.version>4.5.14</httpclient.version>
+    <elasticsearch.version>7.17.9</elasticsearch.version>
     <jetty.version>7.6.21.v20160908</jetty.version>
     <jersey.version>1.9.1</jersey.version>
     <apache.jena.version>4.7.0</apache.jena.version>
     <resteasy.version>3.15.3.Final</resteasy.version>
     <resteasy.jaxrs.api.version>3.0.12.Final</resteasy.jaxrs.api.version>
-    <jackson.version>2.13.4</jackson.version>
-    <!-- jackson-databind requires a separate hotfix version -->
-    <jackson.databind.version>2.13.4.2</jackson.databind.version>
+    <jackson.version>2.14.2</jackson.version>
     <jts.version>1.19.0</jts.version>
-    <junit.jupiter.version>5.9.1</junit.jupiter.version>
-    <junit.platform.version>1.9.1</junit.platform.version>
-    <mockito.version>4.8.0</mockito.version>
+    <junit.jupiter.version>5.9.2</junit.jupiter.version>
+    <junit.platform.version>1.9.2</junit.platform.version>
+    <mockito.version>4.11.0</mockito.version>
     <sb-common.version>1.0.1</sb-common.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
     <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
     <hibernate-jpa-2.1-api.version>1.0.2.Final</hibernate-jpa-2.1-api.version>
-    <gd-microservices.version>1.2.1</gd-microservices.version>
+    <gd-microservices.version>1.2.2</gd-microservices.version>
     <checkstyle.suppressions></checkstyle.suppressions>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- java -->
@@ -74,16 +71,8 @@
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.9.1</version>
-          <configuration>
-            <port>9000</port>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -92,7 +81,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -107,7 +96,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.2.1</version>
           <!-- Update checkstyle to latest version, e.g. be compatible with the IDE checkstyle plugin -->
           <dependencies>
             <dependency>
@@ -120,7 +109,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
@@ -128,7 +117,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
@@ -137,25 +126,20 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>3.4.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-pmd-plugin</artifactId>
-          <version>3.15.0</version>
+          <version>3.4.2</version>
         </plugin>
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.5.0.0</version>
+          <version>4.7.3.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-eclipse-plugin</artifactId>
-          <version>2.10.0</version>
+          <version>2.10</version>
         </plugin>
         <plugin>
           <groupId>biz.aQute.bnd</groupId>
@@ -177,7 +161,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.0.0-M3</version>
+          <version>3.2.1</version>
         </plugin>
         <plugin>
           <groupId>org.vafer</groupId>
@@ -211,26 +195,6 @@
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>pmd</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-          <targetJdk>${project.target.version}</targetJdk>
-          <excludes>
-            <exclude>entities</exclude>
-          </excludes>
-          <aggregate>true</aggregate>
         </configuration>
       </plugin>
       <plugin>
@@ -469,12 +433,6 @@
         <artifactId>thymeleaf-spring5</artifactId>
         <version>${thymeleaf.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.thymeleaf.extras</groupId>
-        <artifactId>thymeleaf-extras-java8time</artifactId>
-        <version>${thymeleaf.java8time.version}</version>
-      </dependency>
-      
 
       <!-- Mailing -->
       <dependency>
@@ -557,7 +515,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>${jackson.databind.version}</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
@@ -631,7 +589,7 @@
       <dependency>
         <groupId>com.rometools</groupId>
         <artifactId>rome</artifactId>
-        <version>1.9.0</version>
+        <version>1.18.0</version>
       </dependency>
 
       <!--  OSGI -->
@@ -801,38 +759,4 @@
       <url>https://repository.liferay.com/nexus/content/repositories/liferay-releases-ce/</url>
     </pluginRepository>
   </pluginRepositories>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.6</version>
-        <reportSets>
-          <reportSet>
-            <id>Standard</id>
-            <reports>
-              <report>index</report>
-              <report>summary</report>
-              <report>license</report>
-              <report>scm</report>
-              <report>issue-tracking</report>
-              <report>cim</report>
-              <report>dependencies</report>
-              <report>project-team</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <linkXRef>true</linkXRef>
-          <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-          <targetJdk>${project.target.version}</targetJdk>
-          <aggregate>true</aggregate>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>

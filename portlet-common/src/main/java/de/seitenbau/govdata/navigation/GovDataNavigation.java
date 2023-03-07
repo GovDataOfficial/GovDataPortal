@@ -1,6 +1,7 @@
 package de.seitenbau.govdata.navigation;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -136,8 +137,11 @@ public class GovDataNavigation
       String metadataName) throws SystemException, PortalException
   {
     PortletRequest request = liferayNavigation.getRequestFromContext();
-    PortletURL url = liferayNavigation.createLink(request, "bearbeiten", portletName);
-    PortletUtil.setParameterInPortletUrl(url, DetailsRequestParamNames.PARAM_METADATA, metadataName);
+    PortletURL url = liferayNavigation.createLink(request, "bearbeiten", portletName, false);
+    if (Objects.nonNull(url))
+    {
+      PortletUtil.setParameterInPortletUrl(url, DetailsRequestParamNames.PARAM_METADATA, metadataName);
+    }
     return url;
   }
 

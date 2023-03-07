@@ -37,25 +37,25 @@
     <div id="searchresult-container" class="column small-12 large-8">
       <div th:if="${viewTop}">
         <div class="design-box" th:unless="${#maps.isEmpty(topLicenses)}">
-          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'licenses')" ></div>
+          <div th:replace="~{fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'licenses')}" ></div>
           <div><canvas id="licChart" aria-label="Beliebte Lizenzen" role="img"></canvas></div>
         </div>
         <div class="design-box" th:unless="${#maps.isEmpty(topFormats)}">
-          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'formats')" ></div>
+          <div th:replace="~{fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'formats')}" ></div>
          <div><canvas id="fmtChart" aria-label="Beliebte Datenformate" role="img"></canvas></div>
         </div>
       </div>
       <div th:if="${viewQualityFeatures}">
         <div class="design-box" th:unless="${#maps.isEmpty(discoverable_yes)}">
-          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'discoverable')" ></div>
+          <div th:replace="~{fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'discoverable')}" ></div>
           <div><canvas id="discoverChart" aria-label="Auffindbarkeit" role="img"></canvas></div>
         </div>
         <div class="design-box" th:unless="${#maps.isEmpty(accessibility_yes)}">
-          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'accessibility')" ></div>
+          <div th:replace="~{fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'accessibility')}" ></div>
           <div><canvas id="accessibilityChart" aria-label="Zugänglichkeit" role="img"></canvas></div>
         </div>
         <div class="design-box" th:unless="${#maps.isEmpty(usability_yes)}">
-          <div th:replace="fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'usability')" ></div>
+          <div th:replace="~{fragments/chart_description :: description(${themeDisplay.pathThemeImages}, 'usability')}" ></div>
           <div><canvas id="usabilityChart" aria-label="Wiederverwendbarkeit" role="img"></canvas></div>
         </div>
       </div>

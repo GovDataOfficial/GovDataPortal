@@ -26,6 +26,7 @@
       de.seitenbau.govdata.search.adapter,
       de.seitenbau.govdata.search.index.mapper,
       de.seitenbau.govdata.odr,
-      de.seitenbau.govdata.cache" />
+      de.seitenbau.govdata.cache,
+      de.seitenbau.govdata.search.filter.util" />
 
 </beans>

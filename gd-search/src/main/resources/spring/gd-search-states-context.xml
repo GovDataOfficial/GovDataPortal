@@ -11,7 +11,8 @@
   <context:component-scan
     base-package="de.seitenbau.govdata.search.gui.model,
       de.seitenbau.govdata.navigation,
-      de.seitenbau.govdata.search.geostate.display.cache" />
+      de.seitenbau.govdata.search.geostate.display.cache,
+      de.seitenbau.govdata.search.filter.util" />
 
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchStatesController" /> 
 

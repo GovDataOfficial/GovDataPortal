@@ -154,19 +154,26 @@
     }
   }
   .navbar .brand {
-    padding: rem-calc(15) rem-calc(20);
+    padding: rem-calc(11) rem-calc(15);
     &:hover,
     &:focus,
     &:active {
       background-color: inherit;
     }
 
+    @media #{$large-up} {
+      img {
+        width: auto;
+        height: 50px;
+      }
+    }
+
     &.show-for-medium-down {
-      padding: rem-calc(10) rem-calc(15);
+      padding: rem-calc(7) rem-calc(12);
 
       img {
         width: auto;
-        height: 30px;
+        height: 36px;
       }
     }
   }

@@ -4,7 +4,7 @@
 
     <!-- Type Dataset & Blog -->
     <div th:unless="${hit.type}=='showcase'">
-      <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${hit.type}, false)"></div>
+      <div th:replace="~{fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${hit.type}, false)}"></div>
       <div class="row">
         <div class="column small-12 medium-8 large-9">
           <h2>
@@ -22,7 +22,7 @@
             <dl class="resultdetail category-list">
               <dt>[[#{od.datasets_metadata_category}]]: </dt>
               <th:block th:each="category : ${hit.categories}">
-                <dd th:replace="fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})"></dd>
+                <dd th:replace="~{fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})}"></dd>
               </th:block>
               <dd th:if="${#lists.isEmpty(hit.categories)}" th:text="#{od.gdsearch.details.withoutcategories}"></dd>
             </dl>
@@ -63,13 +63,13 @@
           <dl th:if="${hit.ckanMetadata}" class="resource-formats">
             <dt>[[#{od.datasets_formats}]]:</dt>
             <th:block th:each="format : ${hit.differentFormatTypes}">
-              <dd th:replace="fragments/icons :: resourceicondd(${format})"></dd>
+              <dd th:replace="~{fragments/icons :: resourceicondd(${format})}"></dd>
             </th:block>
             <dd th:if="${#lists.isEmpty(hit.differentFormatTypes)}">-</dd>
           </dl>
-          <dl th:replace="fragments/hit_fragments :: lastModified(${hit.lastModified})"></dl>
+          <dl th:replace="~{fragments/hit_fragments :: lastModified(${hit.lastModified})}"></dl>
 
-          <dl th:replace="fragments/display_widgets :: temporalCoverage(${hit.temporalCoverageFrom}, ${hit.temporalCoverageTo}, false)"></dl>
+          <dl th:replace="~{fragments/display_widgets :: temporalCoverage(${hit.temporalCoverageFrom}, ${hit.temporalCoverageTo}, false)}"></dl>
 
           <a th:title="#{${linkTextKey}}" th:href="${hit.linkToDetailPage}"
             th:with="linkTextKey = 'od.goto.' + ${hit.type}" class="goto-entry h2-metainfo">
@@ -96,7 +96,7 @@
           </div>
         </div>
         <div class="column small-12 medium-4 large-6">
-          <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${hit.primaryShowcaseType}, false)"></div>
+          <div th:replace="~{fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${hit.primaryShowcaseType}, false)}"></div>
           <h2>
             <a th:title="${hit.title}" th:href="${hit.linkToDetailPage}"
               th:text="${#strings.abbreviate(hit.title, 100)}"></a>
@@ -106,7 +106,7 @@
         </div>
         <div class="column small-12 medium-4 large-3">
 
-          <dl th:replace="fragments/hit_fragments :: lastModified(${hit.lastModified})"></dl>
+          <dl th:replace="~{fragments/hit_fragments :: lastModified(${hit.lastModified})}"></dl>
           
           <dl>
             <dt>[[#{od.showcases_datasets}]]:</dt>
@@ -148,7 +148,7 @@
 
       <dl class="resultdetail h2-tags">
         <th:block th:each="category : ${hit.categories}">
-          <dd th:replace="fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})"></dd>
+          <dd th:replace="~{fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})}"></dd>
         </th:block>
       </dl>
       <dl class="resultdetail h2-tags">
@@ -192,7 +192,7 @@
     
   <th:block th:fragment="partialList">
     <th:block th:each="hit,iterStat : ${searchResult.hits}">
-      <div th:replace="fragments/hits :: resultTile(${hit}, ${themeDisplay})"></div>
+      <div th:replace="~{fragments/hits :: resultTile(${hit}, ${themeDisplay})}"></div>
     </th:block>
   </th:block>
 </div>

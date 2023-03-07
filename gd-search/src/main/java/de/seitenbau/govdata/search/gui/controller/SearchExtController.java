@@ -41,6 +41,7 @@ import de.seitenbau.govdata.search.cache.ResourceFormatCache;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
+import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.geostate.cache.GeoStateCache;
 import de.seitenbau.govdata.search.gui.model.SearchExtViewModel;
 import de.seitenbau.govdata.search.util.states.StateContainer;
@@ -62,6 +63,9 @@ public class SearchExtController extends AbstractBaseController
 
   @Inject
   private GeoStateCache geoStateCache;
+
+  @Inject
+  private FilterUtil filterUtil;
 
   private List<String> blockedStates = new ArrayList<>();
 
@@ -122,9 +126,11 @@ public class SearchExtController extends AbstractBaseController
         .opennessList(prepareOpennessList(locale))
         .stateList(prepareStateList())
         .dataserviceList(prepareDataserviceList(locale))
+        .highValueDatasetList(prepareHighValueDatasetList(locale))
         .passthroughParams(passthroughParams)
         .hiddenFields(hiddenFields)
         .actionUrl(actionUrl.toString())
+        .filterdisabledList(filterUtil.getFilterDisabledList())
         .build();
     
     model.addAttribute("searchExt", viewModel);
@@ -213,12 +219,11 @@ public class SearchExtController extends AbstractBaseController
 
   private List<Map<String, String>> prepareTypeList(Locale locale)
   {
-    return translateList(locale, "od.gdsearch.searchresult.filter.label.", new String[] {
-        SearchConsts.TYPE_DATASET,
-        SearchConsts.TYPE_SHOWCASE,
-        SearchConsts.TYPE_ARTICLE,
-        SearchConsts.TYPE_BLOG
-    });
+    String[] validFilterTypes =
+        SearchConsts.VALID_FILTER_TYPES_WITHOUT_ALL_ORDERED.stream()
+            .filter(s -> filterUtil.getDefaultTypeFilterValues().contains(s)).toArray(String[]::new);
+
+    return translateList(locale, "od.gdsearch.searchresult.filter.label.", validFilterTypes);
   }
   
   private List<Map<String, String>> prepareOpennessList(Locale locale)
@@ -233,6 +238,13 @@ public class SearchExtController extends AbstractBaseController
   {
     return translateList(locale, "od.dataservice.", new String[] {
         SearchConsts.FACET_HAS_DATA_SERVICE
+    });
+  }
+
+  private List<Map<String, String>> prepareHighValueDatasetList(Locale locale)
+  {
+    return translateList(locale, "od.dataset.", new String[] {
+        SearchConsts.FACET_IS_HIGH_VALUE_DATASET
     });
   }
 

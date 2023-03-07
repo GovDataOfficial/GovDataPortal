@@ -60,7 +60,7 @@
           <tr>
             <th><label id="title_label" for="title">[[#{'od.title.name'}]]<span class="requiredmarker"> *</span></label></th>
             <td class="required-field">
-              <div th:replace="fragments :: title(${editForm})"></div>
+              <div th:replace="~{fragments :: title(${editForm})}"></div>
             </td>
           </tr>
 
@@ -68,7 +68,7 @@
           <tr class="highfield">
             <th><label id="notes_label" for="notes">[[#{'od.notes.name'}]]</label><span class="requiredmarker"> *</span></th>
             <td>
-              <div th:replace="fragments :: notes(${editForm})"></div>
+              <div th:replace="~{fragments :: notes(${editForm})}"></div>
             </td>
           </tr>
 
@@ -205,7 +205,7 @@
             <td>
               <fieldset>
                 <legend class="offscreen" aria-labelledby="contact_error">[[#{'od.contact.name'}]]</legend>
-                <div th:replace="fragments :: singleContact(${editForm})"></div>
+                <div th:replace="~{fragments :: singleContact(${editForm})}"></div>
               </fieldset>
               <div id="contact_error" class="validation-error" th:if="${#fields.hasErrors('contact')}" th:errors="*{contact}"></div>
               <div id="contact_error" th:unless="${#fields.hasErrors('contact')}"></div>
@@ -258,7 +258,7 @@
           <tr>
             <th><label for="tags" id="tags_label">[[#{'od.tags.name'}]]</label></th>
             <td>
-              <div th:replace="fragments :: tags(${editForm})"></div>
+              <div th:replace="~{fragments :: tags(${editForm})}"></div>
             </td>
           </tr>
 
@@ -266,7 +266,7 @@
           <tr>
             <th><label id="url_label" for="url">[[#{'od.url.name'}]]</label></th>
             <td>
-              <div th:replace="fragments :: url(${editForm})"></div>
+              <div th:replace="~{fragments :: url(${editForm})}"></div>
             </td>
           </tr>
 
@@ -331,7 +331,7 @@
           <tr class="highfield">
             <th><label id="spatial_label" for="spatial">[[#{'od.gdsearch.filter.spatial.title'}]]</label></th>
             <td>
-              <div th:replace="fragments :: spatial(${editForm})"></div>
+              <div th:replace="~{fragments :: spatial(${editForm})}"></div>
             </td>
           </tr>
 

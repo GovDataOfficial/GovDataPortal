@@ -17,14 +17,6 @@
     <property name="templateResolver" ref="templateResolver" />
   </bean>
 
-  <bean id="addDialectCaller" class="org.springframework.beans.factory.config.MethodInvokingBean">
-    <property name="targetObject" ref="templateEngine"/>
-    <property name="targetMethod" value="addDialect"/>
-    <property name="arguments">
-      <bean class="org.thymeleaf.extras.java8time.dialect.Java8TimeDialect" />
-    </property>
-  </bean>
-
   <bean id="thymeleafSpringResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
     <property name="templateEngine" ref="templateEngine" />
     <property name="characterEncoding" value="UTF-8" />

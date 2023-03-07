@@ -39,7 +39,7 @@ public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
     {
       if (routeParameters.containsKey(param))
       {
-        if (StringUtils.isNotEmpty(routeParameters.get(param)) || "q".equals(param))
+        if (StringUtils.isNotEmpty(routeParameters.get(param)))
         {
           String paramVal = URLENCODER.encode(routeParameters.get(param));
           sb.append(StringPool.SLASH).append(param).append(StringPool.SLASH).append(paramVal);

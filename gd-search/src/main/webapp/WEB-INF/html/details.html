@@ -11,10 +11,10 @@
 
     <div class="column small-12 large-8">
       <div id="metadata_details" class="design-box design-box-padding">
-        <div th:if="${userCanEditDataset}" class="show-for-large-up"><a th:href="${editDatasetUrl}"
+        <div th:if="${userCanEditDataset and not #strings.isEmpty(editDatasetUrl)}" class="show-for-large-up"><a th:href="${editDatasetUrl}"
                                                                         th:text="#{'od-datasets_edit-dataset'}"
                                                                         class="action-button"></a></div>
-        <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${selectedMetadata.metadata.type.toField()}, true)"></div>
+        <div th:replace="~{fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${selectedMetadata.metadata.type.toField()}, true)}"></div>
 
         <h1>[[${selectedMetadata.titleOnlyText}]]</h1>
         <div class="h2-teaser" th:if="${selectedMetadata.isBlockelementInNotes()}"
@@ -46,14 +46,14 @@
             <h3>
               <span th:unless="${#strings.isEmpty(ds.title)}" th:text="${ds.title}" th:id="'dataService' + ${iterStat.index} + '_name'"></span>
             </h3>
-            <div th:replace="fragments/details_fragments :: description(${ds}, 200, ${iterStat.index})"></div>
+            <div th:replace="~{fragments/details_fragments :: description(${ds}, 200, ${iterStat.index})}"></div>
 
             <dl class="inline-list">
               <dt th:unless="${ds.availability == null}">[[#{od.gdsearch.details.dcatap.availability}]]:</dt>
               <dd th:unless="${ds.availability == null}" th:id="'dataService' + ${iterStat.index} + '_availability'"
                   th:text="#{'od.gdsearch.details.dcatap.availability.' + ${#strings.toLowerCase(ds.shortendAvailability)}}"></dd>
 
-              <th:block th:replace="fragments/license :: license(${iterStat.index}, ${ds}, 'dataService')"/>
+              <th:block th:replace="~{fragments/license :: license(${iterStat.index}, ${ds}, 'dataService')}"/>
 
               <dt>[[#{od.gdsearch.details.urls}]]:</dt>
               <ul class="urllist" th:unless="${#lists.isEmpty(ds.endpointUrls)}">
@@ -86,7 +86,7 @@
         <ul class="resource-list h2-metainfo" th:unless="${#lists.isEmpty(selectedMetadata.resources)}">
           <li th:each="res,iterStat : ${selectedMetadata.resources}">
             <h3>
-              <span th:replace="fragments/icons :: resourceicon(${res.formatShort})"></span>
+              <span th:replace="~{fragments/icons :: resourceicon(${res.formatShort})}"></span>
               <span th:unless="${#strings.isEmpty(res.name)}" th:id="'resource' + ${iterStat.index} + '_name'"
                     th:text="${res.nameOnlyText}"></span>
               <span th:if="${#strings.isEmpty(res.name)}" th:id="'resource' + ${iterStat.index} + '_name'"
@@ -113,7 +113,7 @@
                   th:text="#{res.availabilityDisplay}" th:id="'resource' + ${iterStat.index} + '_availability'"></dd>
               <dd th:if="${res.availabilityDisplay == null}" th:id="'resource' + ${iterStat.index} + '_availability'">-</dd>
 
-              <th:block th:replace="fragments/license :: license(${iterStat.index}, ${res}, 'resource')"/>
+              <th:block th:replace="~{fragments/license :: license(${iterStat.index}, ${res}, 'resource')}"/>
 
               <dt>[[#{od.gdsearch.details.url}]]:</dt>
               <dd>
@@ -218,12 +218,12 @@
         <dl class="categories h2-tags space-bottom">
           <dt>[[#{od.datasets_metadata_categories}]]:</dt>
           <th:block th:each="category : ${selectedMetadata.metadata.categories}">
-            <dd th:replace="fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})"></dd>
+            <dd th:replace="~{fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})}"></dd>
           </th:block>
           <dd th:if="${#lists.isEmpty(selectedMetadata.metadata.categories)}">-</dd>
         </dl>
 
-        <dl th:replace="fragments/display_widgets :: temporalCoverage(${selectedMetadata.metadata.temporalCoverageFrom}, ${selectedMetadata.metadata.temporalCoverageTo}, true)"></dl>
+        <dl th:replace="~{fragments/display_widgets :: temporalCoverage(${selectedMetadata.metadata.temporalCoverageFrom}, ${selectedMetadata.metadata.temporalCoverageTo}, true)}"></dl>
 
         <!--/* Raumbezug */-->
         <dl class="space-bottom inline-list" id="metadata_geographicalCoverage">
@@ -315,7 +315,7 @@
         <div class="section-title show-no-comments">[[#{od.comment.empty}]]</div>
         <div id="comment-list" class="comment-list">
           <th:block th:each="comment,iterStat : ${selectedMetadata.comments}">
-            <div th:replace="fragments/comments :: commentEntry(${comment}, ${selectedMetadata})"></div>
+            <div th:replace="~{fragments/comments :: commentEntry(${comment}, ${selectedMetadata})}"></div>
           </th:block>
         </div>
       </div>

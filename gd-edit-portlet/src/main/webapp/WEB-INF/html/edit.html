@@ -47,14 +47,14 @@
           <tr>
             <th><label id="title_label" for="title">[[#{'od.title.name'}]]<span class="requiredmarker"> *</span></label></th>
             <td class="required-field">
-              <div th:replace="fragments :: title(${editForm})"></div>
+              <div th:replace="~{fragments :: title(${editForm})}"></div>
             </td>
           </tr>
 
           <tr class="highfield">
             <th><label id="notes_label" for="notes">[[#{'od.notes.name'}]]</label><span class="requiredmarker"> *</span></th>
             <td>
-              <div th:replace="fragments :: notes(${editForm})"></div>
+              <div th:replace="~{fragments :: notes(${editForm})}"></div>
             </td>
           </tr>
 
@@ -74,10 +74,10 @@
             <td>
               <fieldset>
                 <legend class="offscreen" aria-labelledby="contacts_error">[[#{'od.contacts.name'}]]</legend>
-                <div th:replace="fragments :: contact(${editForm}, 'author')"></div>
-                <div th:replace="fragments :: contact(${editForm}, 'maintainer')"></div>
-                <div th:replace="fragments :: contact(${editForm}, 'publisher')"></div>
-                <div th:replace="fragments :: contact(${editForm}, 'originator')"></div>
+                <div th:replace="~{fragments :: contact(${editForm}, 'author')}"></div>
+                <div th:replace="~{fragments :: contact(${editForm}, 'maintainer')}"></div>
+                <div th:replace="~{fragments :: contact(${editForm}, 'publisher')}"></div>
+                <div th:replace="~{fragments :: contact(${editForm}, 'originator')}"></div>
               </fieldset>
               <div id="contacts_error" class="validation-error" th:if="${#fields.hasErrors('contacts')}" th:errors="*{contacts}"></div>
               <div id="contacts_error" th:unless="${#fields.hasErrors('contacts')}"></div>
@@ -105,14 +105,14 @@
           <tr>
             <th><label for="tags" id="tags_label">[[#{'od.tags.name'}]]</label></th>
             <td>
-              <div th:replace="fragments :: tags(${editForm})"></div>
+              <div th:replace="~{fragments :: tags(${editForm})}"></div>
             </td>
           </tr>
 
           <tr>
             <th><label id="url_label" for="url">[[#{'od.url.name'}]]</label></th>
             <td>
-              <div th:replace="fragments :: url(${editForm})"></div>
+              <div th:replace="~{fragments :: url(${editForm})}"></div>
             </td>
           </tr>
 
@@ -163,7 +163,7 @@
                 <legend aria-labelledby="resources_error" class="offscreen">[[#{'od.resources.name'}]]</legend>
 
                 <th:block th:each="row,rowStat : *{resources}">
-                  <div th:replace="fragments :: resource(${editForm}, ${row}, ${rowStat})"></div>
+                  <div th:replace="~{fragments :: resource(${editForm}, ${row}, ${rowStat})}"></div>
                 </th:block>
 
                 <div id="resources_error" class="validation-error" th:if="${#fields.hasErrors('resources')}" th:errors="*{resources}"></div>
@@ -256,7 +256,7 @@
           <tr class="highfield">
             <th><label id="spatial_label" for="spatial">[[#{'od.gdsearch.filter.spatial.title'}]]</label></th>
             <td>
-              <div th:replace="fragments :: spatial(${editForm})"></div>
+              <div th:replace="~{fragments :: spatial(${editForm})}"></div>
             </td>
           </tr>
 

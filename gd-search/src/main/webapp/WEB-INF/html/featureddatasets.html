@@ -5,13 +5,13 @@
       <ul id="featuted-datasets-result" class="row">
         <!-- display 1 or 2 datasets-->
         <th:block th:each="hit : ${hits}" th:unless="${count} == 3">
-          <li th:replace="fragments/hits :: resultTile(${hit}, ${themeDisplay})"></li>
+          <li th:replace="~{fragments/hits :: resultTile(${hit}, ${themeDisplay})}"></li>
         </th:block>
         <!-- display 3 datasets -->
         <th:block th:if="${count} == 3">
-          <li th:replace="fragments/hits :: resultTile(${hits[0]}, ${themeDisplay})"></li>
-          <li th:replace="fragments/hits :: resultTileSmall(${hits[1]}, ${themeDisplay})"></li>
-          <li th:replace="fragments/hits :: resultTileSmall(${hits[2]}, ${themeDisplay})"></li>
+          <li th:replace="~{fragments/hits :: resultTile(${hits[0]}, ${themeDisplay})}"></li>
+          <li th:replace="~{fragments/hits :: resultTileSmall(${hits[1]}, ${themeDisplay})}"></li>
+          <li th:replace="~{fragments/hits :: resultTileSmall(${hits[2]}, ${themeDisplay})}"></li>
         </th:block>
       </ul>
     </div>

@@ -2,10 +2,10 @@
   <div class="row" id="number-portlet">
     <div class="small-12">
       <ul class="numbers-list" th:classappend="${showTwitter} ? 'twitter-included-list' : ''">
-        <li th:replace="fragments/numbers :: displayNumber(${numberDataset}, #{od.numbers.datasets}, 'dataset', ${themeDisplay})"></li>
-        <li th:replace="fragments/numbers :: displayNumber(${numberShowcase}, #{od.numbers.showcases}, 'anwendung', ${themeDisplay})"></li>
-        <li th:replace="fragments/numbers :: displayNumber(${numberBlog}, #{od.numbers.blogs}, 'blog', ${themeDisplay})"></li>
-        <li th:include="fragments/numbers :: displayTwitter(${latestTweet})" class="numbers-box type-twitter" th:if="${showTwitter}"></li>
+        <li th:replace="~{fragments/numbers :: displayNumber(${numberDataset}, #{od.numbers.datasets}, 'dataset', ${themeDisplay})}"></li>
+        <li th:replace="~{fragments/numbers :: displayNumber(${numberShowcase}, #{od.numbers.showcases}, 'anwendung', ${themeDisplay})}"></li>
+        <li th:replace="~{fragments/numbers :: displayNumber(${numberBlog}, #{od.numbers.blogs}, 'blog', ${themeDisplay})}"></li>
+        <li th:insert="~{fragments/numbers :: displayTwitter(${latestTweet})}" class="numbers-box type-twitter" th:if="${showTwitter}"></li>
       </ul>
     </div>
   </div>

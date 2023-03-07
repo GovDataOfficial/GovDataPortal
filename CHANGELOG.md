@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.10.0 2023-03-06
+
+* Adds a search filter for high-value datasets based on a search for specific tags
+* Support for favicons in several dimensions on different systems and browsers
+* Adds possibility to deactivate showcase and state search
+* Optimizes size of the logo
+* Updates maven dependencies to the latest bugfix / security fix version
+* Updates to Elasticsearch 7.17.9
+* Improves the creation of internal search links
+* Improves error handling when creating internal links
+
 ## v5.9.0 2023-01-23
 
 * Updates Apache Jena Fuseki client library to version 4.7.0

@@ -13,7 +13,7 @@
                                                                           th:text="#{'od-datasets_edit-dataset'}"
                                                                           class="action-button"></a></div>
 
-          <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${selectedShowcase.showcase.primaryShowcaseType.name}, true)"></div>
+          <div th:replace="~{fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${selectedShowcase.showcase.primaryShowcaseType.name}, true)}"></div>
 
           <h1>[[${selectedShowcase.titleOnlyText}]]</h1>
           <!-- Images -->
@@ -125,7 +125,7 @@
         <dl id="showcase-categories" class="categories h2-tags space-bottom">
           <dt>[[#{od.datasets_metadata_categories}]]:</dt>
           <th:block th:each="category : ${selectedShowcase.categories}">
-            <dd th:replace="fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})"></dd>
+            <dd th:replace="~{fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})}"></dd>
           </th:block>
           <dd th:if="${#lists.isEmpty(selectedShowcase.categories)}">-</dd>
         </dl>

@@ -67,14 +67,6 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
       save: dropdownFilterSaveHandler
     },
 
-    'state': {
-      type: "dropdownview",
-      name: "state",
-      options: stateList,
-      selected: [],
-      save: dropdownFilterSaveHandler
-    },
-
     // autocomplete (eigentlich, aber wir machen erstmal kommaseparierte liste)
     'tags': {
       type: "textview",
@@ -97,7 +89,16 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
       }
     }
   };
-
+  // add field type 'state' if the filter is not disabled
+  if (!filterdisabledList.includes('state')) {
+    fieldTypes['state'] = {
+      type: "dropdownview",
+      name: "state",
+      options: stateList,
+      selected: [],
+      save: dropdownFilterSaveHandler
+    };
+  }
   // add simple Text fields with same behaviour
   ['title', 'publisher', 'maintainer', 'notes'].forEach(function(item) {
     fieldTypes[item] = {
@@ -116,14 +117,18 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
   });
 
   // add multiboxviews
-  [
+  var multiboxviewsList = [
     {name: 'groups', data: categoryList},
     {name: 'format', data: formatList},
-    {name: 'platforms', data: platformList},
-    {name: 'showcase_types', data: showcaseTypeList},
-    {name: 'dataservice', data: dataserviceList}
+    {name: 'dataservice', data: dataserviceList},
+    {name: 'hvd', data: highValueDatasetList}
   ]
-  .forEach(function(item) {
+  // add multibox view of 'showcase' if the filter is not disabled
+  if (!filterdisabledList.includes('showcase')) {
+    multiboxviewsList.push({name: 'platforms', data: platformList})
+    multiboxviewsList.push({name: 'showcase_types', data: showcaseTypeList})
+  }
+  multiboxviewsList.forEach(function(item) {
     fieldTypes[item.name] = {
       type: "multiboxview",
       name: item.name,
@@ -495,8 +500,17 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
     }
 
     // Dropdown-Fields / Multiselect (same Model-Structure)
-    ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format', 'showcase_types', 'platforms', 'state', 'dataservice'].forEach(function(item) {
-      if (param.activeFilters.hasOwnProperty(item)) {
+    var dropdownFields = ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format', 'dataservice', 'hvd']
+    // add additional dropdown fields if corresponding filter is not disabled
+    if (!filterdisabledList.includes('showcase')) {
+      dropdownFields.push('showcase_types')
+      dropdownFields.push('platforms')
+    }
+	if (!filterdisabledList.includes('state')) {
+      dropdownFields.push('state')
+    }
+    dropdownFields.forEach(function(item) {
+      if (param.activeFilters.hasOwnProperty(item) ) {
         fieldList.add(Y.merge(fieldTypes[item], {
           selected: param.activeFilters[item]
         }));

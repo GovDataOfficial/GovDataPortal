@@ -18,11 +18,9 @@
       </#if>
 
       <#assign
-        layoutLocalService = serviceLocator.findService("com.liferay.portal.kernel.service.LayoutLocalService")
-        editDatasetLayout = layoutLocalService.getFriendlyURLLayout(theme_display.getSiteGroupId(), false, "/bearbeiten")
-        permissionChecker = theme_display.getPermissionChecker()
+        editDatasetLayout = (layoutService.fetchLayoutByFriendlyURL(theme_display.getSiteGroupId(), false, "/bearbeiten"))!""
       />
-      <#if layoutPermission.contains(permissionChecker, editDatasetLayout, "VIEW")>
+      <#if editDatasetLayout?has_content && layoutPermission.contains(permissionChecker, editDatasetLayout, "VIEW")>
         <a class="oc-profile-sub" href="/web/guest/suchen/-/searchresult/f/onlyEditorMetadata%3AonlyEditorMetadata%2C" title='<@liferay.language key="od.page.showOwnDatasets" />'>
           <@liferay.language key="od.page.showOwnDatasets" />
         </a>

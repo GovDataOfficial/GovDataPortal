@@ -38,21 +38,16 @@ public class LiferayNavigation
    */
   public Layout getLayout(String friendlyUrlName) throws SystemException
   {
-    if (StringUtils.startsWith(friendlyUrlName, "/"))
-    {
-      friendlyUrlName = StringUtils.substring(friendlyUrlName, 1);
-    }
-    
     // http://solvedstack.com/questions/programmatically-get-the-url-of-a-page-in-liferay
     Layout targetLayout = null;
-    
+
     // list all available layouts (== pages)
     List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
     
     for (Layout candidate : layouts)
     {
       String friendlyURL = candidate.getFriendlyURL();
-      if (("/"+friendlyUrlName).equals(friendlyURL))
+      if ((StringUtils.prependIfMissing(friendlyUrlName, "/")).equals(friendlyURL))
       {
         targetLayout = candidate;
         break;
@@ -140,24 +135,65 @@ public class LiferayNavigation
     return createLink(requestFromContext, layoutFriendlyUrlName, portletName);
   }
   
+  /**
+   * Creates a link to a portlet on a liferay page.
+   * 
+   * @param request
+   * @param layoutFriendlyUrlName
+   * @param portletName
+   * @return the created link
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createLink(
       PortletRequest request, String layoutFriendlyUrlName, String portletName) throws SystemException,
       PortalException
   {
-    PortletURL url = null;
+    return createLink(request, layoutFriendlyUrlName, portletName, true);
+  }
+
+  /**
+   * Creates a link to a portlet on a liferay page.
+   * 
+   * @param request
+   * @param layoutFriendlyUrlName
+   * @param portletName
+   * @param throwException
+   * @return the created link or null if not found and <b>throwException</b> is false
+   * @throws SystemException
+   * @throws PortalException
+   */
+  public PortletURL createLink(
+      PortletRequest request, String layoutFriendlyUrlName, String portletName, boolean throwException)
+      throws SystemException, PortalException
+  {
     Layout targetLayout = getLayout(layoutFriendlyUrlName);
     if (targetLayout != null)
     {
       String pid = getPortletOnLayout(portletName, targetLayout);
-      url = createLink(request, targetLayout, pid);
+      if (Objects.nonNull(pid))
+      {
+        return createLink(request, targetLayout, pid);
+      }
+      else
+      {
+        if (throwException)
+        {
+          throw new IllegalArgumentException(
+              "portlet '" + portletName + "' not found on '" + layoutFriendlyUrlName + "'!");
+        }
+      }
     }
     else
     {
       log.warn("Could not found layout for friendlyUrlName: {}", layoutFriendlyUrlName);
-      throw new IllegalArgumentException("layout is null!");
+      if (throwException)
+      {
+        throw new IllegalArgumentException("layout is null!");
+      }
     }
     
-    return url;
+    return null;
   }
 
   /**

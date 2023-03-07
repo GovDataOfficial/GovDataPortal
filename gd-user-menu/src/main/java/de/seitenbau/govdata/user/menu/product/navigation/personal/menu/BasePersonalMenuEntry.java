@@ -2,6 +2,7 @@ package de.seitenbau.govdata.user.menu.product.navigation.personal.menu;
 
 import javax.portlet.PortletRequest;
 
+import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -34,12 +35,20 @@ public abstract class BasePersonalMenuEntry implements PersonalMenuEntry
       LayoutLocalService layoutLocalService, GroupLocalService groupLocalService, String friendlyURL)
       throws PortalException
   {
+    boolean hasAccess = false;
     ThemeDisplay themeDisplay = (ThemeDisplay) portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
     Group defaultSiteGroup = groupLocalService.getFriendlyURLGroup(themeDisplay.getCompanyId(), "/guest");
-    Layout friendlyURLLayout = layoutLocalService.getFriendlyURLLayout(defaultSiteGroup.getGroupId(), false,
-        friendlyURL);
-    boolean hasAccess =
+    try
+    {
+      Layout friendlyURLLayout = layoutLocalService.getFriendlyURLLayout(defaultSiteGroup.getGroupId(), false,
+          friendlyURL);
+      hasAccess =
         LayoutPermissionUtil.contains(permissionChecker, friendlyURLLayout, ActionKeys.VIEW);
+    }
+    catch (NoSuchLayoutException ex)
+    {
+      // do nothing
+    }
 
     return hasAccess;
   }

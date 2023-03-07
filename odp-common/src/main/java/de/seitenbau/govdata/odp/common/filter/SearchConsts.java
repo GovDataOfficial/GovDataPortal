@@ -1,5 +1,7 @@
 package de.seitenbau.govdata.odp.common.filter;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -110,6 +112,11 @@ public abstract class SearchConsts
    */
   public static final Set<String> VALID_FILTER_TYPES;
 
+  /**
+   * Valid filter types ordered without type all.
+   */
+  public static final List<String> VALID_FILTER_TYPES_WITHOUT_ALL_ORDERED;
+
   static
   {
     CKAN_TYPES = new String[] {TYPE_DATASET};
@@ -119,6 +126,8 @@ public abstract class SearchConsts
     VALID_FILTER_TYPES = Stream.of(CKAN_TYPES_ALL, new String[] {TYPE_ARTICLE, TYPE_BLOG, TYPE_SHOWCASE})
         .flatMap(Stream::of)
         .collect(Collectors.toSet());
+    VALID_FILTER_TYPES_WITHOUT_ALL_ORDERED = Arrays.asList(SearchConsts.TYPE_DATASET,
+        SearchConsts.TYPE_SHOWCASE, SearchConsts.TYPE_ARTICLE, SearchConsts.TYPE_BLOG);
   }
 
   /**
@@ -187,9 +196,19 @@ public abstract class SearchConsts
   public static final String FACET_DATASERVICE = "dataservice";
 
   /**
-   * Facet key for has data service.
+   * Facet filter value for has data service.
    */
   public static final String FACET_HAS_DATA_SERVICE = "has_data_service";
+
+  /**
+   * Facet key for the high value dataset.
+   */
+  public static final String FACET_HIGH_VALUE_DATASET = "hvd";
+
+  /**
+   * Facet filter value for the high value dataset.
+   */
+  public static final String FACET_IS_HIGH_VALUE_DATASET = "is_hvd";
 
   // fields used in extended search
   /**

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>5.9.0</version>
+    <version>5.10.0</version>
   </parent>
   <artifactId>gd-developers-corner-portlet</artifactId>
   <packaging>war</packaging>
@@ -182,10 +182,6 @@
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf-spring5</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.thymeleaf.extras</groupId>
-      <artifactId>thymeleaf-extras-java8time</artifactId>
     </dependency>
 
     <!-- Testing -->

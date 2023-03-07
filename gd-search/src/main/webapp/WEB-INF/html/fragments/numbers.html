@@ -25,23 +25,23 @@
       </div>
     </li>
   
-    <li th:fragment="displayTwitter(latestTweet)">
+    <li th:fragment="displayTwitter(latestTweet)" th:remove="tag">
       <div class="numbers-grid-item">
        <div id="number-id-twitter" class="design-box grid-box">
-        <a id="linkTo_twitter" target="_blank" th:href="${latestTweet.url}" th:include="fragments/numbers :: displayTwitterHeader(${latestTweet}, 90)">
+        <a id="linkTo_twitter" target="_blank" th:href="${latestTweet.url}" th:insert="~{fragments/numbers :: displayTwitterHeader(${latestTweet}, 90)}">
         </a>
        </div>
       </div>
       <div class="numbers-list-item">
         <div class="design-box grid-box">
-        <a th:href="${latestTweet.url}" target="_blank" th:include="fragments/numbers :: displayTwitterHeader(${latestTweet}, 135)">
+        <a th:href="${latestTweet.url}" target="_blank" th:insert="~{fragments/numbers :: displayTwitterHeader(${latestTweet}, 135)}">
         </a>
        </div>
       </div>
     </li>
   </ul>
 
-  <div th:fragment="displayTwitterHeader(latestTweet, textLength)">
+  <div th:fragment="displayTwitterHeader(latestTweet, textLength)" th:remove="tag">
     <div class="tweet-header">
       <i class="icon-twitter tweet-icon"></i>
       <div class="tweet-author">

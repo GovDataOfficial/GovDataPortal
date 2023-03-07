@@ -3,7 +3,7 @@
     <div class="design-box design-box-padding featured-showcase-box small-12 medium-10 large-8">
 
       <!-- Type-icon -->
-      <div th:replace="fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${showcase.showcase.primaryShowcaseType.name}, true)"></div>
+      <div th:replace="~{fragments/icons :: documenttypeicon(${themeDisplay.pathThemeImages}, ${showcase.showcase.primaryShowcaseType.name}, true)}"></div>
 
       <!-- Title -->
       <h1>

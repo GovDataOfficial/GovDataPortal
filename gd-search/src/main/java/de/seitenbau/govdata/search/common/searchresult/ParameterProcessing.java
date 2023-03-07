@@ -2,16 +2,20 @@ package de.seitenbau.govdata.search.common.searchresult;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.geo.ShapeRelation;
+
+import com.liferay.portal.kernel.util.PropsUtil;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
@@ -229,17 +233,34 @@ public final class ParameterProcessing
   }
 
   /**
-   * Erzeugt anhand der Suchparameter ein Filter-Bundle für die weitere Verarbeitung.
+   * Creates a filter bundle for the further processing from the search parameters.
    * 
-   * @param preparm die Suchparameter
-   * @param editorOrganizationIdList die Liste der Organisationen in denen der aktuelle Benutzer das
-   *        Recht hat Datensätze zu editieren.
-   * @return
+   * @param preparm the search parameters
+   * @param editorOrganizationIdList a list with organizations the current user has rights to edit
+   *        datasets
+   * @return the created filter bundle
    */
   public static SearchFilterBundle createFilterBundle(PreparedParameters preparm,
       List<String> editorOrganizationIdList)
   {
+    return createFilterBundle(preparm, editorOrganizationIdList, Collections.emptyList());
+  }
+
+  /**
+   * Creates a filter bundle for the further processing from the search parameters.
+   * 
+   * @param preparm the search parameters
+   * @param editorOrganizationIdList a list with organizations the current user has rights to edit
+   *        datasets
+   * @param disabledFilterTypes a list with disabled filter types
+   * @return the created filter bundle
+   */
+  public static SearchFilterBundle createFilterBundle(PreparedParameters preparm,
+      List<String> editorOrganizationIdList, List<String> disabledFilterTypes)
+  {
     SearchFilterBundle bundle = new SearchFilterBundle();
+
+    Map<String, List<String>> filterToRemove = new HashMap<>();
 
     if (!StringUtils.equals(preparm.getType(), SearchConsts.TYPE_ALL))
     { // type:all should be blank
@@ -303,9 +324,35 @@ public final class ParameterProcessing
             // use the "key" as grouping mechanism, effectively the "filter" is the key for this filter.
             // this can be done since the "value" of this filter is always "true".
             // it is merely a bunch of boolean filters disguised as list.
-            bundle.addFilter(new BooleanFilter(ESFieldConsts.BOOL_FACET_MAP.get(filter), key, true));
+            if (ESFieldConsts.BOOL_FACET_MAP.containsKey(filter))
+            {
+              bundle.addFilter(new BooleanFilter(ESFieldConsts.BOOL_FACET_MAP.get(filter), key, true));
+            }
+            else
+            {
+              marksFilterToRemove(filterToRemove, key, filter);
+            }
           }
-          else if (StringUtils.equals(key, SearchConsts.FACET_STATE))
+          else if (StringUtils.equals(key, SearchConsts.FACET_HIGH_VALUE_DATASET))
+          {
+            if (StringUtils.equals(filter, SearchConsts.FACET_IS_HIGH_VALUE_DATASET))
+            {
+              List<String> highValueDatasetTags = GovDataCollectionUtils.convertStringListToLowerCase(
+                  GovDataCollectionUtils.arrayToStream(StringUtils.stripAll(StringUtils.splitByWholeSeparator(
+                      PropsUtil.get("elasticsearch.high.value.dataset.tags"), ",")))
+                      .collect(Collectors.toUnmodifiableList()));
+              if (CollectionUtils.isNotEmpty(highValueDatasetTags))
+              {
+                bundle.addFilter(new TermsFilter(ESFieldConsts.FIELD_TAGS_SEARCH, key, highValueDatasetTags));
+              }
+            }
+            else
+            {
+              marksFilterToRemove(filterToRemove, key, filter);
+            }
+          }
+          else if (!disabledFilterTypes.contains(SearchConsts.FACET_STATE)
+              && StringUtils.equals(key, SearchConsts.FACET_STATE))
           {
             StateContainer state = geoStateParser.getStateList().stream()
                 .filter(s -> filter.equals(s.getId())).findFirst().orElse(null);
@@ -348,12 +395,40 @@ public final class ParameterProcessing
       bundle.setSpatialCenter(preparm.getBoundingBox().getCenter());
     }
 
-    // debugging used filters
-    // for(BaseFilter f : bundle.getFilters()) {
-    // log.info(f.toString());
-    // }
+    cleanActiveFilters(preparm, filterToRemove);
 
     return bundle;
+  }
+
+  private static void marksFilterToRemove(Map<String, List<String>> filterToRemove, String key, String filter)
+  {
+    if (!filterToRemove.containsKey(key))
+    {
+      filterToRemove.put(key, new ArrayList<>(List.of(filter)));
+    }
+    else
+    {
+      filterToRemove.get(key).add(filter);
+    }
+  }
+
+  private static void cleanActiveFilters(PreparedParameters preparm, Map<String, List<String>> filterToRemove)
+  {
+    for (Entry<String, List<String>> toRemoveEntry : filterToRemove.entrySet())
+    {
+      String key = toRemoveEntry.getKey();
+      if (preparm.getActiveFilters().containsKey(key))
+      {
+        for (String toRemove : toRemoveEntry.getValue())
+        {
+          preparm.getActiveFilters().get(key).remove(toRemove);
+        }
+        if (preparm.getActiveFilters().get(key).isEmpty())
+        {
+          preparm.getActiveFilters().remove(key);
+        }
+      }
+    }
   }
 
   private static BaseFilter[] createBasicGeoStateFilters(String key, String stateId, StateContainer state)

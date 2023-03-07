@@ -14,7 +14,8 @@
   <context:component-scan base-package="de.seitenbau.govdata.search.index,
       de.seitenbau.govdata.search.adapter,
       de.seitenbau.govdata.odr,
-      de.seitenbau.govdata.cache" />
+      de.seitenbau.govdata.cache,
+      de.seitenbau.govdata.search.filter.util" />
 
   <bean id="indexQueueClientFactory" class="de.seitenbau.govdata.index.queue.adapter.IndexQueueClientFactory" />
   <bean id="indexQueueResource" factory-bean="indexQueueClientFactory" factory-method="createSuchindexQueueClient" />

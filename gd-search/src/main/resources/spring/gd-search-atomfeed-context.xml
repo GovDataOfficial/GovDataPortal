@@ -15,7 +15,8 @@
       de.seitenbau.govdata.search.adapter,
       de.seitenbau.govdata.search.index.mapper,
       de.seitenbau.govdata.odr,
-      de.seitenbau.govdata.cache" />
+      de.seitenbau.govdata.cache,
+      de.seitenbau.govdata.search.filter.util" />
   
   <bean class="de.seitenbau.govdata.search.gui.controller.AtomFeedController" />
 
