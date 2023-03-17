@@ -5,6 +5,10 @@ import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEA
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.portlet.PortletRequest;
 
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.assertj.core.api.Assertions;
@@ -16,6 +20,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import com.google.gson.Gson;
@@ -27,7 +33,11 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.test.mock.web.portlet.MockActionRequest;
 import com.liferay.portletmvc4spring.test.mock.web.portlet.MockActionResponse;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockRenderRequest;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockRenderResponse;
 
+import de.seitenbau.govdata.cache.CategoryCache;
+import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.edit.model.EditForm;
@@ -35,13 +45,19 @@ import de.seitenbau.govdata.edit.model.Resource;
 import de.seitenbau.govdata.fuseki.FusekiClient;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.ckan.impl.CategoryImpl;
+import de.seitenbau.govdata.odp.registry.ckan.impl.LicenceImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.OrganizationImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.UserImpl;
 import de.seitenbau.govdata.odp.registry.ckan.json.ExtraBean;
+import de.seitenbau.govdata.odp.registry.ckan.json.GroupBean;
+import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.UserBean;
+import de.seitenbau.govdata.odp.registry.model.Category;
+import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
 import de.seitenbau.govdata.odp.registry.model.Organization;
@@ -66,6 +82,12 @@ public class EditControllerTest
 
   @Mock
   private OrganizationCache organizationCache;
+
+  @Mock
+  private LicenceCache licenceCache;
+
+  @Mock
+  private CategoryCache categoryCache;
 
   @Mock
   private BindingResult bindingResult;
@@ -129,6 +151,78 @@ public class EditControllerTest
     Mockito.verify(gdNavigation).createLinkForSearchResults(FRIENDLY_URL_NAME_SEARCHRESULT_PAGE,
         PORTLET_NAME_SEARCHRESULT, "");
     Mockito.verify(fusekiClient).deleteDataset(ckanUser, metadata.getId(), metadata.getId());
+  }
+
+  @Test
+  public void showForm() throws Exception
+  {
+    /* prepare */
+    MockRenderResponse response = new MockRenderResponse();
+    MockRenderRequest request = new MockRenderRequest();
+    Model model = new ExtendedModelMap();
+    EditForm editForm = new EditForm();
+    String editFormName = "test-name";
+    editForm.setName(editFormName);
+    String contributorID = "contributorID-1";
+
+    de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
+
+    String organizationId = "org-id-1";
+    List<Organization> organizations = createOrganizationList(organizationId, contributorID);
+
+    List<Licence> licences = createLicenceList("TEST-URL");
+
+    List<Category> categories = createCategoryList("TEST-soci");
+
+    Mockito.when(odrClient.getOrganizationsForUser(ckanUser, "create_dataset")).thenReturn(organizations);
+    Mockito.when(licenceCache.getLicenceListSortedByTitle()).thenReturn(licences);
+    Mockito.when(categoryCache.getCategoriesSortedByTitle()).thenReturn(categories);
+
+    // When hideContributorId is false: show contributor ids
+    sut.setHideContributorId("false");
+
+    /* execute */
+    sut.showForm("Test-dataset", editForm, bindingResult, request, response, model);
+
+    /* assert */
+    Map<String, Object> modelMap = model.asMap();
+
+    Assertions.assertThat(modelMap).hasSize(11);
+    Assertions.assertThat(modelMap.get("contributorIdSelectList")).asList().isNotEmpty();
+    EditForm editFormResult = (EditForm) modelMap.get("editForm");
+    Assertions.assertThat(editFormResult).isNotNull();
+    Assertions.assertThat(editFormResult.getName()).isEqualTo(editFormName);
+
+    List<?> licencesList = (List<?>) modelMap.get("licenseList");
+    Assertions.assertThat(licencesList).isSameAs(licences);
+
+    List<?> categoryList = (List<?>) modelMap.get("categoryList");
+    Assertions.assertThat(categoryList).isSameAs(categories);
+
+    List<?> organizationList = (List<?>) modelMap.get("organizationList");
+    Assertions.assertThat(organizationList).isSameAs(organizations);
+
+    Assertions.assertThat(Boolean.valueOf(modelMap.get("hideContributorId").toString())).isFalse();
+    Assertions.assertThat(modelMap.get("message")).isNull();
+    Assertions.assertThat(modelMap.get("messageType")).isNull();
+    Assertions.assertThat(modelMap.get("metadataUrl")).isNull();
+    Assertions.assertThat(Boolean.valueOf(modelMap.get("userCanEditDataset").toString())).isTrue();
+
+    // When hideContributorId is true: hide contributor ids
+    sut.setHideContributorId("true");
+    // Create organization without contributor id
+    organizations = createOrganizationList(organizationId, null);
+    Mockito.when(odrClient.getOrganizationsForUser(ckanUser, "create_dataset")).thenReturn(organizations);
+
+    /* execute */
+    sut.showForm("Test-dataset", editForm, bindingResult, request, response, model);
+
+    /* assert */
+    modelMap = model.asMap();
+
+    Assertions.assertThat(modelMap.get("contributorIdSelectList")).asList().isEmpty();
+    Assertions.assertThat(Boolean.valueOf(modelMap.get("hideContributorId").toString())).isTrue();
+
   }
 
   @Test
@@ -302,7 +396,7 @@ public class EditControllerTest
     return metadata;
   }
 
-  private de.seitenbau.govdata.odp.registry.model.User mockUser(MockActionRequest request)
+  private de.seitenbau.govdata.odp.registry.model.User mockUser(PortletRequest request)
       throws PortalException
   {
     request.setAttribute(WebKeys.USER, user);
@@ -321,17 +415,52 @@ public class EditControllerTest
 
   private void mockOrganizationList(String organizationId, String contributorID)
   {
+    List<Organization> organizationList = createOrganizationList(organizationId, contributorID);
+    Mockito.when(organizationCache.getOrganizationsSorted()).thenReturn(organizationList);
+  }
+
+  private List<Organization> createOrganizationList(String organizationId, String contributorID)
+  {
     List<Organization> organizationList = new ArrayList<>();
     OrganizationBean orgBean = new OrganizationBean();
     orgBean.setId(organizationId);
     List<ExtraBean> extras = new ArrayList<>();
     ExtraBean contributorIdExtra = new ExtraBean();
-    contributorIdExtra.setKey(MetadataListExtraFields.CONTRIBUTOR_ID.getField());
-    contributorIdExtra.setValue(new Gson().toJson(Lists.newArrayList(contributorID)));
-    extras.add(contributorIdExtra);
+    if (Objects.nonNull(contributorID))
+    {
+      contributorIdExtra.setKey(MetadataListExtraFields.CONTRIBUTOR_ID.getField());
+      contributorIdExtra.setValue(new Gson().toJson(Lists.newArrayList(contributorID)));
+      extras.add(contributorIdExtra);
+    }
     orgBean.setExtras(extras);
     Organization org = new OrganizationImpl(orgBean);
     organizationList.add(org);
-    Mockito.when(organizationCache.getOrganizationsSorted()).thenReturn(organizationList);
+    return organizationList;
+  }
+
+  private List<Category> createCategoryList(String... groupIds)
+  {
+    List<Category> categories = new ArrayList<>();
+    for (String groupId : groupIds)
+    {
+      GroupBean groupBean = new GroupBean();
+      groupBean.setId(groupId);
+      Category category = new CategoryImpl(groupBean);
+      categories.add(category);
+    }
+    return categories;
+  }
+
+  private List<Licence> createLicenceList(String... licenceUrls)
+  {
+    List<Licence> licences = new ArrayList<>();
+    for (String licenceUrl : licenceUrls)
+    {
+      LicenceBean licenceBean = new LicenceBean();
+      licenceBean.setUrl(licenceUrl);
+      Licence licence = new LicenceImpl(licenceBean);
+      licences.add(licence);
+    }
+    return licences;
   }
 }

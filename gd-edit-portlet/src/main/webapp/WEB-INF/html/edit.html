@@ -58,7 +58,7 @@
             </td>
           </tr>
 
-          <tr>
+          <tr th:unless="${hideContributorId}">
             <th><label id="contributorId_label" for="contributorId">[[#{'od.govdata.contributor.name'}]]<span class="requiredmarker"> *</span></label></th>
             <td>
               <select aria-required="true" th:field="*{contributorId}" aria-labelledby="contributorId_label contributorId_error" id="govdataContributorId" >

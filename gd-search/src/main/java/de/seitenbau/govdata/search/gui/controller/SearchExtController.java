@@ -101,7 +101,15 @@ public class SearchExtController extends AbstractBaseController
     // preprocessing for parameters
     PreparedParameters preparm =
         ParameterProcessing.prepareParameters(request.getParameterMap(), currentPage);
-    
+
+    // remove type "all" from active filters if it exists to avoid showing checklist with the
+    // specific types, because "all" is the default search without defining a specific type.
+    if (preparm.getActiveFilters().containsKey(SearchConsts.FILTER_KEY_TYPE)
+        && preparm.getActiveFilters().get(SearchConsts.FILTER_KEY_TYPE).contains(SearchConsts.TYPE_ALL))
+    {
+      preparm.getActiveFilters().remove(SearchConsts.FILTER_KEY_TYPE);
+    }
+
     // list of fields we want to use for the form (filled by js)
     String[] hiddenFields = {
         QueryParamNames.PARAM_PHRASE,

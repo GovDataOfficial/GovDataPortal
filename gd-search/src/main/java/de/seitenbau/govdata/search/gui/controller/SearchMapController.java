@@ -39,6 +39,9 @@ public class SearchMapController extends AbstractBaseController
   @Value("${mapsearch.credits:}")
   private String credits;
 
+  @Value("${mapsearch.layers:}")
+  private String layers;
+
   @PostConstruct
   public void init() throws Exception
   {
@@ -80,6 +83,7 @@ public class SearchMapController extends AbstractBaseController
         .tileUrl(tileUrl)
         .geocodingUrl(geocodingUrl)
         .credits(creditsReplaced)
+        .layers(layers)
         .build();
     
     model.addAttribute("searchMap", viewModel);

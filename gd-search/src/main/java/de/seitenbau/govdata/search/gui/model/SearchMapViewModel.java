@@ -28,6 +28,7 @@ public class SearchMapViewModel
   private String tileUrl;
   private String geocodingUrl;
   private String credits;
+  private String layers;
   
   
 }

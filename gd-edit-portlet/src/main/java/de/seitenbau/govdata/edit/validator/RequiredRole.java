@@ -11,12 +11,25 @@ import javax.validation.Payload;
 @Constraint(validatedBy = RequiredRoleValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequiredRole {
+public @interface RequiredRole
+{
+  /**
+   * error message
+   */
   String message();
   
+  /**
+   * role name
+   */
   String name();
   
+  /**
+   * groups
+   */
   Class<?>[] groups() default { };
   
+  /**
+   * payload
+   */
   Class<? extends Payload>[] payload() default {};
 }

@@ -29,6 +29,7 @@ import javax.ws.rs.ClientErrorException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,6 +125,8 @@ public class EditController
   @Inject
   private MessageSource messageSource;
 
+  private boolean hideContributorId;
+
   @RenderMapping
   public String showForm(
       @RequestParam(value = DetailsRequestParamNames.PARAM_METADATA, required = false) String metadataName,
@@ -176,20 +179,22 @@ public class EditController
           // only provide active licenses in dropdown for new datasets
           licenceList = licenceCache.getActiveLicenceListSortedByTitle();
         }
-
-        // set contributorIds for selected org
-        List<String> contributorIdList =
-            getContributorIdsFromOrganizations(editForm.getOrganizationId(), organizationsForUser, true);
         List<OptionTag> contributorIdSelectList = new ArrayList<>();
-        // add empty default-option in case of multiple contributor-IDs and if value is invalid
-        if (contributorIdList.size() > 1 && (StringUtils.isEmpty(editForm.getContributorId())
-            || !contributorIdList.contains(editForm.getContributorId())))
+        if (!hideContributorId)
         {
-          contributorIdSelectList.add(
-              new OptionTag("", messageSource.getMessage(
-                  "od.select.required.item.text", new Object[0], null)));
+          // set contributorIds for selected org
+          List<String> contributorIdList =
+              getContributorIdsFromOrganizations(editForm.getOrganizationId(), organizationsForUser, true);
+          // add empty default-option in case of multiple contributor-IDs and if value is invalid
+          if (contributorIdList.size() > 1 && (StringUtils.isEmpty(editForm.getContributorId())
+              || !contributorIdList.contains(editForm.getContributorId())))
+          {
+            contributorIdSelectList.add(
+                new OptionTag("", messageSource.getMessage(
+                    "od.select.required.item.text", new Object[0], null)));
+          }
+          contributorIdSelectList.addAll(mapToOptionTagList(contributorIdList));
         }
-        contributorIdSelectList.addAll(mapToOptionTagList(contributorIdList));
 
         // form data
         model.addAttribute("actionUrl", response.createActionURL(Copy.NONE).toString());
@@ -200,6 +205,7 @@ public class EditController
         model.addAttribute("categoryList", categoryCache.getCategoriesSortedByTitle());
         model.addAttribute("organizationList", organizationsForUser);
         model.addAttribute("contributorIdSelectList", contributorIdSelectList);
+        model.addAttribute("hideContributorId", hideContributorId);
 
         model.addAttribute(MESSAGE, request.getParameter(MESSAGE));
         model.addAttribute(MESSAGE_TYPE, request.getParameter(MESSAGE_TYPE));
@@ -609,12 +615,13 @@ public class EditController
         form.getOrganizationId(),
         organizationCache.getOrganizationsSorted(),
         false);
-    if (!organizationContributorIds.contains(form.getContributorId()))
+
+    if (!hideContributorId && !organizationContributorIds.contains(form.getContributorId()))
     {
       // Add error message
       result.rejectValue(Constants.CONTRIBUTOR_ID, "od.validation_invalid_value", "Der Wert ist ungültig");
     }
-    else
+    else if (!hideContributorId)
     {
       // add the Govdata-Contributor-ID while remove all other Contributor-IDs of the Organization
       List<String> newDatasetContributorIds = new ArrayList<String>();
@@ -833,7 +840,7 @@ public class EditController
 
   private String getGovdataContributorId(List<String> contributorsOrg, List<String> datasetContributors)
   {
-    if (Objects.nonNull(datasetContributors) && Objects.nonNull(datasetContributors))
+    if (Objects.nonNull(contributorsOrg) && Objects.nonNull(datasetContributors))
     {
       for (String contributorId : datasetContributors)
       {
@@ -875,4 +882,11 @@ public class EditController
     }
     return Collections.emptyList();
   }
+
+  @Value("${editform.disable.contributor.id.field:}")
+  public void setHideContributorId(String hideContributorId)
+  {
+    this.hideContributorId = Boolean.valueOf(StringUtils.trim(hideContributorId));
+  }
+
 }

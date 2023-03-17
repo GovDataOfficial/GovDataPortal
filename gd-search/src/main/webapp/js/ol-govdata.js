@@ -309,7 +309,7 @@ function initMap() {
       source: new ol.source.TileWMS({
         url: mapconfig.tileUrl,
         params: {
-          'layers': 'webatlasde',
+          'layers': mapconfig.layers,
         },
         serverType: 'geoserver',
         attributions: creditArray,
@@ -330,7 +330,9 @@ function initMap() {
     }),
     view: new ol.View({
       center: ol.proj.fromLonLat([9, 51]),
-      zoom: 6
+      zoom: 6,
+      minZoom: 5,
+      maxZoom: 20
     })
   });
 

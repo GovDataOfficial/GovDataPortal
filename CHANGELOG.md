@@ -1,5 +1,15 @@
 # Changelog
 
+## v5.11.0 2023-03-16
+
+* Adds possibility to define the property `layers` for the map search by configuration. Switches the map
+  service in the portal GovData from "WebAtlasDE" to "BaseMapDE".
+* Fixes managing tags and categories in web content
+* Adds the possibility to disable the contributorID in the metadata edit form. When the contributorID is
+  deactivated by setting `editform.disable.contributor.id.field=true`, the field is no longer added in the
+  edit form.
+* Prevents adding the type checklist in the extended search if the type filter is "all"
+
 ## v5.10.0 2023-03-06
 
 * Adds a search filter for high-value datasets based on a search for specific tags

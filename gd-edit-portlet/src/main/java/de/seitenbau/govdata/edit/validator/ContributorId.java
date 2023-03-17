@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-@Constraint(validatedBy = LicenceIdValidator.class)
+@Constraint(validatedBy = ContributorIdValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LicenceId
+public @interface ContributorId
 {
   /**
    * error message

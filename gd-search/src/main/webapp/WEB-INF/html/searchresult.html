@@ -141,7 +141,7 @@
       </th:block>
 
       <th:block th:if="${searchResult.filterMap.get('hvd').get(0).docCount > 0}">
-        <dl th:replace="fragments/filter :: facetFilter(${searchResult.filterMap.get('hvd')}, 'hvd', #{'od.gdsearch.searchresult.facet.hvd'}, false)"></dl>
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('hvd')}, 'hvd', #{'od.gdsearch.searchresult.facet.hvd'}, false)}"></dl>
       </th:block>
 
       <dl class="filtergroup spatial-filter" th:if="${searchResult.canContainSpatialData}">
