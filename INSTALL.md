@@ -20,7 +20,7 @@ too, but we have never seen it done.
 - Liferay 7.3.x ([GitHub Releases](https://github.com/liferay/liferay-portal/releases/)) bundled with an application container, e.g. Tomcat for an easy start
 - Elasticsearch 7.17.x follow the ([Elasticsearch installation guide](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/index.html))
 - ActiveMQ ([ActiveMQ Getting started](http://activemq.apache.org/getting-started.html))
-- ckanext-searchindexhook ([ckanext-searchindexhook](https://github.com/GovDataOfficial/ckanext-searchindexhook))
+- ckanext-searchindexhook ([on GitHub](https://github.com/GovDataOfficial/ckanext-searchindexhook) or [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook))
 
 
 Optional Requirements:
@@ -45,17 +45,19 @@ Assuming you have an installed and reachable CKAN 2.x installation.
 
 - Note the admin API key, Liferay will be using this one to authenticate against CKAN (portal-ext.properties)
 
-- Define the file with the licenses used by the German Open Data Portals. The file is available at [ckanext-dcatde](https://github.com/GovDataOfficial/ckanext-dcatde/blob/master/examples/dcat_licenses.json). This can be configured in the ckan configuration file *production.ini*, e.g.
+- Define the file with the licenses used by the German Open Data Portals. The file is available at **ckanext-dcatde** ([on GitHub](https://github.com/GovDataOfficial/ckanext-dcatde/blob/master/examples/dcat_licenses.json) or [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-dcatde/-/blob/master/examples/dcat_licenses.json)). This can be configured in the ckan configuration file *production.ini*, e.g.
 
   - directly to the remote url
 
         licenses_group_url = https://raw.githubusercontent.com/GovDataOfficial/ckanext-dcatde/master/examples/dcat_licenses.json
+        # or
+        licenses_group_url = https://gitlab.opencode.de/fitko/govdata/ckanext-dcatde/-/raw/master/examples/dcat_licenses.json
 
   - or to a local copy of the file
 
         licenses_group_url = file:///usr/lib/dcat-metadata/dcat_licenses.json
 
-- Create some categories (CKAN calls them "groups"). The DCAT-AP.de conform groups can be easily created by the CKAN command *dcatde_themeadder* in the CKAN extension [ckanext-dcatde](https://github.com/GovDataOfficial/ckanext-dcatde#creating-dcat-ap-categories-as-groups).
+- Create some categories (CKAN calls them "groups"). The DCAT-AP.de conform groups can be easily created by the CKAN command *dcatde_themeadder* in the CKAN extension **ckanext-dcatde** ([on GitHub](https://github.com/GovDataOfficial/ckanext-dcatde#creating-dcat-ap-categories-as-groups) or [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-dcatde#creating-dcat-ap-categories-as-groups)).
 
 - Create some datasets
 
@@ -129,7 +131,7 @@ Replace the variables with the real index names, e.g. the default index names:
 
 Install CKAN extension ckanext-searchindexhook
 -----------------
-Install the CKAN extension [ckanext-searchindexhook](https://github.com/GovDataOfficial/ckanext-searchindexhook) as described in the CKAN extension installation guide.
+Install the CKAN extension **ckanext-searchindexhook** ([on GitHub](https://github.com/GovDataOfficial/ckanext-searchindexhook) or [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook)) as described in the CKAN extension installation guide.
 
 
 Configure the portal:
@@ -195,9 +197,14 @@ Relevant parameters when using a SHACL validator:
 
 Build and deploy
 ----------------
-Clone the main project:
+Clone the main project (from GitHub):
 
     git clone https://github.com/GovDataOfficial/GovDataPortal.git govdata-portal
+    cd govdata-portal
+
+or (from Open CoDE):
+
+    git clone https://gitlab.opencode.de/fitko/govdata/GovDataPortal.git govdata-portal
     cd govdata-portal
 
 Build the portlets with Maven:
