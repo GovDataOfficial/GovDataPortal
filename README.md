@@ -13,11 +13,11 @@ Komponenten
 
 - Typischerweise wird beiden ein Webserver wie der Apache httpd vorgeschaltet, um HTTP-Anfragen den Anwendungen oder statischen Dateien zuzuordnen
 
-- Elasticsearch für die Speicherung des Suchindex. Der Suchindex wird mit dem SOLR-Suchindex von CKAN synchron gehalten und von den Liferay-Portlets genutzt, um die Suchanfragen performant zu bearbeiten und die Suchergebnisliste mit den verschiedenen Filtern darzustellen. Derzeit wird Elasticsearch in Version 1.6.x unterstützt, da diese für die Long-Time-Support (LTS) Version von Ubuntu Server verfügbar ist. Für die Synchronisation der Suchindexe ist die CKAN-Erweiterung [ckanext-searchindexhook](https://github.com/GovDataOfficial/ckanext-searchindexhook) zuständig.
+- Elasticsearch für die Speicherung des Suchindex. Der Suchindex wird mit dem SOLR-Suchindex von CKAN synchron gehalten und von den Liferay-Portlets genutzt, um die Suchanfragen performant zu bearbeiten und die Suchergebnisliste mit den verschiedenen Filtern darzustellen. Derzeit wird Elasticsearch in Version 1.6.x unterstützt, da diese für die Long-Time-Support (LTS) Version von Ubuntu Server verfügbar ist. Für die Synchronisation der Suchindexe ist die CKAN-Erweiterung **ckanext-searchindexhook** ([auf GitHub](https://github.com/GovDataOfficial/ckanext-searchindexhook) bzw. [auf Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook)) zuständig.
 
 - Als Persistenz-Komponente dient ein Datenbank-Server. CKAN arbeitet nur mit PostgreSQL zusammen, Liferay unterstützt alle vom Hibernate-Framework unterstützen Datenbanken also auch PostgreSQL.
 
-- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalog, auch Harvesting genannt. Für den automatisierten Import von Daten wurden individuelle Harvester auf Basis der CKAN-Erweiterung ckanext-harvest implementiert. Diese sind in der CKAN-Erweiterung [ckanext-govdatade](https://github.com/GovDataOfficial/ckanext-govdatade) enthalten.
+- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalog, auch Harvesting genannt. Für den automatisierten Import von Daten wurden individuelle Harvester auf Basis der CKAN-Erweiterung ckanext-harvest implementiert. Diese sind in der CKAN-Erweiterung **ckanext-govdatade** ([auf GitHub](https://github.com/GovDataOfficial/ckanext-govdatade) bzw. [auf Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-govdatade)) enthalten.
 
 Architektur
 -----------
@@ -62,7 +62,7 @@ Links:
 - [Contributing to ODP](./CONTRIBUTING.md)
 - [Open data metadata structure for Germany](http://www.dcat-ap.de/def/)
 - Relevant CKAN plugins
-  - [searchindex extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-searchindexhook)
-  - [german specific dcat extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-dcatde)
-  - [harvesting extension used at govdata.de](https://github.com/GovDataOfficial/ckanext-govdatade)
+  - searchindex extension used at govdata.de [on GitHub](https://github.com/GovDataOfficial/ckanext-searchindexhook) and [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook)
+  - German specific dcat extension used at govdata.de [on GitHub](https://github.com/GovDataOfficial/ckanext-dcatde) and [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-dcatde)
+  - harvesting extension used at govdata.de [on GitHub](https://github.com/GovDataOfficial/ckanext-govdatade) and [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-govdatade)
 
