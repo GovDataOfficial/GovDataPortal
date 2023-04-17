@@ -1,5 +1,5 @@
 {
-  "help": "http://keh.gd.swe.seitenbau.net, localhost:5000/api/3/action/help_show?name=user_show",
+  "help": "http://mtest3.gd.swe.seitenbau.net:5000/api/3/action/help_show?name=user_show",
   "success": true,
   "result": {
     "openid": null,

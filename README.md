@@ -9,15 +9,15 @@ Komponenten
 
 - Die Portalsoftware Liferay wird in einem Java-Application-Container wie Apache Tomcat ausgeführt. Sie implementiert den Portlet-Standard JSR 268. Die Anwendungen der Open Data Platform sind als Portlets implementiert, die in diesem Portal laufen.
 
-- CKAN ist ein für Offene Daten weit verbreiteter Metadaten-Katalog, mit vollständiger REST-API. Zur Anbindung an Java-Anwendungenn wurde eine Java-Client-Bibliothek für die CKAN-API entwickelt (opendataregistry-client). Unterstützt wird CKAN 2.x. Grundsätzlich können auch andere Datenkataloge angeschlossen werden.
+- CKAN ist ein für Offene Daten weit verbreiteter Metadaten-Katalog, mit vollständiger REST-API. Zur Anbindung an Java-Anwendungenn wurde eine Java-Client-Bibliothek für die CKAN-API entwickelt (opendataregistry-client). Unterstützt wird CKAN 2.9+. Grundsätzlich können auch andere Datenkataloge angeschlossen werden.
 
 - Typischerweise wird beiden ein Webserver wie der Apache httpd vorgeschaltet, um HTTP-Anfragen den Anwendungen oder statischen Dateien zuzuordnen
 
-- Elasticsearch für die Speicherung des Suchindex. Der Suchindex wird mit dem SOLR-Suchindex von CKAN synchron gehalten und von den Liferay-Portlets genutzt, um die Suchanfragen performant zu bearbeiten und die Suchergebnisliste mit den verschiedenen Filtern darzustellen. Derzeit wird Elasticsearch in Version 1.6.x unterstützt, da diese für die Long-Time-Support (LTS) Version von Ubuntu Server verfügbar ist. Für die Synchronisation der Suchindexe ist die CKAN-Erweiterung **ckanext-searchindexhook** ([auf GitHub](https://github.com/GovDataOfficial/ckanext-searchindexhook) bzw. [auf Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook)) zuständig.
+- Elasticsearch für die Speicherung des Suchindex. Der Suchindex wird mit dem SOLR-Suchindex von CKAN synchron gehalten und von den Liferay-Portlets genutzt, um die Suchanfragen performant zu bearbeiten und die Suchergebnisliste mit den verschiedenen Filtern darzustellen. Derzeit wird Elasticsearch in Version 7.17.x unterstützt. Für die Synchronisation mit dem CKAN Suchindex ist die CKAN-Erweiterung **ckanext-searchindexhook** ([auf GitHub](https://github.com/GovDataOfficial/ckanext-searchindexhook) bzw. [auf Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook)) zuständig.
 
 - Als Persistenz-Komponente dient ein Datenbank-Server. CKAN arbeitet nur mit PostgreSQL zusammen, Liferay unterstützt alle vom Hibernate-Framework unterstützen Datenbanken also auch PostgreSQL.
 
-- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalog, auch Harvesting genannt. Für den automatisierten Import von Daten wurden individuelle Harvester auf Basis der CKAN-Erweiterung ckanext-harvest implementiert. Diese sind in der CKAN-Erweiterung **ckanext-govdatade** ([auf GitHub](https://github.com/GovDataOfficial/ckanext-govdatade) bzw. [auf Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-govdatade)) enthalten.
+- Noch wichtiger als die manuelle Dateneingabe ist für die Open Data Plattform das automatische Importieren der Metadaten aus entfernten Datenkatalogen, auch Harvesting genannt. Für den automatisierten Import von Metadaten in CKAN wird ein RDF-Harvester **ckanext-dcatde** ([auf GitHub](https://github.com/GovDataOfficial/ckanext-dcatde#rdf-dcat-apde-harvester) bzw. [auf Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook)) verwendet.
 
 Architektur
 -----------
@@ -39,6 +39,10 @@ Die einzelnen Java-Komponenten der Open Data Platform sind als Portlets umgesetz
 [gd-search](gd-search): Zeigt die Suchmaske und die Suchergebnis-Liste mit Filtern an. Die Suchanfragen erfolgen an Elasticsearch, die die nötigen Informationen für die Darstellung der Suchergebnissliste liefert. Für die Anzeige der Datensatzdetailseite werden die Informationen per opendataregistry-client von CKAN holt. Das Portlet enthält auch einen Hook, mit dem die Liferay-Inhalte, z.B. Blog-Beiträge in den Elasticsearch-Index geschrieben werden.
 
 [gd-edit-portlet](gd-edit-portlet): Erlaubt das erstellen und pflegen von Metadaten per Formular und opendataregistry-client.
+
+[gd-developers-corner-portlet](gd-developers-corner-portlet): Bietet einen Editor zum Abfragen des Triplestores.
+
+[gd-metadata-quality-portlet](gd-metadata-quality-portlet): Bietet ein Dashboard zum Darstellen von Metriken.
 
 [gd-usermanage-portlet](gd-usermanage-portlet): Enthält und aktiviert die folgenden Funktionalitäten:
 - Benutzer können ihr Konto mittels Double-Opt-Out selbst löschen.

@@ -24,8 +24,6 @@ public class TestBase
   /** The Constant PROPERTY_NAME_CKAN_AUTHORIZATION_KEY. */
   static final String PROPERTY_NAME_CKAN_AUTHORIZATION_KEY = "ckan.authorization.key";
 
-  static final String PROP_NAME_DEFAULT_SORT_METADATA = "sorting.default.metadata";
-
   private static final int MOCK_PORT = 6666;
 
   private static final String MOCK_HTTP_BASE_URL = "http://localhost:" + MOCK_PORT;
@@ -76,7 +74,6 @@ public class TestBase
     // Endpoint neu setzen
     Properties props = new Properties();
     props.setProperty(PROPERTY_NAME_CKAN_AUTHORIZATION_KEY, "secret");
-    props.setProperty(PROP_NAME_DEFAULT_SORT_METADATA, "sort desc");
     props.setProperty(PROPERTY_NAME_CKAN_URL, CKAN_URL);
     odrClient.init(props);
   }

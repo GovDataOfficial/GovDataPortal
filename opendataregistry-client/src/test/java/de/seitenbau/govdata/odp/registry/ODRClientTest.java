@@ -22,14 +22,14 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +41,7 @@ import de.seitenbau.govdata.odp.registry.ckan.impl.ContactAddress;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
 import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean;
+import de.seitenbau.govdata.odp.registry.common.CkanResource;
 import de.seitenbau.govdata.odp.registry.common.TestBase;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.odp.registry.model.Contact;
@@ -54,19 +55,18 @@ import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 import de.seitenbau.govdata.odp.registry.model.Tag;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
-import de.seitenbau.govdata.odp.registry.queries.Query;
-import de.seitenbau.govdata.odp.registry.queries.QueryModeEnumType;
-import de.seitenbau.govdata.odp.registry.queries.QueryResult;
 
 
 public class ODRClientTest extends TestBase
 {
-  private final Logger log = LoggerFactory.getLogger(getClass());
+  private static final String TEST_TOKEN =
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJMU0UtM1E1c0xQTEVMQUl5S3Y0eWhxendhQUUzVy1Jcl9Wdzl0YWpieVVnIiwiaWF0IjoxNjc5NTYxNDE4fQ.MvJCspsvjzEkW3Nrtmf-59tMvs2PTr__oeRIydAPhhE";
 
   @Before
   public void beforeTest() throws Exception
   {
     setupConfigurationAndHttpServer();
+    CkanResource.clearApiMethodsCalled();
   }
 
   @After
@@ -74,12 +74,6 @@ public class ODRClientTest extends TestBase
   {
     stopHttpServer();
   }
-  
-
-  /*
-   * Most important tests: listLicences(), getMetadata(), rateMetadata(), queryMetadata(),
-   * listCategories(), userShow()
-   */
 
   // ODR: listLicenses() - CKAN: license_list
   @Test
@@ -93,6 +87,8 @@ public class ODRClientTest extends TestBase
     Licence licence = licences.get(0);
 
     // name matches field "id" in json response
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("listLicences");
     Assertions.assertThat(licence.getName()).isEqualTo("dl-de-by-1.0");
     Assertions.assertThat(licence.getTitle()).isEqualTo("Datenlizenz Deutschland Namensnennung");
     Assertions.assertThat(licence.getUrl()).isEqualTo("https://www.govdata.de/dl-de/by-1-0");
@@ -114,29 +110,9 @@ public class ODRClientTest extends TestBase
     List<Licence> licences2 = odrClient.listLicenses();
 
     /* assert */
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("listLicences");
     Assertions.assertThat(licences).isNotNull().isSameAs(licences2);
-  }
-
-  private JsonNode getJsonNodeWithDate(String date) {
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode jsonNode = objectMapper.createObjectNode();
-
-
-    ((ObjectNode) jsonNode).put("id", "11a18249-447c-4fa6-89b5-9c5a239af94b");
-    ((ObjectNode) jsonNode).put("metadata_modified", date);
-    ((ObjectNode) jsonNode).put("metadata_created", date);
-    ObjectNode resourcesNode = objectMapper.createObjectNode();
-    resourcesNode.put("created", date);
-    resourcesNode.put("issued", date);
-    resourcesNode.put("modified", date);
-    resourcesNode.put("last_modified", date);
-
-    ArrayNode arrayNode = objectMapper.createArrayNode();
-    arrayNode.add(resourcesNode);
-    ((ObjectNode) jsonNode).set("resources", arrayNode);
-
-    return jsonNode;
   }
 
   @Test
@@ -197,6 +173,8 @@ public class ODRClientTest extends TestBase
     Metadata metadata = odrClient.getMetadata(null, "13dfb16a-c4f1-36b4-eda2-01ff5b1b294f");
 
     Assertions.assertThat(metadata).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("showMetadata");
 
     // Tests if subset of response data is correct
     Assertions.assertThat(metadata.getAuthor()).isEqualTo("Landesamt f\u00fcr Geologie und Bergbau");
@@ -227,6 +205,8 @@ public class ODRClientTest extends TestBase
     Metadata metadata = odrClient.getMetadata(null, "metadata_max");
 
     Assertions.assertThat(metadata).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("showMetadata");
 
     // Tests if subset of response data is correct
     Assertions.assertThat(metadata.getAuthor()).isEqualTo("Landesamt f\u00fcr Geologie und Bergbau");
@@ -271,6 +251,8 @@ public class ODRClientTest extends TestBase
         "http://test-portal.com/dataset", "http://test-portal.com/results");
 
     Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("showDcatDataset");
 
     Assertions.assertThat(result).contains("\"@context\":");
     Assertions.assertThat(result).contains("schema:");
@@ -287,6 +269,8 @@ public class ODRClientTest extends TestBase
         FormatEnumType.XML, ArrayUtils.EMPTY_STRING_ARRAY);
 
     Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("showDcatDataset");
 
     String xmlString = result.path("result").asText();
     Assertions.assertThat(xmlString).contains("<rdf:RDF");
@@ -297,21 +281,6 @@ public class ODRClientTest extends TestBase
     Assertions.assertThat(xmlString).contains("<dcat:Distribution");
   }
 
-  // ODR: queryMetadata() - CKAN: package_search
-  @Test
-  public void queryMetadata()
-  {
-    Query query = new Query();
-    QueryResult<Metadata> result = odrClient.queryMetadata(query);
-    List<Metadata> metadata = result.getResult();
-
-    Assertions.assertThat(result).isNotNull();
-    Assertions.assertThat(metadata).isNotNull();
-    // Query has no facets
-    Assertions.assertThat(result.getFacets().size()).isEqualTo(0);
-    Assertions.assertThat(metadata.size()).isEqualTo(10);
-  }
-
   // ODR: listCategories() - CKAN: group_list
   @Test
   public void listCategories()
@@ -319,6 +288,8 @@ public class ODRClientTest extends TestBase
     List<Category> categories = odrClient.listCategories();
 
     Assertions.assertThat(categories).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("listGroups");
     // 14 different groups
     Assertions.assertThat(categories.size()).isEqualTo(14);
 
@@ -336,7 +307,10 @@ public class ODRClientTest extends TestBase
     User user = odrClient.findUser("bremen");
 
     Assertions.assertThat(user).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("showUser", "getTokenList", "createApiToken");
     Assertions.assertThat(user.getName()).isEqualTo("bremen");
+    Assertions.assertThat(user.getApiToken()).isEqualTo(TEST_TOKEN);
   }
 
   @Test
@@ -345,71 +319,8 @@ public class ODRClientTest extends TestBase
     List<Tag> tags = odrClient.listTags();
 
     Assertions.assertThat(tags).isNotNull();
-  }
-
-  @Test
-  public void querySearchTerm()
-  {
-    Query query = new Query();
-    query.setSearchterm("Ulm");
-    QueryResult<Metadata> result = odrClient.queryMetadata(query);
-
-    if (result.isSuccess())
-    {
-      List<Metadata> metadata = result.getResult();
-
-      for (Metadata set : metadata)
-      {
-        log.info("metadata: {}", set.getTitle());
-      }
-    }
-    else
-    {
-      log.info("no success: {}", result.getErrorMessage());
-    }
-
-    Assertions.assertThat(result.isSuccess()).isTrue();
-  }
-
-  @Test
-  public void extendedQueryMetadata()
-  {
-    Query query = new Query(QueryModeEnumType.EXTENDED);
-    // query.getTypes().add(MetadataEnumType.APPLICATION);
-    // query.setSearchterm("Bodenrichtwerte");
-    // query.getCategories().add("geo");
-    // query.setIsOpen(true);
-    // List<Category> categories = odr.listCategories();
-    // for (Category category : categories) {
-    // query.getCategories().add(category.getName());
-    // }
-    // query.getTypes().add(MetadataEnumType.DATASET);
-    query.setMax(90);
-    // query.setOffset(75);
-    // query.getFormats().add("ASCII");
-    // query.getSortFields().add("dates desc");
-
-    QueryResult<Metadata> result = odrClient.queryMetadata(query);
-    List<Metadata> metadata = result.getResult();
-    log.info("metadata count: {}", metadata.size());
-
-    for (Metadata set : metadata)
-    {
-      log.info("metadata typ {}: {} (open: {})",
-          set.getType().toField(), set.getTitle(), String.valueOf(set.isOpen()));
-
-      for (Contact contact : set.getContacts())
-      {
-        log.info("{}: {}", contact.getRole().getDisplayName(), contact.getName());
-      }
-      // log.info("created: {}", set.getCreatedAsString("dd.MM.yyyy"));
-      // log.info("published: {}", set.getPublishedAsString("dd.MM.yyyy"));
-      // log.info("modified: {}", set.getModifiedAsString("dd.MM.yyyy"));
-      // String averageRating = set.getExtra("rateSum");
-      // log.info("average rating is {}", averageRating);
-    }
-
-    Assertions.assertThat(metadata).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+    .containsExactlyInAnyOrder("listTags");
   }
 
   @Test
@@ -418,6 +329,8 @@ public class ODRClientTest extends TestBase
     Tag tag = odrClient.getTag("Ozon");
 
     Assertions.assertThat(tag).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("showTag");
   }
 
   @Test
@@ -425,17 +338,32 @@ public class ODRClientTest extends TestBase
   {
     String status = odrClient.status();
 
-    log.info("status of open data registry is: {}", status);
+    Assertions.assertThat(status).isEqualTo("{\"success\":true}");
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+    .containsExactlyInAnyOrder("status");
   }
 
   @Test
   public void createMetadata()
   {
-    MetadataImpl impl = (MetadataImpl) odrClient.createMetadata();
-    impl.setTitle("Test Create Metadata V");
+    Metadata result = odrClient.createMetadata();
 
-    impl.setExtraList(MetadataListExtraFields.POLITICAL_GEOCODING_URI, Arrays.asList("sumpfgebiete"));
-    impl.setExtraString(MetadataStringExtraFields.POLITICAL_GEOCODING_LEVEL_URI, GeoGranularityEnumType.CITY.toField());
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result.getId()).isNull();
+    Assertions.assertThat(result.getTitle()).isNull();
+    Assertions.assertThat(result.getResources()).isEmpty();
+  }
+
+  @Test
+  public void persistMetadata()
+  {
+    MetadataImpl impl = (MetadataImpl) odrClient.createMetadata();
+
+    impl.setTitle("Test Create Metadata V");
+    impl.setExtraList(MetadataListExtraFields.POLITICAL_GEOCODING_URI,
+        Arrays.asList("sumpfgebiete"));
+    impl.setExtraString(MetadataStringExtraFields.POLITICAL_GEOCODING_LEVEL_URI,
+        GeoGranularityEnumType.CITY.toField());
     impl.setModified(new Date());
     impl.setNotes("Simple Metadata for testing.");
     impl.setPublished(new Date());
@@ -449,7 +377,7 @@ public class ODRClientTest extends TestBase
     }
     catch (ParseException e)
     {
-      e.printStackTrace();
+      Assertions.fail(e.getMessage());
     }
 
     LicenceBean bean = new LicenceBean();
@@ -475,76 +403,109 @@ public class ODRClientTest extends TestBase
 
     try
     {
-      odrClient.persistMetadata(user, impl);
+      boolean success = odrClient.persistMetadata(user, impl);
+      Assertions.assertThat(success).isTrue();
     }
     catch (OpenDataRegistryException e)
     {
-      e.printStackTrace();
+      Assertions.fail(e.getMessage());
     }
+
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("createMetadata", "showUser", "getTokenList", "createApiToken");
+    JsonNode params = CkanResource.getApiMethodsCalled().get("createMetadata");
+    Assertions.assertThat(params.get("title").textValue()).isEqualTo(impl.getTitle());
+    Assertions.assertThat(params.get("notes").textValue()).isEqualTo(impl.getNotes());
+    Assertions
+        .assertThat(
+            StreamSupport.stream(params.get("tags").spliterator(), false).map(t -> t.get("name").textValue())
+            .collect(Collectors.toList()))
+        .containsExactlyInAnyOrder(impl.getTags().stream().map(t -> t.getName()).toArray(String[]::new));
   }
 
   @Test
   public void createUser()
   {
-    String name = "testnutzer13";
+    /* prepare */
+    String name = "testuser123";
+
+    /* execute */
+    User result = odrClient.createUser(name, name + "@ogdd.de", name);
+
+    /* verify */
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("createUser", "getTokenList", "createApiToken");
+    Assertions.assertThat(result.getDisplayName()).isEqualTo("created");
+    Assertions.assertThat(result.getName()).isEqualTo(name);
+  }
+
+  @Test
+  public void renameUser()
+  {
+    String name = "bremen";
+    String newName = "testnutzer14";
+
     User user = odrClient.findUser(name);
 
-    if (user == null)
-    {
-      log.info("User {} not found, creating...", name);
-      user = odrClient.createUser(name, name + "@ogdd.de", name);
-      if (user != null)
-      {
-        log.info("... done");
-      }
-    }
-    else
-    {
-      log.info("User {} already exists", name);
-    }
+    Assertions.assertThat(user).isNotNull();
+    Assertions.assertThat(user.getName()).isEqualTo(name);
+    Assertions.assertThat(user.getId()).isEqualTo(user.getId());
+
+    User renamedUser = odrClient.renameUser(user, newName);
+
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("updateUser", "showUser", "createApiToken", "getTokenList");
+    Assertions.assertThat(renamedUser.getName()).isEqualTo(newName);
+    Assertions.assertThat(renamedUser.getId()).isEqualTo(user.getId());
   }
 
   @Test
-  public void listRelationships()
+  public void createApiTokenForUser()
   {
-    ((ODRClientImpl) odrClient).listRelationships("de-hh-inspire-flurstueck", null);
+    String userName = "userName";
+    String tokenName = "tokenName";
+    String token = odrClient.createApiTokenForUser(userName, tokenName);
+    Assertions.assertThat(token).isEqualTo(TEST_TOKEN);
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("createApiToken");
+    JsonNode params = CkanResource.getApiMethodsCalled().get("createApiToken");
+    Assertions.assertThat(params.get("name").textValue()).isEqualTo(tokenName);
+    Assertions.assertThat(params.get("user").textValue()).isEqualTo(userName);
+
   }
 
   @Test
-  public void fetchAll()
+  public void revokeApiTokenById()
   {
-    Query query = new Query();
-    query.setMax(50);
-    long start = System.currentTimeMillis();
-    QueryResult<Metadata> result = odrClient.queryMetadata(query);
-    long count = result.getCount();
+    String tokenId = "tokenId";
+    odrClient.revokeApiTokenById(tokenId);
 
-    if (result.isSuccess())
-    {
-      long pages = result.getCount() / 50;
-
-      for (int i = 1; i < pages; i++)
-      {
-        query.setPageoffset(i);
-        result = odrClient.queryMetadata(query);
-      }
-    }
-    log.info("fetched {} metadata in {} ms", count, System.currentTimeMillis() - start);
-    System.out.println("fetched " + count + " metadata in " + (System.currentTimeMillis() - start) + " ms");
+    Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
+        .containsExactlyInAnyOrder("revokeApiToken");
+    JsonNode params = CkanResource.getApiMethodsCalled().get("revokeApiToken");
+    Assertions.assertThat(params.get("jti").textValue()).isEqualTo(tokenId);
   }
 
-  @Test
-  public void getLatestDatasets()
+  private JsonNode getJsonNodeWithDate(String date)
   {
-    Query query = new Query();
 
-    query.getSortFields().add("metadata_modified desc");
-    query.setMax(5);
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.createObjectNode();
 
-    QueryResult<Metadata> result = odrClient.queryDatasets(query);
+    ((ObjectNode) jsonNode).put("id", "11a18249-447c-4fa6-89b5-9c5a239af94b");
+    ((ObjectNode) jsonNode).put("metadata_modified", date);
+    ((ObjectNode) jsonNode).put("metadata_created", date);
+    ObjectNode resourcesNode = objectMapper.createObjectNode();
+    resourcesNode.put("created", date);
+    resourcesNode.put("issued", date);
+    resourcesNode.put("modified", date);
+    resourcesNode.put("last_modified", date);
 
-    Assertions.assertThat(result).isNotNull();
-    Assertions.assertThat(result.isSuccess()).isTrue();
+    ArrayNode arrayNode = objectMapper.createArrayNode();
+    arrayNode.add(resourcesNode);
+    ((ObjectNode) jsonNode).set("resources", arrayNode);
+
+    return jsonNode;
   }
-
 }

@@ -61,9 +61,6 @@ public class UserBean implements Serializable
     private String about;
 
     @JsonProperty
-    private String apikey;
-
-    @JsonProperty
     private Date created;
 
     @JsonProperty
@@ -163,21 +160,6 @@ public class UserBean implements Serializable
      */
     public void setAbout(String about) {
         this.about = about;
-    }
-
-    /**
-     * @return the apikey
-     */
-    public String getApikey() {
-        return apikey;
-    }
-
-    /**
-     * @param apikey
-     *            the apikey to set
-     */
-    public void setApikey(String apikey) {
-        this.apikey = apikey;
     }
 
     /**

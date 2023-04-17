@@ -1,14 +1,13 @@
 {
-  "help": "http://mtest3.gd.swe.seitenbau.net:5000/api/3/action/help_show?name=user_show",
+  "help": "http://mtest3.gd.swe.seitenbau.net:5000/api/3/action/help_show?name=user_create",
   "success": true,
   "result": {
     "openid": null,
     "about": null,
-    "display_name": "bremen",
-    "name": "bremen",
+    "display_name": "created",
+    "name": "testuser123",
     "created": "2012-11-30T17:12:20.064192",
     "email_hash": "d41d8cd98f00b204e9800998ecf8427e",
-    "email": null,
     "sysadmin": false,
     "activity_streams_email_notifications": false,
     "state": "active",

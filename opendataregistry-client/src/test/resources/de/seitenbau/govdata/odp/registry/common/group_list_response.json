@@ -1,5 +1,5 @@
 {
-  "help":"http://mtest3.gd.swe.seitenbau.net, localhost:5000/api/3/action/help_show?name=group_list",
+  "help":"http://mtest3.gd.swe.seitenbau.net:5000/api/3/action/help_show?name=group_list",
   "success":true,
   "result":[
     {

@@ -22,14 +22,11 @@ import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_ALL_FI
 import static de.seitenbau.govdata.odp.registry.ckan.Constants.PROPERTIES_FILENAME;
 import static de.seitenbau.govdata.odp.registry.ckan.Constants.PROPERTY_NAME_CKAN_AUTHORIZATION_KEY;
 import static de.seitenbau.govdata.odp.registry.ckan.Constants.PROPERTY_NAME_CKAN_URL;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.PROP_NAME_DEFAULT_SORT_METADATA;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -62,20 +59,18 @@ import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientAction;
+import de.seitenbau.govdata.odp.registry.ckan.cache.TokenCache;
 import de.seitenbau.govdata.odp.registry.ckan.impl.CategoryImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.LicenceImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.MetadataImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.OrganizationImpl;
-import de.seitenbau.govdata.odp.registry.ckan.impl.QueryFacetImpl;
-import de.seitenbau.govdata.odp.registry.ckan.impl.QueryFacetItemImpl;
-import de.seitenbau.govdata.odp.registry.ckan.impl.QueryResultImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.TagImpl;
 import de.seitenbau.govdata.odp.registry.ckan.impl.UserImpl;
+import de.seitenbau.govdata.odp.registry.ckan.json.ApiTokenBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.GroupBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
-import de.seitenbau.govdata.odp.registry.ckan.json.RelationshipBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.StatusBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.TagBean;
@@ -89,10 +84,6 @@ import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.Tag;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
-import de.seitenbau.govdata.odp.registry.queries.Query;
-import de.seitenbau.govdata.odp.registry.queries.QueryFacet;
-import de.seitenbau.govdata.odp.registry.queries.QueryFacetItem;
-import de.seitenbau.govdata.odp.registry.queries.QueryResult;
 
 /**
  * The Class ODRClientImpl.
@@ -107,9 +98,7 @@ public class ODRClientImpl implements ODRClient
 
   private CKANClientAction action;
 
-  private String authorizationKey;
-
-  private String defaultSortStr;
+  private String authorizationToken;
 
   private StatusBean status;
 
@@ -117,7 +106,11 @@ public class ODRClientImpl implements ODRClient
 
   private static final ObjectNode ALL_FIELDS = OM.createObjectNode();
 
+  private static final String PORTAL_TOKEN_NAME = "portal";
+
   private LicenceCache licenceCache = new LicenceCache();
+
+  private TokenCache tokenCache = new TokenCache();
 
   /*
    * (non-Javadoc)
@@ -151,9 +144,8 @@ public class ODRClientImpl implements ODRClient
   public void init(Properties props)
   {
 
-    authorizationKey = props
+    authorizationToken = props
         .getProperty(PROPERTY_NAME_CKAN_AUTHORIZATION_KEY);
-    defaultSortStr = props.getProperty(PROP_NAME_DEFAULT_SORT_METADATA);
     String url = props.getProperty(PROPERTY_NAME_CKAN_URL);
     RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 
@@ -275,32 +267,6 @@ public class ODRClientImpl implements ODRClient
   /*
    * (non-Javadoc)
    * 
-   * @see de.seitenbau.govdata.odp.registry.ODRClient#queryMetadata(de.seitenbau.govdata.odp.registry
-   * .queries.Query)
-   */
-  @Override
-  public QueryResult<Metadata> queryMetadata(Query query)
-  {
-    return query(query);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see de.seitenbau.govdata.odp.registry.ODRClient#queryDatasets(de.seitenbau.govdata.odp.registry
-   * .queries.Query)
-   */
-  @Override
-  public QueryResult<Metadata> queryDatasets(Query query)
-  {
-    query.getTypes().clear();
-    query.getTypes().add(MetadataEnumType.DATASET);
-    return query(query);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see de.seitenbau.govdata.odp.registry.ODRClient#getTag(java.lang.String)
    */
   @Override
@@ -333,6 +299,7 @@ public class ODRClientImpl implements ODRClient
   @Override
   public User findUser(String name)
   {
+    String method = "findUser() : ";
     ObjectNode userName = OM.createObjectNode();
     userName.put("id", name);
 
@@ -341,14 +308,13 @@ public class ODRClientImpl implements ODRClient
     Response response = null;
     try
     {
-      LOG.trace("REST > calling action api 'user_show' with: {}",
-          userName);
+      LOG.trace("{}REST > calling action api 'user_show' with: {}", method, userName);
       long start = System.currentTimeMillis();
-      response = action.showUser(authorizationKey, userName);
+      response = action.showUser(authorizationToken, userName);
       LOG.debug("/api/3/action/user_show: {}ms",
           System.currentTimeMillis() - start);
 
-      if (response.getStatus() == Response.Status.OK.getStatusCode())
+      if (response.getStatusInfo() == Status.OK)
       {
         JsonNode node = response.readEntity(JsonNode.class);
         LOG.trace("REST < returns: {}", node);
@@ -359,18 +325,29 @@ public class ODRClientImpl implements ODRClient
         impl = new UserImpl(userBean);
         if (userBean == null)
         {
-          LOG.warn("findUser: Could not fetch user object!");
+          LOG.warn("{}Could not fetch user object!", method);
         }
-        else if (userBean.getApikey() == null)
+        else
         {
-          LOG.warn("findUser: Could not fetch apikey for user! Maybe wrong apikey in config file?");
+          // find a token for the user
+          String userToken = getOrCreateTokenForUser(impl.getId());
+          LOG.debug("Use token: {}", userToken);
+          if (userToken == null)
+          {
+            LOG.warn("{}Could not find or create a token for the user!", method);
+          }
+          impl.setApiToken(userToken);
         }
+      }
+      else if (response.getStatusInfo() == Status.NOT_FOUND)
+      {
+        LOG.trace("{}Could not find user named {} in CKAN.", method, name);
       }
       else
       {
-        LOG.trace("REST < (http) returns: {} - {}", response
-            .getStatusInfo().getFamily().name(), response
-                .getStatusInfo().getReasonPhrase());
+        LOG.warn("{}REST < (http) returns: {} - {}", method,
+            response.getStatusInfo().getFamily().name(),
+            response.getStatusInfo().getReasonPhrase());
       }
     }
     finally
@@ -392,6 +369,7 @@ public class ODRClientImpl implements ODRClient
   @Override
   public User createUser(String name, String email, String password)
   {
+    String method = "createUser() : ";
     ObjectNode user = OM.createObjectNode();
     user.put("name", name);
     user.put("email", email);
@@ -401,24 +379,25 @@ public class ODRClientImpl implements ODRClient
     Response response = null;
     try
     {
-      LOG.trace("REST > calling action api 'user_create' with: {}", user);
+      LOG.trace("{}REST > calling action api 'user_create' with: {}", method, user);
       long start = System.currentTimeMillis();
-      response = action.createUser(authorizationKey, user);
+      response = action.createUser(authorizationToken, user);
       LOG.debug("/api/3/action/user_create: {}ms",
           System.currentTimeMillis() - start);
-      if (response.getStatus() == Response.Status.OK.getStatusCode())
+      if (response.getStatusInfo() == Status.OK)
       {
         JsonNode result = response.readEntity(JsonNode.class);
-        LOG.trace("REST < returns: {}", response);
+        LOG.trace("{}REST < returns: {}", method, response);
 
         JsonNode userNode = result.get("result");
         impl = new UserImpl(convert(userNode, UserBean.class));
+        impl.setApiToken(getOrCreateTokenForUser(impl.getId()));
       }
       else
       {
-        LOG.trace("REST < (http) returns: {} - {}", response
-            .getStatusInfo().getFamily().name(), response
-                .getStatusInfo().getReasonPhrase());
+        LOG.warn("{}REST < (http) returns: {} - {}", method,
+            response.getStatusInfo().getFamily().name(),
+            response.getStatusInfo().getReasonPhrase());
       }
     }
     finally
@@ -429,6 +408,83 @@ public class ODRClientImpl implements ODRClient
       }
     }
     return impl;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.seitenbau.govdata.odp.registry.ODRClient#createApiTokenForUser(java.lang.String,
+   * java.lang.String)
+   */
+  @Override
+  public String createApiTokenForUser(String userName, String tokenName)
+  {
+    ObjectNode params = OM.createObjectNode();
+    params.put("name", tokenName);
+    params.put("user", userName);
+
+    String token = null;
+    Response response = null;
+    try
+    {
+      LOG.trace("REST > calling action api 'api_token_create' with: {}", params);
+      long start = System.currentTimeMillis();
+      response = action.createApiToken(authorizationToken, params);
+      LOG.debug("/api/3/action/api_token_create: {}ms", System.currentTimeMillis() - start);
+      if (response.getStatusInfo() == Status.OK)
+      {
+        JsonNode node = response.readEntity(JsonNode.class);
+        LOG.trace("REST < returns: {}", node);
+
+        JsonNode tokenNode = node.get("result");
+        token = tokenNode.get("token").asText();
+      }
+    }
+    catch (Exception e)
+    {
+      LOG.warn("Error while creating a token: {}", e.getMessage());
+    }
+    finally
+    {
+      if (response != null)
+      {
+        response.close();
+      }
+    }
+    return token;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see de.seitenbau.govdata.odp.registry.ODRClient#revokeApiTokenById(java.lang.String)
+   */
+  @Override
+  public void revokeApiTokenById(String tokenId)
+  {
+    ObjectNode params = OM.createObjectNode();
+    params.put("jti", tokenId);
+
+    Response response = null;
+    try
+    {
+      LOG.trace("REST > calling action api 'api_token_revoke' with: {}", params);
+      long start = System.currentTimeMillis();
+      response = action.revokeApiToken(authorizationToken, params);
+      LOG.debug("/api/3/action/api_token_revoke: {}ms", System.currentTimeMillis() - start);
+      if (response.getStatusInfo() != Response.Status.OK)
+      {
+        LOG.warn("Revoking token {} failed!", tokenId);
+      }
+    }
+    finally
+    {
+      if (response != null)
+      {
+        response.close();
+      }
+    }
+    return;
   }
 
   /*
@@ -492,338 +548,6 @@ public class ODRClientImpl implements ODRClient
     return m.valueToTree(obj);
   }
 
-  @SuppressWarnings("unchecked")
-  private <T> QueryResult<T> query(Query query)
-  {
-    List<Metadata> all = new LinkedList<>();
-
-    JsonNode param = queryToJson(query);
-
-    Map<String, QueryFacet> facets = null;
-
-    QueryResultImpl<T> queryResult = new QueryResultImpl<>();
-
-    Response response = null;
-    try
-    {
-      LOG.info("REST > calling action api 'package_search' with: {}",
-          param);
-      long start = System.currentTimeMillis();
-      response = action.metadataSearch(param);
-      LOG.debug("/api/3/action/package_search: {}ms",
-          System.currentTimeMillis() - start);
-
-      if (response.getStatusInfo() == Status.OK)
-      {
-        JsonNode result = response.readEntity(JsonNode.class);
-        LOG.trace("REST < returns: {}", result);
-
-        JsonNode list = getSearchResult(result);
-        for (JsonNode node : list)
-        {
-          MetadataImpl impl;
-          try
-          {
-            impl = generateImpl(node);
-          }
-          catch (OpenDataRegistryException e)
-          {
-            LOG.error("Mapping metadata: {}", node);
-            continue;
-          }
-
-          all.add(impl);
-
-          JsonNode res = result.get("result");
-          if (res != null)
-          {
-            JsonNode searchFacets = res.get("search_facets");
-            facets = QueryFacetImpl.read(searchFacets);
-          }
-        }
-
-        LOG.debug(
-            "parsed and added {} metadata objects to the result list",
-            all.size());
-
-        queryResult.setResult((List<T>) all);
-        queryResult.setCount(getCount(result));
-        queryResult.setLimit(query.getMax());
-        queryResult.setOffset(query.getOffset());
-        queryResult.setPageOffset(query.getPageoffset());
-        if (facets != null && !facets.isEmpty())
-        {
-          QueryFacet licenses = facets.get("license_id");
-          for (QueryFacetItem license : licenses.getItems())
-          {
-            for (Licence lic : listLicenses())
-            {
-              if (license.getName().equalsIgnoreCase(
-                  lic.getName()))
-              {
-                ((QueryFacetItemImpl) license)
-                    .setDisplayName(lic.getTitle());
-              }
-            }
-          }
-          queryResult.getFacets().putAll(facets);
-        }
-      }
-      else
-      {
-        LOG.debug("REST < (http) returns: {} - {}", response
-            .getStatusInfo().getStatusCode(), response
-                .getStatusInfo().getReasonPhrase());
-        queryResult.setSuccess(false);
-        queryResult.setErrorMessage(response.getStatusInfo()
-            .getReasonPhrase());
-      }
-    }
-    finally
-    {
-      if (response != null)
-      {
-        response.close();
-      }
-    }
-
-    return queryResult;
-  }
-
-  private JsonNode queryToJson(Query query)
-  {
-    ObjectNode node = OM.createObjectNode();
-
-    String searchterm = query.getSearchterm();
-
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-
-    switch (query.getMode())
-    {
-    case EXTENDED:
-      if (!query.getTypes().isEmpty())
-      {
-        StringBuilder types = new StringBuilder("type:(");
-        for (MetadataEnumType type : query.getTypes())
-        {
-          if (!types.toString().endsWith(":("))
-          {
-            types.append(" OR ");
-          }
-          types.append(type.toField());
-        }
-        types.append(")");
-
-        searchterm = (searchterm == null) ? types.toString()
-            : searchterm + " " + types.toString();
-      }
-
-      if (!query.getCategories().isEmpty())
-      {
-        StringBuilder categories = new StringBuilder("groups:(");
-        for (String category : query.getCategories())
-        {
-          if (!categories.toString().endsWith(":("))
-          {
-            categories.append(" OR ");
-          }
-          categories.append(category);
-        }
-        categories.append(")");
-
-        searchterm = (searchterm == null) ? categories.toString()
-            : searchterm + " " + categories.toString();
-      }
-
-      if (!query.getTags().isEmpty())
-      {
-        StringBuilder tags = new StringBuilder("tags:(");
-        for (String tag : query.getTags())
-        {
-          if (!tags.toString().endsWith(":("))
-          {
-            tags.append(" OR ");
-          }
-          tags.append(tag);
-        }
-        tags.append(")");
-
-        searchterm = (searchterm == null) ? tags.toString()
-            : searchterm + " " + tags.toString();
-      }
-
-      if (!query.getLicences().isEmpty())
-      {
-        StringBuilder licences = new StringBuilder("license_id:(");
-        for (String licence : query.getLicences())
-        {
-          if (!licences.toString().endsWith(":("))
-          {
-            licences.append(" OR ");
-          }
-          licences.append(licence);
-        }
-        licences.append(")");
-
-        searchterm = (searchterm == null) ? licences.toString()
-            : searchterm + " " + licences.toString();
-      }
-
-      if (!query.getFormats().isEmpty())
-      {
-        StringBuilder formats = new StringBuilder("res_format:(");
-        for (String format : query.getFormats())
-        {
-          if (!formats.toString().endsWith(":("))
-          {
-            formats.append(" OR ");
-          }
-          formats.append(format);
-        }
-        formats.append(")");
-
-        searchterm = (searchterm == null) ? formats.toString()
-            : searchterm + " " + formats.toString();
-      }
-
-      if (query.getIsOpen() != null)
-      {
-        String isopen = "isopen:" + query.getIsOpen().toString();
-        searchterm = (searchterm == null) ? isopen : searchterm + " "
-            + isopen;
-      }
-
-      if (query.getCoverageFrom() != null)
-      {
-        String from = "+temporal_coverage_from:["
-            + dateFormat.format(query.getCoverageFrom()) + " TO *]";
-        searchterm = (searchterm == null) ? from : searchterm + " "
-            + from;
-      }
-
-      if (query.getCoverageTo() != null)
-      {
-        String to = "+temporal_coverage_to:[* TO "
-            + dateFormat.format(query.getCoverageTo()) + "]";
-        searchterm = (searchterm == null) ? to : searchterm + " " + to;
-      }
-
-      break;
-    case FILTERED:
-    default:
-      StringBuilder fq = new StringBuilder("");
-
-      for (MetadataEnumType type : query.getTypes())
-      {
-        if (type != MetadataEnumType.UNKNOWN)
-        {
-          fq.append(" type: ");
-          fq.append(type.toField());
-        }
-      }
-
-      for (String category : query.getCategories())
-      {
-        fq.append(" +groups:");
-        fq.append(category);
-      }
-
-      for (String tag : query.getTags())
-      {
-        fq.append(" +tags:\"");
-        fq.append(tag);
-        fq.append("\"");
-      }
-
-      for (String licence : query.getLicences())
-      {
-        fq.append(" +license_id:");
-        fq.append(licence);
-      }
-
-      for (String format : query.getFormats())
-      {
-        fq.append(" +res_format:");
-        fq.append(format);
-      }
-
-      if (query.getIsOpen() != null)
-      {
-        fq.append(" +isopen:");
-        fq.append(query.getIsOpen().toString());
-      }
-
-      if (query.getCoverageFrom() != null)
-      {
-        fq.append(" +temporal_coverage_from:[");
-        fq.append(dateFormat.format(query.getCoverageFrom()));
-        fq.append(" TO *]");
-      }
-
-      if (query.getCoverageTo() != null)
-      {
-        fq.append(" +temporal_coverage_to:[* TO ");
-        fq.append(dateFormat.format(query.getCoverageTo()));
-        fq.append("]");
-      }
-
-      fq.append(" +state:active");
-
-      if (!fq.toString().isEmpty())
-      {
-        node.put("fq", fq.toString());
-      }
-    }
-
-    if (searchterm != null)
-    {
-      node.put("q", searchterm);
-    }
-
-    StringBuilder sorts = new StringBuilder("");
-    for (String sort : query.getSortFields())
-    {
-      if (!sorts.toString().isEmpty())
-      {
-        sorts.append(", ");
-      }
-      sorts.append(sort);
-    }
-    if (!sorts.toString().isEmpty())
-    {
-      sorts.append(", score desc");
-      node.put("sort", sorts.toString());
-    }
-    else
-    {
-
-      if (defaultSortStr == null)
-      {
-        defaultSortStr = "score desc";
-      }
-      sorts.append(defaultSortStr);
-      sorts.append(", score desc");
-      node.put("sort", sorts.toString());
-    }
-
-    int offset = (query.getMax() * query.getPageoffset())
-        + query.getOffset();
-    node.put("start", offset);
-    node.put("rows", query.getMax());
-
-    ArrayNode facets = OM.createArrayNode();
-    facets.add("groups");
-    facets.add("tags");
-    facets.add("type");
-    facets.add("res_format");
-    facets.add("license_id");
-    facets.add("isopen");
-
-    node.set("facet.field", facets);
-
-    return node;
-  }
-
   /*
    * (non-Javadoc)
    * 
@@ -846,8 +570,8 @@ public class ODRClientImpl implements ODRClient
   @Override
   public void rateMetadata(User user, String metadata, int rate) throws OpenDataRegistryException
   {
-    String userApikey = getApiKeyFromUser(user);
-    if (userApikey != null)
+    String auth = getApiTokenFromUser(user);
+    if (auth != null)
     {
       ObjectNode body = OM.createObjectNode();
       body.put("package", metadata);
@@ -855,14 +579,14 @@ public class ODRClientImpl implements ODRClient
       LOG.trace("REST > calling action api 'rating_create' with: {}", body);
       long start = System.currentTimeMillis();
       JsonNode node = action.createMetadataRating(
-          userApikey, body);
+          auth, body);
       LOG.debug("/api/3/action/rating_create: {}ms",
           System.currentTimeMillis() - start);
       LOG.trace("REST < returns: {}", node);
     }
     else
     {
-      final String msg = "Rating is not possible, because no apikey for user available!";
+      final String msg = "Rating is not possible, because no api-token for user available!";
       LOG.warn("rateMetadata: " + msg);
       throw new OpenDataRegistryException(msg);
     }
@@ -946,7 +670,7 @@ public class ODRClientImpl implements ODRClient
 
     LOG.trace("REST > calling action api 'user_role_update' with: {}", body);
     long start = System.currentTimeMillis();
-    JsonNode node = action.updateRoles(authorizationKey, body);
+    JsonNode node = action.updateRoles(authorizationToken, body);
     LOG.trace("/api/3/action/user_role_update: {}ms",
         System.currentTimeMillis() - start);
     LOG.trace("REST < returns: {}", node);
@@ -956,33 +680,6 @@ public class ODRClientImpl implements ODRClient
   {
     JsonNode success = result.get("success");
     return (success != null && success.isBoolean()) && success.booleanValue();
-  }
-
-  private JsonNode getSearchResult(JsonNode node)
-  {
-    if (isSuccess(node))
-    {
-      JsonNode result = node.get("result");
-      if (result != null && getCount(node) > 0)
-      {
-        JsonNode results = result.get("results");
-        if (results.isArray())
-        {
-          return results;
-        }
-      }
-    }
-    return OM.createArrayNode();
-  }
-
-  private int getCount(JsonNode node)
-  {
-    JsonNode result = node.get("result");
-    if (result != null)
-    {
-      return result.get("count").intValue();
-    }
-    return 0;
   }
 
   private JsonNode getResultList(JsonNode node)
@@ -1017,7 +714,7 @@ public class ODRClientImpl implements ODRClient
   {
     MetadataImpl impl = (MetadataImpl) metadata;
 
-    String auth = getApiKeyFromUser(user);
+    String auth = getApiTokenFromUser(user);
     
     JsonNode node;
     JsonNode result;
@@ -1075,14 +772,14 @@ public class ODRClientImpl implements ODRClient
 
     ObjectNode body = OM.createObjectNode();
     body.put("id", name);
-    String key = getApiKeyFromUser(user);
+    String auth = getApiTokenFromUser(user);
 
     LOG.trace("REST > calling action api 'package_show' with: {}", body);
     long start = System.currentTimeMillis();
     JsonNode node;
     try
     {
-      node = action.showMetadata(key, body);
+      node = action.showMetadata(auth, body);
     }
     catch (ClientErrorException e)
     {
@@ -1127,14 +824,14 @@ public class ODRClientImpl implements ODRClient
     }
     body.set("profiles", profiles);
     body.put("format", format.getKey());
-    String key = getApiKeyFromUser(user);
+    String auth = getApiTokenFromUser(user);
 
     LOG.trace("REST > calling action api 'dcat_dataset_show' with: {}", body);
     long start = System.currentTimeMillis();
     JsonNode node;
     try
     {
-      node = action.showDcatDataset(key, body);
+      node = action.showDcatDataset(auth, body);
 
     }
     catch (ClientErrorException e)
@@ -1294,61 +991,6 @@ public class ODRClientImpl implements ODRClient
     return resource;
   }
 
-  public List<RelationshipBean> listRelationships(String name, String type)
-  {
-    ObjectNode body = OM.createObjectNode();
-    body.put("id", name);
-    if (type != null && !type.isEmpty())
-    {
-      body.put("rel", type);
-    }
-
-    List<RelationshipBean> relationships = new ArrayList<>();
-
-    Response response = null;
-    try
-    {
-      LOG.trace(
-          "REST > calling action api 'package_relationships_list' with: {}",
-          body);
-      long start = System.currentTimeMillis();
-      response = action.listRelationships(authorizationKey, body);
-      LOG.debug("/api/3/action/package_relationships_list: {}ms",
-          System.currentTimeMillis() - start);
-      if (response.getStatusInfo() == Status.OK)
-      {
-        JsonNode node = response.readEntity(JsonNode.class);
-        LOG.trace("REST < returns: {}", node);
-
-        if (isSuccess(node))
-        {
-          JsonNode result = getResultList(node);
-          for (JsonNode relationship : result)
-          {
-            RelationshipBean bean = convert(relationship,
-                RelationshipBean.class);
-            relationships.add(bean);
-          }
-        }
-      }
-      else
-      {
-        LOG.trace("REST < (http) returns: {} - {}", response
-            .getStatusInfo().toString(), response
-                .getStatusInfo().getReasonPhrase());
-      }
-    }
-    finally
-    {
-      if (response != null)
-      {
-        response.close();
-      }
-    }
-
-    return relationships;
-  }
-
   /**
    * Gibt den Status zurück.
    * 
@@ -1359,12 +1001,12 @@ public class ODRClientImpl implements ODRClient
     return status;
   }
 
-  private String getApiKeyFromUser(User user)
+  private String getApiTokenFromUser(User user)
   {
     String result = null;
     if (user != null)
     {
-      result = ((UserImpl) user).getApikey();
+      result = ((UserImpl) user).getApiToken();
     }
     return result;
   }
@@ -1377,12 +1019,12 @@ public class ODRClientImpl implements ODRClient
     // Get all organizations with additional informations, e.g. extras, and use these
     List<Organization> allOrganizations = getOrganizations();
 
-    String apikey = ((UserImpl) user).getApikey();
+    String auth = getApiTokenFromUser(user);
 
     Response response = null;
     try
     {
-      response = action.getOrganisationsForUser(apikey, permission);
+      response = action.getOrganisationsForUser(auth, permission);
       if (response.getStatusInfo() == Status.OK)
       {
         JsonNode node = response.readEntity(JsonNode.class);
@@ -1475,8 +1117,8 @@ public class ODRClientImpl implements ODRClient
     Response response = null;
     try
     {
-      String apikey = ((UserImpl) user).getApikey();
-      response = action.deleteMetadata(apikey, deleteParam);
+      String auth = getApiTokenFromUser(user);
+      response = action.deleteMetadata(auth, deleteParam);
       if (response.getStatusInfo() == Status.OK)
       {
         JsonNode node = response.readEntity(JsonNode.class);
@@ -1514,7 +1156,7 @@ public class ODRClientImpl implements ODRClient
     Response response = null;
     try
     {
-      response = action.deleteUser(authorizationKey, deleteParam);
+      response = action.deleteUser(authorizationToken, deleteParam);
       if (response.getStatusInfo() == Status.OK)
       {
         JsonNode node = response.readEntity(JsonNode.class);
@@ -1553,20 +1195,21 @@ public class ODRClientImpl implements ODRClient
     String email = user.getEmail(); // replace email with placeholder, if the existing email is empty.
     updateParam.set("email", new TextNode(StringUtils.isEmpty(email) ? "email@example.com" : email));
 
+    UserImpl impl = null;
     Response response = null;
     try
     {
-      response = action.updateUser(authorizationKey, updateParam);
-      if (response.getStatus() == Response.Status.OK.getStatusCode())
+      response = action.updateUser(authorizationToken, updateParam);
+      if (response.getStatusInfo() == Status.OK)
       {
         JsonNode result = response.readEntity(JsonNode.class);
         JsonNode userNode = result.get("result");
-        return new UserImpl(convert(userNode, UserBean.class));
+        impl = new UserImpl(convert(userNode, UserBean.class));
+        impl.setApiToken(getOrCreateTokenForUser(impl.getId()));
       }
       else
       {
         LOG.error("could not rename user " + user.getName() + ": " + response.getStatus());
-        return null;
       }
     }
     finally
@@ -1576,6 +1219,127 @@ public class ODRClientImpl implements ODRClient
         response.close();
       }
     }
+    return impl;
+  }
+
+  /**
+   * Read the token for a given user. If no valid token is available create a new one.
+   *
+   * @param userId the id of the user
+   * @return the value of the token
+   */
+  private String getOrCreateTokenForUser(String userId)
+  {
+    String apiToken = tokenCache.getTokenForUser(userId);
+    if (apiToken != null)
+    {
+      // check if the token is still valid for CKAN requests
+      if (!checkIfTokenIsValid(apiToken, userId))
+      {
+        apiToken = null;
+      }
+    }
+    if (apiToken == null)
+    {
+      // clean up expired tokens
+      List<ApiTokenBean> ckanApiTokenList = getTokenListForUser(userId);
+      for (ApiTokenBean ckanToken : ckanApiTokenList)
+      {
+        if (ckanToken.getName().equals(PORTAL_TOKEN_NAME))
+        {
+          revokeApiTokenById(ckanToken.getId());
+        }
+      }
+      // create new token
+      apiToken = createApiTokenForUser(userId, PORTAL_TOKEN_NAME);
+      if (apiToken == null)
+      {
+        LOG.warn("Could not generate a token for user {}", userId);
+      }
+      else
+      {
+        // update token in Cache
+        LOG.info("Created a new token for user {}", userId);
+        tokenCache.updateCache(apiToken, userId);
+      }
+    }
+    return apiToken;
+  }
+
+  /**
+   * Check if a given token is still valid for CKAN-API requests Make a request and check if the
+   * token was accepted.
+   * 
+   * @param token the token to check
+   * @param userId the id of the user
+   * @return true if the token is valid, else false.
+   */
+  private boolean checkIfTokenIsValid(String token, String userId)
+  {
+    ObjectNode params = OM.createObjectNode();
+    params.put("user_id", userId);
+
+    Response response = null;
+    boolean tokenValid = false;
+    try
+    {
+      LOG.trace("REST > calling action api 'api_token_list' with params {}", params);
+      long start = System.currentTimeMillis();
+      response = action.getTokenList(token, userId);
+      LOG.debug("/api/3/action/api_token_list: {}ms", System.currentTimeMillis() - start);
+      if (response.getStatusInfo() == Status.OK)
+      {
+        tokenValid = true;
+      }
+    }
+    finally
+    {
+      if (response != null)
+      {
+        response.close();
+      }
+    }
+    return tokenValid;
+  }
+
+  /**
+   * Get all available tokens from the CKAN API.
+   * 
+   * @param userId the id of the user
+   * @return
+   */
+  private List<ApiTokenBean> getTokenListForUser(String userId)
+  {
+    ObjectNode params = OM.createObjectNode();
+    params.put("user_id", userId);
+
+    Response response = null;
+    List<ApiTokenBean> apiTokens = new ArrayList<>();
+    try
+    {
+      LOG.trace("REST > calling action api 'api_token_list' with params {}", params);
+      long start = System.currentTimeMillis();
+      response = action.getTokenList(authorizationToken, userId);
+      LOG.debug("/api/3/action/api_token_list: {}ms", System.currentTimeMillis() - start);
+      if (response.getStatusInfo() == Status.OK)
+      {
+        JsonNode node = response.readEntity(JsonNode.class);
+        JsonNode result = getResultList(node);
+        for (JsonNode token : result)
+        {
+          ApiTokenBean bean = convert(token, ApiTokenBean.class);
+          apiTokens.add(bean);
+        }
+      }
+    }
+    finally
+    {
+      if (response != null)
+      {
+        response.close();
+      }
+    }
+    return apiTokens;
   }
 
   private class LicenceCache extends BaseCache

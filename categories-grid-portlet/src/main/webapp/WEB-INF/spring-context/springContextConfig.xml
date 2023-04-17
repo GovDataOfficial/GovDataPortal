@@ -16,7 +16,7 @@
     de.seitenbau.govdata.cache" />
   <context:annotation-config />
 
-  <bean class="de.fhg.fokus.odp.categoriesgrid.CategoriesGrid" />
+  <bean class="de.seitenbau.govdata.odp.categoriesgrid.CategoriesGrid" />
 
   <bean
     class="com.liferay.portletmvc4spring.mvc.annotation.DefaultAnnotationHandlerMapping" />

@@ -39,9 +39,6 @@ public interface Constants
   /** The Constant PROPERTY_NAME_CKAN_AUTHORIZATION_KEY. */
   String PROPERTY_NAME_CKAN_AUTHORIZATION_KEY = "ckan.authorization.key";
 
-  /** The Constant PROP_NAME_DEFAULT_SORT_METADATA. */
-  String PROP_NAME_DEFAULT_SORT_METADATA = "sorting.default.metadata";
-
   /** The Constant OPEN_DATA_PROVIDER_NAME. */
   String OPEN_DATA_PROVIDER_NAME = "CKAN";
 

@@ -1,0 +1,7 @@
+{
+    "help":"http://mtest3.gd.swe.seitenbau.net:5000/api/3/action/help_show?name=api_token_create",
+    "success":true,
+    "result":{
+        "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJMU0UtM1E1c0xQTEVMQUl5S3Y0eWhxendhQUUzVy1Jcl9Wdzl0YWpieVVnIiwiaWF0IjoxNjc5NTYxNDE4fQ.MvJCspsvjzEkW3Nrtmf-59tMvs2PTr__oeRIydAPhhE"
+    }
+}

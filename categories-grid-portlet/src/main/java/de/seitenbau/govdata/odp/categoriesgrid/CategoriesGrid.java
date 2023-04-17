@@ -17,7 +17,7 @@
  * along with Open Data Platform.  If not, see <http://www.gnu.org/licenses/agpl-3.0>.
  */
 
-package de.fhg.fokus.odp.categoriesgrid;
+package de.seitenbau.govdata.odp.categoriesgrid;
 
 import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
 import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
@@ -45,9 +45,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
-import de.fhg.fokus.odp.categoriesgrid.model.CategoryViewModel;
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.odp.categoriesgrid.model.CategoryViewModel;
 import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;

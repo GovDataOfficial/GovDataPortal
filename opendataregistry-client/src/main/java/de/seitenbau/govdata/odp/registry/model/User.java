@@ -29,13 +29,6 @@ public interface User
 {
 
     /**
-     * Gets the apikey.
-     * 
-     * @return the apikey
-     */
-    // String getApikey();
-
-    /**
      * Gets the name.
      * 
      * @return the name
@@ -77,5 +70,12 @@ public interface User
    * @return true, if is creator
    */
   boolean isCreator(Metadata metadata);
+
+  /**
+   * Get the API-token.
+   * 
+   * @return
+   */
+  String getApiToken();
 
 }

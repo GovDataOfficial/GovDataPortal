@@ -43,15 +43,11 @@ public class UserImpl implements User, Serializable {
 
   private UserBean user;
 
+  private String apiToken;
+
   public UserImpl(UserBean user)
   {
     this.user = user;
-  }
-
-  // @Override
-  public String getApikey()
-  {
-    return user.getApikey();
   }
 
   @Override
@@ -87,13 +83,29 @@ public class UserImpl implements User, Serializable {
   @Override
   public String toString()
   {
-    return user.getId() + ": " + user.getName() + " / " + user.getDisplay_name() + " / " + user.getApikey();
+    return user.getId() + ": " + user.getName() + " / " + user.getDisplay_name() + " / " + getApiToken();
   }
 
   @Override
   public String getId()
   {
     return user.getId();
+  }
+
+  @Override
+  public String getApiToken()
+  {
+    return this.apiToken;
+  }
+
+  /**
+   * Set an API-token.
+   * 
+   * @param token
+   */
+  public void setApiToken(String token)
+  {
+    this.apiToken = token;
   }
 
 }

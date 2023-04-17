@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.12.0 2023-04-13
+
+* Now using CKAN API tokens instead of CKAN API keys. The CKAN API key support will be removed with CKAN 2.10.
+* Unused legacy code in the library 'opendataregistry-client' was removed
+* Updated README.md and INSTALL.md
+* Add jacoco maven plugin (test coverage) to build process
+
 ## v5.11.0 2023-03-16
 
 * Adds possibility to define the property `layers` for the map search by configuration. Switches the map

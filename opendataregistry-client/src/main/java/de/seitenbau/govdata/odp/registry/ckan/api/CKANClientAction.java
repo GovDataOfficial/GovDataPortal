@@ -39,12 +39,6 @@ public interface CKANClientAction
   public JsonNode status(JsonNode body);
 
   @POST
-  @Path("/api/3/action/package_search")
-  @Produces("application/json")
-  @Consumes("application/json")
-  public Response metadataSearch(JsonNode body);
-
-  @POST
   @Path("/api/3/action/user_list")
   @Produces("application/json")
   @Consumes("application/json")
@@ -115,12 +109,6 @@ public interface CKANClientAction
   public Response deleteMetadata(@HeaderParam("Authorization") String authenticationKey, JsonNode body);
 
   @POST
-  @Path("/api/3/action/package_autocomplete")
-  @Produces("application/json")
-  @Consumes("application/json")
-  public JsonNode metadataAutocomplete(JsonNode body);
-
-  @POST
   @Path("/api/3/action/rating_create")
   @Produces("application/json")
   @Consumes("application/json")
@@ -162,12 +150,6 @@ public interface CKANClientAction
   @Consumes("application/json")
   public JsonNode updateMetadata(@HeaderParam("Authorization") String authenticationKey, JsonNode body);
 
-  @POST
-  @Path("/api/3/action/package_relationships_list")
-  @Produces("application/json")
-  @Consumes("application/json")
-  public Response listRelationships(@HeaderParam("Authorization") String authenticationKey, JsonNode body);
-  
   @GET
   @Path("/api/3/action/organization_list_for_user")
   @Produces("application/json")
@@ -179,4 +161,25 @@ public interface CKANClientAction
   @Produces("application/json")
   public Response getOrganisations(@QueryParam("all_fields") boolean allfields,
       @QueryParam("include_extras") boolean includeextras);
+
+  @POST
+  @Path("/api/3/action/api_token_create")
+  @Produces("application/json")
+  @Consumes("application/json")
+  public Response createApiToken(@HeaderParam("Authorization") String authenticationKey, JsonNode body);
+
+  @POST
+  @Path("/api/3/action/api_token_revoke")
+  @Produces("application/json")
+  @Consumes("application/json")
+  public Response revokeApiToken(@HeaderParam("Authorization") String authenticationKey, JsonNode body);
+
+  @GET
+  @Path("/api/3/action/api_token_list")
+  @Produces("application/json")
+  @Consumes("application/json")
+  public Response getTokenList(@HeaderParam("Authorization")
+  String authenticationKey, @QueryParam("user")
+  String userId);
+
 }

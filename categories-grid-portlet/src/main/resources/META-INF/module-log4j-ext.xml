@@ -3,7 +3,7 @@
 <Configuration strict="true">
 
     <Loggers>
-        <Logger level="DEBUG" name="de.fhg.fokus.odp.categoriesgrid" />
+        <Logger level="DEBUG" name="de.seitenbau.govdata.odp.categoriesgrid" />
     </Loggers>
 
 </Configuration>

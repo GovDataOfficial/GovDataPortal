@@ -1,4 +1,4 @@
-package de.fhg.fokus.odp.categoriesgrid.model;
+package de.seitenbau.govdata.odp.categoriesgrid.model;
 
 import lombok.Builder;
 import lombok.Data;

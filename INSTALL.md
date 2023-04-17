@@ -12,12 +12,12 @@ The best point to start is a fresh Debian or Ubuntu GNU/Linux install. Most
 other distribution should work as. A windows based system should be possible, 
 too, but we have never seen it done.
 
-- PostgreSQL 10 ([Postgres docs](https://www.postgresql.org/docs/))
+- PostgreSQL 14 ([Postgres docs](https://www.postgresql.org/docs/))
 - Java JDK 8 / 11 ([OpenJDK JDK download](https://adoptopenjdk.net/) or [Oracle Java JDK download](https://www.oracle.com/java/technologies/downloads/archive/))
-- Python 2.7 / 3 ([Python docs](https://www.python.org/getit/))
+- Python 3.X ([Python docs](https://www.python.org/getit/))
 - Maven 3.6.x ([Maven site](http://maven.apache.org/download.cgi))
-- CKAN 2.x ([CKAN installation](https://docs.ckan.org/en/latest/maintaining/installing/install-from-source.html)), follow the ([Apache mod_wsgi instructions](https://docs.ckan.org/en/latest/maintaining/installing/deployment.html))
-- Liferay 7.3.x ([GitHub Releases](https://github.com/liferay/liferay-portal/releases/)) bundled with an application container, e.g. Tomcat for an easy start
+- CKAN 2.9+ ([CKAN installation](https://docs.ckan.org/en/latest/maintaining/installing/install-from-source.html)), follow the ([Apache mod_wsgi instructions](https://docs.ckan.org/en/latest/maintaining/installing/deployment.html))
+- Liferay 7.4.3.X ([GitHub Releases](https://github.com/liferay/liferay-portal/releases/)) bundled with an application container, e.g. Tomcat for an easy start
 - Elasticsearch 7.17.x follow the ([Elasticsearch installation guide](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/index.html))
 - ActiveMQ ([ActiveMQ Getting started](http://activemq.apache.org/getting-started.html))
 - ckanext-searchindexhook ([on GitHub](https://github.com/GovDataOfficial/ckanext-searchindexhook) or [on Open CoDE](https://gitlab.opencode.de/fitko/govdata/ckanext-searchindexhook))

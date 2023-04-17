@@ -30,8 +30,6 @@ import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.Tag;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
-import de.seitenbau.govdata.odp.registry.queries.Query;
-import de.seitenbau.govdata.odp.registry.queries.QueryResult;
 
 /**
  * The Interface ODRClient.
@@ -118,7 +116,7 @@ public interface ODRClient
    * @param profileList
    * @return
    */
-  public JsonNode getDcatDataset(User user, String identifier, FormatEnumType format, String[] profileList);
+  JsonNode getDcatDataset(User user, String identifier, FormatEnumType format, String[] profileList);
 
   /**
    * Gets the JSON-LD schema.org representation for the metadata.
@@ -133,22 +131,6 @@ public interface ODRClient
    * @throws OpenDataRegistryException
    */
   String getJsonLdMetadata(User user, String name, String datasetSchemaUrl, String catalogSchemaUrl);
-
-  /**
-   * Query metadata.
-   * 
-   * @param query the query
-   * @return the query result
-   */
-  QueryResult<Metadata> queryMetadata(Query query);
-
-  /**
-   * Query datasets.
-   * 
-   * @param query the query
-   * @return the query result
-   */
-  QueryResult<Metadata> queryDatasets(Query query);
 
   /**
    * Find user.
@@ -167,6 +149,23 @@ public interface ODRClient
    * @return the user
    */
   User createUser(String name, String email, String password);
+
+  /**
+   * Create a CKAN API token for a user.
+   *
+   * @param userName name of the user
+   * @param tokenName name of the token
+   * @return the token as String
+   */
+  String createApiTokenForUser(String userName, String tokenName);
+
+  /**
+   * Delete the given token from CKAN.
+   * 
+   * @param tokenId the tokenId of the token
+   * @return
+   */
+  void revokeApiTokenById(String tokenId);
 
   /**
    * Show roles.
@@ -192,12 +191,12 @@ public interface ODRClient
    * @param user the user
    * @param metadata the metadata
    * @param rate the rate
-   * @throws OpenDataRegistryException if the user object contains no apikey.
+   * @throws OpenDataRegistryException if the user object contains no api-token.
    */
   void rateMetadata(User user, String metadata, int rate) throws OpenDataRegistryException;
 
   /**
-   * Creates the metadata.
+   * Creates a new metadata object.
    * 
    * @return the metadata
    */
