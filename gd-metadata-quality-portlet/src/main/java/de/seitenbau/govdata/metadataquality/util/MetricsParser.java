@@ -128,7 +128,7 @@ public class MetricsParser extends BaseCache
     }
 
     LOG.trace(method + "End");
-    return publishersCache;
+    return new HashMap<>(publishersCache);
   }
 
   /**

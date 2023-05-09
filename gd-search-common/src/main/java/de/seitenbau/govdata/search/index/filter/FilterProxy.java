@@ -1,5 +1,6 @@
 package de.seitenbau.govdata.search.index.filter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.liferay.portal.kernel.search.Document;
@@ -21,7 +22,10 @@ public class FilterProxy implements Filter
    */
   public void setRegisteredFilter(Map<String, Filter> filter)
   {
-    registeredFilter = filter;
+    if (filter != null)
+    {
+      registeredFilter = new HashMap<String, Filter>(filter);
+    }
   }
   
   @Override

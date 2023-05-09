@@ -31,20 +31,23 @@ import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.User;
 
 /**
- * @author sim
+ * Implementation for the interface {@link User}.
  * 
  */
-public class UserImpl implements User, Serializable {
+public class UserImpl implements User, Serializable
+{
 
-  /**
-     * 
-     */
   private static final long serialVersionUID = -9199121089537222860L;
 
   private UserBean user;
 
   private String apiToken;
 
+  /**
+   * Constructor with user bean.
+   * 
+   * @param user
+   */
   public UserImpl(UserBean user)
   {
     this.user = user;

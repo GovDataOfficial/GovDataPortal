@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>od-platform</artifactId>
 		<groupId>de.fhg.fokus.odp</groupId>
-		<version>5.12.0</version>
+		<version>5.13.0</version>
 	</parent>
 	<artifactId>Layout20-80-layouttpl</artifactId>
 	<packaging>war</packaging>

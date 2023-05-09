@@ -27,9 +27,10 @@ $twitter-blue: #1da1f2;
 // own colors
 $checkbox-border: darken($kontur-gray, 10%);
 
-@mixin navcolor($color) {
+@mixin navcolor($background-color, $color) {
   &.active > a {
-    background-color: $color;
+    background-color: $background-color;
+    color: $color;
 
     &:focus {
       background-color: transparent;
@@ -38,38 +39,38 @@ $checkbox-border: darken($kontur-gray, 10%);
   }
 
   a::after {
-    border-top-color: $color;
-    color: $color;
+    border-top-color: $background-color;
+    color: $background-color;
   }
 }
 
 // colors for the background of the main menu...
 #layout_3 { // Daten
-  @include navcolor($data-green);
+  @include navcolor($data-green, $white);
 }
 
 #layout_6 { // Dokumente
-  @include navcolor($dokument-violett);
+  @include navcolor($dokument-violett, $white);
 }
 
 #layout_7 { // Showcases
-  @include navcolor($showcase-blue);
+  @include navcolor($showcase-blue, $white);
 }
 
 #layout_8 { // Neues
-  @include navcolor($blog-red);
+  @include navcolor($blog-red, $white);
 }
 
 #layout_9 { // Bibliothek
-  @include navcolor($black);
+  @include navcolor($black, $white);
 }
 
 #layout_47 { // Entwicklerecke
-  @include navcolor($devcorner-green)
+  @include navcolor($devcorner-green, $white)
 }
 
 #layout_51 { // Metadatenqualität
-  @include navcolor($metadataquality-pink)
+  @include navcolor($metadataquality-pink, $white)
 }
 
 

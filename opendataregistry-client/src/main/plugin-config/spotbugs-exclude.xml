@@ -1,0 +1,21 @@
+<FindBugsFilter>
+  <Match>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Or>
+    <Or>
+      <Class name="~.*\.[a-zA-Z]*Bean.*" />
+      <Package name="~de\.seitenbau\.govdata\..*\.model.*" />
+      <Package name="~de\.seitenbau\.govdata\.odp\.registry\.ckan\.impl.*" />
+    </Or>
+  </Match>
+  <Match>
+    <Class name="de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean" />
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+  </Match>
+  <Match>
+    <Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+    <Class name="de.seitenbau.govdata.odp.registry.ckan.impl.OrganizationImpl" />
+  </Match>
+</FindBugsFilter>

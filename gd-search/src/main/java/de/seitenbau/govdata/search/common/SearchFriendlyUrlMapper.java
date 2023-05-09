@@ -21,8 +21,10 @@ import com.liferay.portal.kernel.util.Validator;
 public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
 {
   private final String[] validParameters = {"q", "f", "s", "boundingbox", "start", "end"};
+
   private final Pattern findParameterRegex = Pattern.compile("/([^/]*)/([^/]*)");
-  private final String renderParameterPrefix = "p_r_p_x_http://portlet.govdata.dev.seitenbau.net_";
+
+  private static final String RENDER_PARAMETER_PREFIX = "p_r_p_x_http://portlet.govdata.dev.seitenbau.net_";
 
   private static final StringEncoder URLENCODER = new URLStringEncoder();
 
@@ -49,7 +51,7 @@ public class SearchFriendlyUrlMapper extends DefaultFriendlyURLMapper
         routeParameters.remove(param);
       }
       // filter namespaced params
-      liferayPortletURL.addParameterIncludedInPath(renderParameterPrefix + param);
+      liferayPortletURL.addParameterIncludedInPath(RENDER_PARAMETER_PREFIX + param);
     }
 
     String friendlyURLPath = sb.toString();

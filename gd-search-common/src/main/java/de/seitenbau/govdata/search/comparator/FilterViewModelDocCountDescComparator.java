@@ -1,11 +1,14 @@
 package de.seitenbau.govdata.search.comparator;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import de.seitenbau.govdata.search.gui.model.FilterViewModel;
 
-public class FilterViewModelDocCountDescComparator implements Comparator<FilterViewModel>
+public class FilterViewModelDocCountDescComparator implements Comparator<FilterViewModel>, Serializable
 {
+  private static final long serialVersionUID = 5213195457752721845L;
+
   /*
    * (non-Javadoc)
    * 

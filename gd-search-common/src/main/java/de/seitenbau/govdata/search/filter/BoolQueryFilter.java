@@ -6,6 +6,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
+
 public class BoolQueryFilter extends BaseFilter
 {
 
@@ -20,7 +22,7 @@ public class BoolQueryFilter extends BaseFilter
   public BoolQueryFilter(String elasticSearchField, String filterFragmentName, List<String> phrases)
   {
     super(elasticSearchField, filterFragmentName);
-    this.phrases = phrases;
+    this.phrases = GovDataCollectionUtils.getCopyOfList(phrases);
   }
 
   @Override
@@ -29,7 +31,7 @@ public class BoolQueryFilter extends BaseFilter
     BoolQueryBuilder qb = QueryBuilders.boolQuery();
     for (String s : phrases)
     {
-      QueryBuilder stringQuery = QueryBuilders.matchPhraseQuery(elasticSearchField, s);
+      QueryBuilder stringQuery = QueryBuilders.matchPhraseQuery(getElasticSearchField(), s);
       qb.should(stringQuery);
     }
     return qb;

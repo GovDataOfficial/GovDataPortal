@@ -48,7 +48,7 @@ public class ShaclValidatorImpl implements ShaclValidator
   private CloseableHttpClient httpClient = null;
 
   @PostConstruct
-  public void init()
+  void init()
   {
     httpClient = HttpClients.createDefault();
   }

@@ -22,6 +22,7 @@ import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.geojson.GeoJsonReader;
 
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.util.states.BoundingBoxContainer;
 import de.seitenbau.govdata.search.util.states.StateContainer;
 import lombok.extern.slf4j.Slf4j;
@@ -113,20 +114,11 @@ public class GeoStateParser
   }
 
   /**
-   * Getter for raw json
-   * @return
-   */
-  public JSONObject getGeoJson()
-  {
-    return geoJsonObject;
-  }
-
-  /**
    * Getter for StateList
    */
   public List<StateContainer> getStateList()
   {
-    return stateList;
+    return GovDataCollectionUtils.getCopyOfList(stateList);
   }
 
   /**

@@ -1,0 +1,12 @@
+<FindBugsFilter>
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP" />
+    <Class name="de.seitenbau.govdata.metadataquality.cache.MetricDataCache" />
+    <Method name="~getRaw(.*)Data" />
+  </Match>
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP2" />
+    <Class name="de.seitenbau.govdata.metadataquality.util.MetricsParser" />
+    <Method name="setData" />
+  </Match>
+</FindBugsFilter>

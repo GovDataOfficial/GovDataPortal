@@ -1,0 +1,13 @@
+<FindBugsFilter>
+  <Match>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Or>
+    <Or>
+      <Class name="~.*\.[a-zA-Z]*Bean.*" />
+      <Package name="~de\.seitenbau\.govdata\..*\.model.*" />
+      <Class name="de.seitenbau.govdata.odr.RegistryClient" />
+    </Or>
+  </Match>
+</FindBugsFilter>

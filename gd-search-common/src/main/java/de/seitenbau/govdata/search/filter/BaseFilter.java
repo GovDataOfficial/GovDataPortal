@@ -6,12 +6,25 @@ import org.elasticsearch.index.query.QueryBuilder;
 
 public abstract class BaseFilter
 {
-  protected static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  protected static final SimpleDateFormat labelDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-  
+  /**
+   * date format for temporal data
+   */
+  private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-  protected String elasticSearchField;
-  protected String filterFragmentName;
+  /**
+   * date format for labels
+   */
+  private final SimpleDateFormat labelDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+  /**
+   * name of the field in elasticsearch
+   */
+  private String elasticSearchField;
+
+  /**
+   * name of the filter-fragment
+   */
+  private String filterFragmentName;
 
   /**
    * Base Filter
@@ -28,9 +41,32 @@ public abstract class BaseFilter
   {
     return filterFragmentName;
   }
-  
+
+  public String getElasticSearchField()
+  {
+    return elasticSearchField;
+  }
+
+  public SimpleDateFormat getSimpleDateFormat()
+  {
+    return (SimpleDateFormat) simpleDateFormat.clone();
+  }
+
+  public SimpleDateFormat getLabelDateFormat()
+  {
+    return (SimpleDateFormat) labelDateFormat.clone();
+  }
+
+  /**
+   * Generate a filter builder
+   * @return
+   */
   public abstract QueryBuilder createFilter();
-  
+
+  /**
+   * Get the label for the filter
+   * @return
+   */
   public abstract String getLabel();
   
   @Override

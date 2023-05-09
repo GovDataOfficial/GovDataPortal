@@ -88,7 +88,7 @@ class DeleteUserController
   private static final String EMAIL_GUK_BODY = "od.user.delete.email_guk.body";
 
   @Inject
-  RegistryClient registryClient;
+  private RegistryClient registryClient;
 
   @Inject
   private LiferayNavigation liferayNavigation;

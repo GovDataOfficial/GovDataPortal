@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 
 /**
@@ -56,7 +57,7 @@ public class OrganizationCache extends BaseRegistryClientCache
     }
 
     log.trace(method + "End");
-    return organizationMap;
+    return new HashMap<String, Organization>(organizationMap);
   }
   
   /**
@@ -79,6 +80,6 @@ public class OrganizationCache extends BaseRegistryClientCache
     }
 
     log.trace(method + "End");
-    return organizationsSorted;
+    return GovDataCollectionUtils.getCopyOfList(organizationsSorted);
   }
 }

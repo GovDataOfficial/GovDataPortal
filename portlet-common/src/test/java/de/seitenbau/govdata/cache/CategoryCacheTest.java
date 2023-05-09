@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.impl.CategoryImpl;
@@ -96,12 +97,16 @@ public class CategoryCacheTest
 
     /* execute */
     Map<String, Category> result = target.getCategoryMap();
+    Object cachedObject = ReflectionTestUtils.getField(target, "categoryMap");
     Map<String, Category> resultCached = target.getCategoryMap();
+    Object cachedObject2 = ReflectionTestUtils.getField(target, "categoryMap");
 
     /* verify */
     Assertions.assertThat(result).hasSize(categoryList.size());
     Assertions.assertThat(result.values()).containsOnly(categoryList.toArray(new Category[0]));
-    Assertions.assertThat(result == resultCached).describedAs("Same objects").isTrue();
+    Assertions.assertThat(cachedObject).isNotNull().isSameAs(cachedObject2);
+    Assertions.assertThat(resultCached).isNotNull().isNotSameAs(result);
+    Assertions.assertThat(resultCached).containsExactlyInAnyOrderEntriesOf(result);
   }
 
   @Test

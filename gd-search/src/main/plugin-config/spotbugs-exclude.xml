@@ -1,0 +1,30 @@
+<FindBugsFilter>
+  <Match>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Or>
+    <Or>
+      <Class name="~.*\.[a-zA-Z]*Bean.*" /> 
+      <Class name="~.*\.[a-zA-Z]*Container.*" /> 
+      <Class name="de.seitenbau.govdata.dataset.details.beans.SelectedMetadata" />
+      <Class name="de.seitenbau.govdata.dataset.details.beans.SelectedShowcase" />
+      <Class name="de.seitenbau.govdata.search.common.searchresult.PreparedParameters" />
+      <Package name="~de\.seitenbau\.govdata\..*\.model.*" />
+      <Package name="~de\.seitenbau\.govdata\..*\.beans.*" />
+    </Or>
+  </Match>
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP2" />
+    <Or>
+      <And>
+        <Class name="de.seitenbau.govdata.search.util.NumberParser" />
+        <Method name="setData" />
+      </And>
+      <And>
+        <Class name="de.seitenbau.govdata.search.common.AtomFeedView" />
+        <Field name="selfurl" />
+      </And>
+    </Or>
+  </Match>
+</FindBugsFilter>

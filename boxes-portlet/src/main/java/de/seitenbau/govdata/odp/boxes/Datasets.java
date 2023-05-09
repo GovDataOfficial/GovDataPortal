@@ -34,14 +34,13 @@ import org.springframework.stereotype.Component;
 
 import de.seitenbau.govdata.odp.boxes.model.DatasetModel;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
 import de.seitenbau.govdata.search.gui.model.LicenseViewModel;
 import de.seitenbau.govdata.search.index.model.HitDto;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * The class constitutes a bean that serves as a source for the latest datasets on the start page
@@ -67,8 +66,6 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
   private SearchResultsViewMapper searchResultsMapper;
 
   /** The datasets. */
-  @Getter
-  @Setter
   private List<DatasetModel> datasets;
 
   /**
@@ -144,5 +141,15 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
   {
     List<DatasetModel> datasets = this.getDatasets();
     return Math.min(datasets.size(), 2);
+  }
+
+  /**
+   * Gets the datasets.
+   * 
+   * @return the datasets.
+   */
+  public List<DatasetModel> getDatasets()
+  {
+    return GovDataCollectionUtils.getCopyOfList(datasets);
   }
 }

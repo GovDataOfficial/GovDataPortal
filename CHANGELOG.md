@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.13.0 2023-05-04
+
+* Adds licence attributes 'od_conformance' and 'osd_conformance'
+* Improves code quality (e.g. by fixing SpotBugs warnings) and code style
+* Fixes a problem that prevents the spatial search from being used in the state search
+* Improves the relevance sorting for the state search
+
 ## v5.12.0 2023-04-13
 
 * Now using CKAN API tokens instead of CKAN API keys. The CKAN API key support will be removed with CKAN 2.10.

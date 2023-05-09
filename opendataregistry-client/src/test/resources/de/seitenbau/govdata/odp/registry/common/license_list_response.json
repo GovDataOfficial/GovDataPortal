@@ -1,507 +1,422 @@
 {
-  "help":"http://mtest3.gd.swe.seitenbau.net:5000/api/3/action/help_show?name=license_list",
-  "success":true,
-  "result":[
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Datenlizenz Deutschland Namensnennung",
-      "domain_data":true,
-      "id":"dl-de-by-1.0",
-      "is_okd_compliant":true,
-      "is_generic":true,
-      "url":"https://www.govdata.de/dl-de/by-1-0",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Datenlizenz Deutschland Namensnennung 2.0",
-      "domain_data":true,
-      "id":"dl-de-by-2.0",
-      "is_okd_compliant":true,
-      "is_generic":true,
-      "url":"https://www.govdata.de/dl-de/by-2-0",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Amtliches Werk, lizenzfrei nach \u00a75 Abs. 1 UrhG",
-      "domain_data":true,
-      "id":"official-work",
-      "is_okd_compliant":true,
-      "is_generic":true,
-      "url":"http://www.gesetze-im-internet.de/urhg/__5.html",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Nutzungsbestimmungen f\u00fcr die Bereitstellung von Geodaten des Bundes",
-      "domain_data":true,
-      "id":"geonutzv-de-2013-03-19",
-      "is_okd_compliant":true,
-      "is_generic":true,
-      "url":"http://www.geodatenzentrum.de/docpdf/geonutzv.pdf",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":false
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Namensnennung (CC-BY)",
-      "domain_data":true,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://www.opendefinition.org/licenses/cc-by",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-by"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Namensnennung (CC BY 4.0)",
-      "domain_data":true,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://creativecommons.org/licenses/by/4.0/",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-by-4.0"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Zero",
-      "domain_data":true,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://www.opendefinition.org/licenses/cc-zero",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-zero"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Attribution Weitergabe unter gleichen Bedingungen (CC-BY-SA)",
-      "domain_data":false,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://www.opendefinition.org/licenses/cc-by-sa",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-by-sa"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Attribution Weitergabe unter gleichen Bedingungen (CC BY-SA 4.0)",
-      "domain_data":false,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://creativecommons.org/licenses/by-sa/4.0/",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-by-sa-4.0"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Open Data Commons Open Database License (ODbL)",
-      "domain_data":true,
-      "is_okd_compliant":true,
-      "domain_content":false,
-      "url":"http://www.opendefinition.org/licenses/odc-odbl",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"odc-odbl"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Open Data Commons Namensnennung",
-      "domain_data":true,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://www.opendefinition.org/licenses/odc-by",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"odc-by"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Open Data Commons Public Domain Dedication and Licence (PDDL)",
-      "domain_data":true,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://www.opendefinition.org/licenses/odc-pddl",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"odc-pddl"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Andere freie Lizenz",
-      "domain_data":true,
-      "id":"other-open",
-      "is_okd_compliant":true,
-      "is_generic":true,
-      "url":"",
-      "is_osi_compliant":true,
-      "domain_software":true,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Nicht-Kommerziell (CC-NC)",
-      "domain_data":true,
-      "is_okd_compliant":false,
-      "domain_content":true,
-      "url":"http://creativecommons.org/licenses/by-nc/2.0/",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-nc"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Nicht-Kommerziell (CC BY-NC 4.0)",
-      "domain_data":true,
-      "is_okd_compliant":false,
-      "domain_content":true,
-      "url":"http://creativecommons.org/licenses/by-nc/4.0/",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-by-nc-4.0"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Keine Bearbeitung (CC-BY-ND)",
-      "domain_data":true,
-      "is_okd_compliant":false,
-      "domain_content":true,
-      "url":"http://creativecommons.org/licenses/by-nd/3.0/",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-by-nd"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Creative Commons Keine Bearbeitung (CC BY-ND)",
-      "domain_data":true,
-      "is_okd_compliant":false,
-      "domain_content":true,
-      "url":"http://creativecommons.org/licenses/by-nd/4.0/",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"cc-by-nd-4.0"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Datenlizenz Deutschland Namensnennung nicht-kommerziell",
-      "domain_data":true,
-      "id":"dl-de-by-nc-1.0",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"https://www.govdata.de/dl-de/by-nc-1-0",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Datenlizenz Deutschland \u2013 Zero \u2013 Version 2.0",
-      "domain_data":true,
-      "id":"dl-de-zero-2.0",
-      "is_okd_compliant":true,
-      "is_generic":true,
-      "url":"https://www.govdata.de/dl-de/zero-2-0",
-      "is_osi_compliant":true,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1.2.1 Open-r\u00e4umlich und zeitlich unbeschr\u00e4nkte Einr\u00e4umung aller Nutzungsrechte",
-      "domain_data":true,
-      "id":"geolizenz-v1.2.1-open",
-      "is_okd_compliant":true,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org/modules/geolizenz/docs/1.2.1/GeoLizenz_V1.2.1_Open_082213_DE.pdf",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 Ia-kommerziell-Weiterverarbeitung-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-1a",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 Ib-nicht-kommerziell-Weiterverarbeitung-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-1b",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 IIa-kommerziell-keine Weiterverarbeitung-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-2a",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 IIb-nicht-kommerziell-keine Weiterverarbeitung-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-2b",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 IIIa-kommerziell-Weiterverarbeitung-nicht-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-3a",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 IIIb-nicht-kommerziell-Weiterverarbeitung-nicht-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-3b",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 IVa-kommerziell-keine Weiterverarbeitung-nicht-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-4a",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GeoLizenz V1-2 IVb-nicht-kommerziell-keine Weiterverarbeitung-nicht-oeffentliche_Netzwerke",
-      "domain_data":true,
-      "id":"geolizenz-v1.2-4b",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"http://www.geolizenz.org",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "domain_content":true
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Apache Lizenz",
-      "domain_data":false,
-      "is_okd_compliant":false,
-      "domain_content":false,
-      "url":"http://www.apache.org/licenses",
-      "is_osi_compliant":true,
-      "domain_software":true,
-      "id":"apache"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Andere kommerzielle Lizenz",
-      "domain_data":false,
-      "is_okd_compliant":false,
-      "domain_content":false,
-      "url":"",
-      "is_osi_compliant":false,
-      "domain_software":true,
-      "id":"app_commercial"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Andere kostenfreie Lizenz",
-      "domain_data":false,
-      "is_okd_compliant":false,
-      "domain_content":false,
-      "url":"",
-      "is_osi_compliant":false,
-      "domain_software":true,
-      "id":"app_freeware"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Andere Open Source Lizenz",
-      "domain_data":false,
-      "is_okd_compliant":false,
-      "domain_content":false,
-      "url":"",
-      "is_osi_compliant":true,
-      "domain_software":true,
-      "id":"app_opensource"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"BSD Lizenz",
-      "domain_data":false,
-      "is_okd_compliant":false,
-      "domain_content":false,
-      "url":"http://www.opensource.org/licenses/bsd-license.php",
-      "is_osi_compliant":true,
-      "domain_software":true,
-      "id":"bsd-license"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GNU Free Documentation License",
-      "domain_data":false,
-      "is_okd_compliant":true,
-      "domain_content":true,
-      "url":"http://www.opendefinition.org/licenses/gfdl",
-      "is_osi_compliant":false,
-      "domain_software":false,
-      "id":"gfdl"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"GNU General Public License version 3.0 (GPLv3)",
-      "domain_data":false,
-      "is_okd_compliant":false,
-      "domain_content":false,
-      "url":"http://www.opensource.org/licenses/gpl-3.0.html",
-      "is_osi_compliant":true,
-      "domain_software":true,
-      "id":"gpl-3.0"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "tags":[
-        
-      ],
-      "domain_data":false,
-      "title":"Mozilla Public License 1.0 (MPL)",
-      "is_okd_compliant":false,
-      "domain_content":false,
-      "url":"http://www.mozilla.org/MPL",
-      "is_osi_compliant":true,
-      "domain_software":true,
-      "id":"mozilla"
-    },
-    {
-      "status":"active",
-      "maintainer":"",
-      "family":"",
-      "title":"Andere eingeschr\u00e4nkte Lizenz",
-      "domain_data":true,
-      "id":"other-closed",
-      "is_okd_compliant":false,
-      "is_generic":true,
-      "url":"",
-      "is_osi_compliant":false,
-      "domain_software":true,
-      "domain_content":true
-    }
-  ]
+    "help": "http://mtest5.gd.bmi.dev.seitenbau.net:5000/api/3/action/help_show?name=license_list",
+    "success": true,
+    "result": [
+        {
+            "id": "http://dcat-ap.de/def/licenses/official-work",
+            "title": "Amtliches Werk, lizenzfrei nach \u00a75 Abs. 1 UrhG (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://www.gesetze-im-internet.de/urhg/__5.html",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/other-freeware",
+            "title": "Andere Freeware Lizenz",
+            "url": "",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/other-closed",
+            "title": "Andere geschlossene Lizenz",
+            "url": "",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/other-commercial",
+            "title": "Andere kommerzielle Lizenz",
+            "url": "",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/other-open",
+            "title": "Andere offene Lizenz",
+            "url": "",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/other-opensource",
+            "title": "Andere Open Source Lizenz",
+            "url": "",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/bsd",
+            "title": "BSD Lizenz",
+            "url": "http://www.opensource.org/licenses/bsd-license.php",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-sa",
+            "title": "Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen (CC-BY-SA)",
+            "url": "http://www.opendefinition.org/licenses/cc-by-sa",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-sa/4_0",
+            "title": "Creative Commons Attribution ShareAlike 4.0 (CCBYSA4.0) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://creativecommons.org/licenses/by-sa/4.0/",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-zero",
+            "title": "Creative Commons CC Zero License (cc-zero)",
+            "url": "http://www.opendefinition.org/licenses/cc-zero",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by/4_0",
+            "title": "Creative Commons Namensnennung  4.0 (CCBY) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://creativecommons.org/licenses/by/4.0/",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by",
+            "title": "Creative Commons Namensnennung (CC-BY)",
+            "url": "http://www.opendefinition.org/licenses/cc-by",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-de/3_0",
+            "title": "Creative Commons Namensnennung 3.0 (CC-BY) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "https://creativecommons.org/licenses/by/3.0/de/",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nd",
+            "title": "Creative Commons Namensnennung - Keine Bearbeitung (CC BY-ND)",
+            "url": "http://creativecommons.org/licenses/by-nd/3.0/",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nd/3_0",
+            "title": "Creative Commons Namensnennung Keine Bearbeitung 3.0 (CC-BY-ND) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://creativecommons.org/licenses/by-nd/3.0/",
+            "status": "inactive",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nd/4_0",
+            "title": "Creative Commons Namensnennung Keine Bearbeitung 4.0 International (CC BYND 4.0) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://creativecommons.org/licenses/by-nd/4.0/",
+            "status": "inactive",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nc-de/4_0",
+            "title": "Creative Commons Namensnennung Nichtkommerziell 4.0 (CCBY) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://creativecommons.org/licenses/by-nc/4.0/",
+            "status": "inactive",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-nc",
+            "title": "Creative Commons Namensnennung-Nicht kommerziell (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://creativecommons.org/licenses/by-nc/2.0/",
+            "status": "inactive",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-nc/3_0",
+            "title": "Creative Commons Namensnennung-Nicht kommerziell 3.0  (\u00e4ltere DCAT-AP.de Version)",
+            "url": "https://creativecommons.org/licenses/by-nc/3.0/de/",
+            "status": "inactive",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-zero-de/2_0",
+            "title": "Datenlizenz Deutschland \u2013 Zero \u2013 Version 2.0 (\u00e4ltere DCAT-AP.de Version)",
+            "url": "https://www.govdata.de/dl-de/zero-2-0",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-by-de/1_0",
+            "title": "Datenlizenz Deutschland Namensnennung 1.0 (\u00e4ltere DCAT-AP.de Version)",
+            "url": "https://www.govdata.de/dl-de/by-1-0",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-by-de/2_0",
+            "title": "Datenlizenz Deutschland Namensnennung 2.0 (\u00e4ltere DCAT-AP.de Version)",
+            "url": "https://www.govdata.de/dl-de/by-2-0",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-by-nc-de/1_0",
+            "title": "Datenlizenz Deutschland Namensnennung nicht-kommerziell 1.0 (\u00e4ltere DCAT-AP.de Version)",
+            "url": "https://www.govdata.de/dl-de/by-nc-1-0",
+            "status": "inactive",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/apache",
+            "title": "Freie Softwarelizenz der Apache Software Foundation",
+            "url": "http://www.apache.org/licenses",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/gfdl",
+            "title": "GNU Free Documentation License (GFDL)",
+            "url": "http://www.opendefinition.org/licenses/gfdl",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/gpl/30",
+            "title": "GNU General Public License version 3.0 (GPLv3) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://www.opensource.org/licenses/gpl-3.0.html",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/mozilla",
+            "title": "Mozilla Public License 2.0 (MPL)",
+            "url": "http://www.mozilla.org/MPL",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/geonutz/20130319",
+            "title": "Nutzungsbestimmungen f\u00fcr die Bereitstellung von Geodaten des Bundes",
+            "url": "https://sg.geodatenzentrum.de/web_public/gdz/lizenz/geonutzv.pdf",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/geoNutz/20131001",
+            "title": "Nutzungsbestimmungen f\u00fcr die Bereitstellung von Geodaten des Landes Berlin",
+            "url": "http://www.stadtentwicklung.berlin.de/geoinformation/download/nutzIII.pdf",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/od-bc",
+            "title": "Open Data Commons Attribution License (ODCBY) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://www.opendefinition.org/licenses/odc-by",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/od-bl",
+            "title": "Open Data Commons Open Database License (ODbL) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://www.opendefinition.org/licenses/odc-odbl",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/odc-pddl",
+            "title": "Open Data Commons Public Domain Dedication and Licence (PDDL) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://www.opendefinition.org/licenses/odc-pddl",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-pdm/1_0",
+            "title": "Public Domain Mark 1.0 (PDM) (\u00e4ltere DCAT-AP.de Version)",
+            "url": "http://creativecommons.org/publicdomain/mark/1.0/",
+            "status": "inactive",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by/4.0",
+            "title": "Creative Commons Namensnennung \u2013 4.0 International (CC BY 4.0)",
+            "url": "http://creativecommons.org/licenses/by/4.0/",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-de/3.0",
+            "title": "Creative Commons Namensnennung 3.0 Deutschland (CC BY 3.0 DE)",
+            "url": "https://creativecommons.org/licenses/by/3.0/de/",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nc",
+            "title": "Creative Commons Namensnennung - Nicht kommerziell (CC BY-NC)",
+            "url": "http://creativecommons.org/licenses/by-nc/",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nc-de/3.0",
+            "title": "Creative Commons Namensnennung-Nicht kommerziell 3.0 Deutschland (CC BY-NC 3.0 DE)",
+            "url": "https://creativecommons.org/licenses/by-nc/3.0/de/",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nc/4.0",
+            "title": "Creative Commons Namensnennung - Nicht kommerziell 4.0 International (CC BY-NC 4.0)",
+            "url": "http://creativecommons.org/licenses/by-nc/4.0/",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nd/3.0",
+            "title": "Creative Commons Namensnennung -- Keine Bearbeitung 3.0 Unported (CC BY-ND 3.0)",
+            "url": "http://creativecommons.org/licenses/by-nd/3.0/",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-nd/4.0",
+            "title": "Creative Commons Namensnennung - - Keine Bearbeitung 4.0 International (CC BY-ND 4.0)",
+            "url": "https://creativecommons.org/licenses/by-nd/4.0/",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-sa/4.0",
+            "title": "Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International (CC-BY-SA 4.0)",
+            "url": "http://creativecommons.org/licenses/by-sa/4.0/",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/ccpdm/1.0",
+            "title": "Public Domain Mark 1.0 (PDM)",
+            "url": "http://creativecommons.org/publicdomain/mark/1.0/",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-by-de/1.0",
+            "title": "Datenlizenz Deutschland Namensnennung 1.0",
+            "url": "https://www.govdata.de/dl-de/by-1-0",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
+            "title": "Datenlizenz Deutschland Namensnennung 2.0",
+            "url": "https://www.govdata.de/dl-de/by-2-0",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-by-nc-de/1.0",
+            "title": "Datenlizenz Deutschland Namensnennung nicht-kommerziell 1.0",
+            "url": "https://www.govdata.de/dl-de/by-nc-1-0",
+            "status": "active",
+            "od_conformance": "not reviewed",
+            "osd_conformance": "not reviewed"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/dl-zero-de/2.0",
+            "title": "Datenlizenz Deutschland \u2013 Zero \u2013 Version 2.0",
+            "url": "https://www.govdata.de/dl-de/zero-2-0",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/gpl/3.0",
+            "title": "GNU General Public License version 3.0 (GPLv3)",
+            "url": "http://www.opensource.org/licenses/gpl-3.0.html",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/odbl",
+            "title": "Open Data Commons Open Database License (ODbL)",
+            "url": "http://www.opendefinition.org/licenses/odc-odbl",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/odby",
+            "title": "Open Data Commons Attribution License (ODC-BY 1.0)",
+            "url": "http://www.opendefinition.org/licenses/odc-by",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/odcpddl",
+            "title": "Open Data Commons Public Domain Dedication and Licence (ODC PDDL)",
+            "url": "http://www.opendefinition.org/licenses/odc-pddl",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/officialWork",
+            "title": "Amtliches Werk, lizenzfrei nach \u00a75 Abs. 1 UrhG",
+            "url": "http://www.gesetze-im-internet.de/urhg/__5.html",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        },
+        {
+            "id": "http://dcat-ap.de/def/licenses/cc-by-sa-de/3.0",
+            "title": "Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 3.0 Deutschland (CC BY-SA 3.0 DE) ",
+            "url": "https://creativecommons.org/licenses/by-sa/3.0/de/",
+            "status": "active",
+            "od_conformance": "approved",
+            "osd_conformance": "approved"
+        }
+    ]
 }

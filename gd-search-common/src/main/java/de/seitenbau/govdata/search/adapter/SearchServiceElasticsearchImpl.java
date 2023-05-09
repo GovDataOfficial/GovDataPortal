@@ -276,8 +276,6 @@ public class SearchServiceElasticsearchImpl implements SearchService
     final String method = "search() : ";
     log.trace(method + "Start");
 
-    final QueryBuilder baseQuery = buildBaseQuery(q);
-
     // Map of active Filters, used in result presentation
     Map<String, FilterListDto> activeFilterMap = new HashMap<>();
 
@@ -287,8 +285,16 @@ public class SearchServiceElasticsearchImpl implements SearchService
     // Create all supplied filters from their transport objects
     for (BaseFilter filter : bundle.getFilters())
     {
-      filters.filter(filter.createFilter());
+      // state search is build separately
+      if (!Objects.equals(filter.getFragmentName(), SearchConsts.FACET_STATE))
+      {
+        filters.filter(filter.createFilter());
+      }
     }
+
+    // query for state search
+    final QueryBuilder stateQuery = buildStateSearchQuery(bundle.getFilters().stream()
+        .filter(f -> Objects.equals(f.getFragmentName(), SearchConsts.FACET_STATE)).findFirst());
 
     // filter on certain types
     QueryBuilder typeFilter = createTypeFilter(bundle.getTypeFilter());
@@ -325,6 +331,7 @@ public class SearchServiceElasticsearchImpl implements SearchService
       combinedFilters.filter(typeFilter);
     }
 
+    final QueryBuilder baseQuery = QueryBuilders.boolQuery().must(buildBaseQuery(q)).must(stateQuery);
     final QueryBuilder filteredQuery = QueryBuilders.boolQuery().must(baseQuery).filter(combinedFilters);
 
     // Prepare Search
@@ -1187,6 +1194,21 @@ public class SearchServiceElasticsearchImpl implements SearchService
   }
 
   /**
+   * Creates a filter for the state-search.
+   * @param stateFilters
+   * @return
+   */
+  private QueryBuilder buildStateSearchQuery(Optional<BaseFilter> stateFilters)
+  {
+    if (stateFilters.isPresent())
+    {
+      return QueryBuilders.boolQuery().must(stateFilters.get().createFilter());
+    }
+    // return empty query
+    return QueryBuilders.boolQuery();
+  }
+
+  /**
    * Iterates the List of Filters and removes all groups which are not part of the official list.
    *
    * @param groupAggregateList
@@ -1305,25 +1327,44 @@ public class SearchServiceElasticsearchImpl implements SearchService
   }
 
   // Getter / Setter
+  /**
+   * Returns a copy of the current nodes array if not null.
+   * 
+   * @return
+   */
   public String[] getNodes()
   {
-    return nodes;
+    if (Objects.nonNull(nodes))
+    {
+      return nodes.clone();
+    }
+    return null;
   }
 
+  /**
+   * Set the elasticsearch nodes.
+   * 
+   * @param nodes the nodes as comma separated list
+   */
   @Value("${elasticsearch.nodes}")
-  public void setNodes(String[] nodes)
+  public void setNodes(String nodes)
   {
-    this.nodes = nodes;
+    String[] nodeArray = StringUtils.stripAll(StringUtils.splitByWholeSeparator(nodes, ","));
+    this.nodes = nodeArray;
   }
 
+  /**
+   * Returns a copy of the current index names array if not null.
+   * 
+   * @return
+   */
   public String[] getIndexNames()
   {
-    return indexNames;
-  }
-
-  public void setIndexNames(String[] indexNames)
-  {
-    this.indexNames = indexNames;
+    if (Objects.nonNull(indexNames))
+    {
+      return indexNames.clone();
+    }
+    return null;
   }
 
   /**

@@ -23,7 +23,7 @@ public class TermFilter extends BaseFilter
   @Override
   public QueryBuilder createFilter()
   {
-    return QueryBuilders.boolQuery().must(QueryBuilders.termQuery(elasticSearchField, term));
+    return QueryBuilders.boolQuery().must(QueryBuilders.termQuery(getElasticSearchField(), term));
   }
 
   @Override

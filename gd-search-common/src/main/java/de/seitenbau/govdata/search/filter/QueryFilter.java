@@ -25,7 +25,7 @@ public class QueryFilter extends BaseFilter
   public QueryBuilder createFilter()
   {
     return QueryBuilders.boolQuery()
-        .must(QueryBuilders.matchQuery(elasticSearchField, phrase).operator(Operator.AND));
+        .must(QueryBuilders.matchQuery(getElasticSearchField(), phrase).operator(Operator.AND));
   }
 
   @Override

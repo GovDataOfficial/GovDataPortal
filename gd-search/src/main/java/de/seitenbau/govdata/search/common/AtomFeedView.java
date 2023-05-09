@@ -20,6 +20,7 @@ import com.rometools.rome.feed.atom.Link;
 import com.rometools.rome.feed.synd.SyndPerson;
 import com.rometools.rome.feed.synd.SyndPersonImpl;
 
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
 
@@ -38,7 +39,7 @@ public class AtomFeedView extends AbstractAtomFeedView
 
   public AtomFeedView(List<HitViewModel> entries, PortletURL selfurl)
   {
-    this.entries = entries;
+    this.entries = GovDataCollectionUtils.getCopyOfList(entries);
     this.selfurl = selfurl;
 
   }

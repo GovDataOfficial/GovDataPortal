@@ -20,6 +20,7 @@ package de.seitenbau.govdata.date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -38,7 +39,7 @@ public abstract class DateUtil
 {
   private static final Logger LOG = LoggerFactory.getLogger(DateUtil.class);
 
-  public static final String[] DEFAULT_DATE_FORMATS = {"yyyy-MM-dd'T'HH:mm:ssX", "yyyy-MM-dd'T'HH:mm:ssz",
+  private static final String[] DEFAULT_DATE_FORMATS = {"yyyy-MM-dd'T'HH:mm:ssX", "yyyy-MM-dd'T'HH:mm:ssz",
       "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm:ssX", "yyyy-MM-dd HH:mm:ssz", "yyyy-MM-dd HH:mm:ss X",
       "yyyy-MM-dd HH:mm:ss z", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", "dd.MM.yyyy'T'HH:mm:ssX",
       "dd.MM.yyyy'T'HH:mm:ssz", "dd.MM.yyyy'T'HH:mm:ss", "dd.MM.yyyy HH:mm:ss", "dd.MM.yyyy"};
@@ -101,7 +102,8 @@ public abstract class DateUtil
       }
       if (result == null)
       {
-        LOG.debug(method + "Could not parse string '{}' as date!", dateString);
+        LOG.debug(method + "Could not parse string '{}' as date! Supported formats: {}", dateString,
+            Arrays.toString(DEFAULT_DATE_FORMATS));
       }
     }
 
@@ -202,6 +204,16 @@ public abstract class DateUtil
 
     LOG.trace(method + "End");
     return result;
+  }
+
+  public static Date getCopyOfDate(Date date)
+  {
+    if (date == null)
+    {
+      return null;
+    }
+
+    return new Date(date.getTime());
   }
 
 }

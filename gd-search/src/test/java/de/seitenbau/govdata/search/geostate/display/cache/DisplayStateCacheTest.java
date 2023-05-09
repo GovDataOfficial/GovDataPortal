@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.google.common.collect.Lists;
 import com.liferay.portal.kernel.portlet.DummyPortletURL;
@@ -132,11 +133,15 @@ public class DisplayStateCacheTest
 
     /* execute */
     List<StateViewModel> result = sut.getStateList(blockedStatesString);
+    Object cachedObject = ReflectionTestUtils.getField(sut, "stateList");
     List<StateViewModel> resultNew = sut.getStateList(blockedStatesStringNew);
+    Object cachedObject2 = ReflectionTestUtils.getField(sut, "stateList");
 
     /* assert */
     Assertions.assertThat(result).hasSize(ALL_STATES_COUNT);
-    Assertions.assertThat(result).isSameAs(resultNew);
+    Assertions.assertThat(resultNew).isNotNull().isNotSameAs(result);
+    Assertions.assertThat(cachedObject).isNotNull().isSameAs(cachedObject2);
+    Assertions.assertThat(resultNew).containsExactlyInAnyOrderElementsOf(result);
   }
 
   @Test

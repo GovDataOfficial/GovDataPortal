@@ -48,6 +48,7 @@ import de.seitenbau.govdata.odp.registry.model.Contact;
 import de.seitenbau.govdata.odp.registry.model.FormatEnumType;
 import de.seitenbau.govdata.odp.registry.model.GeoGranularityEnumType;
 import de.seitenbau.govdata.odp.registry.model.Licence;
+import de.seitenbau.govdata.odp.registry.model.LicenceConformance;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
 import de.seitenbau.govdata.odp.registry.model.MetadataStringExtraFields;
@@ -79,27 +80,35 @@ public class ODRClientTest extends TestBase
   @Test
   public void listLicences()
   {
+    /* execute */
     List<Licence> licences = odrClient.listLicenses();
 
+    /* verify */
     Assertions.assertThat(licences).isNotNull();
-    Assertions.assertThat(licences.size()).isEqualTo(37);
-
-    Licence licence = licences.get(0);
-
-    // name matches field "id" in json response
+    Assertions.assertThat(licences.size()).isEqualTo(52);
     Assertions.assertThat(CkanResource.getApiMethodsCalled().keySet())
         .containsExactlyInAnyOrder("listLicences");
-    Assertions.assertThat(licence.getName()).isEqualTo("dl-de-by-1.0");
-    Assertions.assertThat(licence.getTitle()).isEqualTo("Datenlizenz Deutschland Namensnennung");
-    Assertions.assertThat(licence.getUrl()).isEqualTo("https://www.govdata.de/dl-de/by-1-0");
-    Assertions.assertThat(licence.getOther()).isNull();
-    Assertions.assertThat(licence.isActive()).isTrue();
-    Assertions.assertThat(licence.isDomainContent()).isTrue();
-    Assertions.assertThat(licence.isDomainData()).isTrue();
-    Assertions.assertThat(licence.isDomainSoftware()).isFalse();
-    Assertions.assertThat(licence.isOkdCompliant()).isTrue();
+
+    Licence licence = licences.get(0);
+    // name matches field "id" in json response
+    Assertions.assertThat(licence.getName()).isEqualTo("http://dcat-ap.de/def/licenses/official-work");
+    Assertions.assertThat(licence.getTitle())
+        .isEqualTo("Amtliches Werk, lizenzfrei nach §5 Abs. 1 UrhG (ältere DCAT-AP.de Version)");
+    Assertions.assertThat(licence.getUrl()).isEqualTo("http://www.gesetze-im-internet.de/urhg/__5.html");
+    Assertions.assertThat(licence.isActive()).isFalse();
+    Assertions.assertThat(licence.getOdConformance()).isEqualTo(LicenceConformance.APPROVED.getValue());
+    Assertions.assertThat(licence.getOsdConformance()).isEqualTo(LicenceConformance.APPROVED.getValue());
     Assertions.assertThat(licence.isOpen()).isTrue();
-    Assertions.assertThat(licence.isOsiCompliant()).isFalse();
+
+    licence = licences.get(1);
+    // name matches field "id" in json response
+    Assertions.assertThat(licence.getName()).isEqualTo("http://dcat-ap.de/def/licenses/other-freeware");
+    Assertions.assertThat(licence.getTitle()).isEqualTo("Andere Freeware Lizenz");
+    Assertions.assertThat(licence.getUrl()).isEmpty();
+    Assertions.assertThat(licence.isActive()).isTrue();
+    Assertions.assertThat(licence.getOdConformance()).isEqualTo(LicenceConformance.NOTREVIEWED.getValue());
+    Assertions.assertThat(licence.getOsdConformance()).isEqualTo(LicenceConformance.NOTREVIEWED.getValue());
+    Assertions.assertThat(licence.isOpen()).isFalse();
   }
 
   @Test

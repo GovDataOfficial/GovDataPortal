@@ -17,12 +17,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsUtil;
 
 import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
+import de.seitenbau.govdata.search.common.ESFieldConsts;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
+import de.seitenbau.govdata.search.filter.BaseFilter;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.sort.SortType;
 
@@ -110,7 +113,8 @@ public class ParameterProcessingTest
     Assertions.assertThat(result.getType()).isEqualTo("dataset");
     Assertions.assertThat(result.getDateFrom()).isEqualTo("2015-01-01");
     Assertions.assertThat(result.getDateUntil()).isEqualTo("2025-02-02");
-    Assertions.assertThat(result.getBoundingBox().toString()).isEqualTo("1.0,3.0,2.0,4.0");
+    Assertions.assertThat(result.getBoundingBox().getLabel()).isEqualTo("1.0,3.0,2.0,4.0");
+    Assertions.assertThat(result.getBoundingBox().getCenter().toString()).isEqualTo("3.5, 1.5");
     Assertions.assertThat(result.getSelectedSorting()).isEqualTo(new Sort(SortType.LASTMODIFICATION, true));
   }
 
@@ -162,6 +166,25 @@ public class ParameterProcessingTest
         .containsExactlyInAnyOrder(getDefaultFilterFragmentNameList());
     Assertions.assertThat(bundle.getFilters()).extracting("label")
         .containsExactlyInAnyOrder(getDefaultFilterLabelList());
+
+    BaseFilter stateFilter = bundle.getFilters().stream().filter(f -> "state".equals(f.getFragmentName()))
+        .findFirst().orElse(null);
+    Assertions.assertThat(stateFilter).isNotNull();
+    BaseFilter[] stateFilters = (BaseFilter[]) ReflectionTestUtils.getField(stateFilter, "filters");
+    Assertions.assertThat(stateFilters).extracting("elasticSearchField").containsExactlyInAnyOrder(
+        ESFieldConsts.FIELD_TITLE_SEARCH_WORD, ESFieldConsts.FIELD_DESCRIPTION_SEARCH_WORD,
+        ESFieldConsts.FIELD_TAGS_SEARCH, ESFieldConsts.FIELD_CONTRIBUTOR_ID_RAW,
+        ESFieldConsts.FIELD_GEOCODING_URI_RAW, ESFieldConsts.FIELD_GEOCODING_TEXT, ESFieldConsts.BOUNDINGBOX);
+
+    BaseFilter showcaseTypeFilter = bundle.getFilters().stream()
+        .filter(f -> "showcase_types".equals(f.getFragmentName())).findFirst().orElse(null);
+    Assertions.assertThat(showcaseTypeFilter).isNotNull();
+    BaseFilter[] showcaseTypeFilters =
+        (BaseFilter[]) ReflectionTestUtils.getField(showcaseTypeFilter, "filters");
+    Assertions.assertThat(showcaseTypeFilters).extracting("elasticSearchField").containsExactlyInAnyOrder(
+        ESFieldConsts.FIELD_PRIMARY_SHOWCASE_TYPE, ESFieldConsts.FIELD_ADDITIONAL_SHOWCASE_TYPE);
+    Assertions.assertThat(showcaseTypeFilters).extracting("label").containsExactlyInAnyOrder(
+        "concept", "concept");
   }
 
   /**

@@ -9,12 +9,25 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Constraint(validatedBy = GeoJSONPolygonValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD })
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GeoJSONPolygon {
+public @interface GeoJSONPolygon
+{
+  /**
+   * the validation message.
+   * @return
+   */
   String message();
-  
+
+  /**
+   * the groups.
+   * @return
+   */
   Class<?>[] groups() default { };
-  
+
+  /**
+   * the payload.
+   * @return
+   */
   Class<? extends Payload>[] payload() default {};
 }

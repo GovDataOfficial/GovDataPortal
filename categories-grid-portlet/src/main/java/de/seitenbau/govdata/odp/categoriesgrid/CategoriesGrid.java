@@ -76,12 +76,14 @@ public class CategoriesGrid
 
   private MultiVMPool multiVMPool;
 
+  @Autowired
   private GovDataNavigation govDataNavigation;
 
   private MultiVMPoolServiceTracker multiVMPoolTracker;
 
   private boolean clusteredCacheAvailable = true;
 
+  @Autowired
   private CategoryCache categoryCache;
 
   /**
@@ -247,23 +249,6 @@ public class CategoriesGrid
     LOG.trace(method + "End");
     return result;
 
-  }
-
-  @Autowired
-  public void setGovDataNavigation(GovDataNavigation govDataNavigation)
-  {
-    this.govDataNavigation = govDataNavigation;
-  }
-
-  /**
-   * Sets the categoryCache.
-   * 
-   * @param categoryCache the categoryCache to set
-   */
-  @Autowired
-  public void setCategoryCache(CategoryCache categoryCache)
-  {
-    this.categoryCache = categoryCache;
   }
 
 }

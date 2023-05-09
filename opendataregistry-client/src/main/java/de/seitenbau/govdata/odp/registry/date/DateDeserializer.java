@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,9 +58,8 @@ public class DateDeserializer extends StdDeserializer<Date>
           return result;
         }
       }
-      LOG.debug("Unparseable date: '" + dateString + "'. Supported formats: "
-          + Arrays.toString(
-              ArrayUtils.addAll(DateUtil.DEFAULT_DATE_FORMATS, ADDITIONAL_DATE_FORMATS)));
+      LOG.debug("Unparseable date: '{}'. Supported formats: {}", dateString,
+          Arrays.toString(ADDITIONAL_DATE_FORMATS));
     }
 
     return result;

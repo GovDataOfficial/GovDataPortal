@@ -4,6 +4,7 @@ import static de.seitenbau.govdata.edit.constants.EditCommonConstants.DEFAULT_CO
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,8 +138,13 @@ public class ShowcaseViewModel implements Serializable
    * Parse values from selected fields and map them to existing entity-Ids
    * @throws IllegalAccessException
    * @throws InstantiationException
+   * @throws SecurityException
+   * @throws NoSuchMethodException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
    */
-  public void updateModel() throws InstantiationException, IllegalAccessException
+  public void updateModel() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+      InvocationTargetException, NoSuchMethodException, SecurityException
   {
     updateModel(this);
   }
@@ -149,9 +155,14 @@ public class ShowcaseViewModel implements Serializable
    * Parse values from selected fields and map them to existing entity-Ids
    * @throws IllegalAccessException
    * @throws InstantiationException
+   * @throws SecurityException
+   * @throws NoSuchMethodException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
    */
   public void updateModel(ShowcaseViewModel modelToUpdate)
-      throws InstantiationException, IllegalAccessException
+      throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+      InvocationTargetException, NoSuchMethodException, SecurityException
   {
     setInEditing(false);
 

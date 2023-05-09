@@ -22,6 +22,7 @@ package de.seitenbau.govdata.developerscorner;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -101,7 +102,7 @@ public class DevelopersCornerController
     {
       endpoints.add(SparqlEndpoint.builder().type(entry.getKey())
           .name(messageSource.getMessage("od.sparql.query.endpoint.name." + entry.getKey(),
-              ArrayUtils.EMPTY_OBJECT_ARRAY, null))
+              ArrayUtils.EMPTY_OBJECT_ARRAY, Locale.getDefault()))
           .url(entry.getValue()).build());
     }
     model.addAttribute("fusekiEndpoints", endpoints);

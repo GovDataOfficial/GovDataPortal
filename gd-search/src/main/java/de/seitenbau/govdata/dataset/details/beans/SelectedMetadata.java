@@ -73,7 +73,7 @@ public class SelectedMetadata implements ISelectedObject
   /**
    * The comments.
    */
-  private List<MetadataCommentWrapper> comments;
+  private List<MetadataCommentWrapperExt> comments;
 
   /**
    * The metadata contact.

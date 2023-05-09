@@ -12,6 +12,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import de.seitenbau.govdata.comparator.CategoriesTitleComparator;
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,7 +64,7 @@ public class CategoryCache extends BaseRegistryClientCache
     }
 
     log.trace(method + "End");
-    return categoryMap;
+    return new HashMap<String, Category>(categoryMap);
   }
 
   /**
@@ -89,7 +90,7 @@ public class CategoryCache extends BaseRegistryClientCache
     }
 
     log.trace(method + "End");
-    return categoriesSortedByTitle;
+    return GovDataCollectionUtils.getCopyOfList(categoriesSortedByTitle);
   }
 
   private List<Category> getCategories()
@@ -115,6 +116,6 @@ public class CategoryCache extends BaseRegistryClientCache
     cacheUpdated();
 
     log.trace(method + "End");
-    return categories;
+    return GovDataCollectionUtils.getCopyOfList(categories);
   }
 }

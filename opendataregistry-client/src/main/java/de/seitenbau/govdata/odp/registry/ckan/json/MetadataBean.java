@@ -39,7 +39,6 @@ import lombok.Data;
 /**
  * Class for a CKAN dataset.
  * 
- * @author sim
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

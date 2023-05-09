@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.fhg.fokus.odp</groupId>
-    <version>5.12.0</version>
+    <version>5.13.0</version>
   </parent>
   <artifactId>boxes-portlet</artifactId>
   <packaging>war</packaging>
@@ -13,6 +13,9 @@
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
   </build>
+  <properties>
+    <spotbugs.excludeFilterFile>${basedir}/src/main/plugin-config/spotbugs-exclude.xml</spotbugs.excludeFilterFile>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>javax.faces</groupId>

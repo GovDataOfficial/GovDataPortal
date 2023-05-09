@@ -48,10 +48,13 @@ public class GovDataSearchIndexWriter implements IndexWriter
 {
   private static final Locale LOCALE_USED = Locale.GERMANY;
 
+  @Inject
   private IndexQueueAdapterServiceRESTResource indexClient;
 
+  @Inject
   private SearchService searchService;
-  
+
+  @Inject
   private FilterProxy filterProxy;
   
   private String indexName;
@@ -336,24 +339,6 @@ public class GovDataSearchIndexWriter implements IndexWriter
   private void throwOnDeletingExcpetion(String uid, Throwable cause) throws SearchException
   {
     throw new SearchException("Deleting document uid=" + uid + " failed.", cause);
-  }
-
-  @Inject
-  public void setIndexClient(IndexQueueAdapterServiceRESTResource indexClient)
-  {
-    this.indexClient = indexClient;
-  }
-
-  @Inject
-  public void setSearchService(SearchService searchService)
-  {
-    this.searchService = searchService;
-  }
-
-  @Inject
-  public void setFilterProxy(FilterProxy filterProxy)
-  {
-    this.filterProxy = filterProxy;
   }
 
   @Value(SearchConsts.CONFIG_ELASTICSEARCH_LIFERAY_INDEX_NAME)

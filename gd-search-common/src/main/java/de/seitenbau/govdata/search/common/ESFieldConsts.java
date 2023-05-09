@@ -1,5 +1,6 @@
 package de.seitenbau.govdata.search.common;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -179,35 +180,41 @@ public abstract class ESFieldConsts
   /**
    * Map with available facets.
    */
-  public static final Map<String, String> FACET_MAP = new HashMap<>();
+  public static final Map<String, String> FACET_MAP;
 
   /**
    * Map with available extended search facets.
    */
-  public static final Map<String, String> EXT_SEARCH_MAP = new HashMap<>();
+  public static final Map<String, String> EXT_SEARCH_MAP;
 
   /**
    * Map with available boolean facets.
    */
-  public static final Map<String, String> BOOL_FACET_MAP = new HashMap<>();
+  public static final Map<String, String> BOOL_FACET_MAP;
 
   static
   {
-    FACET_MAP.put(SearchConsts.FACET_GROUPS, FIELD_METADATA_GROUPS);
-    FACET_MAP.put(SearchConsts.FACET_TAGS, FIELD_TAGS_FACET);
-    FACET_MAP.put(SearchConsts.FACET_FORMAT, FIELD_METADATA_RESOURCES_FORMAT);
-    FACET_MAP.put(SearchConsts.FACET_PLATFORMS, FIELD_SHOWCASE_PLATFORM);
-    FACET_MAP.put(SearchConsts.FACET_SHOWCASE_TYPE, FIELD_SHOWCASE_TYPES_VALUE);
-    FACET_MAP.put(SearchConsts.FACET_LICENCE, FIELD_METADATA_RESOURCES_LICENSES);
-    FACET_MAP.put(SearchConsts.FACET_SOURCEPORTAL, SearchConsts.FIELD_OWNER_ORG);
+    Map<String, String> facetMapBuilder = new HashMap<>();
+    facetMapBuilder.put(SearchConsts.FACET_GROUPS, FIELD_METADATA_GROUPS);
+    facetMapBuilder.put(SearchConsts.FACET_TAGS, FIELD_TAGS_FACET);
+    facetMapBuilder.put(SearchConsts.FACET_FORMAT, FIELD_METADATA_RESOURCES_FORMAT);
+    facetMapBuilder.put(SearchConsts.FACET_PLATFORMS, FIELD_SHOWCASE_PLATFORM);
+    facetMapBuilder.put(SearchConsts.FACET_SHOWCASE_TYPE, FIELD_SHOWCASE_TYPES_VALUE);
+    facetMapBuilder.put(SearchConsts.FACET_LICENCE, FIELD_METADATA_RESOURCES_LICENSES);
+    facetMapBuilder.put(SearchConsts.FACET_SOURCEPORTAL, SearchConsts.FIELD_OWNER_ORG);
+    FACET_MAP = Collections.unmodifiableMap(facetMapBuilder);
 
-    EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_TITLE, FIELD_TITLE);
-    EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_NOTES, FIELD_DESCRIPTION);
-    EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_PUBLISHER, FIELD_METADATA_PUBLISHER_NAME);
-    EXT_SEARCH_MAP.put(SearchConsts.FILTER_EXT_MAINTAINER, FIELD_METADATA_MAINTAINER);
+    Map<String, String> extSearchMapBuilder = new HashMap<>();
+    extSearchMapBuilder.put(SearchConsts.FILTER_EXT_TITLE, FIELD_TITLE);
+    extSearchMapBuilder.put(SearchConsts.FILTER_EXT_NOTES, FIELD_DESCRIPTION);
+    extSearchMapBuilder.put(SearchConsts.FILTER_EXT_PUBLISHER, FIELD_METADATA_PUBLISHER_NAME);
+    extSearchMapBuilder.put(SearchConsts.FILTER_EXT_MAINTAINER, FIELD_METADATA_MAINTAINER);
+    EXT_SEARCH_MAP = Collections.unmodifiableMap(extSearchMapBuilder);
 
-    BOOL_FACET_MAP.put(SearchConsts.FACET_HAS_OPEN, HAS_OPEN);
-    BOOL_FACET_MAP.put(SearchConsts.FACET_HAS_CLOSED, HAS_CLOSED);
-    BOOL_FACET_MAP.put(SearchConsts.FACET_HAS_DATA_SERVICE, HAS_DATASERVICE);
+    Map<String, String> boolFacetMapBuilder = new HashMap<>();
+    boolFacetMapBuilder.put(SearchConsts.FACET_HAS_OPEN, HAS_OPEN);
+    boolFacetMapBuilder.put(SearchConsts.FACET_HAS_CLOSED, HAS_CLOSED);
+    boolFacetMapBuilder.put(SearchConsts.FACET_HAS_DATA_SERVICE, HAS_DATASERVICE);
+    BOOL_FACET_MAP = Collections.unmodifiableMap(boolFacetMapBuilder);
   }
 }

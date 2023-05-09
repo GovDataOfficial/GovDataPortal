@@ -1,6 +1,7 @@
 package de.seitenbau.govdata.developerscorner;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -57,9 +58,9 @@ public class DevelopersCornerControllerTest
     Mockito.when(props.get("fusekiSparqlEndpoint")).thenReturn(FUSEKI_SPARQL_ENDPOINT);
     // message source
     Mockito.when(messageSource.getMessage("od.sparql.query.endpoint.name." + SPARQL_DATASET_TYPE_METADATA,
-        ArrayUtils.EMPTY_OBJECT_ARRAY, null)).thenReturn(SPARQL_ENDPOINT_NAME);
+        ArrayUtils.EMPTY_OBJECT_ARRAY, Locale.getDefault())).thenReturn(SPARQL_ENDPOINT_NAME);
     Mockito.when(messageSource.getMessage("od.sparql.query.endpoint.name." + SPARQL_DATASET_TYPE_MQA,
-        ArrayUtils.EMPTY_OBJECT_ARRAY, null)).thenReturn(SPARQL_SHACL_ENDPOINT_NAME);
+        ArrayUtils.EMPTY_OBJECT_ARRAY, Locale.getDefault())).thenReturn(SPARQL_SHACL_ENDPOINT_NAME);
   }
 
   @After

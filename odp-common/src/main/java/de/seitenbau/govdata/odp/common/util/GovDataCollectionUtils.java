@@ -60,4 +60,21 @@ public final class GovDataCollectionUtils
   {
     return collectionToStream(toConvert).map(String::toLowerCase).collect(Collectors.toList());
   }
+
+  /**
+   * Gets a copy of a list.
+   * 
+   * @param list to cpoy
+   * @return copy of the list
+   */
+  public static <T> List<T> getCopyOfList(List<T> list)
+  {
+    if (list == null)
+    {
+      return null;
+    }
+
+    return collectionToStream(list).collect(Collectors.toList());
+
+  }
 }

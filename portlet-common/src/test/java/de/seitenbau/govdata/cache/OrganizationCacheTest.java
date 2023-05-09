@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.impl.OrganizationImpl;
@@ -96,12 +97,16 @@ public class OrganizationCacheTest
 
     /* execute */
     Map<String, Organization> result = target.getOrganizationMap();
+    Object cachedObject = ReflectionTestUtils.getField(target, "organizationMap");
     Map<String, Organization> resultCached = target.getOrganizationMap();
+    Object cachedObject2 = ReflectionTestUtils.getField(target, "organizationMap");
 
     /* verify */
     Assertions.assertThat(result).hasSize(organizationList.size());
     Assertions.assertThat(result.values()).containsOnly(organizationList.toArray(new Organization[0]));
-    Assertions.assertThat(result == resultCached).describedAs("Same objects").isTrue();
+    Assertions.assertThat(cachedObject).isNotNull().isSameAs(cachedObject2);
+    Assertions.assertThat(resultCached).isNotNull().isNotSameAs(result);
+    Assertions.assertThat(resultCached).containsExactlyInAnyOrderEntriesOf(result);
   }
 
   @Test

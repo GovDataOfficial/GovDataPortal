@@ -1,0 +1,16 @@
+<FindBugsFilter>
+  <Match>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Or>
+    <Or>
+      <Package name="~de\.seitenbau\.govdata\..*\.model.*" />
+    </Or>
+  </Match>
+  <Match>
+    <Class name="~de\.seitenbau\.govdata\.edit\.gui\.controller\.EditController" />
+    <Method name="submitForm" />
+    <Bug pattern="DLS_DEAD_LOCAL_STORE" />
+  </Match>
+</FindBugsFilter>

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.util.GeoStateParser;
 import de.seitenbau.govdata.search.util.states.StateContainer;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,6 @@ public class GeoStateCache
     }
 
     log.trace(method + "End");
-    return stateList;
+    return GovDataCollectionUtils.getCopyOfList(stateList);
   }
 }

@@ -47,11 +47,18 @@ public interface Licence
   String getUrl();
 
   /**
-   * Gets the other.
+   * Gets the od conformance.
    * 
-   * @return the other
+   * @return the od conformancer
    */
-  String getOther();
+  String getOdConformance();
+
+  /**
+   * Gets the osd conformance.
+   * 
+   * @return the osd conformance
+   */
+  String getOsdConformance();
 
   /**
    * True if the license is included in the current version of DCAT-AP.de
@@ -61,69 +68,10 @@ public interface Licence
   boolean isActive();
 
   /**
-   * Checks if is domain content.
-   * 
-   * @return true, if is domain content
-   */
-  boolean isDomainContent();
-
-  /**
-   * Checks if is domain data.
-   * 
-   * @return true, if is domain data
-   */
-  boolean isDomainData();
-
-  /**
-   * Checks if is domain software.
-   * 
-   * @return true, if is domain software
-   */
-  boolean isDomainSoftware();
-
-  /**
-   * Checks if is okd compliant.
-   * 
-   * @return true, if is okd compliant
-   */
-  boolean isOkdCompliant();
-
-  /**
-   * Checks if is osi compliant.
-   * 
-   * @return true, if is osi compliant
-   */
-  boolean isOsiCompliant();
-
-  /**
    * Checks if is open.
    * 
    * @return true, if is open
    */
   boolean isOpen();
-
-  /**
-   * Sets the other.
-   * 
-   * @param other
-   *            the new other
-   */
-  void setOther(String other);
-
-  /**
-   * Sets the title.
-   * 
-   * @param title
-   *            the new title
-   */
-  void setTitle(String title);
-
-  /**
-   * Sets the url.
-   * 
-   * @param url
-   *            the new url
-   */
-  void setUrl(String url);
 
 }

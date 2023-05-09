@@ -11,13 +11,13 @@ public abstract class FusekiQueryTemplates
    * Delete Query
    * %s: Insert URI of the dataset
    */
-  private static final String DELETE_DATASET_QUERY = "PREFIX dct: <http://purl.org/dc/terms/>\n"
-      + "\n"
-      + "DELETE { ?s ?p ?o }\n"
-      + "WHERE {\n"
-      + "  <%s> (<>|!<>)* ?s . \n"
-      + "  FILTER NOT EXISTS { <%s> <http://purl.org/dc/terms/publisher> ?s }\n"
-      + "  ?s ?p ?o .\n"
+  private static final String DELETE_DATASET_QUERY = "PREFIX dct: <http://purl.org/dc/terms/>%n"
+      + "%n"
+      + "DELETE { ?s ?p ?o }%n"
+      + "WHERE {%n"
+      + "  <%s> (<>|!<>)* ?s . %n"
+      + "  FILTER NOT EXISTS { <%s> <http://purl.org/dc/terms/publisher> ?s }%n"
+      + "  ?s ?p ?o .%n"
       + "}";
 
   /**
@@ -25,12 +25,12 @@ public abstract class FusekiQueryTemplates
    * @param %s Insert URI of the dataset
    * @param %s ID of the organization
    */
-  private static final String DELETE_MQA_DATASET_QUERY = "DELETE { ?s ?p ?o }\n"
-      + "WHERE {\n"
-      + "  ?r <http://www.w3.org/ns/dqv#computedOn> <%s> .\n"
-      + "  ?r (<>|!<>)* ?s .\n"
-      + "  ?s (<>|!<>)* ?o . \n"
-      + "  ?s ?p ?o\n"
+  private static final String DELETE_MQA_DATASET_QUERY = "DELETE { ?s ?p ?o }%n"
+      + "WHERE {%n"
+      + "  ?r <http://www.w3.org/ns/dqv#computedOn> <%s> .%n"
+      + "  ?r (<>|!<>)* ?s .%n"
+      + "  ?s (<>|!<>)* ?o . %n"
+      + "  ?s ?p ?o%n"
       + "}";
 
   /**

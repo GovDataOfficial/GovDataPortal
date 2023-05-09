@@ -5,6 +5,8 @@ import java.util.Date;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
+import de.seitenbau.govdata.date.DateUtil;
+
 public class TemporalCoverageTo extends BaseFilter
 {
   private Date dateTo;
@@ -18,20 +20,20 @@ public class TemporalCoverageTo extends BaseFilter
   public TemporalCoverageTo(String elasticSearchField, String filterFragmentName, Date dateTo)
   {
     super(elasticSearchField, filterFragmentName);
-    this.dateTo = dateTo;
+    this.dateTo = DateUtil.getCopyOfDate(dateTo);
   }
 
   @Override
   public QueryBuilder createFilter()
   {
     return QueryBuilders.boolQuery()
-        .must(QueryBuilders.rangeQuery(elasticSearchField).lte(simpleDateFormat.format(dateTo)));
+        .must(QueryBuilders.rangeQuery(getElasticSearchField()).lte(getSimpleDateFormat().format(dateTo)));
   }
 
   @Override
   public String getLabel()
   {
-    return labelDateFormat.format(dateTo);
+    return getLabelDateFormat().format(dateTo);
   }
 
 }

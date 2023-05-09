@@ -64,6 +64,7 @@ import de.seitenbau.govdata.edit.model.Image;
 import de.seitenbau.govdata.edit.model.ShowcaseViewModel;
 import de.seitenbau.govdata.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
 import de.seitenbau.govdata.messages.MessageType;
+import de.seitenbau.govdata.messages.MessageKey;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.util.ImageUtil;
 import de.seitenbau.govdata.permission.PermissionUtil;
@@ -279,26 +280,22 @@ public class EditShowcaseController
         // Update search index
         updateShowcaseInSearchIndex(showcaseId);
 
-        response.setRenderParameter(MESSAGE_TYPE, MessageType.SUCCESS.toString());
-        response.setRenderParameter(MESSAGE, "od.editform.showcase.save.success");
+        addMessagetoResponse(response, MessageType.SUCCESS, MessageKey.SHOWCASE_SAVE_SUCCESS);
       }
       catch (SystemException | RestCallFailedException e)
       {
-        response.setRenderParameter(MESSAGE_TYPE, MessageType.ERROR.toString());
-        response.setRenderParameter(MESSAGE, "od.editform.showcase.save.error");
+        addMessagetoResponse(response, MessageType.ERROR, MessageKey.SHOWCASE_SAVE_ERROR);
         log.warn("Cannot save or/and load dataset!", e);
       }
       catch (ValidationException e)
       {
-        response.setRenderParameter(MESSAGE_TYPE, MessageType.WARNING.toString());
-        response.setRenderParameter(MESSAGE, "od.editform.showcase.save.warning");
+        addMessagetoResponse(response, MessageType.WARNING, MessageKey.SHOWCASE_SAVE_WARNING);
         log.debug("Form has validation errors: " + result.getAllErrors());
       }
     }
     else
     {
-      response.setRenderParameter(MESSAGE_TYPE, MessageType.WARNING.toString());
-      response.setRenderParameter(MESSAGE, "od.editform.showcase.save.warning");
+      addMessagetoResponse(response, MessageType.WARNING, MessageKey.SHOWCASE_SAVE_WARNING);
       log.debug("Form has errors: " + result.getAllErrors());
     }
   }
@@ -399,19 +396,28 @@ public class EditShowcaseController
       if (ArrayUtils.isNotEmpty(imageByteArray))
       {
         Files.write(tmpImageFile, imageByteArray);
-        image.setTmpFileName(tmpImageFile.getFileName().toString());
+
+        Path fileName = tmpImageFile.getFileName();
+        if (fileName != null)
+        {
+          image.setTmpFileName(fileName.toString());
+        }
+        else
+        {
+          addMessagetoResponse(response, MessageType.ERROR, MessageKey.SHOWCASE_IMAGE_UPLOAD_ERROR);
+          log.warn("Could not upload the image because there was no filename");
+        }
+
       }
       else
       {
-        response.setRenderParameter(MESSAGE_TYPE, MessageType.ERROR.toString());
-        response.setRenderParameter(MESSAGE, "od.editform.showcase.image.upload.error");
+        addMessagetoResponse(response, MessageType.ERROR, MessageKey.SHOWCASE_IMAGE_UPLOAD_ERROR);
         log.warn("Received base64 encoded string could not converted to a byte array!");
       }
     }
     catch (IOException e)
     {
-      response.setRenderParameter(MESSAGE_TYPE, MessageType.ERROR.toString());
-      response.setRenderParameter(MESSAGE, "od.editform.showcase.image.upload.error");
+      addMessagetoResponse(response, MessageType.ERROR, MessageKey.SHOWCASE_IMAGE_UPLOAD_ERROR);
       log.warn("Error while updating image preview! Details: {}", e.getMessage());
     }
   }
@@ -648,5 +654,11 @@ public class EditShowcaseController
     resourceURL.setResourceID(resourceId);
     resourceURL.setParameter(REQUEST_PARAM_FILENAME, fileName);
     return resourceURL.toString();
+  }
+
+  private void addMessagetoResponse(ActionResponse response, MessageType messageType, MessageKey messageKey)
+  {
+    response.setRenderParameter(MESSAGE_TYPE, messageType.toString());
+    response.setRenderParameter(MESSAGE, messageKey.toString());
   }
 }

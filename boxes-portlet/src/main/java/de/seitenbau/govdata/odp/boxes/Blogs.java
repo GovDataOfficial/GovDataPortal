@@ -37,6 +37,7 @@ import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.portal.kernel.exception.SystemException;
 
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
 
 /**
@@ -155,17 +156,7 @@ public class Blogs extends BaseBoxesBean<BlogsEntry>
    */
   public List<BlogsEntry> getBlogs()
   {
-    return blogs;
-  }
-
-  /**
-   * Sets the blogs.
-   * 
-   * @param blogs the blogs.
-   */
-  public void setBlogs(List<BlogsEntry> blogs)
-  {
-    this.blogs = blogs;
+    return GovDataCollectionUtils.getCopyOfList(blogs);
   }
 
 }

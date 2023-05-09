@@ -107,7 +107,7 @@ public class DisplayStateCache extends BaseCache
         .forEach(s -> s.setUrl(createLinkUrl(s.getStateKey())));
 
     log.trace(method + "End");
-    return stateList;
+    return GovDataCollectionUtils.getCopyOfList(stateList);
   }
 
   private String createLinkUrl(String stateKey)

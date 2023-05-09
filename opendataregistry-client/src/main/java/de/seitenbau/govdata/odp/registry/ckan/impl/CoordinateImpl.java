@@ -27,10 +27,11 @@ import java.io.Serializable;
 import de.seitenbau.govdata.odp.registry.model.Coordinate;
 
 /**
- * @author sim
+ * Implementation for the interface {@link Coordinate}.
  * 
  */
-public class CoordinateImpl implements Coordinate, Serializable {
+public class CoordinateImpl implements Coordinate, Serializable
+{
 
     /**
      * 
@@ -41,7 +42,14 @@ public class CoordinateImpl implements Coordinate, Serializable {
 
     private double y;
 
-    public CoordinateImpl(double x, double y) {
+    /**
+     * Constructor with coordinates.
+     * 
+     * @param x
+     * @param y
+     */
+    public CoordinateImpl(double x, double y)
+    {
         this.x = x;
         this.y = y;
     }
@@ -52,7 +60,8 @@ public class CoordinateImpl implements Coordinate, Serializable {
      * @see de.seitenbau.govdata.odp.registry.model.Coordinate#getX()
      */
     @Override
-    public double getX() {
+    public double getX()
+    {
         return x;
     }
 
@@ -62,7 +71,8 @@ public class CoordinateImpl implements Coordinate, Serializable {
      * @see de.seitenbau.govdata.odp.registry.model.Coordinate#getY()
      */
     @Override
-    public double getY() {
+    public double getY()
+    {
         return y;
     }
 

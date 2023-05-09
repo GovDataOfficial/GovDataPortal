@@ -14,6 +14,10 @@ import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
 import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 
+/**
+ * Note: this class has a natural ordering that is inconsistent with equals.
+ *
+ */
 public class OrganizationImpl implements Organization, Serializable
 {
   private static final long serialVersionUID = -4316531700498190834L;

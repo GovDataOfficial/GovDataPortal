@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import de.seitenbau.govdata.odp.common.cache.BaseCache;
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.adapter.SearchService;
 
 /**
@@ -57,7 +58,8 @@ public class ResourceFormatCache extends BaseCache
     }
 
     log.trace(method + "End");
-    return formats;
+
+    return GovDataCollectionUtils.getCopyOfList(formats);
   }
 
   /**
@@ -85,6 +87,6 @@ public class ResourceFormatCache extends BaseCache
     }
 
     log.trace(method + "End");
-    return formatsSorted;
+    return GovDataCollectionUtils.getCopyOfList(formatsSorted);
   }
 }

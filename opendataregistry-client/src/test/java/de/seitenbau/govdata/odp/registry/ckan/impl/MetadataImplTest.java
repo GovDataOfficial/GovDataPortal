@@ -35,6 +35,7 @@ import de.seitenbau.govdata.odp.registry.ckan.json.MetadataBean;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.odp.registry.model.Contact;
 import de.seitenbau.govdata.odp.registry.model.Licence;
+import de.seitenbau.govdata.odp.registry.model.LicenceConformance;
 import de.seitenbau.govdata.odp.registry.model.MetadataEnumType;
 import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
 import de.seitenbau.govdata.odp.registry.model.MetadataStringExtraFields;
@@ -70,7 +71,7 @@ public class MetadataImplTest {
   public void setup() throws Exception
   {
     // Setup odrClient Mock
-    expectListLicences(true);
+    expectListLicences(LicenceConformance.APPROVED.getValue());
   }
 
   @Test
@@ -420,7 +421,7 @@ public class MetadataImplTest {
   public void isOpen_with_resources_and_licence_open() throws IOException, ParseException
   {
     /* prepare */
-    expectListLicences(true);
+    expectListLicences(LicenceConformance.APPROVED.getValue());
     MetadataImpl target = createMetadataImplFromJson();
     assertThat(target.getResources()).isNotEmpty();
 
@@ -435,7 +436,7 @@ public class MetadataImplTest {
   public void isOpen_with_resources_and_licence_open_with_unknown_licence() throws IOException, ParseException
   {
     /* prepare */
-    expectListLicences(true);
+    expectListLicences(LicenceConformance.APPROVED.getValue());
     MetadataImpl target = createMetadataImplFromJson("/dcatap-dataset-only-unknown-licence.json");
     assertThat(target.getResources()).isNotEmpty();
 
@@ -450,7 +451,7 @@ public class MetadataImplTest {
   public void isOpen_with_resources_and_licence_closed() throws IOException, ParseException
   {
     /* prepare */
-    expectListLicences(false);
+    expectListLicences(LicenceConformance.NOTREVIEWED.getValue());
     MetadataImpl target = createMetadataImplFromJson();
     assertThat(target.getResources()).isNotEmpty();
 
@@ -491,12 +492,12 @@ public class MetadataImplTest {
     assertThat(result).isFalse();
   }
 
-  private void expectListLicences(boolean isOpen)
+  private void expectListLicences(String odConformance)
   {
     List<Licence> licenceList = new ArrayList<>();
     LicenceBean licenceBean = new LicenceBean();
     licenceBean.setId("http://dcat-ap.de/def/licenses/dl-by-de/2.0");
-    licenceBean.set_okd_compliant(isOpen);
+    licenceBean.setOd_conformance(odConformance);
     licenceList.add(new LicenceImpl(licenceBean));
     when(odrClient.listLicenses()).thenReturn(licenceList);
   }

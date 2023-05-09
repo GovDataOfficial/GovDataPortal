@@ -3,6 +3,7 @@ package de.seitenbau.govdata.search.gui.controller;
 import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SHOWROOM_PAGE;
 import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -107,7 +108,7 @@ public class FeaturedShowcaseController extends AbstractBaseController
       if (selectedShowcase.getShowcase().isPrivate())
       {
         model.addAttribute(MODEL_ERROR_MSG_KEY, messageSource.getMessage(
-            "od.featured.showcase.error.is.private", new Object[0], null));
+            "od.featured.showcase.error.is.private", new Object[0], Locale.getDefault()));
         return "featuredshowcaseerror";
       }
     }
@@ -116,7 +117,7 @@ public class FeaturedShowcaseController extends AbstractBaseController
       log.warn(method + "Problem with selected showcase-ID " + selectedFeaturedShowcaseId + ": "
           + ex.getMessage());
       model.addAttribute(MODEL_ERROR_MSG_KEY, messageSource.getMessage(
-          "od.featured.showcase.error.not.found", new Object[0], null));
+          "od.featured.showcase.error.not.found", new Object[0], Locale.getDefault()));
       return "featuredshowcaseerror";
     }
 

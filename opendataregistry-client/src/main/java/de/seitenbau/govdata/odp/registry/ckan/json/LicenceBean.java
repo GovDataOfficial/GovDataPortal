@@ -49,23 +49,8 @@ public class LicenceBean implements Serializable
   private String status;
 
   @JsonProperty
-  private String maintainer;
+  private String od_conformance;
 
   @JsonProperty
-  private String family;
-
-  @JsonProperty
-  private boolean domain_content;
-
-  @JsonProperty
-  private boolean domain_data;
-
-  @JsonProperty
-  private boolean domain_software;
-
-  @JsonProperty
-  private boolean is_okd_compliant;
-
-  @JsonProperty
-  private boolean is_osi_compliant;
+  private String osd_conformance;
 }

@@ -99,7 +99,7 @@ public final class ParameterProcessing
       try
       {
         preparedParameters.setBoundingBox(new BoundingBox(ESFieldConsts.BOUNDINGBOX,
-            QueryParamNames.PARAM_BOUNDINGBOX, boundingBoxParam, ShapeRelation.INTERSECTS));
+            QueryParamNames.PARAM_BOUNDINGBOX, boundingBoxParam));
       }
       catch (Exception e)
       {
@@ -365,7 +365,8 @@ public final class ParameterProcessing
                 BoundingBox mapFilter = new BoundingBox(ESFieldConsts.BOUNDINGBOX,
                     QueryParamNames.PARAM_BOUNDINGBOX, state.getBoundingBox(), ShapeRelation.WITHIN);
                 bundle.setBoostSpatialRelevance(true);
-                ArrayUtils.add(filters, mapFilter);
+                bundle.setSpatialCenter(mapFilter.getCenter());
+                filters = ArrayUtils.add(filters, mapFilter);
               }
               bundle.addFilter(new OrFilter(key, filters));
               bundle.setForceRelevanceSort(true);

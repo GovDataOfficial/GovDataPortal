@@ -2,6 +2,7 @@ package de.seitenbau.govdata.edit.model;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public final class ModelUtil
   {
     // private
   }
+  
   /**
    * Merges values from the database and values from the HTML form together. Keeps objects from DB
    * if the content is equal.
@@ -37,10 +39,15 @@ public final class ModelUtil
    * @return the merged list
    * @throws InstantiationException
    * @throws IllegalAccessException
+   * @throws SecurityException
+   * @throws NoSuchMethodException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
    */
   public static <T extends ISimpleDbRelationValue> List<T> mergeObjectsFromDb(List<String> selectedValues,
       List<T> objectsInDb, Class<T> clazz)
-      throws InstantiationException, IllegalAccessException
+      throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+      InvocationTargetException, NoSuchMethodException, SecurityException
   {
     List<T> result = new ArrayList<>();
     if (selectedValues != null)
@@ -62,7 +69,7 @@ public final class ModelUtil
         }
         if (!exists)
         {
-          T toAdd = clazz.newInstance();
+          T toAdd = clazz.getDeclaredConstructor().newInstance();
           toAdd.setName(s);
           result.add(toAdd);
         }

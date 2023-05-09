@@ -18,46 +18,58 @@
  */
 package de.seitenbau.govdata.odp.registry.ckan.impl;
 
+import java.io.Serializable;
+
 import de.seitenbau.govdata.odp.registry.ckan.json.TagBean;
 import de.seitenbau.govdata.odp.registry.model.Tag;
 
-import java.io.Serializable;
-
 /**
- * @author sim
+ * Implementation for the interface {@link Tag}.
  * 
  */
-public class TagImpl implements Tag, Serializable {
+public class TagImpl implements Tag, Serializable
+{
     private static final long serialVersionUID = -2353397328621277220L;
 
     private TagBean tag;
 
     private long count;
 
-    public TagImpl(TagBean tag) {
+    /**
+     * Constructor with tag bean.
+     * 
+     * @param tag
+     */
+    public TagImpl(TagBean tag)
+    {
         this.tag = tag;
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return tag.getName();
     }
 
     @Override
-    public long getCount() {
+    public long getCount()
+    {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(long count)
+    {
         this.count = count;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription()
+    {
         return tag.getDisplay_name();
     }
 
-    public TagBean getBean() {
+    public TagBean getBean()
+    {
         return tag;
     }
 

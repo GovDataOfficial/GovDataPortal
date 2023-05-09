@@ -23,11 +23,11 @@
 package de.seitenbau.govdata.odp.registry.ckan.impl;
 
 import java.io.Serializable;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Objects;
 
 import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.model.Licence;
+import de.seitenbau.govdata.odp.registry.model.LicenceConformance;
 
 /**
  * The Class LicenceImpl.
@@ -40,8 +40,11 @@ public class LicenceImpl implements Licence, Serializable
 
   private final LicenceBean licence;
 
-  private String other;
-
+  /**
+   * Constructor with license bean.
+   * 
+   * @param licence the licence bean,
+   */
   public LicenceImpl(LicenceBean licence)
   {
     this.licence = licence;
@@ -66,96 +69,29 @@ public class LicenceImpl implements Licence, Serializable
   }
 
   @Override
-  public String getOther()
+  public String getOdConformance()
   {
-    return other;
+    return licence.getOd_conformance();
   }
 
   @Override
-  public boolean isActive() { return licence.getStatus().equals("active"); }
-
-  @Override
-  public void setOther(String other)
+  public String getOsdConformance()
   {
-    this.other = other;
-  }
-
-  public static Licence read(JsonNode licence)
-  {
-    LicenceBean bean = new LicenceBean();
-
-    if (licence != null)
-    {
-      JsonNode id = licence.get("license_id");
-      bean.setId(id != null ? id.textValue() : null);
-
-      // just mirror the id :-(
-      bean.setTitle(bean.getId());
-
-      JsonNode url = licence.get("license_url");
-      bean.setUrl(url != null ? url.textValue() : null);
-
-      // JsonNode is_free_to_use = licence.get("is_free_to_use");
-      // if (is_free_to_use != null) {
-      // bean.setIs_okd_compliant(is_free_to_use.getBooleanValue());
-      // }
-    }
-
-    LicenceImpl impl = new LicenceImpl(bean);
-    if (licence != null && licence.get("other") != null)
-    {
-      impl.setOther(licence.get("other").textValue());
-    }
-
-    return impl;
+    return licence.getOsd_conformance();
   }
 
   @Override
-  public void setTitle(String title)
+  public boolean isActive()
   {
-    licence.setTitle(title);
-  }
-
-  @Override
-  public boolean isDomainContent()
-  {
-    return licence.isDomain_content();
-  }
-
-  @Override
-  public boolean isDomainData()
-  {
-    return licence.isDomain_data();
-  }
-
-  @Override
-  public boolean isDomainSoftware()
-  {
-    return licence.isDomain_software();
-  }
-
-  @Override
-  public boolean isOkdCompliant()
-  {
-    return licence.is_okd_compliant();
-  }
-
-  @Override
-  public boolean isOsiCompliant()
-  {
-    return licence.is_osi_compliant();
+    return Objects.equals(licence.getStatus(), "active");
   }
 
   @Override
   public boolean isOpen()
   {
-    return isOkdCompliant() || isOsiCompliant();
-  }
-
-  @Override
-  public void setUrl(String url)
-  {
-    licence.setUrl(url);
+    return (getOdConformance() != null && getOdConformance().equals(LicenceConformance.APPROVED.getValue()))
+        || (getOsdConformance() != null
+            && getOsdConformance().equals(LicenceConformance.APPROVED.getValue()));
   }
 
 }

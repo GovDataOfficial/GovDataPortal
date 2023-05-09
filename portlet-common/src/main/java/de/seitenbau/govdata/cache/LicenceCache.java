@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.comparator.LicencesTitleComparator;
 
@@ -67,7 +68,7 @@ public class LicenceCache extends BaseRegistryClientCache
     }
 
     log.trace(method + "End");
-    return licenceMap;
+    return new HashMap<String, Licence>(licenceMap);
   }
 
   /**
@@ -85,7 +86,7 @@ public class LicenceCache extends BaseRegistryClientCache
           .collect(Collectors.toList());
     }
 
-    return activeLicenceMapSortedByTitle;
+    return GovDataCollectionUtils.getCopyOfList(activeLicenceMapSortedByTitle);
   }
 
   /**
@@ -111,7 +112,7 @@ public class LicenceCache extends BaseRegistryClientCache
     }
 
     log.trace(method + "End");
-    return licenceMapSortedByTitle;
+    return GovDataCollectionUtils.getCopyOfList(licenceMapSortedByTitle);
   }
 
   private List<Licence> getLicences()

@@ -100,8 +100,6 @@ public class ODRClientImpl implements ODRClient
 
   private String authorizationToken;
 
-  private StatusBean status;
-
   private static final ObjectMapper OM = new ObjectMapper();
 
   private static final ObjectNode ALL_FIELDS = OM.createObjectNode();
@@ -159,16 +157,7 @@ public class ODRClientImpl implements ODRClient
 
     ALL_FIELDS.put(JSON_FIELD_ALL_FIELDS, true);
 
-    LOG.trace("REST > calling action api 'status' with nothing");
-    long start = System.currentTimeMillis();
-    JsonNode node = action.status(OM.createObjectNode());
-    LOG.debug("/api/3/action/status_show: {}ms", System.currentTimeMillis()
-        - start);
-    LOG.trace("REST < returns: {}", node);
-    if (isSuccess(node))
-    {
-      status = convert(getResultObject(node), StatusBean.class);
-    }
+    getStatus();
   }
 
   /*
@@ -998,7 +987,18 @@ public class ODRClientImpl implements ODRClient
    */
   public StatusBean getStatus()
   {
-    return status;
+    StatusBean result = null;
+    LOG.trace("REST > calling action api 'status' with nothing");
+    long start = System.currentTimeMillis();
+    JsonNode node = action.status(OM.createObjectNode());
+    LOG.debug("/api/3/action/status_show: {}ms", System.currentTimeMillis()
+        - start);
+    LOG.trace("REST < returns: {}", node);
+    if (isSuccess(node))
+    {
+      result = convert(getResultObject(node), StatusBean.class);
+    }
+    return result;
   }
 
   private String getApiTokenFromUser(User user)

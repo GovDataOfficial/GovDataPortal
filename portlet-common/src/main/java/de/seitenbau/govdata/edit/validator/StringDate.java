@@ -9,16 +9,37 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Constraint(validatedBy = StringDateValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD })
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StringDate {
+public @interface StringDate
+{
+  /**
+   * the validation message.
+   * @return
+   */
   String message();
-  
+
+  /**
+   * the validation format.
+   * @return
+   */
   String format();
-  
+
+  /**
+   * the validation regex.
+   * @return
+   */
   String regex();
-  
+
+  /**
+   * the groups.
+   * @return
+   */
   Class<?>[] groups() default { };
-  
+
+  /**
+   * the payload.
+   * @return
+   */
   Class<? extends Payload>[] payload() default {};
 }

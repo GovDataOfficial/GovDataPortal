@@ -63,12 +63,13 @@ import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.common.api.PageableRequest;
 import de.seitenbau.govdata.common.api.PagedList;
 import de.seitenbau.govdata.common.api.SearchFilter;
+import de.seitenbau.govdata.common.client.impl.RestCallFailedException;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.dataset.details.beans.CurrentMetadataContact;
 import de.seitenbau.govdata.dataset.details.beans.CurrentUser;
 import de.seitenbau.govdata.dataset.details.beans.ISelectedObject;
-import de.seitenbau.govdata.dataset.details.beans.MetadataCommentWrapper;
+import de.seitenbau.govdata.dataset.details.beans.MetadataCommentWrapperExt;
 import de.seitenbau.govdata.dataset.details.beans.SelectedMetadata;
 import de.seitenbau.govdata.dataset.details.beans.SelectedShowcase;
 import de.seitenbau.govdata.db.api.ShowcaseResource;
@@ -128,6 +129,8 @@ public class MetadataDetailsController
   private static final String HTTP_STATUS_BAD_REQUEST = "400";
 
   private static final String HTTP_STATUS_NOT_FOUND = "404";
+
+  private static final String HTTP_STATUS_OK = "200";
 
   private static final String MODEL_KEY_COMMENTS_ENABLED = "commentsEnabled";
 
@@ -244,10 +247,14 @@ public class MetadataDetailsController
         model.addAttribute("selectedShowcase", selectedShowcase);
         return APP_VIEW_MODEL_NAME;
       }
-      catch (Exception ex)
+      catch (RestCallFailedException ex)
       {
         // Cannot find a Showcase for the id. Continue.
         log.info("Did not find a Showcase for the identifier: {}", metadataIdOrName);
+      }
+      catch (Exception ex)
+      {
+        log.warn("An unexpected error occured while reading showcases: {}", ex.getMessage());
       }
     }
 
@@ -344,6 +351,15 @@ public class MetadataDetailsController
     return VIEW_MODEL_NAME;
   }
 
+  /**
+   * Add a comment to a dataset.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws PortalException
+   * @throws SystemException
+   */
   @ResourceMapping(value = ADD_COMMENT_RESOURCE_URL_ID)
   public String addComment(
       ResourceRequest request,
@@ -439,6 +455,15 @@ public class MetadataDetailsController
     return "fragments/comments :: commentEntry";
   }
 
+  /**
+   * Edit a comment of a dataset.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws PortalException
+   * @throws SystemException
+   */
   @ResourceMapping(value = EDIT_COMMENT_RESOURCE_URL_ID)
   public View editComment(
       ResourceRequest request,
@@ -485,46 +510,42 @@ public class MetadataDetailsController
           {
             log.debug(method + "Der Benutzer hat kein Recht zum Editieren des Kommentars mit der ID {}",
                 commentId);
-            // add message for user
-            view.addStaticAttribute(
-                QueryParamNames.PARAM_MESSAGE,
-                LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.NO_PERMISSION));
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_FORBIDDEN);
+            addMessageForUser(view, request, response, MessageKey.NO_PERMISSION, HTTP_STATUS_FORBIDDEN);
           }
         }
         else
         {
           log.debug(method + "Kein Kommentar zur ID {} gefunden.", commentId);
-          // add message for user
-          view.addStaticAttribute(
-              QueryParamNames.PARAM_MESSAGE,
-              LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.COMMENT_NOT_EXISTENT));
-          response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_BAD_REQUEST);
+          addMessageForUser(view, request, response, MessageKey.COMMENT_NOT_EXISTENT,
+              HTTP_STATUS_BAD_REQUEST);
         }
       }
       catch (Exception e)
       {
         log.warn(method + e.getMessage());
-        view.addStaticAttribute(
-            QueryParamNames.PARAM_MESSAGE,
-            LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.ERROR_OCCURRED));
-        response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+        addMessageForUser(view, request, response, MessageKey.ERROR_OCCURRED,
+            HTTP_STATUS_INTERNAL_SERVER_ERROR);
       }
     }
     else
     {
       log.debug(method + "End, tue nichts. Kein Kommentar im Request gefunden.");
-      // add message for user
-      view.addStaticAttribute(
-          QueryParamNames.PARAM_MESSAGE,
-          LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.ERROR_OCCURRED));
-      response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_BAD_REQUEST);
+      addMessageForUser(view, request, response, MessageKey.ERROR_OCCURRED, HTTP_STATUS_BAD_REQUEST);
     }
 
     log.trace(method + "End");
     return view;
   }
 
+  /**
+   * Delete a comment of a dataset.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws PortalException
+   * @throws SystemException
+   */
   @ResourceMapping(value = DELETE_COMMENT_RESOURCE_URL_ID)
   public View deleteComment(
       ResourceRequest request,
@@ -553,50 +574,32 @@ public class MetadataDetailsController
           {
             MetadataCommentLocalServiceUtil.deleteMetadataComment(metadataComment.get_id());
             log.debug(method + "Kommentar mit ID {} gelöscht.", commentId);
-            // add message for user
-            view.addStaticAttribute(
-                QueryParamNames.PARAM_MESSAGE,
-                LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.COMMENT_DELETED_SUCCESS));
+            addMessageForUser(view, request, response, MessageKey.COMMENT_DELETED_SUCCESS, HTTP_STATUS_OK);
           }
           else
           {
             log.debug(method + "Der Benutzer hat kein Recht zum Löschen des Kommentars mit der ID {}",
                 commentId);
-            // add message for user
-            view.addStaticAttribute(
-                QueryParamNames.PARAM_MESSAGE,
-                LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.NO_PERMISSION));
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_FORBIDDEN);
+            addMessageForUser(view, request, response, MessageKey.NO_PERMISSION, HTTP_STATUS_FORBIDDEN);
           }
         }
         else
         {
           log.debug(method + "Kein Kommentar zur ID {} gefunden.", commentId);
-          // add message for user
-          view.addStaticAttribute(
-              QueryParamNames.PARAM_MESSAGE,
-              LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.COMMENT_NOT_EXISTENT));
-          response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_NOT_FOUND);
+          addMessageForUser(view, request, response, MessageKey.COMMENT_NOT_EXISTENT, HTTP_STATUS_NOT_FOUND);
         }
       }
       catch (Exception e)
       {
         log.warn(method + e.getMessage());
-        // add message for user
-        view.addStaticAttribute(
-            QueryParamNames.PARAM_MESSAGE,
-            LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.ERROR_OCCURRED));
-        response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+        addMessageForUser(view, request, response, MessageKey.ERROR_OCCURRED,
+            HTTP_STATUS_INTERNAL_SERVER_ERROR);
       }
     }
     else
     {
       log.debug(method + "End, tue nichts. Keine Kommentar-ID im Request gefunden.");
-      // add message for user
-      view.addStaticAttribute(
-          QueryParamNames.PARAM_MESSAGE,
-          LanguageUtil.get(PortalUtil.getLocale(request), MessageKey.ERROR_OCCURRED));
-      response.setProperty(ResourceResponse.HTTP_STATUS_CODE, HTTP_STATUS_BAD_REQUEST);
+      addMessageForUser(view, request, response, MessageKey.ERROR_OCCURRED, HTTP_STATUS_BAD_REQUEST);
       return null;
     }
 
@@ -604,6 +607,14 @@ public class MetadataDetailsController
     return view;
   }
 
+  /**
+   * Save a rating for a dataset.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws IOException
+   */
   @ResourceMapping(value = SUBMIT_RATING_RESOURCE_URL_ID)
   public View submitRating(
       ResourceRequest request,
@@ -804,23 +815,24 @@ public class MetadataDetailsController
     return metadata;
   }
 
-  private List<MetadataCommentWrapper> wrapComments(List<MetadataComment> comments, ThemeDisplay themeDisplay)
+  private List<MetadataCommentWrapperExt> wrapComments(List<MetadataComment> comments,
+      ThemeDisplay themeDisplay)
   {
-    List<MetadataCommentWrapper> result = new ArrayList<>();
+    List<MetadataCommentWrapperExt> result = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(comments))
     {
       for (MetadataComment metadataComment : comments)
       {
-        MetadataCommentWrapper comment = wrapComment(metadataComment, themeDisplay);
+        MetadataCommentWrapperExt comment = wrapComment(metadataComment, themeDisplay);
         result.add(comment);
       }
     }
     return result;
   }
 
-  private MetadataCommentWrapper wrapComment(MetadataComment metadataComment, ThemeDisplay themeDisplay)
+  private MetadataCommentWrapperExt wrapComment(MetadataComment metadataComment, ThemeDisplay themeDisplay)
   {
-    MetadataCommentWrapper comment = new MetadataCommentWrapper(metadataComment);
+    MetadataCommentWrapperExt comment = new MetadataCommentWrapperExt(metadataComment);
     comment.setThemeDisplay(themeDisplay);
     return comment;
   }
@@ -874,5 +886,14 @@ public class MetadataDetailsController
       orgName = organization.getDisplayName();
     }
     return orgName;
+  }
+
+  private void addMessageForUser(MappingJackson2JsonView view, ResourceRequest request,
+      ResourceResponse response, MessageKey messageKey, String httpStatusCode)
+  {
+    view.addStaticAttribute(
+        QueryParamNames.PARAM_MESSAGE,
+        LanguageUtil.get(PortalUtil.getLocale(request), messageKey.toString()));
+    response.setProperty(ResourceResponse.HTTP_STATUS_CODE, httpStatusCode);
   }
 }

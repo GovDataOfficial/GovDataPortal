@@ -92,7 +92,8 @@ public class SearchresultController extends AbstractBaseController
    *
    * @author tscheffler
    */
-  @Data class ProcessedFilterBundle
+  @Data
+  private static class ProcessedFilterBundle
   {
     private final List<FilterViewModel> FilterViewModelList;
 

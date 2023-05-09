@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -191,7 +192,7 @@ public class EditController
           {
             contributorIdSelectList.add(
                 new OptionTag("", messageSource.getMessage(
-                    "od.select.required.item.text", new Object[0], null)));
+                    "od.select.required.item.text", new Object[0], Locale.getDefault())));
           }
           contributorIdSelectList.addAll(mapToOptionTagList(contributorIdList));
         }

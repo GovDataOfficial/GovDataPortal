@@ -17,6 +17,7 @@
 
 package de.seitenbau.govdata.comparator;
 
+import java.io.Serializable;
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;
@@ -26,8 +27,10 @@ import de.seitenbau.govdata.odp.registry.model.Licence;
 /**
  * The Class LicencesTitleComparator.
  */
-public class LicencesTitleComparator implements Comparator<Licence>
+public class LicencesTitleComparator implements Comparator<Licence>, Serializable
 {
+  private static final long serialVersionUID = 1919490600029177942L;
+
   /*
    * (non-Javadoc)
    * 

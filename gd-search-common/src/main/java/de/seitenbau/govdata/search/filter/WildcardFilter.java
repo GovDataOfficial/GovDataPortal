@@ -23,7 +23,7 @@ public class WildcardFilter extends BaseFilter
   @Override
   public QueryBuilder createFilter()
   {
-    return QueryBuilders.boolQuery().must(QueryBuilders.wildcardQuery(elasticSearchField, phrase));
+    return QueryBuilders.boolQuery().must(QueryBuilders.wildcardQuery(getElasticSearchField(), phrase));
   }
 
   @Override

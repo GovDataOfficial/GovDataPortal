@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import de.seitenbau.govdata.search.adapter.SearchService;
 
@@ -85,11 +86,15 @@ public class ResourceFormatCacheTest
 
     /* execute */
     List<String> result = target.getFormats();
+    Object cachedObject = ReflectionTestUtils.getField(target, "formats");
     List<String> resultCached = target.getFormats();
+    Object cachedObject2 = ReflectionTestUtils.getField(target, "formats");
 
     /* verify */
     Assertions.assertThat(result).containsExactly(resourceFormatList.toArray(new String[0]));
-    Assertions.assertThat(result == resultCached).describedAs("Same objects").isTrue();
+    Assertions.assertThat(cachedObject).isNotNull().isSameAs(cachedObject2);
+    Assertions.assertThat(resultCached).isNotNull().isNotSameAs(result);
+    Assertions.assertThat(resultCached).containsExactlyInAnyOrderElementsOf(result);
   }
 
   @Test
@@ -177,7 +182,9 @@ public class ResourceFormatCacheTest
 
     /* execute */
     List<String> result = target.getFormatsSorted();
+    Object cachedObject = ReflectionTestUtils.getField(target, "formatsSorted");
     List<String> resultCached = target.getFormatsSorted();
+    Object cachedObject2 = ReflectionTestUtils.getField(target, "formatsSorted");
 
     /* verify */
     ArrayList<String> expected = new ArrayList<String>();
@@ -185,7 +192,9 @@ public class ResourceFormatCacheTest
     expected.add("three");
     expected.add("two");
     Assertions.assertThat(result).containsExactly(expected.toArray(new String[0]));
-    Assertions.assertThat(result == resultCached).describedAs("Same objects").isTrue();
+    Assertions.assertThat(resultCached).isNotNull().isNotSameAs(result);
+    Assertions.assertThat(cachedObject).isNotNull().isSameAs(cachedObject2);
+    Assertions.assertThat(resultCached).containsExactlyInAnyOrderElementsOf(result);
   }
 
   @Test

@@ -24,7 +24,7 @@ public class BooleanFilter extends BaseFilter
   public QueryBuilder createFilter()
   {
     return QueryBuilders.boolQuery()
-        .must(QueryBuilders.termQuery(elasticSearchField, val ? "true" : "false"));
+        .must(QueryBuilders.termQuery(getElasticSearchField(), val ? "true" : "false"));
   }
 
   @Override

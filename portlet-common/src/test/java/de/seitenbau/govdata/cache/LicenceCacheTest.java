@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.impl.LicenceImpl;
@@ -96,12 +97,16 @@ public class LicenceCacheTest
 
     /* execute */
     Map<String, Licence> result = target.getLicenceMap();
+    Object cachedObject = ReflectionTestUtils.getField(target, "licenceMap");
     Map<String, Licence> resultCached = target.getLicenceMap();
+    Object cachedObject2 = ReflectionTestUtils.getField(target, "licenceMap");
 
     /* verify */
     Assertions.assertThat(result).hasSize(licenceList.size());
     Assertions.assertThat(result.values()).containsOnly(licenceList.toArray(new Licence[0]));
-    Assertions.assertThat(result == resultCached).describedAs("Same objects").isTrue();
+    Assertions.assertThat(cachedObject).isNotNull().isSameAs(cachedObject2);
+    Assertions.assertThat(resultCached).isNotNull().isNotSameAs(result);
+    Assertions.assertThat(resultCached).containsExactlyInAnyOrderEntriesOf(result);
   }
 
   @Test

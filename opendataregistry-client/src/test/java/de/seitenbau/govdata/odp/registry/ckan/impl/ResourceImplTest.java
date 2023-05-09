@@ -18,6 +18,7 @@ import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
 import de.seitenbau.govdata.odp.registry.model.Licence;
+import de.seitenbau.govdata.odp.registry.model.LicenceConformance;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceImplTest
@@ -200,18 +201,18 @@ public class ResourceImplTest
   private void expectListLicences()
   {
     List<Licence> licenceList = new ArrayList<>();
-    LicenceBean licenceBeanOpen = createLicense(true, LICENSE_OPEN);
-    LicenceBean licenceBeanClosed = createLicense(false, LICENSE_CLOSED);
+    LicenceBean licenceBeanOpen = createLicense(LicenceConformance.APPROVED.getValue(), LICENSE_OPEN);
+    LicenceBean licenceBeanClosed = createLicense(LicenceConformance.NOTREVIEWED.getValue(), LICENSE_CLOSED);
     licenceList.add(new LicenceImpl(licenceBeanOpen));
     licenceList.add(new LicenceImpl(licenceBeanClosed));
     when(odrClient.listLicenses()).thenReturn(licenceList);
   }
 
-  private LicenceBean createLicense(boolean isOpen, String id)
+  private LicenceBean createLicense(String odConformance, String id)
   {
     LicenceBean licenceBean = new LicenceBean();
     licenceBean.setId(id);
-    licenceBean.set_okd_compliant(isOpen);
+    licenceBean.setOd_conformance(odConformance);
     return licenceBean;
   }
 }
