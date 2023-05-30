@@ -1,4 +1,7 @@
 # Changelog
+## v5.15.0 2023-05-30
+
+* Updates the search criterias for the state search portlet
 
 ## v5.14.0 2023-05-25
 
