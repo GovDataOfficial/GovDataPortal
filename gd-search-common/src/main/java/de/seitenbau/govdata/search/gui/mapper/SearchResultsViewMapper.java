@@ -219,7 +219,7 @@ public class SearchResultsViewMapper
     if (Objects.nonNull(licence))
     {
       result =
-          new LicenseViewModel(licence.getName(), licence.getUrl(), licence.getTitle(), licence.isOpen());
+          new LicenseViewModel(licence.getId(), licence.getUrl(), licence.getTitle(), licence.isOpen());
     }
     return result;
   }

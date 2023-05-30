@@ -24,6 +24,8 @@ public final class Util
 {
   private static final ObjectMapper OM = new ObjectMapper();
 
+  private static final Licence NO_LICENCE_AVAILABLE = createLicence("license-id-not-set");
+
   private Util()
   {
     // util class
@@ -121,11 +123,11 @@ public final class Util
         Licence licenceIfUnknown = createLicence(licenseId);
         List<Licence> licences = odrClient.listLicenses();
         license =
-            licences.stream().filter(l -> l.getName().equals(licenseId)).findFirst().orElse(licenceIfUnknown);
+            licences.stream().filter(l -> l.getId().equals(licenseId)).findFirst().orElse(licenceIfUnknown);
       }
       else
       {
-        license = createLicence("license-id-not-set");
+        license = NO_LICENCE_AVAILABLE;
       }
     }
 

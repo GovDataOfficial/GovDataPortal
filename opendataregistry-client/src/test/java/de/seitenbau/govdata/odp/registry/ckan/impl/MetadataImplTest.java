@@ -270,7 +270,7 @@ public class MetadataImplTest {
     assertThat(res.getUrl()).isEqualTo("http://geodienste.hamburg.de/darf_nicht_die_gleiche_url_wie_downloadurl_sein_da_es_sonst_nicht_angezeigt_wird");
     assertThat(res.getDescription()).isEqualTo("Das ist eine deutsche Beschreibung der Distribution 1");
     assertThat(res.getHash()).isEqualTo("5bcc814127be171c75595d419f371c74c9cf041419c45d6e8d2c789e5c303b47");
-    assertThat(res.getLicense().getName()).isEqualTo("http://dcat-ap.de/def/licenses/dl-by-de/2.0");
+    assertThat(res.getLicense().getId()).isEqualTo("http://dcat-ap.de/def/licenses/dl-by-de/2.0");
     assertThat(res.getLanguage()).containsExactly("de");
     assertThat(res.getIssued()).isEqualTo("2017-02-27");
     assertThat(res.getModified()).isEqualTo("2017-03-07T10:00:00");

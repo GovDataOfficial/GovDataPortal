@@ -164,7 +164,7 @@ public class SearchExtController extends AbstractBaseController
     for (Licence licence : licenceCache.getActiveLicenceListSortedByTitle())
     {
       HashMap<String, String> hashMap = new HashMap<>();
-      hashMap.put("key", licence.getName());
+      hashMap.put("key", licence.getId());
       hashMap.put("label", licence.getTitle());
       options.add(hashMap);
     }

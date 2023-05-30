@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.14.0 2023-05-25
+
+* Improves display of licences in the metadata details view
+
 ## v5.13.0 2023-05-04
 
 * Adds licence attributes 'od_conformance' and 'osd_conformance'

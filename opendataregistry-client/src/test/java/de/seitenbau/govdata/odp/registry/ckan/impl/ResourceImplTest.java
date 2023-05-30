@@ -92,7 +92,7 @@ public class ResourceImplTest
 
     /* verify */
     assertThat(result).isNotNull();
-    assertThat(result.getName()).isEqualTo("license-id-not-set");
+    assertThat(result.getId()).isEqualTo("license-id-not-set");
     assertThat(result.isOpen()).isFalse();
   }
 

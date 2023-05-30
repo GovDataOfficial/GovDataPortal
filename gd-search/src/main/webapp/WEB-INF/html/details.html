@@ -156,8 +156,10 @@
         <dl class="licence inline-list"
             th:if="${selectedMetadata.singleLicense != null}">
           <dt>[[#{od.datasets_open_licence}]]:</dt>
-          <dd id="od_usage_agreement_free_open" class="sbi-freie-nutzung" th:if="${selectedMetadata.metadata.open}" th:title="#{od.usage_agreement.free.description}">[[#{od.usage_agreement.free}]]</dd>
-          <dd id="od_usage_agreement_restricted_not_open" class="sbi-eingeschraenkte-nutzung" th:unless="${selectedMetadata.metadata.open}" th:title="#{od.usage_agreement.restricted.description}">
+          <dd id="od_usage_agreement_free_open" class="sbi-freie-nutzung" th:if="${selectedMetadata.metadata.open}"
+              th:title="#{od.usage_agreement.free.description}">[[#{od.usage_agreement.free}]]</dd>
+          <dd id="od_usage_agreement_restricted_not_open" class="sbi-eingeschraenkte-nutzung" th:unless="${selectedMetadata.metadata.open}"
+              th:title="#{od.usage_agreement.restricted.description}">
             [[#{od.usage_agreement.restricted}]]</dd>
         </dl>
 
@@ -165,8 +167,12 @@
             th:if="${selectedMetadata.hasMultipleLicenses() or selectedMetadata.singleLicense != null}">
           <dt>[[#{od.usage_agreement}]]:</dt>
           <dd th:if="${selectedMetadata.hasMultipleLicenses()}" th:text="#{od.usage_agreement.multiplelicenses}"></dd>
-          <dd th:unless="${selectedMetadata.hasMultipleLicenses()}">
+          <dd th:if="${!selectedMetadata.hasMultipleLicenses() and !#strings.isEmpty(selectedMetadata.singleLicense.url)}">
             <a target="_blank" th:href="${selectedMetadata.singleLicense.url}"><span th:text="${selectedMetadata.singleLicense.title}"></span></a>
+          </dd>
+          <dd th:if="${!selectedMetadata.hasMultipleLicenses() and #strings.isEmpty(selectedMetadata.singleLicense.url)}">
+            <span th:if="${!#strings.isEmpty(selectedMetadata.singleLicense.title)}" th:text="${selectedMetadata.singleLicense.title}"></span>
+            <span th:if="${#strings.isEmpty(selectedMetadata.singleLicense.title)}">-</span>
           </dd>
         </dl>
 

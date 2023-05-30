@@ -91,7 +91,7 @@ public class ODRClientTest extends TestBase
 
     Licence licence = licences.get(0);
     // name matches field "id" in json response
-    Assertions.assertThat(licence.getName()).isEqualTo("http://dcat-ap.de/def/licenses/official-work");
+    Assertions.assertThat(licence.getId()).isEqualTo("http://dcat-ap.de/def/licenses/official-work");
     Assertions.assertThat(licence.getTitle())
         .isEqualTo("Amtliches Werk, lizenzfrei nach §5 Abs. 1 UrhG (ältere DCAT-AP.de Version)");
     Assertions.assertThat(licence.getUrl()).isEqualTo("http://www.gesetze-im-internet.de/urhg/__5.html");
@@ -102,7 +102,7 @@ public class ODRClientTest extends TestBase
 
     licence = licences.get(1);
     // name matches field "id" in json response
-    Assertions.assertThat(licence.getName()).isEqualTo("http://dcat-ap.de/def/licenses/other-freeware");
+    Assertions.assertThat(licence.getId()).isEqualTo("http://dcat-ap.de/def/licenses/other-freeware");
     Assertions.assertThat(licence.getTitle()).isEqualTo("Andere Freeware Lizenz");
     Assertions.assertThat(licence.getUrl()).isEmpty();
     Assertions.assertThat(licence.isActive()).isTrue();

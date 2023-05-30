@@ -480,7 +480,7 @@ public class EditController
           resource.getDescription(),
           resource.getName(),
           languageString,
-          resource.getLicense().getName(),
+          resource.getLicense().getId(),
           resource.getLicenseAttributionByText(),
           formatDate(resource.getIssued()),
           formatDate(resource.getModified()),

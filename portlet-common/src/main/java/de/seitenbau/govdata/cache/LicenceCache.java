@@ -62,7 +62,7 @@ public class LicenceCache extends BaseRegistryClientCache
       {
         for (Licence licence : licencesTemp)
         {
-          licenceMap.put(licence.getName(), licence);
+          licenceMap.put(licence.getId(), licence);
         }
       }
     }

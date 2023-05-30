@@ -10,11 +10,15 @@
         [[#{od.usage_agreement.restricted}]]
     </dd>
 
-    <dt th:unless="${object.license == null or #strings.isEmpty(object.license.url)}">[[#{od.usage_agreement}]]:</dt>
-    <dd th:unless="${object.license == null or #strings.isEmpty(object.license.url)}">
+    <dt>[[#{od.usage_agreement}]]:</dt>
+    <dd th:unless="${object.license == null or #strings.isEmpty(object.license.title)}">
       <a th:unless="${#strings.isEmpty(object.license.url)}" th:href="${object.license.url}"
          th:text="${object.license.title}" th:id="${idPrefix} + ${index} + '_licenselink'"></a>
+      <span th:if="${#strings.isEmpty(object.license.url)}" th:text="${object.license.title}"
+          th:id="${idPrefix} + ${index} + '_licenselink'"></span>
     </dd>
+    <dd th:if="${object.license == null or (#strings.isEmpty(object.license.url) and #strings.isEmpty(object.license.title))}"
+        th:id="${idPrefix} + ${index} + '_licenselink'">-</dd>
 
     <dt th:unless="${#strings.isEmpty(object.licenseAttributionByText)}">[[#{od.usage_attribution_by_text}]]:</dt>
     <dd th:unless="${#strings.isEmpty(object.licenseAttributionByText)}" th:id="${idPrefix} + ${index} + '_licensetext'"

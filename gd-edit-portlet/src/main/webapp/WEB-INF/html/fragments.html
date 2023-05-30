@@ -382,7 +382,7 @@
           <div>
             <select aria-required="true" th:field="*{licenseId}"
                     th:attr="aria-labelledby=${idp}+'_licenseid_label '+${idp}+'_licenseid_error'">
-              <option th:each="licence : ${licenseList}" th:value="${licence.name}"
+              <option th:each="licence : ${licenseList}" th:value="${licence.id}"
                       th:text="${licence.title}"></option>
             </select>
             <div th:id="${idp}+'_licenseid_error'" class="validation-error"
