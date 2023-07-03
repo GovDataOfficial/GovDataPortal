@@ -10,7 +10,7 @@
   <parent>
     <groupId>de.seitenbau.govdata</groupId>
     <artifactId>microservices</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -18,7 +18,6 @@
   <!-- P R O P E R T I E S -->
   <!-- ====================================================================== -->
   <properties>
-    <spring.version>5.2.9.RELEASE</spring.version>
     <checkstyle.suppressions>${basedir}/src/main/plugin-config/checkstyle-suppressions.xml</checkstyle.suppressions>
   </properties>
 

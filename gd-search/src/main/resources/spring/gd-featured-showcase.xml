@@ -10,7 +10,9 @@
 
   <context:component-scan
     base-package="de.seitenbau.govdata.navigation,
-      de.seitenbau.govdata.search.showcase.cache" />
+      de.seitenbau.govdata.search.showcase.cache,
+      de.seitenbau.govdata.search.filter.util,
+      de.seitenbau.govdata.search.common.searchresult" />
 
   <bean id="showcaseClientFactory" class="de.seitenbau.govdata.db.api.ShowcaseClientFactory" />
   <bean id="showcaseResource" factory-bean="showcaseClientFactory" factory-method="createShowcaseClient" />

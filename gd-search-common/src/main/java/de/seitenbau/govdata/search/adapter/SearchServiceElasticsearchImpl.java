@@ -977,7 +977,8 @@ public class SearchServiceElasticsearchImpl implements SearchService
 
   private QueryBuilder createTypeFilter(String typeFilterString)
   {
-    QueryBuilder typeFilter = null;
+    QueryBuilder typeFilter = QueryBuilders.termsQuery(ESFieldConsts.FIELD_METADATA_TYPE,
+        filterUtil.getDefaultTypeFilterValues());
     {
       if (StringUtils.isNotBlank(typeFilterString))
       {

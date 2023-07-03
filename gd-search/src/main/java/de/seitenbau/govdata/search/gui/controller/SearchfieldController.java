@@ -49,6 +49,9 @@ public class SearchfieldController extends AbstractBaseController
   @Inject
   private SearchService indexService;
 
+  @Inject
+  private ParameterProcessing parameterProcessing;
+
   @Value("${elasticsearch.search.paths.typefiltered}")
   private String[] typeFilteredPaths;
 
@@ -76,7 +79,7 @@ public class SearchfieldController extends AbstractBaseController
     String currentPage = themeDisplay.getLayout().getFriendlyURL();
 
     PreparedParameters preparm =
-        ParameterProcessing.prepareParameters(request.getParameterMap(), currentPage);
+        parameterProcessing.prepareParameters(request.getParameterMap(), currentPage);
     UrlBuilder urlbuilder = new UrlBuilder(preparm);
 
     // List of hidden Fields to generate to pass through other fields

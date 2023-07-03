@@ -15,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,6 +31,8 @@ import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.common.SearchQuery;
+import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
+import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.util.states.StateViewModel;
@@ -38,11 +42,17 @@ public class DisplayStateCacheTest
 {
   private static final int ALL_STATES_COUNT = 17;
 
+  @Captor
+  ArgumentCaptor<PreparedParameters> PreparedParametersCaptor;
+
   @Mock
   private GovDataNavigation govDataNavigation;
 
   @Mock
   private SearchService indexService;
+
+  @Mock
+  private ParameterProcessing parameterProcessing;
 
   @InjectMocks
   private DisplayStateCache sut;
@@ -52,6 +62,8 @@ public class DisplayStateCacheTest
   {
     /* prepare */
     SearchResultContainer searchResultContainer = new SearchResultContainer();
+    Mockito.when(parameterProcessing.createFilterBundle(Mockito.any(PreparedParameters.class),
+        Mockito.eq(new ArrayList<>()))).thenReturn(new SearchFilterBundle());
     Mockito.when(indexService.search(Mockito.any(SearchQuery.class), Mockito.eq((Integer) null),
         Mockito.any(SearchFilterBundle.class), Mockito.any(Sort.class))).thenReturn(searchResultContainer);
     Mockito
@@ -66,6 +78,7 @@ public class DisplayStateCacheTest
     /* assert */
     Assertions.assertThat(result).hasSize(ALL_STATES_COUNT);
     Assertions.assertThat(result).extracting("url").allMatch(s -> !Objects.isNull(s), "not null");
+    assertParameterProcessing(result, ALL_STATES_COUNT);
   }
 
   @Test
@@ -73,6 +86,8 @@ public class DisplayStateCacheTest
   {
     /* prepare */
     SearchResultContainer searchResultContainer = new SearchResultContainer();
+    Mockito.when(parameterProcessing.createFilterBundle(Mockito.any(PreparedParameters.class),
+        Mockito.eq(new ArrayList<>()))).thenReturn(new SearchFilterBundle());
     Mockito.when(indexService.search(Mockito.any(SearchQuery.class), Mockito.eq((Integer) null),
         Mockito.any(SearchFilterBundle.class), Mockito.any(Sort.class))).thenReturn(searchResultContainer);
     Mockito
@@ -87,6 +102,7 @@ public class DisplayStateCacheTest
     /* assert */
     Assertions.assertThat(result).hasSize(ALL_STATES_COUNT);
     Assertions.assertThat(result).extracting("url").allMatch(s -> !Objects.isNull(s), "not null");
+    assertParameterProcessing(result, ALL_STATES_COUNT);
   }
 
   @Test
@@ -94,6 +110,8 @@ public class DisplayStateCacheTest
   {
     /* prepare */
     SearchResultContainer searchResultContainer = new SearchResultContainer();
+    Mockito.when(parameterProcessing.createFilterBundle(Mockito.any(PreparedParameters.class),
+        Mockito.eq(new ArrayList<>()))).thenReturn(new SearchFilterBundle());
     Mockito.when(indexService.search(Mockito.any(SearchQuery.class), Mockito.eq((Integer) null),
         Mockito.any(SearchFilterBundle.class), Mockito.any(Sort.class))).thenReturn(searchResultContainer);
     Mockito
@@ -106,6 +124,7 @@ public class DisplayStateCacheTest
 
     /* execute */
     List<StateViewModel> result = sut.getStateList(blockedStatesString);
+    assertParameterProcessing(result, ALL_STATES_COUNT);
     List<StateViewModel> resultNew = sut.getStateList(blockedStatesStringNew);
 
     /* assert */
@@ -114,6 +133,7 @@ public class DisplayStateCacheTest
     Assertions.assertThat(result).isEqualTo(resultNew);
     // but the cache is updated and returns a new object
     Assertions.assertThat(result).isNotSameAs(resultNew);
+    assertParameterProcessing(resultNew, ALL_STATES_COUNT * 2);
   }
 
   @Test
@@ -121,6 +141,8 @@ public class DisplayStateCacheTest
   {
     /* prepare */
     SearchResultContainer searchResultContainer = new SearchResultContainer();
+    Mockito.when(parameterProcessing.createFilterBundle(Mockito.any(PreparedParameters.class),
+        Mockito.eq(new ArrayList<>()))).thenReturn(new SearchFilterBundle());
     Mockito.when(indexService.search(Mockito.any(SearchQuery.class), Mockito.eq((Integer) null),
         Mockito.any(SearchFilterBundle.class), Mockito.any(Sort.class))).thenReturn(searchResultContainer);
     Mockito
@@ -133,6 +155,7 @@ public class DisplayStateCacheTest
 
     /* execute */
     List<StateViewModel> result = sut.getStateList(blockedStatesString);
+    assertParameterProcessing(result, ALL_STATES_COUNT);
     Object cachedObject = ReflectionTestUtils.getField(sut, "stateList");
     List<StateViewModel> resultNew = sut.getStateList(blockedStatesStringNew);
     Object cachedObject2 = ReflectionTestUtils.getField(sut, "stateList");
@@ -142,6 +165,7 @@ public class DisplayStateCacheTest
     Assertions.assertThat(resultNew).isNotNull().isNotSameAs(result);
     Assertions.assertThat(cachedObject).isNotNull().isSameAs(cachedObject2);
     Assertions.assertThat(resultNew).containsExactlyInAnyOrderElementsOf(result);
+    assertParameterProcessing(resultNew, ALL_STATES_COUNT);
   }
 
   @Test
@@ -149,6 +173,8 @@ public class DisplayStateCacheTest
   {
     /* prepare */
     SearchResultContainer searchResultContainer = new SearchResultContainer();
+    Mockito.when(parameterProcessing.createFilterBundle(Mockito.any(PreparedParameters.class),
+        Mockito.eq(new ArrayList<>()))).thenReturn(new SearchFilterBundle());
     Mockito.when(indexService.search(Mockito.any(SearchQuery.class), Mockito.eq((Integer) null),
         Mockito.any(SearchFilterBundle.class), Mockito.any(Sort.class))).thenReturn(searchResultContainer);
     Mockito
@@ -164,6 +190,7 @@ public class DisplayStateCacheTest
     /* assert */
     Assertions.assertThat(result).hasSize(ALL_STATES_COUNT);
     assertStatesBlocked(result, blockedStatesString);
+    assertParameterProcessing(result, ALL_STATES_COUNT);
   }
 
   @Test
@@ -286,5 +313,17 @@ public class DisplayStateCacheTest
     actual.stream().filter(svm -> !blockedStateList.contains(svm.getName())).allMatch(svm -> svm.isBlocked());
     actual.stream().filter(svm -> !blockedStateList.contains(svm.getName()))
         .allMatch(svm -> StringUtils.isNotEmpty(svm.getCssClass()));
+  }
+
+  private void assertParameterProcessing(List<StateViewModel> result, int numberOfInvocations)
+  {
+    Mockito.verify(parameterProcessing, Mockito.times(numberOfInvocations))
+        .createFilterBundle(PreparedParametersCaptor.capture(), Mockito.eq(new ArrayList<>()));
+    List<PreparedParameters> actual = PreparedParametersCaptor.getAllValues();
+    List<String> statekeys =
+        actual.stream().map(s -> s.getActiveFilters().values().stream()
+            .flatMap(List::stream)
+            .collect(Collectors.toList())).flatMap(List::stream).collect(Collectors.toList());
+    Assertions.assertThat(result).extracting("stateKey").allMatch(s -> statekeys.contains(s));
   }
 }

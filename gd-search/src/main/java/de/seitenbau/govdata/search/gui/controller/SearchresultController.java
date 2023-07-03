@@ -63,7 +63,6 @@ import de.seitenbau.govdata.search.common.SearchQuery;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
-import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.geostate.cache.GeoStateCache;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.FilterViewListModel;
@@ -132,7 +131,7 @@ public class SearchresultController extends AbstractBaseController
   private GeoStateCache geoStateCache;
 
   @Inject
-  private FilterUtil filterUtil;
+  private ParameterProcessing parameterProcessing;
 
   /**
    * Display search result.
@@ -165,7 +164,7 @@ public class SearchresultController extends AbstractBaseController
 
     // preprocessing for parameters
     PreparedParameters preparm =
-        ParameterProcessing.prepareParameters(request.getParameterMap(), currentPage);
+        parameterProcessing.prepareParameters(request.getParameterMap(), currentPage);
 
     // Get current liferay-user
     com.liferay.portal.kernel.model.User liferayUser = null;
@@ -195,10 +194,9 @@ public class SearchresultController extends AbstractBaseController
     }
 
     // execute search
-    SearchFilterBundle searchFilterBundle = ParameterProcessing.createFilterBundle(
+    SearchFilterBundle searchFilterBundle = parameterProcessing.createFilterBundle(
         preparm,
-        new ODRTools().extractIDsFromOrganizations(editorOrganizationList),
-        filterUtil.getFilterDisabledList());
+        new ODRTools().extractIDsFromOrganizations(editorOrganizationList));
 
     SearchResultContainer result = indexService.search(
         preparm.getQuery(),

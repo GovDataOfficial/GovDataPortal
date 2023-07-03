@@ -2,7 +2,6 @@ package de.seitenbau.govdata.search.common.searchresult;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,10 +9,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.geo.ShapeRelation;
+import org.springframework.stereotype.Component;
 
 import com.liferay.portal.kernel.util.PropsUtil;
 
@@ -36,6 +38,7 @@ import de.seitenbau.govdata.search.filter.TemporalCoverageTo;
 import de.seitenbau.govdata.search.filter.TermFilter;
 import de.seitenbau.govdata.search.filter.TermsFilter;
 import de.seitenbau.govdata.search.filter.WildcardFilter;
+import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.sort.SortType;
 import de.seitenbau.govdata.search.util.GeoStateParser;
@@ -48,14 +51,13 @@ import lombok.extern.slf4j.Slf4j;
  * @author rnoerenberg
  */
 @Slf4j
-public final class ParameterProcessing
+@Component
+public class ParameterProcessing
 {
-  private static GeoStateParser geoStateParser = new GeoStateParser();
+  @Inject
+  private FilterUtil filterUtil;
 
-  private ParameterProcessing()
-  {
-    // no instance allowed
-  }
+  private GeoStateParser geoStateParser = new GeoStateParser();
 
   /**
    * Preprocessing of search parameters and actual search.
@@ -65,7 +67,7 @@ public final class ParameterProcessing
    *                     type. Can be null.
    * @return
    */
-  public static PreparedParameters prepareParameters(Map<String, String[]> parameterMap, String currentPage)
+  public PreparedParameters prepareParameters(Map<String, String[]> parameterMap, String currentPage)
   {
     PreparedParameters preparedParameters = new PreparedParameters();
 
@@ -169,7 +171,7 @@ public final class ParameterProcessing
     return null;
   }
 
-  private static String resolveType(Map<String, List<String>> activeFilters, String currentPage)
+  private String resolveType(Map<String, List<String>> activeFilters, String currentPage)
   {
     final String method = "resolveType() : ";
     log.trace(method + "Start");
@@ -180,7 +182,8 @@ public final class ParameterProcessing
     if (CollectionUtils.isNotEmpty(groupList))
     {
       String filterTypeValue = groupList.get(0);
-      if (SearchConsts.VALID_FILTER_TYPES.contains(filterTypeValue))
+      if (SearchConsts.VALID_FILTER_TYPES.contains(filterTypeValue)
+          && filterUtil.getDefaultTypeFilterValues().contains(filterTypeValue))
       {
         log.trace(method + "End with selected filter '" + filterTypeValue + "'");
         return filterTypeValue;
@@ -240,23 +243,8 @@ public final class ParameterProcessing
    *        datasets
    * @return the created filter bundle
    */
-  public static SearchFilterBundle createFilterBundle(PreparedParameters preparm,
+  public SearchFilterBundle createFilterBundle(PreparedParameters preparm,
       List<String> editorOrganizationIdList)
-  {
-    return createFilterBundle(preparm, editorOrganizationIdList, Collections.emptyList());
-  }
-
-  /**
-   * Creates a filter bundle for the further processing from the search parameters.
-   * 
-   * @param preparm the search parameters
-   * @param editorOrganizationIdList a list with organizations the current user has rights to edit
-   *        datasets
-   * @param disabledFilterTypes a list with disabled filter types
-   * @return the created filter bundle
-   */
-  public static SearchFilterBundle createFilterBundle(PreparedParameters preparm,
-      List<String> editorOrganizationIdList, List<String> disabledFilterTypes)
   {
     SearchFilterBundle bundle = new SearchFilterBundle();
 
@@ -351,7 +339,7 @@ public final class ParameterProcessing
               marksFilterToRemove(filterToRemove, key, filter);
             }
           }
-          else if (!disabledFilterTypes.contains(SearchConsts.FACET_STATE)
+          else if (!filterUtil.getFilterDisabledList().contains(SearchConsts.FACET_STATE)
               && StringUtils.equals(key, SearchConsts.FACET_STATE))
           {
             StateContainer state = geoStateParser.getStateList().stream()

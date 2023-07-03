@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>de.fhg.fokus.odp</groupId>
+    <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>5.15.0</version>
+    <version>5.16.0</version>
   </parent>
   <properties>
     <spotbugs.excludeFilterFile>${basedir}/src/main/plugin-config/spotbugs-exclude.xml</spotbugs.excludeFilterFile>
@@ -13,7 +13,7 @@
   <dependencies>
     <!-- ODP -->
     <dependency>
-      <groupId>de.fhg.fokus.odp</groupId>
+      <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>opendataregistry-client</artifactId>
     </dependency>
     <dependency>

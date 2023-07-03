@@ -1,4 +1,10 @@
 # Changelog
+## v5.16.0 2023-06-29
+
+* Updates maven dependencies to the latest bugfix / security fix version
+* Improves counting over all types on the search results page when no type is selected
+* Updates the search criterias for the state search portlet
+
 ## v5.15.0 2023-05-30
 
 * Updates the search criterias for the state search portlet

@@ -8,7 +8,9 @@
   <import resource="portlet-context.xml" />
   <import resource="mvc-context.xml" />
 
-  <context:component-scan base-package="de.seitenbau.govdata.navigation, de.seitenbau.govdata.search.gui.mapper" />
+  <context:component-scan base-package="de.seitenbau.govdata.navigation, de.seitenbau.govdata.search.gui.mapper,
+      de.seitenbau.govdata.search.filter.util,
+      de.seitenbau.govdata.search.common.searchresult" />
 
   <bean class="de.seitenbau.govdata.search.gui.controller.FeaturedDatasetsController" />
 

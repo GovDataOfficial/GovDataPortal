@@ -15,7 +15,8 @@
       de.seitenbau.govdata.cache,
       de.seitenbau.govdata.search.cache,
       de.seitenbau.govdata.search.geostate.cache,
-      de.seitenbau.govdata.search.filter.util" />
+      de.seitenbau.govdata.search.filter.util,
+      de.seitenbau.govdata.search.common.searchresult" />
       
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchExtController" /> 
 

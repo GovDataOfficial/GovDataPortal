@@ -33,7 +33,6 @@ import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
-import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
 import de.seitenbau.govdata.search.index.model.SearchResultContainer;
@@ -60,7 +59,7 @@ public class AtomFeedController
   private RegistryClient registryClient;
 
   @Inject
-  private FilterUtil filterUtil;
+  private ParameterProcessing parameterProcessing;
 
   /**
    * Serve the search as atom-feed
@@ -79,7 +78,7 @@ public class AtomFeedController
   {
     
     // preprocessing for parameters
-    PreparedParameters preparm = ParameterProcessing.prepareParameters(request.getParameterMap(), null);
+    PreparedParameters preparm = parameterProcessing.prepareParameters(request.getParameterMap(), null);
 
     // Get Organizations for this user from CKAN - or fail / get an empty list. 
     List<Organization> editorOrganizationList = new ArrayList<Organization>();
@@ -98,10 +97,9 @@ public class AtomFeedController
     }
     
     // execute search
-    SearchFilterBundle searchFilterBundle = ParameterProcessing.createFilterBundle(
+    SearchFilterBundle searchFilterBundle = parameterProcessing.createFilterBundle(
         preparm,
-        new ODRTools().extractIDsFromOrganizations(editorOrganizationList),
-        filterUtil.getFilterDisabledList());
+        new ODRTools().extractIDsFromOrganizations(editorOrganizationList));
     
     SearchResultContainer result = indexService.search(
         preparm.getQuery(),

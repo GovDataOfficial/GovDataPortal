@@ -12,7 +12,8 @@
     base-package="de.seitenbau.govdata.search.gui.model,
       de.seitenbau.govdata.navigation,
       de.seitenbau.govdata.search.geostate.display.cache,
-      de.seitenbau.govdata.search.filter.util" />
+      de.seitenbau.govdata.search.filter.util,
+      de.seitenbau.govdata.search.common.searchresult" />
 
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchStatesController" /> 
 

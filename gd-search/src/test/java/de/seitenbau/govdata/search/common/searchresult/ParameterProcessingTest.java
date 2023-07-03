@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -26,12 +27,16 @@ import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.common.ESFieldConsts;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.filter.BaseFilter;
+import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.sort.SortType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParameterProcessingTest
 {
+  @InjectMocks
+  private ParameterProcessing sut;
+
   final String DEFAULT_TYPE = "all";
 
   final Sort DEFAULT_SORT = new Sort(SortType.RELEVANCE, false);
@@ -42,6 +47,9 @@ public class ParameterProcessingTest
 
   @Mock
   private Props propsMock;
+
+  @Mock
+  private FilterUtil filterUtil;
 
   @Before
   public void setUp()
@@ -67,7 +75,7 @@ public class ParameterProcessingTest
     Map<String, String[]> parameterMapInput = new HashMap<>();
 
     /* execute */
-    PreparedParameters result = ParameterProcessing.prepareParameters(parameterMapInput, "/home");
+    PreparedParameters result = sut.prepareParameters(parameterMapInput, "/home");
 
     /* verify */
     Assertions.assertThat(result).isNotNull();
@@ -87,7 +95,7 @@ public class ParameterProcessingTest
     Map<String, String[]> parameterMapInput = prepareParameterInputMap();
 
     /* execute */
-    PreparedParameters result = ParameterProcessing.prepareParameters(parameterMapInput, DATA_PAGE);
+    PreparedParameters result = sut.prepareParameters(parameterMapInput, DATA_PAGE);
 
     /* verify */
     Assertions.assertThat(result).isNotNull();
@@ -126,11 +134,11 @@ public class ParameterProcessingTest
   {
     /* prepare */
     Map<String, String[]> parameterMapInput = new HashMap<>();
-    PreparedParameters preparedParameters = ParameterProcessing.prepareParameters(parameterMapInput, "/home");
+    PreparedParameters preparedParameters = sut.prepareParameters(parameterMapInput, "/home");
 
     /* execute */
     SearchFilterBundle bundle =
-        ParameterProcessing.createFilterBundle(preparedParameters, new ArrayList<>(), new ArrayList<>());
+        sut.createFilterBundle(preparedParameters, new ArrayList<>());
 
     /* verify */
     Assertions.assertThat(bundle).isNotNull();
@@ -149,12 +157,11 @@ public class ParameterProcessingTest
     /* prepare */
     Map<String, String[]> parameterMapInput = prepareParameterInputMap();
     PreparedParameters preparedParameters =
-        ParameterProcessing.prepareParameters(parameterMapInput, DATA_PAGE);
+        sut.prepareParameters(parameterMapInput, DATA_PAGE);
 
     /* execute */
     SearchFilterBundle bundle =
-        ParameterProcessing.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"),
-            new ArrayList<>());
+        sut.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"));
 
     /* verify */
     Assertions.assertThat(bundle).isNotNull();
@@ -198,12 +205,11 @@ public class ParameterProcessingTest
 
     Map<String, String[]> parameterMapInput = prepareParameterInputMap();
     PreparedParameters preparedParameters =
-        ParameterProcessing.prepareParameters(parameterMapInput, DATA_PAGE);
+        sut.prepareParameters(parameterMapInput, DATA_PAGE);
 
     /* execute */
     SearchFilterBundle bundle =
-        ParameterProcessing.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"),
-            new ArrayList<>());
+        sut.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"));
 
     /* verify */
     Assertions.assertThat(bundle).isNotNull();
@@ -229,12 +235,11 @@ public class ParameterProcessingTest
 
     Map<String, String[]> parameterMapInput = prepareParameterInputMap();
     PreparedParameters preparedParameters =
-        ParameterProcessing.prepareParameters(parameterMapInput, DATA_PAGE);
+        sut.prepareParameters(parameterMapInput, DATA_PAGE);
 
     /* execute */
     SearchFilterBundle bundle =
-        ParameterProcessing.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"),
-            new ArrayList<>());
+        sut.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"));
 
     /* verify */
     Assertions.assertThat(bundle).isNotNull();
@@ -260,12 +265,11 @@ public class ParameterProcessingTest
         "openness:invalidOpennessFilter,tags:testTag,hvd:invalidHvdFilter,"
             + "dataservice:invalidDataserviceFilter"});
     PreparedParameters preparedParameters =
-        ParameterProcessing.prepareParameters(parameterMapInput, DATA_PAGE);
+        sut.prepareParameters(parameterMapInput, DATA_PAGE);
 
     /* execute */
     SearchFilterBundle bundle =
-        ParameterProcessing.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"),
-            new ArrayList<>());
+        sut.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"));
 
     /* verify */
     Assertions.assertThat(bundle).isNotNull();
@@ -289,12 +293,11 @@ public class ParameterProcessingTest
         "openness:invalidOpennessFilter,hvd:invalidHvdFilter,dataservice:invalidDataserviceFilter,"
             + "openness:has_open,hvd:is_hvd,dataservice:has_data_service"});
     PreparedParameters preparedParameters =
-        ParameterProcessing.prepareParameters(parameterMapInput, DATA_PAGE);
+        sut.prepareParameters(parameterMapInput, DATA_PAGE);
 
     /* execute */
     SearchFilterBundle bundle =
-        ParameterProcessing.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"),
-            new ArrayList<>());
+        sut.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"));
 
     /* verify */
     Assertions.assertThat(bundle).isNotNull();

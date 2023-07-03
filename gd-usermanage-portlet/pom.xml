@@ -5,9 +5,9 @@
   <packaging>war</packaging>
 
   <parent>
-    <groupId>de.fhg.fokus.odp</groupId>
+    <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>5.15.0</version>
+    <version>5.16.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -33,15 +33,15 @@
 
     <!-- ODP -->
     <dependency>
-      <groupId>de.fhg.fokus.odp</groupId>
+      <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>opendataregistry-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>de.fhg.fokus.odp</groupId>
+      <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>odp-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>de.fhg.fokus.odp</groupId>
+      <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>portlet-common</artifactId>
     </dependency>
 

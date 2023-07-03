@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata</groupId>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
   <artifactId>microservices</artifactId>
   <packaging>pom</packaging>
   <name>GovData Microservices</name>
@@ -16,41 +16,41 @@
     <servlet-api.version>4.0.1</servlet-api.version>
     <assertj.version>3.24.2</assertj.version>
     <commons-collections4.version>4.4</commons-collections4.version>
-    <commons-io.version>2.11.0</commons-io.version>
+    <commons-io.version>2.12.0</commons-io.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
-    <groovy.version>2.5.21</groovy.version>
-    <guava.version>31.1-jre</guava.version>
+    <groovy.version>2.5.22</groovy.version>
+    <guava.version>32.0.0-jre</guava.version>
     <hibernate-jpa-2.1-api.version>1.0.2.Final</hibernate-jpa-2.1-api.version>
     <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
     <dozer.version>5.5.1</dozer.version>
     <elasticsearch.version>7.17.9</elasticsearch.version>
     <gson.version>2.10.1</gson.version>
-    <jsoup.version>1.15.3</jsoup.version>
+    <jsoup.version>1.16.1</jsoup.version>
     <jts.version>1.19.0</jts.version>
     <lombok.version>1.18.24</lombok.version>
     <junit.version>4.13.2</junit.version>
-    <junit.jupiter.version>5.9.2</junit.jupiter.version>
-    <junit.platform.version>1.9.2</junit.platform.version>
-    <mockito.version>4.11.0</mockito.version>
-    <!-- byte-buddy >= 1.12 is required by mockito >= 4.5.x
+    <junit.jupiter.version>5.9.3</junit.jupiter.version>
+    <junit.platform.version>1.9.3</junit.platform.version>
+    <mockito.version>5.3.1</mockito.version>
+    <!-- byte-buddy is required by mockito
          https://github.com/mockito/mockito/issues/2625 -->
-    <byte-buddy.version>1.12.19</byte-buddy.version>
-    <nimbus-jose-jwt.version>9.30.1</nimbus-jose-jwt.version>
+    <byte-buddy.version>1.14.5</byte-buddy.version>
+    <nimbus-jose-jwt.version>9.31</nimbus-jose-jwt.version>
     <rome.version>1.18.0</rome.version>
-    <resteasy.version>3.15.3.Final</resteasy.version>
+    <resteasy.version>3.15.6.Final</resteasy.version>
     <resteasy.jaxrs.api.version>3.0.12.Final</resteasy.jaxrs.api.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
-    <jackson.version>2.14.2</jackson.version>
+    <jackson.version>2.15.2</jackson.version>
     <sb-common.version>1.0.1</sb-common.version>
-    <log4j.version>2.19.0</log4j.version>
-    <slf4j.version>1.7.36</slf4j.version>
+    <log4j.version>2.20.0</log4j.version>
+    <slf4j.version>2.0.7</slf4j.version>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- JAXB -->
     <jaxb.runtime.version>2.3.8</jaxb.runtime.version>
     <!-- Spring -->
-    <spring-boot.version>2.6.14</spring-boot.version>
-    <spring.version>5.3.25</spring.version>
-    <spring-security.version>5.7.6</spring-security.version>
+    <spring-boot.version>2.6.15</spring-boot.version>
+    <spring.version>5.3.27</spring.version>
+    <spring-security.version>5.7.8</spring-security.version>
     <!-- Java -->
     <java.version>8</java.version>
     <project.source.version>${java.version}</project.source.version>
@@ -72,20 +72,20 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.1</version>
+          <version>3.11.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.2.1</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -95,17 +95,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.2.1</version>
+          <version>3.3.0</version>
           <dependencies>
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
@@ -117,7 +117,7 @@
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.7.3.0</version>
+          <version>4.7.3.4</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -127,7 +127,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.2.1</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.vafer</groupId>
@@ -172,6 +172,18 @@
           <suppressionsLocation>${checkstyle.suppressions}</suppressionsLocation>
           <resourceExcludes>**/messages.properties,**/Language_*.properties</resourceExcludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.10</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -238,7 +250,7 @@
       <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-broker</artifactId>
-        <version>5.17.3</version>
+        <version>5.18.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>

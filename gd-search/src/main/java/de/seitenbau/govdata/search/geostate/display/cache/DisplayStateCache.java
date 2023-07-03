@@ -54,6 +54,9 @@ public class DisplayStateCache extends BaseCache
   @Inject
   private SearchService indexService;
 
+  @Inject
+  private ParameterProcessing parameterProcessing;
+
   private GeoStateParser geoStateParser = new GeoStateParser();
 
   private List<StateViewModel> stateList;
@@ -211,7 +214,7 @@ public class DisplayStateCache extends BaseCache
         FilterPathUtils.serializeFilter(SearchConsts.FACET_STATE, id);
     PreparedParameters preparedParameters = new PreparedParameters();
     preparedParameters.setActiveFilters(FilterPathUtils.deserializeFilter(filterParam));
-    SearchFilterBundle searchFilterBundle = ParameterProcessing.createFilterBundle(
+    SearchFilterBundle searchFilterBundle = parameterProcessing.createFilterBundle(
         preparedParameters, new ArrayList<>());
 
     SearchResultContainer result = indexService.search(

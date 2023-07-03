@@ -30,6 +30,9 @@ public abstract class AbstractBaseController
 {
   @Inject
   private GovDataNavigation navigationHelper;
+
+  @Inject
+  private ParameterProcessing parameterProcessing;
   
   @Value("${elasticsearch.search.paths.typefiltered}")
   private String[] typeFilteredPaths;
@@ -60,7 +63,7 @@ public abstract class AbstractBaseController
     
     // process parameters and create URL
     PreparedParameters prepareParameters =
-        ParameterProcessing.prepareParameters(request.getParameterMap(), target);
+        parameterProcessing.prepareParameters(request.getParameterMap(), target);
     UrlBuilder urlbuilder = new UrlBuilder(prepareParameters);
     PortletURL redirectUrl = urlbuilder.createRedirectToResultsUrl(navigationHelper, target);
     
