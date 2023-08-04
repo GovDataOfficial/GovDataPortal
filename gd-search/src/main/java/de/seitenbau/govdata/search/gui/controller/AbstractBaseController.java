@@ -28,6 +28,9 @@ import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
 @RequestMapping("VIEW")
 public abstract class AbstractBaseController
 {
+  /** Model key for the Theme Display object. */
+  public static final String MODEL_KEY_THEME_DISPLAY = "themeDisplay";
+
   @Inject
   private GovDataNavigation navigationHelper;
 

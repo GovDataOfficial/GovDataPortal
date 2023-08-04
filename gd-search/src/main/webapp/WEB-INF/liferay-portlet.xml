@@ -28,7 +28,6 @@
     <ajaxable>false</ajaxable>
     <header-portlet-css>/css/ol.css</header-portlet-css>
     <header-portlet-javascript>/js/ol-debug.js</header-portlet-javascript>
-    <header-portlet-javascript>/js/ol-govdata.js</header-portlet-javascript>
     <css-class-wrapper>gd-search-map-portlet</css-class-wrapper>
   </portlet>
   <portlet>
@@ -44,7 +43,6 @@
         http://www.coderexception.com/C36B1z3bPXQSxXJi/spring-portlet-ajax-call-no-parameter-found -->
     <requires-namespaced-parameters>false</requires-namespaced-parameters>
     <ajaxable>false</ajaxable>
-    <footer-portlet-javascript>/js/extsearch.js</footer-portlet-javascript>
     <css-class-wrapper>gd-search-ext-portlet</css-class-wrapper>
   </portlet>
   <portlet>

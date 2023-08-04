@@ -35,6 +35,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -57,6 +58,8 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.odp.common.cache.BaseCache;
+import de.seitenbau.govdata.odp.common.http.client.config.OdpRequestConfig;
+import de.seitenbau.govdata.odp.common.http.impl.client.OdpConnectionKeepAliveStrategy;
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.api.CKANClientAction;
 import de.seitenbau.govdata.odp.registry.ckan.cache.TokenCache;
@@ -145,10 +148,17 @@ public class ODRClientImpl implements ODRClient
     authorizationToken = props
         .getProperty(PROPERTY_NAME_CKAN_AUTHORIZATION_KEY);
     String url = props.getProperty(PROPERTY_NAME_CKAN_URL);
+    LOG.info("Start initialize CKAN client with URL {} ...", url);
     RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 
     CloseableHttpClient httpClient =
-        HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager()).build();
+        HttpClientBuilder.create().setConnectionManager(new PoolingHttpClientConnectionManager())
+            .setKeepAliveStrategy(OdpConnectionKeepAliveStrategy.INSTANCE)
+            .setDefaultRequestConfig(OdpRequestConfig.REQUEST_CONFIG)
+            .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(20 * 1000).build())
+            .setMaxConnPerRoute(20)
+            .setMaxConnTotal(40)
+            .build();
     ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpClient);
     ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
     ResteasyWebTarget target = client.target(url);
@@ -158,6 +168,7 @@ public class ODRClientImpl implements ODRClient
     ALL_FIELDS.put(JSON_FIELD_ALL_FIELDS, true);
 
     getStatus();
+    LOG.info("CKAN client sucessfully initialized.");
   }
 
   /*

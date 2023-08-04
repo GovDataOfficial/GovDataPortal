@@ -30,6 +30,7 @@ import org.springframework.stereotype.Repository;
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.Constants;
 import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Ein Client für den Zugriff auf CKAN über die CKAN-API.
@@ -37,6 +38,7 @@ import de.seitenbau.govdata.odp.spi.OpenDataRegistry;
  * @author rnoerenberg
  * 
  */
+@Slf4j
 @Repository
 public class RegistryClient
 {
@@ -55,7 +57,14 @@ public class RegistryClient
     Properties props = new Properties();
     props.setProperty(Constants.PROPERTY_NAME_CKAN_AUTHORIZATION_KEY, authKey);
     props.setProperty(Constants.PROPERTY_NAME_CKAN_URL, ckanUrl);
-    client.init(props);
+    try
+    {
+      client.init(props);
+    }
+    catch (Exception e)
+    {
+      log.error("An error occurred while initializing client!", e);
+    }
   }
 
   public ODRClient getInstance()

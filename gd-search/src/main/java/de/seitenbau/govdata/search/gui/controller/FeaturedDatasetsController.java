@@ -39,8 +39,6 @@ public class FeaturedDatasetsController extends AbstractBaseController
 
   private static final String MODEL_HITS_KEY = "hits";
 
-  private static final String MODEL_THEME_KEY = "themeDisplay";
-
   private static final String MODEL_DATASET_COUNT_KEY = "count";
 
   private static final String MODEL_LINK_DATASETS_KEY = "linkToDatasets";
@@ -148,7 +146,7 @@ public class FeaturedDatasetsController extends AbstractBaseController
     PortletURL redirectUrl = gdNavigation.createLinkForSearchResults(FRIENDLY_URL_NAME_DATASET_PAGE,
         PORTLET_NAME_SEARCHRESULT, "");
 
-    model.addAttribute(MODEL_THEME_KEY, themeDisplay);
+    model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
     model.addAttribute(MODEL_HITS_KEY, hitViewModelList);
     model.addAttribute(MODEL_DATASET_COUNT_KEY, hitViewModelList.size());
     model.addAttribute(MODEL_SHOW_DATAET_KEY, showDatasetButton);

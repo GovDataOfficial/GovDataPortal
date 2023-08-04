@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
@@ -70,7 +71,7 @@ public class TweetCache extends BaseCache
   public void init()
   {
     setMaxCacheTimeAmount(1);
-    httpClient = HttpClients.custom()
+    httpClient = HttpClients.custom().useSystemProperties()
         .setDefaultRequestConfig(RequestConfig.custom()
             .setCookieSpec(CookieSpecs.STANDARD).build())
         .build();
@@ -228,8 +229,7 @@ public class TweetCache extends BaseCache
     try
     {
       URIBuilder uriBuilder = new URIBuilder(tweetEndpoint);
-      ArrayList<NameValuePair> queryParameters;
-      queryParameters = new ArrayList<>();
+      List<NameValuePair> queryParameters = new ArrayList<>();
       queryParameters.add(new BasicNameValuePair("max_results", "5")); // 5 is minimum
       queryParameters.add(new BasicNameValuePair("exclude", TwitterApiKeys.REPLIES.getKey()));
       queryParameters.add(new BasicNameValuePair("expansions", TwitterApiKeys.AUTHOR_ID.getKey()));

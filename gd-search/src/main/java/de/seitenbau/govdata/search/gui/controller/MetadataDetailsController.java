@@ -5,6 +5,7 @@ import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAM
 import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
 
 import java.io.IOException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,6 +27,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowStateException;
+import javax.ws.rs.NotFoundException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,7 +65,7 @@ import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.common.api.PageableRequest;
 import de.seitenbau.govdata.common.api.PagedList;
 import de.seitenbau.govdata.common.api.SearchFilter;
-import de.seitenbau.govdata.common.client.impl.RestCallFailedException;
+import de.seitenbau.govdata.common.client.impl.EntityNotFoundException;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.dataset.details.beans.CurrentMetadataContact;
@@ -79,6 +81,7 @@ import de.seitenbau.govdata.edit.model.Link;
 import de.seitenbau.govdata.edit.model.ShowcaseViewModel;
 import de.seitenbau.govdata.messages.MessageKey;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
+import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.Organization;
@@ -102,8 +105,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("VIEW")
 public class MetadataDetailsController
 {
-  private static final String MODEL_KEY_THEME_DISPLAY = "themeDisplay";
-
   private static final String MODEL_KEY_CURRENT_USER = "currentUser";
 
   private static final String MODEL_KEY_COMMENT = "comment";
@@ -169,6 +170,8 @@ public class MetadataDetailsController
   @Inject
   private OrganizationCache organizationCache;
 
+  private ShowcaseDatabaseAvailabileCache showcaseDbAvailableCache = new ShowcaseDatabaseAvailabileCache();
+
   /**
    * Display details view for datasets, showcases, blogs and articles.
    * @param metadataIdOrName
@@ -225,10 +228,9 @@ public class MetadataDetailsController
     if (selectedMetadata.getMetadata() == null)
     {
       // Did not find a dataset with the id. Check for Showcases.
-      try
+      SelectedShowcase selectedShowcase = createSelectedShowcase(metadataIdOrName, currentUser);
+      if (Objects.nonNull(selectedShowcase))
       {
-        SelectedShowcase selectedShowcase = createSelectedShowcase(metadataIdOrName, currentUser);
-
         log.info("showcase {} found!", metadataIdOrName);
 
         if (selectedShowcase.isShowcaseVisibleForUser())
@@ -243,18 +245,9 @@ public class MetadataDetailsController
           model.addAttribute(MODEL_KEY_EDITDATASETURL, url);
         }
 
-        model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
+        model.addAttribute(AbstractBaseController.MODEL_KEY_THEME_DISPLAY, themeDisplay);
         model.addAttribute("selectedShowcase", selectedShowcase);
         return APP_VIEW_MODEL_NAME;
-      }
-      catch (RestCallFailedException ex)
-      {
-        // Cannot find a Showcase for the id. Continue.
-        log.info("Did not find a Showcase for the identifier: {}", metadataIdOrName);
-      }
-      catch (Exception ex)
-      {
-        log.warn("An unexpected error occured while reading showcases: {}", ex.getMessage());
       }
     }
 
@@ -304,11 +297,11 @@ public class MetadataDetailsController
       model.addAttribute(MODEL_KEY_METADATA_JSON_LD, jsonLd);
       // set organization
       selectedMetadata.setOrganizationName(getOrganizationName(selectedMetadata.getMetadata().getOwnerOrg()));
-    }
 
-    // Get all Apps with the dataset
-    List<Link> showcaseListForDataset = readShowcaseListForDataset(metadataIdOrName);
-    selectedMetadata.setLinksToShowcases(showcaseListForDataset);
+      // Get all Apps with the dataset
+      List<Link> showcaseListForDataset = readShowcaseListForDataset(metadataIdOrName);
+      selectedMetadata.setLinksToShowcases(showcaseListForDataset);
+    }
 
     // set url for submitting rating via ajax
     selectedMetadata.setRatingActionUrl(
@@ -323,7 +316,7 @@ public class MetadataDetailsController
 
     model.addAttribute(MODEL_KEY_SELECTED_METADATA, selectedMetadata);
     model.addAttribute(MODEL_KEY_CURRENT_USER, currentUser);
-    model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
+    model.addAttribute(AbstractBaseController.MODEL_KEY_THEME_DISPLAY, themeDisplay);
     model.addAttribute(MODEL_KEY_CANEDIT, userCanEditDataset);
 
     // create LoginURL to be used with the fastlogin-popup - anonymous users can comment that way
@@ -669,12 +662,52 @@ public class MetadataDetailsController
 
   private SelectedShowcase createSelectedShowcase(String metadataIdOrName, CurrentUser currentUser)
   {
-    Long appId = Long.parseLong(metadataIdOrName);
-    Showcase showcase = showcaseResource.read(appId);
-    Objects.requireNonNull(showcase);
-    ShowcaseViewModel showcaseModel = ShowcaseMapper.mapShowcaseEntityToViewModel(showcase);
-    SelectedShowcase selectedShowcase =
-        new SelectedShowcase(showcaseModel, currentUser, categoryCache.getCategoryMap());
+    final String method = "createSelectedShowcase() : ";
+    log.trace(method + "Start");
+
+    SelectedShowcase selectedShowcase = null;
+    if (showcaseDbAvailableCache.isAvailable())
+    {
+      try
+      {
+        Long appId = Long.parseLong(metadataIdOrName);
+        Showcase showcase = showcaseResource.read(appId);
+        Objects.requireNonNull(showcase);
+        ShowcaseViewModel showcaseModel = ShowcaseMapper.mapShowcaseEntityToViewModel(showcase);
+        selectedShowcase = new SelectedShowcase(showcaseModel, currentUser, categoryCache.getCategoryMap());
+      }
+      catch (NumberFormatException ex)
+      {
+        // Invalid showcase id. Continue.
+        log.debug("Gets an invalid showcase identifier: {}", metadataIdOrName);
+      }
+      catch (EntityNotFoundException ex)
+      {
+        // Cannot find a showcase for the id. Continue.
+        log.info("Did not find a showcase for the identifier: {}", metadataIdOrName);
+      }
+      catch (Exception ex)
+      {
+        // Workaround for showcase was not found, because of bad exception mapping in showcase
+        // client
+        Throwable cause = ex.getCause();
+        if (cause instanceof NotFoundException)
+        {
+          // Cannot find a showcase for the id. Continue.
+          log.info("Did not find a showcase for the identifier: {}", metadataIdOrName);
+        }
+        else
+        {
+          log.warn("{}Unexpected error while reading showcase with ID {}. Details: {}. "
+              + "Disable reading showcases for {} {}.", method, metadataIdOrName, ex.getMessage(),
+              showcaseDbAvailableCache.getMaxCacheTimeAmount(),
+              showcaseDbAvailableCache.getCacheTemporalUnit());
+          showcaseDbAvailableCache.markAsNotAvailable();
+        }
+      }
+    }
+
+    log.trace(method + "End");
     return selectedShowcase;
   }
 
@@ -684,32 +717,39 @@ public class MetadataDetailsController
     log.trace(method + "Start");
 
     List<Link> showcaseListForDataset = new ArrayList<>();
-    try
+    if (showcaseDbAvailableCache.isAvailable())
     {
-      PageableRequest pageRequest = new PageableRequest(0, 50, "title", "asc");
-      SearchFilter searchFilter = SearchFilter.builder()
-          .searchColumns(Lists.newArrayList(USED_DATASETS_URL_COLUMN))
-          .searchKey(metadataIdOrName)
-          .build();
-      PagedList<Showcase> showcaseList = showcaseResource.list(pageRequest, searchFilter);
-      for (Showcase showcase : showcaseList.getItems())
+      try
       {
-        if (showcase.isHidden())
+        PageableRequest pageRequest = new PageableRequest(0, 50, "title", "asc");
+        SearchFilter searchFilter = SearchFilter.builder()
+            .searchColumns(Lists.newArrayList(USED_DATASETS_URL_COLUMN))
+            .searchKey(metadataIdOrName)
+            .build();
+        PagedList<Showcase> showcaseList = showcaseResource.list(pageRequest, searchFilter);
+        for (Showcase showcase : showcaseList.getItems())
         {
-          // Do not show private showcases
-          continue;
+          if (showcase.isHidden())
+          {
+            // Do not show private showcases
+            continue;
+          }
+          // Create a Link for each App
+          Link link = new Link();
+          link.setName(showcase.getTitle());
+          link.setUrl(gdNavigation.createLinkForMetadata(
+              "gdsearchdetails", showcase.getId().toString(), FRIENDLY_URL_NAME_SHOWROOM_PAGE).toString());
+          showcaseListForDataset.add(link);
         }
-        // Create a Link for each App
-        Link link = new Link();
-        link.setName(showcase.getTitle());
-        link.setUrl(gdNavigation.createLinkForMetadata(
-            "gdsearchdetails", showcase.getId().toString(), FRIENDLY_URL_NAME_SHOWROOM_PAGE).toString());
-        showcaseListForDataset.add(link);
       }
-    }
-    catch (Exception e)
-    {
-      log.warn("{}Error while reading linked showcases for dataset. Details: {}", method, e.getMessage());
+      catch (Exception ex)
+      {
+        log.warn("{}Unexpected error while reading linked showcases for the dataset. Details: {}. "
+            + "Disable reading showcases for datasets for {} {}.", method, ex.getMessage(),
+            showcaseDbAvailableCache.getMaxCacheTimeAmount(),
+            showcaseDbAvailableCache.getCacheTemporalUnit());
+        showcaseDbAvailableCache.markAsNotAvailable();
+      }
     }
 
     log.trace(method + "End");
@@ -895,5 +935,31 @@ public class MetadataDetailsController
         QueryParamNames.PARAM_MESSAGE,
         LanguageUtil.get(PortalUtil.getLocale(request), messageKey.toString()));
     response.setProperty(ResourceResponse.HTTP_STATUS_CODE, httpStatusCode);
+  }
+
+  private static final class ShowcaseDatabaseAvailabileCache extends BaseCache
+  {
+    private ShowcaseDatabaseAvailabileCache()
+    {
+      setCacheTemporalUnit(ChronoUnit.MINUTES);
+      setMaxCacheTimeAmount(10);
+    }
+
+    private boolean available = true;
+
+    private void markAsNotAvailable()
+    {
+      this.available = false;
+      cacheUpdated();
+    }
+
+    private boolean isAvailable()
+    {
+      if (!this.available && isCacheExpired())
+      {
+        this.available = true;
+      }
+      return this.available;
+    }
   }
 }

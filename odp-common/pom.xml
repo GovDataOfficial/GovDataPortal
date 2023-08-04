@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>5.16.0</version>
+    <version>6.1.0</version>
   </parent>
 
   <artifactId>odp-common</artifactId>
@@ -14,12 +14,18 @@
   </properties>
 
   <dependencies>
+    <!-- Http-Client -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+
     <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    
+
     <!-- Tools -->
     <dependency>
       <groupId>org.projectlombok</groupId>

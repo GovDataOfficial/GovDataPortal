@@ -45,8 +45,6 @@ public class FeaturedShowcaseController extends AbstractBaseController
 
   private static final String MODEL_LINK_SHOWROOM_KEY = "linkToShowroom";
 
-  private static final String MODEL_THEME_DISPLAY_KEY = "themeDisplay";
-
   private static final String MODEL_SHOW_SHOWROOM_KEY = "showShowroomButton";
 
   private static final String MODEL_ERROR_MSG_KEY = "errormessage";
@@ -130,7 +128,7 @@ public class FeaturedShowcaseController extends AbstractBaseController
     PortletURL redirectUrl = gdNavigation.createLinkForSearchResults(FRIENDLY_URL_NAME_SHOWROOM_PAGE,
         PORTLET_NAME_SEARCHRESULT, "");
 
-    model.addAttribute(MODEL_THEME_DISPLAY_KEY, themeDisplay);
+    model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
     model.addAttribute(MODEL_SHOWCASE_KEY, selectedShowcase);
     model.addAttribute(MODEL_LINK_SHOWCASE_KEY, linkToShowcase);
     model.addAttribute(MODEL_LINK_SHOWROOM_KEY, redirectUrl.toString());

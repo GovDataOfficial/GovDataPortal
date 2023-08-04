@@ -111,7 +111,7 @@ public class SearchNumbersController
         model.addAttribute(modelAttributeName, nvm);
       }
     }
-    model.addAttribute("themeDisplay", themeDisplay);
+    model.addAttribute(AbstractBaseController.MODEL_KEY_THEME_DISPLAY, themeDisplay);
     model.addAttribute("showTwitter", showTwitter);
     model.addAttribute("latestTweet", tweet);
     return "searchnumbers";

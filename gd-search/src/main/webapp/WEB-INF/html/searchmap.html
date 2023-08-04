@@ -11,7 +11,7 @@
      <div class="map-search-button-container row">
        <div class="column small-12 medium-8 large-6 locationsearch">
          <label class="offscreen" for="locationsearchinput" th:text="#{'od.mapsearch.locationsearch.input.placeholder'}"></label>
-         <input type="search" id="locationsearchinput" class="input-search" th:placeholder="#{'od.mapsearch.locationsearch.input.placeholder'}"/>
+         <input type="search" id="locationsearchinput" class="input-search" th:placeholder="#{'od.mapsearch.locationsearch.input.placeholder'}" th:disabled=${#strings.isEmpty(searchMap.geocodingUrl)}/>
        </div>
        <div class="column small-12 medium-4">
          <input type="submit" class="map-search-button button-search hide-for-large-up" th:value="#{od.search.field.submit}" />
@@ -30,4 +30,5 @@
      </div>
    </div>
   </form>
+  <script language="JavaScript" type="text/javascript" th:src="@{${themeDisplay.pathContext} + '/js/ol-govdata.js'}"></script>
 </div>

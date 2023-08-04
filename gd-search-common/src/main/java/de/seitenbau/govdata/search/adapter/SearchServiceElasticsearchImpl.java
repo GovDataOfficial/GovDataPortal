@@ -90,6 +90,8 @@ import org.springframework.stereotype.Service;
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.common.client.TrustAllStrategy;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.odp.common.http.client.config.OdpRequestConfig;
+import de.seitenbau.govdata.odp.common.http.impl.client.OdpConnectionKeepAliveStrategy;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.search.common.ESFieldConsts;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
@@ -235,10 +237,13 @@ public class SearchServiceElasticsearchImpl implements SearchService
         httpHosts.toArray(new HttpHost[0]))
         .setHttpClientConfigCallback(
             httpClientBuilder -> {
-              httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-              httpClientBuilder.setSSLContext(sslContext);
-              httpClientBuilder
-                  .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+              httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)
+                  .setSSLContext(sslContext)
+                  .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                  .setKeepAliveStrategy(OdpConnectionKeepAliveStrategy.INSTANCE)
+                  .setDefaultRequestConfig(OdpRequestConfig.REQUEST_CONFIG)
+                  .setMaxConnPerRoute(20)
+                  .setMaxConnTotal(40);
               return httpClientBuilder;
             });
     client = new RestHighLevelClient(builder);

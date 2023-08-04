@@ -63,6 +63,7 @@ import de.seitenbau.govdata.search.common.SearchQuery;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
+import de.seitenbau.govdata.search.filter.util.FilterUtil;
 import de.seitenbau.govdata.search.geostate.cache.GeoStateCache;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.FilterViewListModel;
@@ -132,6 +133,9 @@ public class SearchresultController extends AbstractBaseController
 
   @Inject
   private ParameterProcessing parameterProcessing;
+
+  @Inject
+  private FilterUtil filterUtil;
 
   /**
    * Display search result.
@@ -361,12 +365,12 @@ public class SearchresultController extends AbstractBaseController
         .build();
 
     model.addAttribute(MODEL_KEY_SHOW_DATASET_OPTIONS,
-        ArrayUtils.contains(SearchConsts.CKAN_TYPES_ALL, preparm.getType()));
-    model.addAttribute(MODEL_KEY_SHOW_SHOWCASE_OPTIONS, ArrayUtils
-        .contains(new String[] {SearchConsts.TYPE_ALL, SearchConsts.TYPE_SHOWCASE}, preparm.getType()));
+        checkShowOptions(preparm.getType(), SearchConsts.TYPE_DATASET, SearchConsts.CKAN_TYPES_ALL));
+    model.addAttribute(MODEL_KEY_SHOW_SHOWCASE_OPTIONS, checkShowOptions(preparm.getType(),
+        SearchConsts.TYPE_SHOWCASE, new String[] {SearchConsts.TYPE_ALL, SearchConsts.TYPE_SHOWCASE}));
 
     model.addAttribute(MODEL_KEY_SEARCH_RESULT, searchResultsViewModel);
-    model.addAttribute("themeDisplay", themeDisplay);
+    model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
 
     // set scroll url
     ResourceURL nextHitsResourceURL = response.createResourceURL();
@@ -375,6 +379,16 @@ public class SearchresultController extends AbstractBaseController
 
     log.debug("showSearchResults finished");
     return "searchresult";
+  }
+
+  private boolean checkShowOptions(String currentFilterType, String filterTypeForOptions,
+      String[] responsibleTypes)
+  {
+    if (filterUtil.getDefaultTypeFilterValues().contains(filterTypeForOptions))
+    {
+      return ArrayUtils.contains(responsibleTypes, currentFilterType);
+    }
+    return false;
   }
 
   @SuppressWarnings("unchecked")
@@ -476,7 +490,7 @@ public class SearchresultController extends AbstractBaseController
         .scrollId(result.getScrollId())
         .build();
     model.addAttribute(MODEL_KEY_SEARCH_RESULT, nextHits);
-    model.addAttribute("themeDisplay", themeDisplay);
+    model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
 
     log.debug(method + "End");
     return "fragments/hits :: partialList";

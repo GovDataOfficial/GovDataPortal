@@ -1,4 +1,17 @@
 # Changelog
+## v6.1.0 2023-08-01
+
+* Supports using session ID for restricted BKG services. Replaces the use of the API Key with the session ID
+  in the GovData map search.
+* Fixes editing portlet information in the frontend configuration, if a portlet has JavaScript files included
+* Improves reading and searching showcases from the showcases service
+* Shows publisher filter options on search result page only if the type is available
+* Adds db pool parameters and sets keepaliveTime and maxlifetime in portal configuration
+* Sets individual keep alive strategy for HTTP client connections with a maximum keep alive time
+* Sets connect and socket timeouts for HTTP client connections explicitly
+* Increases max connections for the HTTP clients
+* Changes slf4j dependency from version 2.x back to version 1.7.x, due to comatibility with Liferay
+
 ## v5.16.0 2023-06-29
 
 * Updates maven dependencies to the latest bugfix / security fix version

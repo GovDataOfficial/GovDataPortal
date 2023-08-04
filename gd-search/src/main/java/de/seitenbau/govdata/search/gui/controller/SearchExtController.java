@@ -137,6 +137,7 @@ public class SearchExtController extends AbstractBaseController
         .build();
     
     model.addAttribute("searchExt", viewModel);
+    model.addAttribute(MODEL_KEY_THEME_DISPLAY, themeDisplay);
     return "searchext";
   }
   

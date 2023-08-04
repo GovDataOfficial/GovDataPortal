@@ -82,7 +82,7 @@ function initMap() {
     })
   ];
 
-  var boundingboxfield = document.getElementById('boundingbox').value;
+  var boundingboxfield = document.getElementById('boundingbox') ? document.getElementById('boundingbox').value : "";
   var bboxpredefined = false;
   var box;
   if(boundingboxfield.length > 0) {
