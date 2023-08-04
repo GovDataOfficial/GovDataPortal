@@ -1,4 +1,8 @@
 # Changelog
+## v6.1.1 2023-08-01
+
+* Updates the search criterias for the state search portlet
+
 ## v6.1.0 2023-08-01
 
 * Supports using session ID for restricted BKG services. Replaces the use of the API Key with the session ID
