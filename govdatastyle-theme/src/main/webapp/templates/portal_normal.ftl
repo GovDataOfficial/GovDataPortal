@@ -71,7 +71,7 @@
               <div class="container">
                 <span>
                   <a id="_145_navSiteNavigationNavbarBtn" class="btn btn-navbar" tabindex="0">
-                    <i class="icon-reorder"></i>
+                    <i class="icon-reorder fa-solid"></i>
                   </a>
                 </span>
                 <span>

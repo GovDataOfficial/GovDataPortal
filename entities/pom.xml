@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.2.0</version>
+    <version>6.2.1</version>
   </parent>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>entities</artifactId>

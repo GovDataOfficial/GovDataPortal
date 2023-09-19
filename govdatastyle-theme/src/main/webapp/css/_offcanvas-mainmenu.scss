@@ -199,8 +199,7 @@
       content: '\f107';
       speak: none;
       float: right;
-      font-family: 'fontawesome-alloy';
-      font-size: 1.3em;
+      font: var(--fa-font-solid);
     }
 
     &:active,

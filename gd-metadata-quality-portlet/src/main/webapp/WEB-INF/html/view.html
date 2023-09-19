@@ -2,7 +2,7 @@
   <div id="contentPane" class="contentPane row">
     <div class="column small-12 large-8 typefilterarea show-for-medium-down">
       <a th:class="'open-filter-menu-small right-off-canvas-toggle' + (${selectedSourcePortal} == ${allPublishers} ? '' : ' active-filters')">
-        <i class="sbi-hamburger-menu pull-right"></i>
+        <i class="sbi-hamburger-menu fa-pull-right"></i>
         <span th:if="${selectedSourcePortal} == ${allPublishers}">[[#{gd.metadata.filter.label}]]: [[#{gd.metadata.filter.none}]]</span>
         <span th:unless="${selectedSourcePortal} == ${allPublishers}">[[#{gd.metadata.filter.label}]]: [[#{gd.metadata.filter.active}]]</span>
       </a>

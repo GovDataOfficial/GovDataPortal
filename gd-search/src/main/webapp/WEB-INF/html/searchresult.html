@@ -19,7 +19,7 @@
   <!--/* Filter-Menu-Opener, only shown for medium breakpoint */-->
   <div class="column medium-6 show-for-medium-only">
     <a class="" th:class="'open-filter-menu-medium right-off-canvas-toggle' + (${searchResult.hasActiveFilters} ? ' active-filters' : '')">
-      <i class="sbi-hamburger-menu pull-right"></i>
+      <i class="sbi-hamburger-menu fa-pull-right"></i>
       [[#{od.gdsearch.filter.label}]]
     </a>
   </div>
@@ -46,7 +46,7 @@
     </div>
 
     <a th:class="'open-filter-menu-small right-off-canvas-toggle show-for-small-only' + (${searchResult.hasActiveFilters} ? ' active-filters' : '')">
-      <i class="sbi-hamburger-menu pull-right"></i>
+      <i class="sbi-hamburger-menu fa-pull-right"></i>
       <span th:if="${searchResult.hasActiveFilters}">[[#{od.gdsearch.filter.label}]]: [[#{active}]]</span>
       <span th:unless="${searchResult.hasActiveFilters}">[[#{od.gdsearch.filter.label}]]: [[#{od.gdsearch.filter.no_active_filter}]]</span>
     </a>

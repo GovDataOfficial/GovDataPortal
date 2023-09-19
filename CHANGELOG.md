@@ -1,8 +1,14 @@
 # Changelog
+
+## v6.2.1 2023-09-13
+
+* Fixes icons after Font Awesome update
+
 ## v6.2.0 2023-09-13
 
 * Replaces Twitter icon with the new X icon and removes the Facebook social media link
 * Adds the possiblity to the portlet "GovData in numbers" additionally displaying the latest post from Mastodon
+* Updates the Font Awesome library to the latest Font Awesome version 6.4.2 and disables the version shipped with Liferay
 * Updates Apache Jena Fuseki client library to version 4.9.0
 * Fixes interpreting line breaks as HTML on metadata details view
 * Fixes navigating to type filter "all" on search result pages /daten and /showroom
