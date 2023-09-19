@@ -167,6 +167,34 @@ public class ResourceImplTest
     assertThat(result).isEqualTo("plannedAvailability");
   }
 
+  @Test
+  public void getDescriptionOnlyText_description_null() throws Exception
+  {
+    /* prepare */
+    ResourceImpl target = createDefaultResource(null);
+
+    /* execute */
+    String result = target.getDescriptionOnlyText();
+
+    /* assert */
+    assertThat(result).isEmpty();
+    assertThat(target.getDescription()).isNull();
+  }
+
+  @Test
+  public void getDescriptionOnlyText_description() throws Exception
+  {
+    /* prepare */
+    ResourceImpl target = createDefaultResource(null);
+    target.setDescription("<b>text</b> <script>script content</script> and text");
+
+    /* execute */
+    String result = target.getDescriptionOnlyText();
+
+    /* assert */
+    assertThat(result).isEqualTo("text and text");
+  }
+
   private ResourceImpl createDefaultResource(String licenseId)
   {
     return new ResourceImpl(this.odrClient, createDefaultResourceBean(licenseId));

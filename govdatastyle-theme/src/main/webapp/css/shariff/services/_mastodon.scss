@@ -1,0 +1,25 @@
+.shariff {
+    .mastodon {
+        border-color: #563ACC;
+        a {
+            background-color: #563ACC;
+            &:hover,
+            &:active,
+            &:focus {
+                color: #563ACC;
+            }
+        }
+        .fa-mastodon {
+            font-size: 28px;
+        }
+        .share_count {
+            color: #6364FF;
+            background-color: #858AFA;
+        }
+    }
+    .theme-white {
+        .mastodon a {
+            color: #563ACC;
+        }
+    }
+}

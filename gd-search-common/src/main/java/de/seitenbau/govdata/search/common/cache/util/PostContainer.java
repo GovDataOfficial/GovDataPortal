@@ -10,14 +10,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Store Tweet information.
+ * Store Tweet & Post information.
  *
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TweetContainer
+public class PostContainer
 {
   private String text;
 
@@ -34,12 +34,13 @@ public class TweetContainer
   private String type;
 
   /**
-   * Returns the state if the tweet is of type retweet.
-   * @return true if the tweet is a retweet, otherwise false.
+   * Returns the state if the post is of type retweet or boosted.
+   * @return true if the post is a retweet, otherwise false.
    */
   public boolean isRetweet()
   {
-    return StringUtils.equals(type, "retweeted");
+    return StringUtils.equals(type, SocialMediaPlatformsConsts.TWITTER_RETWEETED)
+        || StringUtils.equals(type, SocialMediaPlatformsConsts.MASTODON_BOOSTED);
   }
 
 }

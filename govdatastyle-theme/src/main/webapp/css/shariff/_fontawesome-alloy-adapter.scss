@@ -1,37 +1,5 @@
 // so liferay uses some alloyUI-version of awesome... how... not awesome. Just create our own classes and be done with it.
 
-.fa {
-  display: inline-block;
-  font-family: 'fontawesome-alloy';
-  font-feature-settings: normal;
-  font-kerning: auto;
-  font-size: inherit;
-  font-size-adjust: none;
-  font-stretch: normal;
-  font-style: normal;
-  font-variant: normal;
-  font-weight: normal;
-  line-height: 1;
-  text-rendering: auto;
-}
-
-
-.fa-twitter::before {
-  content: '\f099';
-}
-
-.fa-facebook::before {
-  content: '\f09a';
-}
-
-.fa-google-plus::before {
-  content: '\f0d5';
-}
-
-.fa-envelope::before {
-  content: '\f003';
-}
-
 .fa-asterisk::before {
   content: 'Q';
   speak: none;

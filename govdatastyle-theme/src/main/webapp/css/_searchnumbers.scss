@@ -197,7 +197,7 @@
     }
   }
 
-  .twitter-included-list {
+  .social-media-included-list {
     @media #{$medium-only} {
       // only two boxes per row
       margin-left: auto;
@@ -235,46 +235,51 @@
       }
     }
 
-    .type-twitter {
+    .type-social-media {
 
-      .tweet-header {
+      .post-header {
         font-size: 25px;
         float: left;
         width: 100%;
         margin-bottom: 5px;
       }
   
-      .tweet-icon {
+      .post-icon {
         float: left;
         font-size: 20px;
-        background-color: $twitter-blue;
         padding: 5px;
         border-radius: 50%;
       }
   
-      .tweet-author {
+      .fa-x-twitter {
+        background-color: $twitter-black;
+      }
+      .fa-mastodon {
+        background-color: $mastodon-purple;
+      }
+      .post-author {
         float: left;
         margin-left: 7px;
       }
   
-      .tweet-user {
+      .post-user {
         font-size: 12px;
         line-height: 14px;
         float: left;
         clear: left;
       }
   
-      .tweet-username {
+      .post-username {
         font-weight: 300;
       }
   
-      .tweet-date {
+      .post-date {
         font-size: 12px;
         font-weight: 300;
         float: right;
       }
   
-      .tweet-body {
+      .post-body {
         font-size: 12px;
         line-height: 20px;
         display: block;

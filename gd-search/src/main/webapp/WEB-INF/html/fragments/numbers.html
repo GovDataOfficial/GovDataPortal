@@ -25,32 +25,32 @@
       </div>
     </li>
   
-    <li th:fragment="displayTwitter(latestTweet)" th:remove="tag">
+    <li th:fragment="displaySocialMedia(latestPost, platform, platformIcon, hasSharedText)" th:remove="tag">
       <div class="numbers-grid-item">
-       <div id="number-id-twitter" class="design-box grid-box">
-        <a id="linkTo_twitter" target="_blank" th:href="${latestTweet.url}" th:insert="~{fragments/numbers :: displayTwitterHeader(${latestTweet}, 90)}">
+       <div th:id="'number-id-'+${platform}" class="design-box grid-box">
+        <a th:id="'linkTo_'+${platform}" target="_blank" th:href="${latestPost.url}" th:insert="~{fragments/numbers :: displaySocialMediaHeader(${latestPost}, 90, ${platformIcon}, ${hasSharedText})}">
         </a>
        </div>
       </div>
       <div class="numbers-list-item">
         <div class="design-box grid-box">
-        <a th:href="${latestTweet.url}" target="_blank" th:insert="~{fragments/numbers :: displayTwitterHeader(${latestTweet}, 135)}">
+        <a th:href="${latestPost.url}" target="_blank" th:insert="~{fragments/numbers :: displaySocialMediaHeader(${latestPost}, 135, ${platformIcon}, ${hasSharedText})}">
         </a>
        </div>
       </div>
     </li>
   </ul>
 
-  <div th:fragment="displayTwitterHeader(latestTweet, textLength)" th:remove="tag">
-    <div class="tweet-header">
-      <i class="icon-twitter tweet-icon"></i>
-      <div class="tweet-author">
-        <span th:text="${latestTweet.name}" class="tweet-user"></span>
-        <span th:text="${latestTweet.isRetweet()} ? #{od.numbers.twitter.hasRetweetet} : '@' + ${latestTweet.username}" class="tweet-user tweet-username"></span>
+  <div th:fragment="displaySocialMediaHeader(latestPost, textLength, platformIcon, hasSharedText)" th:remove="tag">
+    <div class="post-header">
+      <i class="post-icon fa-brands" th:classappend="${platformIcon}"></i>
+      <div class="post-author">
+        <span th:text="${latestPost.name}" class="post-user"></span>
+        <span th:text="${latestPost.isRetweet()} ? ${hasSharedText} : '@' + ${latestPost.username}" class="post-user post-username"></span>
       </div>
-      <span th:text="${#temporals.format(latestTweet.timestamp, 'dd. MMM. yyyy')}" class="tweet-date"></span>
+      <span th:text="${#temporals.format(latestPost.timestamp, 'dd. MMM. yyyy')}" class="post-date"></span>
     </div>
-    <span class="tweet-body" th:text="${#strings.abbreviate(latestTweet.text, textLength)}"></span>
+    <span class="post-body" th:text="${#strings.abbreviate(latestPost.text, textLength)}"></span>
   </div>
 
 </div>

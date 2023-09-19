@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>6.1.1</version>
+  <version>6.2.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -38,7 +38,7 @@
     <elasticsearch.version>7.17.9</elasticsearch.version>
     <jetty.version>7.6.21.v20160908</jetty.version>
     <jersey.version>1.9.1</jersey.version>
-    <apache.jena.version>4.7.0</apache.jena.version>
+    <apache.jena.version>4.9.0</apache.jena.version>
     <resteasy.version>3.15.6.Final</resteasy.version>
     <resteasy.jaxrs.api.version>3.0.12.Final</resteasy.jaxrs.api.version>
     <jackson.version>2.15.2</jackson.version>

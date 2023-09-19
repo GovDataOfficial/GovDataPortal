@@ -1,11 +1,12 @@
 <div xmlns:th="http://www.thymeleaf.org">
   <div class="row" id="number-portlet">
     <div class="small-12">
-      <ul class="numbers-list" th:classappend="${showTwitter} ? 'twitter-included-list' : ''">
+      <ul class="numbers-list" th:classappend="${showPlatform} ? 'social-media-included-list' : ''">
         <li th:replace="~{fragments/numbers :: displayNumber(${numberDataset}, #{od.numbers.datasets}, 'dataset', ${themeDisplay})}"></li>
         <li th:replace="~{fragments/numbers :: displayNumber(${numberShowcase}, #{od.numbers.showcases}, 'anwendung', ${themeDisplay})}"></li>
         <li th:replace="~{fragments/numbers :: displayNumber(${numberBlog}, #{od.numbers.blogs}, 'blog', ${themeDisplay})}"></li>
-        <li th:insert="~{fragments/numbers :: displayTwitter(${latestTweet})}" class="numbers-box type-twitter" th:if="${showTwitter}"></li>
+        <li th:insert="~{fragments/numbers :: displaySocialMedia(${twitter}, 'twitter', 'fa-x-twitter', #{od.numbers.twitter.hasRetweetet})}" class="numbers-box type-social-media" th:if="${twitter}"></li>
+        <li th:insert="~{fragments/numbers :: displaySocialMedia(${mastodon}, 'mastodon', 'fa-mastodon', #{od.numbers.mastodon.hasboosted})}" class="numbers-box type-social-media" th:if="${mastodon}"></li>
       </ul>
     </div>
   </div>

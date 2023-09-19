@@ -182,11 +182,14 @@ public class ParameterProcessing
     if (CollectionUtils.isNotEmpty(groupList))
     {
       String filterTypeValue = groupList.get(0);
-      if (SearchConsts.VALID_FILTER_TYPES.contains(filterTypeValue)
-          && filterUtil.getDefaultTypeFilterValues().contains(filterTypeValue))
+      if (SearchConsts.VALID_FILTER_TYPES.contains(filterTypeValue))
       {
-        log.trace(method + "End with selected filter '" + filterTypeValue + "'");
-        return filterTypeValue;
+        if (StringUtils.equals(filterTypeValue, SearchConsts.TYPE_ALL)
+            || filterUtil.getDefaultTypeFilterValues().contains(filterTypeValue))
+        {
+          log.trace(method + "End with selected filter '" + filterTypeValue + "'");
+          return filterTypeValue;
+        }
       }
       else
       {

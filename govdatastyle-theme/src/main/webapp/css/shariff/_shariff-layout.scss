@@ -57,7 +57,8 @@ $size: 33px;
             vertical-align: middle;
             line-height: rem-calc($size);
         }
-        .fa {
+        .fa-brands,
+        .fa-regular {
             width: rem-calc($size);
             line-height: rem-calc($size);
             text-align: center;

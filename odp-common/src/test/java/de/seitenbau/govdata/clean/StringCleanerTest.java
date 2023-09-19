@@ -141,6 +141,25 @@ public class StringCleanerTest
   }
 
   @Test
+  public void trimAndFilterStringWithWhitelist_line_breaks() throws Exception
+  {
+    /* prepare */
+    String dirty =
+        "sdfdsf <b>bold</b> <i>italic</i> <u>underline</u>\r\n <a style=\"class\" href=\"http://test.de\">"
+            + "link</a>\n <p><ul> \r\n <li>one</li></ul>&#13;&#13;<ol> <li>two</li></ol></p>&#13;"
+            + "<p>second\n paragraph</p>";
+
+    /* execute */
+    String result = StringCleaner.trimAndFilterString(dirty, StringCleaner.WHITELIST_METADATA_NOTES);
+
+    /* verify */
+    Assertions.assertThat(result)
+        .isEqualTo("sdfdsf <b>bold</b> <i>italic</i> <u>underline</u>\n <a href=\"http://test.de\" "
+            + "rel=\"nofollow\" target=\"_blank\">link</a>\n <p></p><ul> <br> <li>one</li></ul>\r<br><ol> "
+            + "<li>two</li></ol><p></p>\r<p>second<br> paragraph</p>");
+  }
+
+  @Test
   public void trimAndFilterStringWithWhitelist_aTag_href_empty() throws Exception
   {
     /* prepare */

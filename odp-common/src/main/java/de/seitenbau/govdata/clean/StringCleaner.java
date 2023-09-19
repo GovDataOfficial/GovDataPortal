@@ -19,6 +19,7 @@ package de.seitenbau.govdata.clean;
 
 import java.text.Normalizer;
 
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -82,6 +83,7 @@ public abstract class StringCleaner
       Document cleaned = cleaner.clean(dirty);
       cleaned.outputSettings().prettyPrint(false);
       result = cleaned.body().html();
+      result = RegExUtils.replaceAll(RegExUtils.replaceAll(result, "(\\r\\n)", "\n"), "(?<!>)(\\R)", "<br>");
     }
     return result;
   }

@@ -1,4 +1,13 @@
 # Changelog
+## v6.2.0 2023-09-13
+
+* Replaces Twitter icon with the new X icon and removes the Facebook social media link
+* Adds the possiblity to the portlet "GovData in numbers" additionally displaying the latest post from Mastodon
+* Updates Apache Jena Fuseki client library to version 4.9.0
+* Fixes interpreting line breaks as HTML on metadata details view
+* Fixes navigating to type filter "all" on search result pages /daten and /showroom
+* Improves the styling in headlines if the word is too long for the line
+
 ## v6.1.1 2023-08-01
 
 * Updates the search criterias for the state search portlet

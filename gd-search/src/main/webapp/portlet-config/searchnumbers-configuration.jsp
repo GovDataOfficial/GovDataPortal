@@ -7,12 +7,14 @@
 
 <%
 boolean showTwitter = GetterUtil.getBoolean(portletPreferences.getValue("showTwitter", StringPool.FALSE));
+boolean showMastodon = GetterUtil.getBoolean(portletPreferences.getValue("showMastodon", StringPool.FALSE));
 %>
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm">
+
     <aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
-    
     <aui:input label="Zeige die aktuellste Twittermeldung" name="preferences--showTwitter--" type="checkbox" value="<%= showTwitter %>" />
+    <aui:input label="Zeige die aktuellste Mastodonmeldung" name="preferences--showMastodon--" type="checkbox" value="<%= showMastodon %>" />
 
     <aui:button-row>
        <aui:button type="submit" />

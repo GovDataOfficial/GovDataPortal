@@ -28,9 +28,11 @@ import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.search.common.cache.MastodonCache;
 import de.seitenbau.govdata.search.common.cache.NumberCache;
 import de.seitenbau.govdata.search.common.cache.TweetCache;
-import de.seitenbau.govdata.search.common.cache.util.TweetContainer;
+import de.seitenbau.govdata.search.common.cache.util.PostContainer;
+import de.seitenbau.govdata.search.common.cache.util.SocialMediaPlatformsConsts;
 import de.seitenbau.govdata.search.gui.model.NumberViewModel;
 import de.seitenbau.govdata.search.util.NumberParser;
 
@@ -46,6 +48,9 @@ public class SearchNumbersController
 
   @Inject
   private TweetCache tweetCache;
+
+  @Inject
+  private MastodonCache mastodonCache;
 
   private NumberParser numberParser = new NumberParser();
 
@@ -78,18 +83,25 @@ public class SearchNumbersController
 
     // get portlet config
     PortletPreferences portletPreferences = request.getPreferences();
-    boolean showTwitter =
-        GetterUtil.getBoolean(portletPreferences.getValue("showTwitter", StringPool.FALSE));
 
-    // get latest tweet if required
-    TweetContainer tweet = null;
-    if (showTwitter)
+    // manage social media posts
+    boolean showPlatform = false;
+    if (GetterUtil.getBoolean(portletPreferences.getValue("showTwitter", StringPool.FALSE)))
     {
-      tweet = tweetCache.getTweetData();
-      if (tweet == null)
+      PostContainer twitterPost = tweetCache.getTweetData();
+      if (twitterPost != null)
       {
-        // Don't show twitter if no tweet is available
-        showTwitter = false;
+        model.addAttribute(SocialMediaPlatformsConsts.TWITTER, twitterPost);
+        showPlatform = true;
+      }
+    }
+    if (GetterUtil.getBoolean(portletPreferences.getValue("showMastodon", StringPool.FALSE)))
+    {
+      PostContainer mastodonPost = mastodonCache.getPostData();
+      if (mastodonPost != null)
+      {
+        model.addAttribute(SocialMediaPlatformsConsts.MASTODON, mastodonPost);
+        showPlatform = true;
       }
     }
 
@@ -112,8 +124,7 @@ public class SearchNumbersController
       }
     }
     model.addAttribute(AbstractBaseController.MODEL_KEY_THEME_DISPLAY, themeDisplay);
-    model.addAttribute("showTwitter", showTwitter);
-    model.addAttribute("latestTweet", tweet);
+    model.addAttribute("showPlatform", showPlatform);
     return "searchnumbers";
   }
 

@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import de.seitenbau.govdata.odp.common.cache.BaseCache;
-import de.seitenbau.govdata.search.common.cache.util.TweetContainer;
+import de.seitenbau.govdata.search.common.cache.util.PostContainer;
 import lombok.extern.slf4j.Slf4j;
 
 /***
@@ -49,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 public class TweetCache extends BaseCache
 {
-  private TweetContainer tweet;
+  private PostContainer tweet;
 
   @Value("${govdata.twitter.url}")
   private String twitterUrl;
@@ -90,7 +90,7 @@ public class TweetCache extends BaseCache
    * Gibt die Daten aus dem Cache zurück. Falls keine vorliegen werden diese erst geladen.
    * @return
    */
-  public TweetContainer getTweetData()
+  public PostContainer getTweetData()
   {
     final String method = "getTweetData() : ";
     log.trace("{}Start", method);
@@ -110,12 +110,12 @@ public class TweetCache extends BaseCache
    * Frage den aktuellen Tweet von der Twitter API ab.
    * @return
    */
-  private TweetContainer getNewestTweet()
+  private PostContainer getNewestTweet()
   {
     final String method = "getNewestTweet() : ";
     log.trace(method + "Start");
 
-    TweetContainer result;
+    PostContainer result;
     String response = sendRequest();
     if (response == null)
     {
@@ -166,7 +166,8 @@ public class TweetCache extends BaseCache
       }
 
       JSONObject jsonUser = readUserFromJson(json);
-      result = TweetContainer.builder().text(latestPost.get(TwitterApiKeys.POST_TEXT.getKey()).toString())
+      result = PostContainer.builder()
+          .text(latestPost.get(TwitterApiKeys.POST_TEXT.getKey()).toString())
           .id(latestPost.get(TwitterApiKeys.POST_ID.getKey()).toString())
           .url(twitterUrl)
           .username(jsonUser.get(TwitterApiKeys.USER_USERNAME.getKey()).toString())

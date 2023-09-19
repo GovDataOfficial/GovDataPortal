@@ -1,15 +1,15 @@
 .shariff {
     .twitter {
-        border-color: #55acee;
+        border-color: #14171A;
         a {
-            background-color: #55acee;
+            background-color: #14171A;
             &:hover,
             &:active,
             &:focus {
-                color: #55acee;
+                color: #14171A;
             }
         }
-        .fa-twitter {
+        .fa-x-twitter {
             font-size: 28px;
         }
         .share_count {
@@ -19,7 +19,7 @@
     }
     .theme-white {
         .twitter a {
-            color: #55acee;
+            color: #14171A;
         }
     }
 }

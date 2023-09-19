@@ -31,6 +31,10 @@
         <Class name="de.seitenbau.govdata.search.common.cache.TweetCache" />
         <Method name="getTweetData" />
       </And>
+      <And>
+        <Class name="de.seitenbau.govdata.search.common.cache.MastodonCache" />
+        <Method name="getPostData" />
+      </And>
     </Or>
   </Match>
 </FindBugsFilter>

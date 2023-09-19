@@ -10,7 +10,6 @@ import java.util.Objects;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -244,7 +243,7 @@ public class EditControllerTest
     res.setUrl("res url");
     res.setIssued("2022-10-20");
     res.setModified("2022-11-222");
-    editForm.setResources(Lists.newArrayList(res));
+    editForm.setResources(List.of(res));
 
     MockActionResponse response = new MockActionResponse();
     MockActionRequest request = new MockActionRequest();
@@ -429,7 +428,7 @@ public class EditControllerTest
     if (Objects.nonNull(contributorID))
     {
       contributorIdExtra.setKey(MetadataListExtraFields.CONTRIBUTOR_ID.getField());
-      contributorIdExtra.setValue(new Gson().toJson(Lists.newArrayList(contributorID)));
+      contributorIdExtra.setValue(new Gson().toJson(List.of(contributorID)));
       extras.add(contributorIdExtra);
     }
     orgBean.setExtras(extras);

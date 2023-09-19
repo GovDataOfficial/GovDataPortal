@@ -132,7 +132,7 @@
           <div class="share-container">
             <h2 class="share-label"><@liferay.language key="od.share" /></h2>
             <span class="shariff"
-              data-services="[&quot;twitter&quot;, &quot;facebook&quot;, &quot;diaspora&quot;, &quot;mail&quot;]"
+              data-services="[&quot;twitter&quot;, &quot;mastodon&quot;, &quot;facebook&quot;, &quot;diaspora&quot;, &quot;mail&quot;]"
               data-title="${the_title?esc} - ${company_name?esc}"
               data-mail-url="mailto:"
               data-mail-subject="${the_title?esc} - ${company_name?esc}"></span>
@@ -167,14 +167,14 @@
             <ul class="social-icons">
               <li>
                 <a href="https://twitter.com/govdata_de" target="_blank" title="Twitter">
-                  <i class="icon-twitter"></i>
+                  <i class="fa-brands fa-x-twitter"></i>
                   <span class="offscreen">Twitter</span>
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/govdata.de/" target="_blank" title="Facebook">
-                  <i class="icon-facebook"></i>
-                  <span class="offscreen">Facebook</span>
+                <a href="https://mastodon.social/@opendata@social.bund.de" target="_blank" title="Mastodon">
+                  <i class="fa-brands fa-mastodon"></i>
+                  <span class="offscreen">Mastodon</span>
                 </a>
               </li>
             </ul>
@@ -193,7 +193,7 @@
       <script>
         $(document).foundation();
       </script>
-      <script src="${javascript_folder}/shariff.min.js"></script>
+      <script src="${javascript_folder}/shariff.min.js?t=${theme_timestamp}"></script>
       <script src="${javascript_folder}/customize.js?t=${theme_timestamp}"></script>
     </div>
   </div>
