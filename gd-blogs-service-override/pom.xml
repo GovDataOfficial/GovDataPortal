@@ -5,16 +5,11 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.2.1</version>
+    <version>6.2.2</version>
   </parent>
   <groupId>de.seitenbau.blogs.service.override</groupId>
   <artifactId>gd-blogs-service-override</artifactId>
   <modelVersion>4.0.0</modelVersion>
-
-  <properties>
-    <checkstyle.suppressions>${basedir}/src/main/plugin-config/checkstyle-suppressions.xml</checkstyle.suppressions>
-    <spotbugs.excludeFilterFile>${basedir}/src/main/plugin-config/spotbugs-exclude.xml</spotbugs.excludeFilterFile>
-  </properties>
 
   <build>
     <plugins>
@@ -39,6 +34,20 @@
           <excludes>
             <exclude>**/META-INF/resources/**/.sass-cache/</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+            <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>

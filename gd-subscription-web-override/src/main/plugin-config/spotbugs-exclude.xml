@@ -1,6 +1,0 @@
-<FindBugsFilter>
-  <Match>
-    <!-- Ignore all java files -->
-    <Source name="~.*\.java" />
-  </Match>
-</FindBugsFilter>

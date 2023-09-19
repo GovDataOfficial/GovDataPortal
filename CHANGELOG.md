@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.2.2 2023-09-19
+
+* Fixes the location icon in the map search after Font Awesome update
+* Fixes the URL for the parameter `mapsearch.geocodingUrl` in the portal configuration
+
 ## v6.2.1 2023-09-13
 
 * Fixes icons after Font Awesome update

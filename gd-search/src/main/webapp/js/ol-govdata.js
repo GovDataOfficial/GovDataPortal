@@ -272,7 +272,7 @@ function initMap() {
 
     var button = document.createElement('button');
     button.type = 'button'; // prevent form submit
-    button.innerHTML = '<i class="icon-map-marker"></i>';
+    button.innerHTML = '<i class="icon-map-marker fa-location-dot fa-solid"></i>';
     button.title = 'Auswahl-Rechteck zurücksetzen und auf Karte neu positionieren';
     button.addEventListener('click', centerSelection, false);
     button.addEventListener('touchstart', centerSelection, false);
