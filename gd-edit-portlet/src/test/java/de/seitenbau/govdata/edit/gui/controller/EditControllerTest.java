@@ -2,6 +2,7 @@ package de.seitenbau.govdata.edit.gui.controller;
 
 import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAME_SEARCHRESULT_PAGE;
 import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.portlet.PortletRequest;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -65,7 +69,11 @@ import de.seitenbau.govdata.odr.RegistryClient;
 @RunWith(MockitoJUnitRunner.class)
 public class EditControllerTest
 {
-  private static final String NAME_INICATES_NEW_DATASET = "Neuer Datensatz";
+  private static final String CONTRIBUTOR_ID_DEFAULT = "contributorID-1";
+
+  private static final String ORG_ID_DEFAULT = "org-id-1";
+
+  private static final String NAME_INDICATES_NEW_DATASET = "Neuer Datensatz";
 
   @Mock
   private FusekiClient fusekiClient;
@@ -119,7 +127,7 @@ public class EditControllerTest
     String name = "name-1";
     EditForm editForm = new EditForm();
     editForm.setName(name);
-    String organizationId = "org-id-1";
+    String organizationId = ORG_ID_DEFAULT;
     editForm.setOrganizationId(organizationId);
 
     MockActionResponse response = new MockActionResponse();
@@ -159,15 +167,12 @@ public class EditControllerTest
     MockRenderResponse response = new MockRenderResponse();
     MockRenderRequest request = new MockRenderRequest();
     Model model = new ExtendedModelMap();
-    EditForm editForm = new EditForm();
     String editFormName = "test-name";
-    editForm.setName(editFormName);
-    String contributorID = "contributorID-1";
+    EditForm editForm = buildEditForm(editFormName);
 
     de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
 
-    String organizationId = "org-id-1";
-    List<Organization> organizations = createOrganizationList(organizationId, contributorID);
+    List<Organization> organizations = createOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
 
     List<Licence> licences = createLicenceList("TEST-URL");
 
@@ -210,7 +215,7 @@ public class EditControllerTest
     // When hideContributorId is true: hide contributor ids
     sut.setHideContributorId("true");
     // Create organization without contributor id
-    organizations = createOrganizationList(organizationId, null);
+    organizations = createOrganizationList(ORG_ID_DEFAULT, null);
     Mockito.when(odrClient.getOrganizationsForUser(ckanUser, "create_dataset")).thenReturn(organizations);
 
     /* execute */
@@ -229,13 +234,7 @@ public class EditControllerTest
   {
     /* prepare */
     String titleMunged = "new-title-1";
-    EditForm editForm = new EditForm();
-    editForm.setName(NAME_INICATES_NEW_DATASET);
-    editForm.setTitle("New Title 1");
-    String organizationId = "org-id-1";
-    editForm.setOrganizationId(organizationId);
-    String contributorID = "contributorID-1";
-    editForm.setContributorId(contributorID);
+    EditForm editForm = buildEditForm();
     // resources
     Resource res = new Resource();
     res.setName("res name");
@@ -250,7 +249,7 @@ public class EditControllerTest
 
     de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
 
-    mockOrganizationList(organizationId, contributorID);
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
 
     Metadata metadata = createMetadata(titleMunged);
     Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
@@ -267,7 +266,7 @@ public class EditControllerTest
     // after persist + load dataset
     Mockito.verify(odrClient, Mockito.times(2)).getMetadata(ckanUser, titleMunged);
     Mockito.verify(fusekiClient).updateOrCreateDataset(ckanUser, metadata.getId(), metadata.getId(),
-        metadata.getOwnerOrg(), contributorID);
+        metadata.getOwnerOrg(), CONTRIBUTOR_ID_DEFAULT);
     Assertions.assertThat(metadata.getResources()).extracting("name").containsExactly("res name");
     Assertions.assertThat(metadata.getResources()).extracting("description")
         .containsExactly("res description");
@@ -283,20 +282,14 @@ public class EditControllerTest
   {
     /* prepare */
     String titleMunged = "new-title-1";
-    EditForm editForm = new EditForm();
-    editForm.setName(NAME_INICATES_NEW_DATASET);
-    editForm.setTitle("New Title 1");
-    String organizationId = "org-id-1";
-    editForm.setOrganizationId(organizationId);
-    String contributorID = "contributorID-1";
-    editForm.setContributorId(contributorID);
+    EditForm editForm = buildEditForm();
 
     MockActionResponse response = new MockActionResponse();
     MockActionRequest request = new MockActionRequest();
 
     de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
 
-    mockOrganizationList(organizationId, contributorID);
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
 
     Metadata metadata = createMetadata(titleMunged);
     Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
@@ -311,23 +304,248 @@ public class EditControllerTest
   }
 
   @Test
-  public void submitForm_update_public() throws Exception
+  public void submitForm_new_persist_authorization_error_de() throws Exception
   {
     /* prepare */
-    String name = "name-1";
-    EditForm editForm = new EditForm();
-    editForm.setName(name);
-    String organizationId = "org-id-1";
-    editForm.setOrganizationId(organizationId);
-    String contributorID = "contributorID-1";
-    editForm.setContributorId(contributorID);
+    String titleMunged = "new-title-1";
+    EditForm editForm = buildEditForm();
 
     MockActionResponse response = new MockActionResponse();
     MockActionRequest request = new MockActionRequest();
 
     de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
 
-    mockOrganizationList(organizationId, contributorID);
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
+    String msgEntity = "{"
+        + "\"help\": \"http://example.com\","
+        + " \"error\": {"
+        + "\"__type\": \"Authorization Error\","
+        + " \"message\": \"Zugriff verweigert: Benutzer datenbereitstellera hat keine Berechtigung diese"
+        + " Gruppen zu bearbeiten\""
+        + "},"
+        + " \"success\": false"
+        + "}";
+    Response mockResponse =
+        buildMockResponse(Status.FORBIDDEN, msgEntity);
+    ClientErrorException e = new ClientErrorException(mockResponse);
+
+    Metadata metadata = createMetadata(titleMunged);
+    Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
+    Mockito.when(odrClient.persistMetadata(ckanUser, metadata)).thenThrow(e);
+
+    /* execute */
+    sut.submitForm(editForm, bindingResult, response, request);
+
+    Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
+    Mockito.verify(mockResponse, Mockito.times(1)).readEntity(String.class);
+    Assertions.assertThat(response.getRenderParameter("message"))
+        .isEqualTo("od.editform.save.error.forbidden.groups");
+    Assertions.assertThat(editForm.getName()).isEqualTo(NAME_INDICATES_NEW_DATASET);
+  }
+
+  @Test
+  public void submitForm_new_persist_authorization_error_de_reworded() throws Exception
+  {
+    /* prepare */
+    String titleMunged = "new-title-1";
+    EditForm editForm = buildEditForm();
+
+    MockActionResponse response = new MockActionResponse();
+    MockActionRequest request = new MockActionRequest();
+
+    de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
+
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
+    String msgEntity = "{"
+        + "\"help\": \"http://example.com\","
+        + " \"error\": {"
+        + "\"__type\": \"Authorization Error\","
+        + " \"message\": \"Zugriff verweigert: Gruppen: Benutzer datenbereitstellera hat keine Berechtigung"
+        + " diese zu bearbeiten\""
+        + "},"
+        + " \"success\": false"
+        + "}";
+    Response mockResponse =
+        buildMockResponse(Status.FORBIDDEN, msgEntity);
+    ClientErrorException e = new ClientErrorException(mockResponse);
+
+    Metadata metadata = createMetadata(titleMunged);
+    Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
+    Mockito.when(odrClient.persistMetadata(ckanUser, metadata)).thenThrow(e);
+
+    /* execute */
+    sut.submitForm(editForm, bindingResult, response, request);
+
+    Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
+    Mockito.verify(mockResponse, Mockito.times(1)).readEntity(String.class);
+    Assertions.assertThat(response.getRenderParameter("message"))
+        .isEqualTo("od.editform.save.error.forbidden.groups");
+    Assertions.assertThat(editForm.getName()).isEqualTo(NAME_INDICATES_NEW_DATASET);
+  }
+
+  @Test
+  public void submitForm_new_persist_authorization_error_de_only_one_match_without_groups() throws Exception
+  {
+    /* prepare */
+    String titleMunged = "new-title-1";
+    EditForm editForm = buildEditForm();
+
+    MockActionResponse response = new MockActionResponse();
+    MockActionRequest request = new MockActionRequest();
+
+    de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
+
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
+    String msgEntity = "{"
+        + "\"help\": \"http://example.com\","
+        + " \"error\": {"
+        + "\"__type\": \"Authorization Error\","
+        + " \"message\": \"Zugriff verweigert: Benutzer datenbereitstellera hat keine Berechtigung diese Texte"
+        + " zu bearbeiten\""
+        + "},"
+        + " \"success\": false"
+        + "}";
+    Response mockResponse =
+        buildMockResponse(Status.FORBIDDEN, msgEntity);
+    ClientErrorException e = new ClientErrorException(mockResponse);
+
+    Metadata metadata = createMetadata(titleMunged);
+    Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
+    Mockito.when(odrClient.persistMetadata(ckanUser, metadata)).thenThrow(e);
+
+    /* execute */
+    sut.submitForm(editForm, bindingResult, response, request);
+
+    Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
+    Mockito.verify(mockResponse, Mockito.times(1)).readEntity(String.class);
+    Assertions.assertThat(response.getRenderParameter("message"))
+        .isEqualTo("od.editform.save.error.forbidden");
+    Assertions.assertThat(editForm.getName()).isEqualTo(NAME_INDICATES_NEW_DATASET);
+  }
+
+  @Test
+  public void submitForm_new_persist_authorization_error_en() throws Exception
+  {
+    /* prepare */
+    String titleMunged = "new-title-1";
+    EditForm editForm = buildEditForm();
+
+    MockActionResponse response = new MockActionResponse();
+    MockActionRequest request = new MockActionRequest();
+
+    de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
+
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
+    String msgEntity = "{"
+        + "\"help\": \"http://example.com\","
+        + " \"error\": {"
+        + "\"__type\": \"Authorization Error\","
+        + " \"message\": \"Access denied: User datenbereitstellera not authorized to edit these groups\""
+        + "},"
+        + " \"success\": false"
+        + "}";
+    Response mockResponse =
+        buildMockResponse(Status.FORBIDDEN, msgEntity);
+    ClientErrorException e = new ClientErrorException(mockResponse);
+
+    Metadata metadata = createMetadata(titleMunged);
+    Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
+    Mockito.when(odrClient.persistMetadata(ckanUser, metadata)).thenThrow(e);
+
+    /* execute */
+    sut.submitForm(editForm, bindingResult, response, request);
+
+    Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
+    Mockito.verify(mockResponse, Mockito.times(1)).readEntity(String.class);
+    Assertions.assertThat(response.getRenderParameter("message"))
+        .isEqualTo("od.editform.save.error.forbidden.groups");
+    Assertions.assertThat(editForm.getName()).isEqualTo(NAME_INDICATES_NEW_DATASET);
+  }
+
+  @Test
+  public void submitForm_new_persist_authorization_error_message_null() throws Exception
+  {
+    /* prepare */
+    String titleMunged = "new-title-1";
+    EditForm editForm = buildEditForm();
+
+    MockActionResponse response = new MockActionResponse();
+    MockActionRequest request = new MockActionRequest();
+
+    de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
+
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
+    String msgEntity = "{"
+        + "\"help\": \"http://example.com\","
+        + " \"error\": {\"__type\": \"Authorization Error\"},"
+        + " \"success\": false"
+        + "}";
+    Response mockResponse =
+        buildMockResponse(Status.FORBIDDEN, msgEntity);
+    ClientErrorException e = new ClientErrorException(mockResponse);
+
+    Metadata metadata = createMetadata(titleMunged);
+    Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
+    Mockito.when(odrClient.persistMetadata(ckanUser, metadata)).thenThrow(e);
+
+    /* execute */
+    sut.submitForm(editForm, bindingResult, response, request);
+
+    Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
+    Mockito.verify(mockResponse, Mockito.times(1)).readEntity(String.class);
+    Assertions.assertThat(response.getRenderParameter("message"))
+        .isEqualTo("od.editform.save.error.forbidden");
+    Assertions.assertThat(editForm.getName()).isEqualTo(NAME_INDICATES_NEW_DATASET);
+  }
+
+  @Test
+  public void submitForm_new_persist_authorization_error_message_parse_exception() throws Exception
+  {
+    /* prepare */
+    String titleMunged = "new-title-1";
+    EditForm editForm = buildEditForm();
+
+    MockActionResponse response = new MockActionResponse();
+    MockActionRequest request = new MockActionRequest();
+
+    de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
+
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
+    String msgEntityInvalidJson = "{"
+        + "\"help\": \"http://example.com\","
+        + " \"error\": {\"__type\": \"Authorization Error\"},"
+        + " \"success\": false";
+    Response mockResponse =
+        buildMockResponse(Status.FORBIDDEN, msgEntityInvalidJson);
+    ClientErrorException e = new ClientErrorException(mockResponse);
+
+    Metadata metadata = createMetadata(titleMunged);
+    Mockito.when(odrClient.createMetadata()).thenReturn(metadata);
+    Mockito.when(odrClient.persistMetadata(ckanUser, metadata)).thenThrow(e);
+
+    /* execute */
+    sut.submitForm(editForm, bindingResult, response, request);
+
+    Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
+    Mockito.verify(mockResponse, Mockito.times(1)).readEntity(String.class);
+    Assertions.assertThat(response.getRenderParameter("message"))
+        .isEqualTo("od.editform.save.error.forbidden");
+    Assertions.assertThat(editForm.getName()).isEqualTo(NAME_INDICATES_NEW_DATASET);
+  }
+
+  @Test
+  public void submitForm_update_public() throws Exception
+  {
+    /* prepare */
+    String name = "name-1";
+    EditForm editForm = buildEditForm(name);
+
+    MockActionResponse response = new MockActionResponse();
+    MockActionRequest request = new MockActionRequest();
+
+    de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
+
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
 
     MetadataBean metadataBean = new MetadataBean();
     metadataBean.setId("id-1");
@@ -345,7 +563,7 @@ public class EditControllerTest
     Assertions.assertThat(editForm.getName()).isEqualTo(name);
     Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
     Mockito.verify(fusekiClient).updateOrCreateDataset(ckanUser, metadata.getId(), metadata.getId(),
-        metadata.getOwnerOrg(), contributorID);
+        metadata.getOwnerOrg(), CONTRIBUTOR_ID_DEFAULT);
   }
 
   @Test
@@ -353,19 +571,15 @@ public class EditControllerTest
   {
     /* prepare */
     String name = "name-1";
-    EditForm editForm = new EditForm();
+    EditForm editForm = buildEditForm(name);
     editForm.setPrivate(true);
-    editForm.setName(name);
-    String organizationId = "org-id-1";
-    editForm.setOrganizationId(organizationId);
-    String contributorID = "contributorID-1";
-    editForm.setContributorId(contributorID);
+
     MockActionResponse response = new MockActionResponse();
     MockActionRequest request = new MockActionRequest();
 
     de.seitenbau.govdata.odp.registry.model.User ckanUser = mockUser(request);
 
-    mockOrganizationList(organizationId, contributorID);
+    mockOrganizationList(ORG_ID_DEFAULT, CONTRIBUTOR_ID_DEFAULT);
 
     MetadataBean metadataBean = new MetadataBean();
     metadataBean.setId("id-1");
@@ -383,6 +597,31 @@ public class EditControllerTest
     Assertions.assertThat(editForm.getName()).isEqualTo(name);
     Mockito.verify(odrClient).persistMetadata(ckanUser, metadata);
     Mockito.verify(fusekiClient).deleteDataset(ckanUser, metadata.getId(), metadataBean.getId());
+  }
+
+  private Response buildMockResponse(Status status, String msgEntity)
+  {
+    Response mockResponse = mock(Response.class);
+    Mockito.when(mockResponse.readEntity(String.class)).thenReturn(msgEntity);
+    Mockito.when(mockResponse.getStatus()).thenReturn(status.getStatusCode());
+    Mockito.when(mockResponse.getStatusInfo()).thenReturn(status);
+
+    return mockResponse;
+  }
+
+  private EditForm buildEditForm()
+  {
+    return buildEditForm(NAME_INDICATES_NEW_DATASET);
+  }
+
+  private EditForm buildEditForm(String name)
+  {
+    EditForm editForm = new EditForm();
+    editForm.setName(name);
+    editForm.setTitle("New Title 1");
+    editForm.setOrganizationId(ORG_ID_DEFAULT);
+    editForm.setContributorId(CONTRIBUTOR_ID_DEFAULT);
+    return editForm;
   }
 
   private Metadata createMetadata(String titleMunged)

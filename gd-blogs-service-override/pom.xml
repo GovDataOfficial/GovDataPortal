@@ -5,7 +5,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.2.2</version>
+    <version>6.3.0</version>
   </parent>
   <groupId>de.seitenbau.blogs.service.override</groupId>
   <artifactId>gd-blogs-service-override</artifactId>
@@ -34,6 +34,13 @@
           <excludes>
             <exclude>**/META-INF/resources/**/.sass-cache/</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <configuration>
+          <skip>true</skip>
         </configuration>
       </plugin>
       <plugin>

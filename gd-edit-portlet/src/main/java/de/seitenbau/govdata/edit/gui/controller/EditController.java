@@ -30,6 +30,9 @@ import javax.ws.rs.ClientErrorException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -128,6 +131,17 @@ public class EditController
 
   private boolean hideContributorId;
 
+  /**
+   * Shows the edit form.
+   * 
+   * @param metadataName The metadata name or ID.
+   * @param editForm The form object.
+   * @param result The binding result.
+   * @param request The request.
+   * @param response The response.
+   * @param model The model with the data.
+   * @return The template ID
+   */
   @RenderMapping
   public String showForm(
       @RequestParam(value = DetailsRequestParamNames.PARAM_METADATA, required = false) String metadataName,
@@ -243,6 +257,14 @@ public class EditController
     return "edit";
   }
 
+  /**
+   * Submits the form.
+   * 
+   * @param editForm The for object.
+   * @param result The binding result.
+   * @param response The response.
+   * @param request The request.
+   */
   @RequestMapping
   public void submitForm(@Valid @ModelAttribute("editForm") EditForm editForm, BindingResult result,
       ActionResponse response, ActionRequest request)
@@ -348,6 +370,14 @@ public class EditController
     editForm.getResources().remove(rowId.intValue());
   }
 
+  /**
+   * Deletes a dataset.
+   * 
+   * @param editForm The form object.
+   * @param bindingResult The binding result.
+   * @param response The response.
+   * @param request The request.
+   */
   @RequestMapping(params = {"deleteDataset"})
   public void deleteDataset(final @ModelAttribute("editForm") EditForm editForm,
       final BindingResult bindingResult,
@@ -750,7 +780,7 @@ public class EditController
     }
 
     boolean requestSuccess = false;
-    
+
     try
     {
       requestSuccess = registryClient.getInstance().persistMetadata(ckanUser, metadata);
@@ -761,12 +791,24 @@ public class EditController
       {
         throw new OpenDataRegistryException("od.editform.save.error.alreadyexists");
       }
+      else if (e.getResponse().getStatus() == 403)
+      {
+        String errorMessage = parseErrorMessage(e);
+        if (errorMessage != null
+            && errorMessage.matches(".*(keine Berechtigung|not authorized)+.*")
+            && errorMessage.matches(".*(Gruppen|groups)+.*"))
+        {
+          throw new OpenDataRegistryException("od.editform.save.error.forbidden.groups");
+        }
+        // default message for 403
+        throw new OpenDataRegistryException("od.editform.save.error.forbidden");
+      }
       else
       {
         throw new OpenDataRegistryException();
       }
     }
-    
+
     if (requestSuccess)
     {
       try
@@ -790,6 +832,31 @@ public class EditController
         log.warn(e.getMessage());
       }
     }
+  }
+
+  private String parseErrorMessage(ClientErrorException e) throws OpenDataRegistryException
+  {
+    String result = null;
+    try
+    {
+      JSONParser parser = new JSONParser();
+      JSONObject responseObject = (JSONObject) parser.parse(e.getResponse().readEntity(String.class));
+      Object errorObject = responseObject.get("error");
+      if (Objects.nonNull(errorObject))
+      {
+        JSONObject errorJsonObject = (JSONObject) parser.parse(errorObject.toString());
+        Object messageObject = errorJsonObject.get("message");
+        if (Objects.nonNull(messageObject))
+        {
+          result = messageObject.toString();
+        }
+      }
+    }
+    catch (ParseException ex)
+    {
+      log.warn("Error while parsing CKAN error response.", e);
+    }
+    return result;
   }
 
   private List<String> extractNonGovDataContributorIds(List<String> datasetContributorIds,

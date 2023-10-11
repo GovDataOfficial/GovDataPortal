@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.2.2</version>
+    <version>6.3.0</version>
   </parent>
   <artifactId>categories-grid-portlet</artifactId>
   <packaging>war</packaging>
@@ -13,6 +13,9 @@
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
   </build>
+  <properties>
+    <owasp.suppressions>${basedir}/../src/plugin-config/owasp/owasp-suppressions.xml</owasp.suppressions>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>com.liferay.portal</groupId>

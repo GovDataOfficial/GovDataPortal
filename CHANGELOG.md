@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.3.0 2023-10-10
+
+* Improves the error message in the metadata edit form if an user does not have enough rights to save a metadata
+* Integrates OWASP Dependency Check into build process with a maven profile `dependency-check`
+
 ## v6.2.2 2023-09-19
 
 * Fixes the location icon in the map search after Font Awesome update

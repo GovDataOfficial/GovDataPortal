@@ -7,17 +7,19 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.2.2</version>
+    <version>6.3.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
   <artifactId>gd-usermanage-portlet</artifactId>
   <name>gd-usermanage-portlet</name>
   <description>The GovData User Management Portlet</description>
-
+  <properties>
+    <owasp.suppressions>${basedir}/../src/plugin-config/owasp/owasp-suppressions.xml</owasp.suppressions>
+  </properties>
   <dependencies>
     <!-- portlet, liferay -->
-<dependency>
+    <dependency>
 	    <groupId>com.liferay.portal</groupId>
 	    <artifactId>com.liferay.portal.kernel</artifactId>
 	    <scope>provided</scope>
