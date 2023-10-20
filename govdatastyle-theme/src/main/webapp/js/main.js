@@ -9,12 +9,38 @@ AUI.add('lang/autocomplete-list', function (e) {
 
 
 AUI().ready(
-	'liferay-navigation-interaction', 'liferay-sign-in-modal',
-	function(A) {
-		var signIn = A.one('li.sign-in a');
+    'liferay-navigation-interaction', 'liferay-sign-in-modal',
+    function(A) {
+    var signInLink = document.querySelector('li.sign-in > a');
 
-		if (signIn && signIn.getData('redirect') !== 'true') {
-			signIn.plug(Liferay.SignInModal);
-		}
-	}
+    if (signInLink && signInLink.dataset.redirect === 'false') {
+        signInLink.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            var modalSignInURL = Liferay.Util.addParams(
+                'windowState=exclusive',
+                signInLink.href
+            );
+
+            Liferay.Util.fetch(modalSignInURL)
+                .then(response => response.text())
+                .then(response => {
+                    if (response) {
+                        Liferay.Util.openModal({
+                            bodyHTML: response,
+                            title: Liferay.Language.get('sign-in'),
+                        });
+                    }
+                    else {
+                        redirectPage();
+                    }
+                })
+                .catch(() => redirectPage());
+        });
+    }
+
+    function redirectPage() {
+        window.location.href = signInLink.href;
+    }
+    }
 );

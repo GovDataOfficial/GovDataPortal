@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hook PUBLIC "-//Liferay//DTD Hook 7.4.0//EN" "http://www.liferay.com/dtd/liferay-hook_7_4_0.dtd">
+
+<hook>
+   <indexer-post-processor>
+     <indexer-class-name>com.liferay.blogs.model.BlogsEntry</indexer-class-name>
+     <indexer-post-processor-impl>de.seitenbau.govdata.search.index.GovDataSearchIndexWriter</indexer-post-processor-impl>
+ </indexer-post-processor>
+    <indexer-post-processor>
+     <indexer-class-name>com.liferay.journal.model.JournalArticle</indexer-class-name>
+     <indexer-post-processor-impl>de.seitenbau.govdata.search.index.GovDataSearchIndexWriter</indexer-post-processor-impl>
+ </indexer-post-processor>
+</hook>

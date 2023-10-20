@@ -2,20 +2,16 @@ package de.seitenbau.govdata.search.index;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +28,6 @@ import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.util.DateFormatFactory;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactory;
@@ -92,68 +87,65 @@ public class GovDataSearchIndexWriterTest
   
   @InjectMocks
   private GovDataSearchIndexWriter sutWriter;
-  
-  @Before
-  public void setUp()
-  {
-    sutWriter.setIndexName(DEFAULT_INDEXNAME);
-  }
-  
+
   @Test
-  public void testDeletePortletDocuments() throws SearchException
+  public void testpostProcessAddDocument() throws Exception
   {
-    String portletId = "42";
-    String uid1 = "12345";
-    String uid2 = "54321";
-    
-    List<String> uids = new ArrayList<String>();
-    uids.add(uid1);
-    uids.add(uid2);
-    
-    when(searchServiceMock.findPortalContentIdsByPortletId(portletId)).thenReturn(uids);
-    
-    sutWriter.deleteEntityDocuments(searchContextMock, portletId);
-    
+    /* prepare */
+    DocumentImpl document = createAndGetDocument();
+
+
+    sutWriter.postProcessDocument(document, new Object());
+
     ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<SearchIndexEntry> searchIndexEntryCaptor = ArgumentCaptor.forClass(SearchIndexEntry.class);
-    
-    verify(indexQueueServiceMock, times(2)).deleteAndSendDeleteMessage(
-        any(RestUserMetadata.class), 
-        idCaptor.capture(), 
+
+    verify(indexQueueServiceMock, times(0)).deleteAndSendDeleteMessage(
+        any(RestUserMetadata.class),
+        idCaptor.capture(),
         searchIndexEntryCaptor.capture());
-    
-    assertThat(idCaptor.getAllValues().get(0)).isEqualTo(uid1);
-    assertThat(idCaptor.getAllValues().get(1)).isEqualTo(uid2);
-    
+    verify(indexQueueServiceMock, times(1)).save(
+        any(RestUserMetadata.class),
+        searchIndexEntryCaptor.capture());
+
+    assertThat(searchIndexEntryCaptor.getAllValues().size()).isEqualTo(1);
     SearchIndexEntry firstSearchIndexEntry = searchIndexEntryCaptor.getAllValues().get(0);
-    assertThat(firstSearchIndexEntry.getDocument().getId()).isEqualTo(uid1);
+    assertThat(firstSearchIndexEntry.getDocument().getId()).isEqualTo(document.getUID());
     assertThat(firstSearchIndexEntry.getDocument().getMandant()).isEqualTo(DEFAULT_MANDANT);
     assertThat(firstSearchIndexEntry.getIndexName()).isEqualTo(DEFAULT_INDEXNAME);
-    assertThat(firstSearchIndexEntry.getType()).isEqualTo(IndexConstants.INDEX_TYPE_PORTAL);
-    
-    SearchIndexEntry secondSearchIndexEntry = searchIndexEntryCaptor.getAllValues().get(1);
-    assertThat(secondSearchIndexEntry.getDocument().getId()).isEqualTo(uid2);
-    assertThat(secondSearchIndexEntry.getDocument().getMandant()).isEqualTo(DEFAULT_MANDANT);
-    assertThat(secondSearchIndexEntry.getIndexName()).isEqualTo(DEFAULT_INDEXNAME);
-    assertThat(secondSearchIndexEntry.getType()).isEqualTo(IndexConstants.INDEX_TYPE_PORTAL);
+
   }
-  
+
   @Test
-  public void testDeletePortletDocuments_NoDocuments() throws SearchException
+  public void testpostProcessDeleteDocument() throws Exception
   {
-    String portletId = "42";
-    
-    List<String> uids = new ArrayList<String>();
-    
-    when(searchServiceMock.findPortalContentIdsByPortletId(portletId)).thenReturn(uids);
-    
-    sutWriter.deleteEntityDocuments(searchContextMock, portletId);
-    
-    verify(indexQueueServiceMock, never()).deleteAndSendDeleteMessage(
-        any(RestUserMetadata.class), 
-        any(String.class), 
-        any(SearchIndexEntry.class));
-    
+    /* prepare */
+    DocumentImpl document = createAndGetDocument();
+    // Field.REMOVED_DATE
+    document.add(new Field(Field.REMOVED_DATE, "20150819035215")); // UTC +2:00
+
+    sutWriter.postProcessDocument(document, new Object());
+
+    ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<SearchIndexEntry> searchIndexEntryCaptor = ArgumentCaptor.forClass(SearchIndexEntry.class);
+
+    verify(indexQueueServiceMock, times(0)).save(
+        any(RestUserMetadata.class),
+        searchIndexEntryCaptor.capture());
+    verify(indexQueueServiceMock, times(1)).deleteAndSendDeleteMessage(
+        any(RestUserMetadata.class),
+        idCaptor.capture(),
+        searchIndexEntryCaptor.capture());
+
+    assertThat(idCaptor.getAllValues().size()).isEqualTo(1);
+    assertThat(idCaptor.getAllValues().get(0)).isEqualTo(document.getUID());
+
+    assertThat(searchIndexEntryCaptor.getAllValues().size()).isEqualTo(1);
+    SearchIndexEntry firstSearchIndexEntry = searchIndexEntryCaptor.getAllValues().get(0);
+    assertThat(firstSearchIndexEntry.getDocument().getId()).isEqualTo(document.getUID());
+    assertThat(firstSearchIndexEntry.getDocument().getMandant()).isEqualTo(DEFAULT_MANDANT);
+    assertThat(firstSearchIndexEntry.getIndexName()).isEqualTo(DEFAULT_INDEXNAME);
+
   }
 
   @Test
@@ -261,5 +253,35 @@ public class GovDataSearchIndexWriterTest
     String metadataJsonString = (String) searchEntryDocument.getMetadata();
     Map<String, String> metadata = new Gson().fromJson(metadataJsonString, MetadataType.class);
     Assertions.assertThat(metadata).isEqualTo(metadataExpected);
+  }
+
+  private DocumentImpl createAndGetDocument()
+  {
+    String portletId = "42";
+    String entryId = "100";
+    String uuid = portletId + "_PORTLET_" + entryId;
+    String entryClassPk = "20013";
+    String version = "1.0";
+    String title = "My title";
+    String content = "My content";
+    String entryClassName = BlogsEntry.class.getName();
+
+    // Document
+    DocumentImpl document = new DocumentImpl();
+    document.addUID(portletId, entryId);
+    // Field.VERSION
+    document.add(new Field(Field.VERSION, version));
+    // Field.TITLE
+    document.add(new Field(Field.TITLE, title));
+    // Field.CONTENT
+    document.add(new Field(Field.CONTENT, content));
+    // Field.MODIFIED_DATE
+    document.add(new Field(Field.MODIFIED_DATE, "20150819035214")); // UTC +2:00
+    // Field.ENTRY_CLASS_NAME
+    document.add(new Field(Field.ENTRY_CLASS_NAME, entryClassName));
+    // Field.ENTRY_CLASS_NAME
+    document.add(new Field(Field.ENTRY_CLASS_PK, entryClassPk));
+
+    return document;
   }
 }

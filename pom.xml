@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>6.3.0</version>
+  <version>6.4.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -12,7 +12,7 @@
   </organization>
 
   <properties>
-    <liferay.version>7.4.3.41</liferay.version>
+    <liferay.version>7.4.3.95</liferay.version>
     <faces.api.version>2.2</faces.api.version>
     <liferay.faces.bridge.ext.version>6.0.0</liferay.faces.bridge.ext.version>
     <liferay.faces.bridge.version>4.1.4</liferay.faces.bridge.version>

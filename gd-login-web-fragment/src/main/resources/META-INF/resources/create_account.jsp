@@ -1,16 +1,7 @@
 <%--
 /**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 --%>
 
@@ -88,23 +79,6 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 		<liferay-ui:message arguments="<%= String.valueOf(upe.minLength) %>" key="that-password-is-too-short" translateArguments="<%= false %>" />
 	</liferay-ui:error>
 
-	<liferay-ui:error exception="<%= UserPasswordException.MustHaveMoreNumbers.class %>">
-
-		<%
-		UserPasswordException.MustHaveMoreNumbers upe = (UserPasswordException.MustHaveMoreNumbers)errorException;
-		%>
-
-		<liferay-ui:message arguments="<%= String.valueOf(upe.minNumbers) %>" key="that-password-must-contain-at-least-x-numbers" translateArguments="<%= false %>" />
-	</liferay-ui:error>
-	<liferay-ui:error exception="<%= UserPasswordException.MustHaveMoreUppercase.class %>">
-
-		<%
-		UserPasswordException.MustHaveMoreUppercase upe = (UserPasswordException.MustHaveMoreUppercase)errorException;
-		%>
-
-		<liferay-ui:message arguments="<%= String.valueOf(upe.minUppercase) %>" key="that-password-must-contain-at-least-x-uppercase-characters" translateArguments="<%= false %>" />
-	</liferay-ui:error>
-
 	<liferay-ui:error exception="<%= UserPasswordException.MustComplyWithModelListeners.class %>" message="that-password-is-invalid-please-enter-a-different-password" />
 
 	<liferay-ui:error exception="<%= UserPasswordException.MustComplyWithRegex.class %>">
@@ -114,6 +88,33 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 		%>
 
 		<liferay-ui:message arguments="<%= HtmlUtil.escape(upe.regex) %>" key="that-password-does-not-comply-with-the-regular-expression" translateArguments="<%= false %>" />
+	</liferay-ui:error>
+
+	<liferay-ui:error exception="<%= UserPasswordException.MustHaveMoreNumbers.class %>">
+
+		<%
+		UserPasswordException.MustHaveMoreNumbers upe = (UserPasswordException.MustHaveMoreNumbers)errorException;
+		%>
+
+		<liferay-ui:message arguments="<%= String.valueOf(upe.minNumbers) %>" key="that-password-must-contain-at-least-x-numbers" translateArguments="<%= false %>" />
+	</liferay-ui:error>
+
+	<liferay-ui:error exception="<%= UserPasswordException.MustHaveMoreSymbols.class %>">
+
+		<%
+		UserPasswordException.MustHaveMoreSymbols upe = (UserPasswordException.MustHaveMoreSymbols)errorException;
+		%>
+
+		<liferay-ui:message arguments="<%= String.valueOf(upe.minSymbols) %>" key="that-password-must-contain-at-least-x-symbols" translateArguments="<%= false %>" />
+	</liferay-ui:error>
+
+	<liferay-ui:error exception="<%= UserPasswordException.MustHaveMoreUppercase.class %>">
+
+		<%
+		UserPasswordException.MustHaveMoreUppercase upe = (UserPasswordException.MustHaveMoreUppercase)errorException;
+		%>
+
+		<liferay-ui:message arguments="<%= String.valueOf(upe.minUppercase) %>" key="that-password-must-contain-at-least-x-uppercase-characters" translateArguments="<%= false %>" />
 	</liferay-ui:error>
 
 	<liferay-ui:error exception="<%= UserPasswordException.MustMatch.class %>" message="the-passwords-you-entered-do-not-match" />
@@ -144,6 +145,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 	<clay:sheet>
 		<clay:sheet-section>
 			<div class="form-group">
+            <h3 class="sheet-subtitle"><liferay-ui:message key="user-display-data" /></h3>
 
 				<clay:row>
 					<clay:col
@@ -155,7 +157,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 						%>
 
 						<c:if test="<%= !autoGenerateScreenName %>">
-							<aui:input autoFocus="<%= true %>" model="<%= User.class %>" name="screenName">
+							<aui:input model="<%= User.class %>" name="screenName">
 
 								<%
 								ScreenNameValidator screenNameValidator = ScreenNameValidatorFactory.getInstance();
@@ -169,16 +171,13 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 							</aui:input>
 						</c:if>
 
-						<aui:input autoFocus="<%= autoGenerateScreenName %>" model="<%= User.class %>" name="emailAddress">
-							<c:if test="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.USERS_EMAIL_ADDRESS_REQUIRED) %>">
-								<aui:validator name="required" />
-							</c:if>
-						</aui:input>
+						<aui:input model="<%= User.class %>" name="emailAddress" required="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.USERS_EMAIL_ADDRESS_REQUIRED) %>" />
 					</clay:col>
 				</clay:row>
 			</div>
 
 			<div class="form-group">
+				<h3 class="sheet-subtitle"><liferay-ui:message key="personal-information" /></h3>
 
 				<clay:row>
 					<clay:col
@@ -211,30 +210,28 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 				</clay:row>
 			</div>
 
-			<div class="form-group">
+			<c:if test="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.LOGIN_CREATE_ACCOUNT_ALLOW_CUSTOM_PASSWORD, PropsValues.LOGIN_CREATE_ACCOUNT_ALLOW_CUSTOM_PASSWORD) %>">
+				<div class="form-group">
+					<h3 class="sheet-subtitle"><liferay-ui:message key="password" /></h3>
 
-				<clay:row>
-					<clay:col
-						md="6"
-					>
-						<c:if test="<%= PropsValues.LOGIN_CREATE_ACCOUNT_ALLOW_CUSTOM_PASSWORD %>">
-							<aui:input label="password" name="password1" size="30" type="password" value="">
-								<aui:validator name="required" />
-							</aui:input>
+					<clay:row>
+						<clay:col
+							md="6"
+						>
+							<aui:input label="password" name="password1" required="<%= true %>" size="30" type="password" value="" />
 
-							<aui:input label="enter-again" name="password2" size="30" type="password" value="">
+							<aui:input label="reenter-password" name="password2" required="<%= true %>" size="30" type="password" value="">
 								<aui:validator name="equalTo">
 									'#<portlet:namespace />password1'
 								</aui:validator>
-
-								<aui:validator name="required" />
 							</aui:input>
-						</c:if>
-					</clay:col>
-				</clay:row>
-			</div>
+						</clay:col>
+					</clay:row>
+				</div>
+			</c:if>
 
 			<div class="form-group">
+				<h3 class="mb-2 sheet-subtitle"><liferay-ui:message key="verification" /></h3>
 
 				<clay:row>
 					<clay:col md="6">

@@ -1,11 +1,11 @@
 <#ftl output_format="HTML" auto_esc=false>
-<nav class="${nav_css_class}" id="navigation" role="navigation">
+<nav aria-label="<@liferay.language key="site-pages" />" class="${nav_css_class}" id="navigation" role="navigation">
   <h2 class="offscreen">Navigation</h2>
   <div class="navbar-inner">
     <div class="collapse nav-collapse">
       <a class="brand" href="/"><img alt="<@liferay.language key="od.page.navigate-to-start" />" height="${site_logo_height}" src="${logo_govdata_src}" width="${site_logo_width}" /></a>
 
-      <ul aria-label="<@liferay.language key="site-pages" />" class="nav nav-collapse" role="menubar">
+      <ul class="nav nav-collapse" role="menubar">
         <#foreach nav_item in nav_items>
           <#assign
             nav_item_attr_selected=""

@@ -1,26 +1,26 @@
 package de.seitenbau.govdata.search.index;
 
 import java.text.ParseException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.IndexWriter;
+import com.liferay.portal.kernel.search.IndexerPostProcessor;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
+import com.liferay.portal.kernel.util.PropsUtil;
 
 import de.seitenbau.govdata.common.api.RestUserMetadata;
 import de.seitenbau.govdata.common.client.impl.RestCallFailedException;
@@ -28,7 +28,6 @@ import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
 import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
-import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.index.filter.FilterProxy;
 import de.seitenbau.govdata.search.index.mapper.ClassToTypeMapper;
 import de.seitenbau.govdata.search.index.util.SearchIndexUtil;
@@ -43,222 +42,85 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-@Service
-public class GovDataSearchIndexWriter implements IndexWriter
+public class GovDataSearchIndexWriter implements IndexerPostProcessor
 {
   private static final Locale LOCALE_USED = Locale.GERMANY;
 
-  @Inject
-  private IndexQueueAdapterServiceRESTResource indexClient;
-
-  @Inject
-  private SearchService searchService;
-
-  @Inject
-  private FilterProxy filterProxy;
+  private IndexQueueAdapterServiceRESTResource indexClient = ApplicationContextProvider.getApplicationContext().getBean(IndexQueueAdapterServiceRESTResource.class);
   
-  private String indexName;
+  private String indexName = PropsUtil.get(SearchConsts.PARAM_ELASTICSEARCH_LIFERAY_INDEX_NAME);
 
-  @Inject
-  private SearchIndexUtil searchIndexUtil;
-  
+  private SearchIndexUtil searchIndexUtil = ApplicationContextProvider.getApplicationContext().getBean(SearchIndexUtil.class);
+
+  private FilterProxy filterProxy =
+      ApplicationContextProvider.getApplicationContext().getBean(FilterProxy.class);
+
+  private static Log _log = LogFactoryUtil.getLog(GovDataSearchIndexWriter.class);
+
   @Override
-  public void addDocument(SearchContext searchContext, Document document)
-      throws SearchException
+  public void postProcessContextBooleanFilter(BooleanFilter booleanFilter, SearchContext searchContext)
+      throws Exception
   {
-    if (!filterProxy.isRelevantForIndex(document))
-    {
-      log.debug("addDocument: ignoring document uid={} (not relevant for index)", document.getUID());
-      return;
-    }
-    log.debug("addDocument: uid={}", document.getUID());
-    // same as update
-    updateDocument(searchContext, document);
+    log.info("postProcessContextBooleanFilter()");
+    if (_log.isDebugEnabled())
+      _log.debug("postProcessContextBooleanFilter()");
   }
 
   @Override
-  public void addDocuments(SearchContext searchContext,
-      Collection<Document> documents) throws SearchException
+  public void postProcessDocument(Document document, Object object) throws Exception
   {
-    log.debug("addDocuments " + Integer.toString(documents.size()) + " documents.");
-    for (Document document : documents)
-    {
-      try
-      {
-        addDocument(searchContext, document);
-      }
-      catch (Exception e)
-      {
-        // Would it be better to stop processing here?
-        log.error("Could not add document uid=" + document.getUID(), e);
-      }
-    }
-  }
-
-  @Override
-  public void deleteEntityDocuments(SearchContext searchContext, String className) throws SearchException
-  {
-    log.debug("deleteEntityDocuments className=" + className);
-    List<String> uids = searchService.findPortalContentIdsByPortletId(className);
-    if (uids.size() > 0)
-    {
-      deleteDocuments(searchContext, uids);
-    }
-  }
-
-  @Override
-  public void deleteDocument(SearchContext searchContext, String uid)
-      throws SearchException
-  {
-    log.debug("deleteDocument uid=" + uid);
-    
-    SearchIndexEntry entry = createSearchIndexEntryWithBasicInformation(uid);
-
+    SearchIndexEntry entry = buildSearchIndexEntryFromLiferayDocument(document);
     RestUserMetadata ruMetadata = new RestUserMetadata(IndexConstants.INDEX_MANDANT);
-    
-    try
-    {
-      indexClient.deleteAndSendDeleteMessage(ruMetadata, uid, entry);
-    }
-    catch (RestCallFailedException restCallFailedException)
-    {
-      Throwable cause = restCallFailedException.getCause();
-      if (!(cause instanceof NotFoundException))
-      {
-        throwOnDeletingExcpetion(uid, cause);
-      }
-    }
-    catch(Exception e)
-    {
-      throwOnDeletingExcpetion(uid, e);
-    }
-  }
+    String uid = document.getUID();
 
-  @Override
-  public void deleteDocuments(SearchContext searchContext,
-      Collection<String> uids) throws SearchException
-  {
-    log.debug("deleteDocuments " + Integer.toString(uids.size()) + " documents.");
-    for (String uid : uids)
+    if (!document.get(Field.REMOVED_DATE).isEmpty()
+        || !filterProxy.isRelevantForIndex(document))
     {
       try
       {
-        deleteDocument(searchContext, uid);
+        deleteDocument(entry, ruMetadata, uid);
       }
       catch (Exception e)
       {
-        // Would it be better to stop processing here?
         log.error("Could not delete document uid=" + uid, e);
       }
     }
-  }
-
-  @Override
-  public void updateDocument(SearchContext searchContext, Document document)
-      throws SearchException
-  {
-    if (!filterProxy.isRelevantForIndex(document))
-    {
-      log.debug("updateDocument: ignoring document uid={} (not relevant for index)", document.getUID());
-      // as the document may already be in the index, we try to delete it
-      deleteDocument(searchContext, document.getUID());
-      return;
-    }
-    log.debug("updateDocument: uid=" + document.getUID());
-
-    SearchIndexEntry entry = buildSearchIndexEntryFromLiferayDocument(document);
-
-    RestUserMetadata ruMetadata = new RestUserMetadata(IndexConstants.INDEX_MANDANT);
-    indexClient.save(ruMetadata, entry);
-  }
-
-  @Override
-  public void updateDocuments(SearchContext searchContext,
-      Collection<Document> documents) throws SearchException
-  {
-    log.debug("updateDocuments " + Integer.toString(documents.size()) + " documents.");
-    for (Document document : documents)
+    else
     {
       try
       {
-        updateDocument(searchContext, document);
+        addDocument(entry, ruMetadata, uid);
       }
       catch (Exception e)
       {
-        // Would it be better to stop processing here?
-        log.error("Could not update document uid=" + document.getUID(), e);
+        log.error("Could not add document uid=" + uid, e);
       }
     }
   }
 
   @Override
-  public void clearQuerySuggestionDictionaryIndexes(
-      SearchContext searchContext) throws SearchException
+  public void postProcessFullQuery(BooleanQuery fullQuery, SearchContext searchContext) throws Exception
   {
-    log.debug("clearQuerySuggestionDictionaryIndexes");
+    log.info("postProcessFullQuery()");
+    if (_log.isDebugEnabled())
+      _log.debug(" postProcessFullQuery()");
   }
 
   @Override
-  public void clearSpellCheckerDictionaryIndexes(SearchContext searchContext)
-      throws SearchException
+  public void postProcessSearchQuery(BooleanQuery searchQuery, BooleanFilter booleanFilter,
+      SearchContext searchContext) throws Exception
   {
-    log.debug("clearSpellCheckerDictionaryIndexes");
+    log.info("postProcessSearchQuery()");
+    if (_log.isDebugEnabled())
+      _log.debug(" postProcessSearchQuery()");
   }
 
   @Override
-  public void indexKeyword(SearchContext searchContext, float weight,
-      String keywordType) throws SearchException
+  public void postProcessSummary(Summary summary, Document document, Locale locale, String snippet)
   {
-    log.debug("indexKeyword");
-  }
-
-  @Override
-  public void indexQuerySuggestionDictionaries(SearchContext searchContext)
-      throws SearchException
-  {
-    log.debug("indexQuerySuggestionDictionaries");
-  }
-
-  @Override
-  public void indexQuerySuggestionDictionary(SearchContext searchContext)
-      throws SearchException
-  {
-    log.debug("indexQuerySuggestionDictionary");
-  }
-
-  @Override
-  public void indexSpellCheckerDictionaries(SearchContext searchContext)
-      throws SearchException
-  {
-    log.debug("indexSpellCheckerDictionaries");
-  }
-
-  @Override
-  public void indexSpellCheckerDictionary(SearchContext searchContext)
-      throws SearchException
-  {
-    log.debug("indexSpellCheckerDictionary");
-  }
-
-  @Override
-  public void commit(SearchContext searchContext) throws SearchException
-  {
-    log.debug("commit");
-  }
-
-  @Override
-  public void partiallyUpdateDocument(SearchContext searchContext, Document document) throws SearchException
-  {
-    log.debug("partiallyUpdateDocument");
-    updateDocument(searchContext, document);
-  }
-
-  @Override
-  public void partiallyUpdateDocuments(SearchContext searchContext, Collection<Document> documents)
-      throws SearchException
-  {
-    log.debug("partiallyUpdateDocuments");
-    updateDocuments(searchContext, documents);
+    log.info("postProcessSummary()");
+    if (_log.isDebugEnabled())
+      _log.debug("postProcessSummary()");
   }
 
   private SearchIndexEntry createSearchIndexEntryWithBasicInformation(String uid)
@@ -341,9 +203,33 @@ public class GovDataSearchIndexWriter implements IndexWriter
     throw new SearchException("Deleting document uid=" + uid + " failed.", cause);
   }
 
-  @Value(SearchConsts.CONFIG_ELASTICSEARCH_LIFERAY_INDEX_NAME)
-  public void setIndexName(String indexName)
+  private void addDocument(SearchIndexEntry entry, RestUserMetadata ruMetadata, String uid)
   {
-    this.indexName = indexName;
+    log.debug("addDocument: uid={}", uid);
+    indexClient.save(ruMetadata, entry);
   }
+
+  private void deleteDocument(SearchIndexEntry entry, RestUserMetadata ruMetadata, String uid)
+      throws SearchException
+  {
+    log.debug("deleteDocument uid=" + uid);
+    try
+    {
+      indexClient.deleteAndSendDeleteMessage(ruMetadata, uid, entry);
+    }
+    catch (RestCallFailedException restCallFailedException)
+    {
+      Throwable cause = restCallFailedException.getCause();
+      if (!(cause instanceof NotFoundException))
+      {
+
+        throwOnDeletingExcpetion(uid, cause);
+      }
+    }
+    catch (Exception e)
+    {
+      throwOnDeletingExcpetion(uid, e);
+    }
+  }
+
 }

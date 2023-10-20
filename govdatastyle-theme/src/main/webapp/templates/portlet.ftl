@@ -20,20 +20,25 @@
 		/>
 
 		<#if (portlet_configuration_icons?has_content || portlet_title_menus?has_content)>
-			<header class="portlet-topper">
+			<header class="cadmin portlet-topper">
 				<div class="portlet-title-default">
 					<span class="portlet-name-text">${portlet_display_name}</span>
 				</div>
 
 				<#foreach portletTitleMenu in portlet_title_menus>
 					<menu class="portlet-title-menu portlet-topper-toolbar" id="portlet-title-menu_${portlet_id}_${portletTitleMenu_index + 1}" type="toolbar">
+						${portletTitleMenu.setDirection("right cadmin")}
+
 						<@liferay_ui["menu"] menu=portletTitleMenu />
 					</menu>
 				</#foreach>
 
 				<#if portlet_configuration_icons?has_content>
 					<menu class="portlet-topper-toolbar" id="portlet-topper-toolbar_${portlet_id}" type="toolbar">
-						<@liferay_portlet["icon-options"] portletConfigurationIcons=portlet_configuration_icons />
+						<@liferay_frontend["icon-options"]
+							direction="right cadmin"
+							portletConfigurationIcons=portlet_configuration_icons
+						/>
 					</menu>
 				</#if>
 			</header>
@@ -53,10 +58,10 @@
 		</#if>
 
 		<div class="autofit-float autofit-row portlet-header">
-      <#if portlet_display.isShowPortletTitle()>
-  			<div class="autofit-col autofit-col-expand">
-  				<h1 class="portlet-title-text">${portlet_title}</h1>
-  			</div>
+		<#if portlet_display.isShowPortletTitle()>
+			<div class="autofit-col autofit-col-expand">
+				<h1 class="portlet-title-text">${portlet_title}</h1>
+			</div>
 			</#if>
 
 			<div class="autofit-col autofit-col-end">

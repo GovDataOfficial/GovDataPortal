@@ -1,15 +1,6 @@
 /**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * SPDX-FileCopyrightText: (c) 2023 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
 package de.fhg.fokus.odp.entities.service.base;
@@ -28,6 +19,8 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiService;
 import com.liferay.portal.kernel.search.Indexable;
@@ -45,8 +38,6 @@ import de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil;
 import de.fhg.fokus.odp.entities.service.persistence.MetadataCommentPersistence;
 
 import java.io.Serializable;
-
-import java.lang.reflect.Field;
 
 import java.util.List;
 
@@ -319,6 +310,11 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
 		throws PortalException {
 
+		if (_log.isWarnEnabled()) {
+			_log.warn(
+				"Implement MetadataCommentLocalServiceImpl#deleteMetadataComment(MetadataComment) to avoid orphaned data");
+		}
+
 		return metadataCommentLocalService.deleteMetadataComment(
 			(MetadataComment)persistedModel);
 	}
@@ -384,7 +380,7 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 
 	@Deactivate
 	protected void deactivate() {
-		_setLocalServiceUtilService(null);
+		MetadataCommentLocalServiceUtil.setService(null);
 	}
 
 	@Override
@@ -399,7 +395,7 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	public void setAopProxy(Object aopProxy) {
 		metadataCommentLocalService = (MetadataCommentLocalService)aopProxy;
 
-		_setLocalServiceUtilService(metadataCommentLocalService);
+		MetadataCommentLocalServiceUtil.setService(metadataCommentLocalService);
 	}
 
 	/**
@@ -444,23 +440,6 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 		}
 	}
 
-	private void _setLocalServiceUtilService(
-		MetadataCommentLocalService metadataCommentLocalService) {
-
-		try {
-			Field field =
-				MetadataCommentLocalServiceUtil.class.getDeclaredField(
-					"_service");
-
-			field.setAccessible(true);
-
-			field.set(null, metadataCommentLocalService);
-		}
-		catch (ReflectiveOperationException reflectiveOperationException) {
-			throw new RuntimeException(reflectiveOperationException);
-		}
-	}
-
 	protected MetadataCommentLocalService metadataCommentLocalService;
 
 	@Reference
@@ -481,5 +460,8 @@ public abstract class MetadataCommentLocalServiceBaseImpl
 	@Reference
 	protected com.liferay.portal.kernel.service.UserLocalService
 		userLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		MetadataCommentLocalServiceBaseImpl.class);
 
 }

@@ -5,15 +5,12 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.3.0</version>
+    <version>6.4.0</version>
   </parent>
   <groupId>de.fhg.fokus.odp</groupId>
   <artifactId>entities</artifactId>
   <packaging>pom</packaging>
   <name>entities</name>
-  <scm>
-    <developerConnection>scm:git:git@git.dev.seitenbau.net:bmi-govdata-portal/entities</developerConnection>
-  </scm>
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>

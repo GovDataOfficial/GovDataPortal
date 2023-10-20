@@ -1,11 +1,10 @@
 Bundle-Name: entities-service
 Bundle-SymbolicName: de.fhg.fokus.odp.entities.service
 Bundle-Version: 1.0.0
-Liferay-Require-SchemaVersion: 0.0.1
+Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true
 -dsannotations-options: inherit
 -includeresource: META-INF/service.xml=service.xml
 -liferay-service-xml: META-INF/service.xml
 -plugin.metatype: com.liferay.ant.bnd.metatype.MetatypePlugin
 -plugin.service: com.liferay.ant.bnd.service.ServiceAnalyzerPlugin
-Bundle-Activator: de.fhg.fokus.odp.entities.activator.EntitiesServiceBundleActivator

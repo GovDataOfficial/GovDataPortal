@@ -1,5 +1,9 @@
 # Changelog
 
+## v6.4.0 2023-10-19
+
+* Supports Liferay version 7.4.3.95 GA95 now
+
 ## v6.3.0 2023-10-10
 
 * Improves the error message in the metadata edit form if an user does not have enough rights to save a metadata

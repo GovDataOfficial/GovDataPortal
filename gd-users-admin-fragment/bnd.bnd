@@ -1,7 +1,7 @@
 Bundle-Name: users-admin-fragment
 Bundle-SymbolicName: de.seitenbau.govdata.users.admin.fragment
 Bundle-Version: 1.0.0
-Fragment-Host: com.liferay.users.admin.web;bundle-version="6.0.61"
+Fragment-Host: com.liferay.users.admin.web;bundle-version="6.0.108"
 -jsp: *.jsp,*.jspf
 -metatype: *
 -plugin.jsp: com.liferay.ant.bnd.jsp.JspAnalyzerPlugin

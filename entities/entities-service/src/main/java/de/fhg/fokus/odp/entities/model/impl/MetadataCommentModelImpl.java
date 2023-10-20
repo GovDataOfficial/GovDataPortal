@@ -1,15 +1,6 @@
 /**
- * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * SPDX-FileCopyrightText: (c) 2023 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
 package de.fhg.fokus.odp.entities.model.impl;
@@ -218,59 +209,77 @@ public class MetadataCommentModelImpl
 	public Map<String, Function<MetadataComment, Object>>
 		getAttributeGetterFunctions() {
 
-		return _attributeGetterFunctions;
+		return AttributeGetterFunctionsHolder._attributeGetterFunctions;
 	}
 
 	public Map<String, BiConsumer<MetadataComment, Object>>
 		getAttributeSetterBiConsumers() {
 
-		return _attributeSetterBiConsumers;
+		return AttributeSetterBiConsumersHolder._attributeSetterBiConsumers;
 	}
 
-	private static final Map<String, Function<MetadataComment, Object>>
-		_attributeGetterFunctions;
-	private static final Map<String, BiConsumer<MetadataComment, Object>>
-		_attributeSetterBiConsumers;
+	private static class AttributeGetterFunctionsHolder {
 
-	static {
-		Map<String, Function<MetadataComment, Object>>
-			attributeGetterFunctions =
-				new LinkedHashMap<String, Function<MetadataComment, Object>>();
-		Map<String, BiConsumer<MetadataComment, ?>> attributeSetterBiConsumers =
-			new LinkedHashMap<String, BiConsumer<MetadataComment, ?>>();
+		private static final Map<String, Function<MetadataComment, Object>>
+			_attributeGetterFunctions;
 
-		attributeGetterFunctions.put("uuid", MetadataComment::getUuid);
-		attributeSetterBiConsumers.put(
-			"uuid",
-			(BiConsumer<MetadataComment, String>)MetadataComment::setUuid);
-		attributeGetterFunctions.put("_id", MetadataComment::get_id);
-		attributeSetterBiConsumers.put(
-			"_id", (BiConsumer<MetadataComment, Long>)MetadataComment::set_id);
-		attributeGetterFunctions.put(
-			"userLiferayId", MetadataComment::getUserLiferayId);
-		attributeSetterBiConsumers.put(
-			"userLiferayId",
-			(BiConsumer<MetadataComment, Long>)
-				MetadataComment::setUserLiferayId);
-		attributeGetterFunctions.put(
-			"metadataName", MetadataComment::getMetadataName);
-		attributeSetterBiConsumers.put(
-			"metadataName",
-			(BiConsumer<MetadataComment, String>)
-				MetadataComment::setMetadataName);
-		attributeGetterFunctions.put("text", MetadataComment::getText);
-		attributeSetterBiConsumers.put(
-			"text",
-			(BiConsumer<MetadataComment, String>)MetadataComment::setText);
-		attributeGetterFunctions.put("created", MetadataComment::getCreated);
-		attributeSetterBiConsumers.put(
-			"created",
-			(BiConsumer<MetadataComment, Date>)MetadataComment::setCreated);
+		static {
+			Map<String, Function<MetadataComment, Object>>
+				attributeGetterFunctions =
+					new LinkedHashMap
+						<String, Function<MetadataComment, Object>>();
 
-		_attributeGetterFunctions = Collections.unmodifiableMap(
-			attributeGetterFunctions);
-		_attributeSetterBiConsumers = Collections.unmodifiableMap(
-			(Map)attributeSetterBiConsumers);
+			attributeGetterFunctions.put("uuid", MetadataComment::getUuid);
+			attributeGetterFunctions.put("_id", MetadataComment::get_id);
+			attributeGetterFunctions.put(
+				"userLiferayId", MetadataComment::getUserLiferayId);
+			attributeGetterFunctions.put(
+				"metadataName", MetadataComment::getMetadataName);
+			attributeGetterFunctions.put("text", MetadataComment::getText);
+			attributeGetterFunctions.put(
+				"created", MetadataComment::getCreated);
+
+			_attributeGetterFunctions = Collections.unmodifiableMap(
+				attributeGetterFunctions);
+		}
+
+	}
+
+	private static class AttributeSetterBiConsumersHolder {
+
+		private static final Map<String, BiConsumer<MetadataComment, Object>>
+			_attributeSetterBiConsumers;
+
+		static {
+			Map<String, BiConsumer<MetadataComment, ?>>
+				attributeSetterBiConsumers =
+					new LinkedHashMap<String, BiConsumer<MetadataComment, ?>>();
+
+			attributeSetterBiConsumers.put(
+				"uuid",
+				(BiConsumer<MetadataComment, String>)MetadataComment::setUuid);
+			attributeSetterBiConsumers.put(
+				"_id",
+				(BiConsumer<MetadataComment, Long>)MetadataComment::set_id);
+			attributeSetterBiConsumers.put(
+				"userLiferayId",
+				(BiConsumer<MetadataComment, Long>)
+					MetadataComment::setUserLiferayId);
+			attributeSetterBiConsumers.put(
+				"metadataName",
+				(BiConsumer<MetadataComment, String>)
+					MetadataComment::setMetadataName);
+			attributeSetterBiConsumers.put(
+				"text",
+				(BiConsumer<MetadataComment, String>)MetadataComment::setText);
+			attributeSetterBiConsumers.put(
+				"created",
+				(BiConsumer<MetadataComment, Date>)MetadataComment::setCreated);
+
+			_attributeSetterBiConsumers = Collections.unmodifiableMap(
+				(Map)attributeSetterBiConsumers);
+		}
+
 	}
 
 	@Override
@@ -646,37 +655,6 @@ public class MetadataCommentModelImpl
 		return sb.toString();
 	}
 
-	@Override
-	public String toXmlString() {
-		Map<String, Function<MetadataComment, Object>>
-			attributeGetterFunctions = getAttributeGetterFunctions();
-
-		StringBundler sb = new StringBundler(
-			(5 * attributeGetterFunctions.size()) + 4);
-
-		sb.append("<model><model-name>");
-		sb.append(getModelClassName());
-		sb.append("</model-name>");
-
-		for (Map.Entry<String, Function<MetadataComment, Object>> entry :
-				attributeGetterFunctions.entrySet()) {
-
-			String attributeName = entry.getKey();
-			Function<MetadataComment, Object> attributeGetterFunction =
-				entry.getValue();
-
-			sb.append("<column><column-name>");
-			sb.append(attributeName);
-			sb.append("</column-name><column-value><![CDATA[");
-			sb.append(attributeGetterFunction.apply((MetadataComment)this));
-			sb.append("]]></column-value></column>");
-		}
-
-		sb.append("</model>");
-
-		return sb.toString();
-	}
-
 	private static class EscapedModelProxyProviderFunctionHolder {
 
 		private static final Function<InvocationHandler, MetadataComment>
@@ -697,7 +675,8 @@ public class MetadataCommentModelImpl
 		columnName = _attributeNames.getOrDefault(columnName, columnName);
 
 		Function<MetadataComment, Object> function =
-			_attributeGetterFunctions.get(columnName);
+			AttributeGetterFunctionsHolder._attributeGetterFunctions.get(
+				columnName);
 
 		if (function == null) {
 			throw new IllegalArgumentException(
