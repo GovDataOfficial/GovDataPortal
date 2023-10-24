@@ -9,14 +9,13 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
+import de.seitenbau.govdata.comparator.LicencesTitleComparator;
 import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.odp.registry.model.Licence;
-import de.seitenbau.govdata.comparator.LicencesTitleComparator;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Liefert die gecachte Liste der Lizenzen.

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.4.0</version>
+    <version>6.4.1</version>
   </parent>
   <artifactId>od-platform-packaging</artifactId>
   <packaging>deb</packaging>
@@ -72,7 +72,7 @@
                   <data>
                     <src>${project.basedir}/../</src>
                     <type>directory</type>
-                    <includes>**/gd-blogs-service-override/target/*.jar,**/gd-subscription-web-override/target/*.jar</includes>
+                    <includes>**/gd-blogs-web-override/target/*.jar,**/gd-blogs-service-override/target/*.jar,**/gd-subscription-web-override/target/*.jar</includes>
                     <mapper>
                       <type>perm</type>
                       <strip>2</strip>

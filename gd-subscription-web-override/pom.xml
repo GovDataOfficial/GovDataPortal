@@ -5,7 +5,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.4.0</version>
+    <version>6.4.1</version>
   </parent>
   <groupId>de.seitenbau.subscription.web.override</groupId>
   <artifactId>gd-subscription-web-override</artifactId>

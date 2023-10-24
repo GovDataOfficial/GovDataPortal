@@ -1,14 +1,11 @@
 package de.seitenbau.govdata.languagehook;
 
-import com.liferay.portal.kernel.language.UTF8Control;
-import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
-import javax.portlet.Portlet;
-
 import org.osgi.service.component.annotations.Component;
+
+import com.liferay.portal.kernel.language.UTF8Control;
 
 @Component(property = {"language.id=de_DE"}, service = ResourceBundle.class)
 public class LanguageHookDeResourceBundle extends ResourceBundle

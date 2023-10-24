@@ -44,9 +44,9 @@ public abstract class StringCleaner
       .addEnforcedAttribute("a", "rel", "nofollow")
       .addEnforcedAttribute("a", "target", "_blank");
 
-  public final static int CKAN_PACKAGE_NAME_MAX_LENGTH = 100;
+  public static final int CKAN_PACKAGE_NAME_MAX_LENGTH = 100;
 
-  public final static int CKAN_PACKAGE_NAME_MIN_LENGTH = 2;
+  public static final int CKAN_PACKAGE_NAME_MIN_LENGTH = 2;
 
   /**
    * Entfernt aus dem übergebenen String jeglichen Markup, trimmt den String und gibt diesen zurück.

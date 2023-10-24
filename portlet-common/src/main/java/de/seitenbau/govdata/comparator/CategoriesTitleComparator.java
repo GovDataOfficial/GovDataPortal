@@ -40,7 +40,7 @@ public class CategoriesTitleComparator implements Comparator<Category>, Serializ
   public int compare(Category c1, Category c2)
   {
     Collator collator = Collator.getInstance(Locale.GERMAN);
-    collator.setStrength(Collator.SECONDARY);// a == A, a < Ä
+    collator.setStrength(Collator.SECONDARY); // a == A, a < Ä
     return collator.compare(c1.getTitle(), c2.getTitle());
   }
 

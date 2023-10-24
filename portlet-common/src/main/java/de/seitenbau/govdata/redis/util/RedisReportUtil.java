@@ -38,7 +38,7 @@ public abstract class RedisReportUtil
    * @return eine Liste an nicht erreichbaren URLs oder eine leere Liste, falls keine nicht
    *         erreichbaren Verweise existieren.
    */
-  public final static Set<String> readUnavailableResourceLinks(
+  public static final Set<String> readUnavailableResourceLinks(
       final String metadataId, final RedisClientAdapter redisClientAdapter)
   {
     final String method = "readUnavailableResourceLinks() : ";
@@ -93,7 +93,7 @@ public abstract class RedisReportUtil
    * @param reportPythonDictString der Report-Eintrag als Python Dictionary String.
    * @return der geparste JSON-String.
    */
-  final static String parseReportPythonDictStringToJson(final String reportPythonDictString)
+  static final String parseReportPythonDictStringToJson(final String reportPythonDictString)
   {
     String result = reportPythonDictString;
     // replace python unicode character "u"

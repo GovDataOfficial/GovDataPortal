@@ -22,7 +22,8 @@ public class DatasetDetailsFriendlyUrlMapper extends DefaultFriendlyURLMapper
 
     String friendlyURLPath = router.parametersToUrl(routeParameters);
 
-    if (Validator.isNull(friendlyURLPath)) {
+    if (Validator.isNull(friendlyURLPath))
+    {
       return null;
     }
 

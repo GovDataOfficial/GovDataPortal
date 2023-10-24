@@ -40,7 +40,7 @@ public class LicencesTitleComparator implements Comparator<Licence>, Serializabl
   public int compare(Licence licence1, Licence licence2)
   {
     Collator collator = Collator.getInstance(Locale.GERMAN);
-    collator.setStrength(Collator.SECONDARY);// a == A, a < Ä
+    collator.setStrength(Collator.SECONDARY); // a == A, a < Ä
     return collator.compare(licence1.getTitle(), licence2.getTitle());
   }
 

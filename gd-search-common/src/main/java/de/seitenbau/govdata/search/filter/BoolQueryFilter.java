@@ -17,7 +17,7 @@ public class BoolQueryFilter extends BaseFilter
    * Data structure to hold bool-query-filter information
    * @param elasticSearchField
    * @param filterFragmentName
-   * @param phrase
+   * @param phrases
    */
   public BoolQueryFilter(String elasticSearchField, String filterFragmentName, List<String> phrases)
   {

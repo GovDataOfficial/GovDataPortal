@@ -58,7 +58,8 @@ public interface SearchService
   /**
    * Lifert die Datensätze zu den übergebenen Identifiern.
    * 
-   * @param datasetIds
+   * @param ids
+   * @param searchIndexes
    * @return
    */
   public SearchResultContainer singleSearch(List<String> ids, String[] searchIndexes);

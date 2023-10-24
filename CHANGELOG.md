@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.4.1 2023-10-24
+
+* Internal: Updates deployment configuration files
+* Fixes displaying the next blog entry in the blog details view
+* Updates maven dependencies to the latest bugfix / security fix version
+
 ## v6.4.0 2023-10-19
 
 * Supports Liferay version 7.4.3.95 GA95 now
