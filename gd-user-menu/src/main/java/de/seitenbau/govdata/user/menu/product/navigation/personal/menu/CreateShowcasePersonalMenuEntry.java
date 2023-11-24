@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.product.navigation.personal.menu.PersonalMenuEntry;
 
 /**
+ * Service Component CreateShowcasePersonalMenuEntry
  * @author rnoerenberg
  */
 @Component(

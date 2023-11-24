@@ -1,25 +1,4 @@
-/**
- * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS
- * <p>
- * This file is part of Open Data Platform.
- * <p>
- * Open Data Platform is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * Open Data Plaform is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with Open Data Platform.  If not, see <http://www.gnu.org/licenses/agpl-3.0>.
- */
-
 package de.seitenbau.govdata.odp.registry.ckan.impl;
-
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_DATETIME_PATTERN;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -37,6 +16,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.odp.registry.ODRClient;
+import de.seitenbau.govdata.odp.registry.ckan.Constants;
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
 import de.seitenbau.govdata.odp.registry.ckan.Util;
 import de.seitenbau.govdata.odp.registry.ckan.json.ResourceBean;
@@ -213,7 +193,7 @@ public class ResourceImpl implements Resource, Serializable
    */
   public JsonNode write()
   {
-    SimpleDateFormat formatter = new SimpleDateFormat(JSON_DATETIME_PATTERN);
+    SimpleDateFormat formatter = new SimpleDateFormat(Constants.JSON_DATETIME_PATTERN);
 
     ResourceExportBean bean = new ResourceExportBean();
     bean.setCreated(resource.getCreated());
@@ -375,7 +355,7 @@ public class ResourceImpl implements Resource, Serializable
    * 
    * @param text
    */
-  public void setDownload_url(String text)
+  public void setDownloadUrl(String text)
   {
     resource.setDownload_url(text);
   }
@@ -439,7 +419,7 @@ public class ResourceImpl implements Resource, Serializable
    * 
    * @param text
    */
-  public void setHash_algorithm(String text)
+  public void setHashAlgorithm(String text)
   {
     resource.setHash_algorithm(text);
   }

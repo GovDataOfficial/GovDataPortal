@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.4.1</version>
+    <version>6.4.3</version>
   </parent>
   <artifactId>language-hook</artifactId>
   <dependencies>

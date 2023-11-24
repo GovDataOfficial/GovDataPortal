@@ -238,10 +238,8 @@ public class MetadataDetailsController
           // Set showcase details as html website meta information
           setSiteInformationFromMetadata(themeDisplay.getLayout(), selectedShowcase);
           // create Link to edit form
-          String url = gdNavigation
-              .createLinkForShowcaseEdit("gdeditshowcaseportlet",
-                  selectedShowcase.getShowcase().getId().toString())
-              .toString();
+          String url = gdNavigation.createLinkForShowcaseEdit("gdeditshowcaseportlet",
+              selectedShowcase.getShowcase().getId().toString()).toString();
           model.addAttribute(MODEL_KEY_EDITDATASETURL, url);
         }
 
@@ -320,8 +318,7 @@ public class MetadataDetailsController
     model.addAttribute(MODEL_KEY_CANEDIT, userCanEditDataset);
 
     // create LoginURL to be used with the fastlogin-popup - anonymous users can comment that way
-    PortletURL loginURL =
-        PortletURLFactoryUtil.create(
+    PortletURL loginURL = PortletURLFactoryUtil.create(
             request, PortletKeys.FAST_LOGIN, themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
     loginURL.setParameter("saveLastPath", Boolean.FALSE.toString());
     loginURL.setParameter("struts_action", "/login/login");

@@ -6,9 +6,21 @@ package de.seitenbau.govdata.edit.gui.common;
  */
 public enum DisplayMode
 {
+  /**
+   * Display mode confirmationdialog
+   */
   CONFIRMATIONDIALOG("confirmationdialog"),
+  /**
+   * Display mode mailsent
+   */
   MAILSENT("mailsent"),
+  /**
+   * Display mode success
+   */
   DELETIONSUCCESS("success"),
+  /**
+   * Display mode error
+   */
   ERROR("error");
 
   private String field;

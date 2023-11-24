@@ -120,7 +120,7 @@ class DeleteUserController
     // user arriving from email-link. prepare final step.
     if (StringUtils.isNotEmpty(ticketKey))
     {
-      // TODO: temporary workaround
+      // workaround
       if (ticketKey.contains(","))
       {
         ticketKey = ticketKey.split(",")[0];
@@ -260,7 +260,8 @@ class DeleteUserController
       // rename the ckan user prior to deletion (so the original name can be used again)
       // make it unlikely to already exist
       /*
-       * TODO: Temporary disabled, see GOVDATA-2585 String newName = ckanUser.getName() + "-del-" +
+       * Currently disabled, see GOVDATA-2585
+       * String newName = ckanUser.getName() + "-del-" +
        * RandomStringUtils.randomAlphanumeric(6).toLowerCase();
        * if(registryClient.getInstance().renameUser(ckanUser, newName) == null) { throw new
        * PortalException("could not rename user!"); }
@@ -270,7 +271,6 @@ class DeleteUserController
       {
         throw new PortalException("could not delete user " + ticketUser.getScreenName().toLowerCase() + "!");
       }
-      ;
     }
     else
     {

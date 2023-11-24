@@ -206,6 +206,11 @@ public abstract class DateUtil
     return result;
   }
 
+  /**
+   * Generate a copy of a date.
+   * @param date
+   * @return
+   */
   public static Date getCopyOfDate(Date date)
   {
     if (date == null)

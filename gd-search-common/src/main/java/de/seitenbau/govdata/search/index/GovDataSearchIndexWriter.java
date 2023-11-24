@@ -46,11 +46,13 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
 {
   private static final Locale LOCALE_USED = Locale.GERMANY;
 
-  private IndexQueueAdapterServiceRESTResource indexClient = ApplicationContextProvider.getApplicationContext().getBean(IndexQueueAdapterServiceRESTResource.class);
+  private IndexQueueAdapterServiceRESTResource indexClient =
+      ApplicationContextProvider.getApplicationContext().getBean(IndexQueueAdapterServiceRESTResource.class);
   
   private String indexName = PropsUtil.get(SearchConsts.PARAM_ELASTICSEARCH_LIFERAY_INDEX_NAME);
 
-  private SearchIndexUtil searchIndexUtil = ApplicationContextProvider.getApplicationContext().getBean(SearchIndexUtil.class);
+  private SearchIndexUtil searchIndexUtil =
+      ApplicationContextProvider.getApplicationContext().getBean(SearchIndexUtil.class);
 
   private FilterProxy filterProxy =
       ApplicationContextProvider.getApplicationContext().getBean(FilterProxy.class);
@@ -63,7 +65,9 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   {
     log.info("postProcessContextBooleanFilter()");
     if (_log.isDebugEnabled())
+    {
       _log.debug("postProcessContextBooleanFilter()");
+    }
   }
 
   @Override
@@ -103,7 +107,9 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   {
     log.info("postProcessFullQuery()");
     if (_log.isDebugEnabled())
+    {
       _log.debug(" postProcessFullQuery()");
+    }
   }
 
   @Override
@@ -112,7 +118,9 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   {
     log.info("postProcessSearchQuery()");
     if (_log.isDebugEnabled())
+    {
       _log.debug(" postProcessSearchQuery()");
+    }
   }
 
   @Override
@@ -120,7 +128,9 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   {
     log.info("postProcessSummary()");
     if (_log.isDebugEnabled())
+    {
       _log.debug("postProcessSummary()");
+    }
   }
 
   private SearchIndexEntry createSearchIndexEntryWithBasicInformation(String uid)

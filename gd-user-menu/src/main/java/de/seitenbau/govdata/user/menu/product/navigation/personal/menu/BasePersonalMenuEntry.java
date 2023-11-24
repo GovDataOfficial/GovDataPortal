@@ -16,14 +16,30 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.personal.menu.PersonalMenuEntry;
 
 /**
+ * Class BasePersonalMenuEntry
  * @author rnoerenberg
  */
 public abstract class BasePersonalMenuEntry implements PersonalMenuEntry
 {
+  /**
+   * Friendly URL for edit dataset form
+   */
   protected static final String FRIENDLY_URL_PAGE_CREATE_METADATA = "/bearbeiten";
 
+  /**
+   * Friendly URL for edit showcase form
+   */
   protected static final String FRIENDLY_URL_PAGE_CREATE_SHOWCASE = "/showcase-bearbeiten";
 
+  /**
+   * Check edit permissions for dataset
+   * @param portletRequest
+   * @param permissionChecker
+   * @param layoutLocalService
+   * @param groupLocalService
+   * @return
+   * @throws PortalException
+   */
   public boolean canEditDatasets(PortletRequest portletRequest, PermissionChecker permissionChecker,
       LayoutLocalService layoutLocalService, GroupLocalService groupLocalService) throws PortalException
   {
@@ -31,6 +47,16 @@ public abstract class BasePersonalMenuEntry implements PersonalMenuEntry
         FRIENDLY_URL_PAGE_CREATE_METADATA);
   }
 
+  /**
+   * Check access permissions for dataset
+   * @param portletRequest
+   * @param permissionChecker
+   * @param layoutLocalService
+   * @param groupLocalService
+   * @param friendlyURL
+   * @return
+   * @throws PortalException
+   */
   public boolean hasPermissions(PortletRequest portletRequest, PermissionChecker permissionChecker,
       LayoutLocalService layoutLocalService, GroupLocalService groupLocalService, String friendlyURL)
       throws PortalException

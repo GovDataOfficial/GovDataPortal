@@ -120,6 +120,13 @@ public class AtomFeedController
     return new AtomFeedView(hitViewModelList, selfurl);
   }
   
+  /**
+   * Display the search results.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   */
   @RenderMapping
   public String showSearchResults(
       RenderRequest request,

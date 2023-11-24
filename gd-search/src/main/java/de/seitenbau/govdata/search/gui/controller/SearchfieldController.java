@@ -55,6 +55,15 @@ public class SearchfieldController extends AbstractBaseController
   @Value("${elasticsearch.search.paths.typefiltered}")
   private String[] typeFilteredPaths;
 
+  /**
+   * Display the search field input.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   @RenderMapping
   public String showSearchInputField(
       RenderRequest request,

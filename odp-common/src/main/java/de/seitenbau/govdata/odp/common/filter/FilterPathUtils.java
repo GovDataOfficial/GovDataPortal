@@ -77,6 +77,11 @@ public final class FilterPathUtils
     return activeFilterMap;
   }
 
+  /**
+   * Serialize a filter map.
+   * @param activeFilterMap
+   * @return
+   */
   public static String serializeFilterMap(Map<String, List<String>> activeFilterMap)
   {
     StringBuilder sb = new StringBuilder();
@@ -92,16 +97,32 @@ public final class FilterPathUtils
     return sb.toString();
   }
 
+  /**
+   * Serialize a filter value.
+   * @param key
+   * @param val
+   * @return
+   */
   public static String serializeFilter(String key, String val)
   {
     return key + KEY_VAL_DELIMITER + encodeFilterValue(val) + GROUP_DELIMITER;
   }
 
+  /**
+   * Searialize a filter key.
+   * @param key
+   * @return
+   */
   public static String serializeFilterMatchAllRegex(String key)
   {
     return key + KEY_VAL_DELIMITER + ".+?" + GROUP_DELIMITER;
   }
 
+  /**
+   * Decode a filter value.
+   * @param encodedValue
+   * @return
+   */
   public static String decodeFilterValue(String encodedValue)
   {
     try
@@ -115,6 +136,11 @@ public final class FilterPathUtils
     }
   }
 
+  /**
+   * Encodes a filter value.
+   * @param filter
+   * @return
+   */
   public static String encodeFilterValue(final String filter)
   {
     try

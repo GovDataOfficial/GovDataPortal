@@ -37,7 +37,11 @@ public class Contact implements Serializable
   
   @Valid
   private ContactAddress address;
-  
+
+  /**
+   * Check if contact should be stored.
+   * @return
+   */
   public boolean shouldStoreContact()
   {
     if (StringUtils.isBlank(name) && StringUtils.isBlank(email) && StringUtils.isBlank(url))

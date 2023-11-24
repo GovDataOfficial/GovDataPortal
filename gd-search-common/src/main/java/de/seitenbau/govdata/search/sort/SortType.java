@@ -4,7 +4,18 @@ import org.apache.commons.lang3.StringUtils;
 
 public enum SortType
 {
-  RELEVANCE("relevance"), LASTMODIFICATION("lastmodification"), TITLE("title");
+  /**
+   * Sort type relevance
+   */
+  RELEVANCE("relevance"),
+  /**
+   * Sort type lastmodification
+   */
+  LASTMODIFICATION("lastmodification"),
+  /**
+   * Sort type title
+   */
+  TITLE("title");
   
   SortType(String key)
   {
@@ -16,6 +27,11 @@ public enum SortType
     return key;
   }
   
+  /**
+   * Get SortType by key.
+   * @param key
+   * @return
+   */
   public static SortType fromString(String key)
   {
     for (SortType type : SortType.values())

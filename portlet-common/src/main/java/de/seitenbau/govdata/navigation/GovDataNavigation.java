@@ -92,7 +92,21 @@ public class GovDataNavigation
   {
     return createLinkForSearchResults(layoutFriendlyUrlName, portletName, q, filter, sort, bbox, null, null);
   }
-  
+
+  /**
+   * Generate a link for search results.
+   * @param layoutFriendlyUrlName
+   * @param portletName
+   * @param q
+   * @param filter
+   * @param sort
+   * @param bbox
+   * @param from
+   * @param until
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createLinkForSearchResults(
       String layoutFriendlyUrlName,
       String portletName,
@@ -113,14 +127,31 @@ public class GovDataNavigation
     PortletUtil.setParameterInPortletUrl(url, QueryParamNames.PARAM_END, until);
     return url;
   }
-  
+
+  /**
+   * Generate a link for dataset.
+   * @param portletName
+   * @param metadataName
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createLinkForMetadata(
       String portletName,
       String metadataName) throws SystemException, PortalException
   {
     return createLinkForMetadata(portletName, metadataName, FRIENDLY_URL_NAME_SEARCHRESULT_PAGE);
   }
-  
+
+  /**
+   * Generate a link for dataset.
+   * @param portletName
+   * @param metadataName
+   * @param page
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createLinkForMetadata(
       String portletName,
       String metadataName,
@@ -131,7 +162,15 @@ public class GovDataNavigation
     PortletUtil.setParameterInPortletUrl(url, DetailsRequestParamNames.PARAM_METADATA, metadataName);
     return url;
   }
-  
+
+  /**
+   * Generate a link tothe edit dataset form.
+   * @param portletName
+   * @param metadataName
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createLinkForMetadataEdit(
       String portletName,
       String metadataName) throws SystemException, PortalException
@@ -145,6 +184,14 @@ public class GovDataNavigation
     return url;
   }
 
+  /**
+   * Generate a link to the edit showcase form.
+   * @param portletName
+   * @param showcaseName
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createLinkForShowcaseEdit(
       String portletName,
       String showcaseName) throws SystemException, PortalException

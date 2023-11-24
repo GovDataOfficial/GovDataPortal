@@ -445,6 +445,13 @@ public class SearchresultController extends AbstractBaseController
     return result;
   }
 
+  /**
+   * Scroll for the next hits
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   */
   @ResourceMapping(value = NEXT_HITS_RESOURCE_URL_ID)
   public String scrollNextHits(
       ResourceRequest request,

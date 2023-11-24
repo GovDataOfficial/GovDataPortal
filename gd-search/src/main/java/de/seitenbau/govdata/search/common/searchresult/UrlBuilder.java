@@ -111,18 +111,42 @@ public class UrlBuilder
     return renderUrl;
   }
 
+  /**
+   * Generate redirect URL to results.
+   * @param navigationHelper
+   * @param target
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createRedirectToResultsUrl(GovDataNavigation navigationHelper, String target)
       throws SystemException, PortalException
   {
     return createFulloptionUrl(navigationHelper, target, PORTLET_NAME_SEARCHRESULT);
   }
 
+  /**
+   * Generate URL to Atom feed.
+   * @param navigationHelper
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createAtomFeedUrl(GovDataNavigation navigationHelper) throws SystemException,
       PortalException
   {
     return createFulloptionUrl(navigationHelper, FRIENDLY_URL_NAME_SEARCHRESULT_PAGE, "gdsearchatomfeed");
   }
 
+  /**
+   * Generate URL for options.
+   * @param navigationHelper
+   * @param target
+   * @param portletid
+   * @return
+   * @throws SystemException
+   * @throws PortalException
+   */
   public PortletURL createFulloptionUrl(GovDataNavigation navigationHelper, String target, String portletid)
       throws SystemException, PortalException
   {
@@ -171,6 +195,11 @@ public class UrlBuilder
     return result;
   }
 
+  /**
+   * Getter for parameters.
+   * @param key
+   * @return
+   */
   public String getParam(String key)
   {
     return parameters.get(key);

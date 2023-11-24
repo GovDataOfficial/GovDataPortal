@@ -94,8 +94,8 @@ public class ShowcaseViewModel implements Serializable
 
   private List<Keyword> keywords;
 
-  @Pattern(regexp = "|[ ]*([a-zäöüß0-9\\-_\\. ])+(,[ ]*[a-zäöüß0-9\\-_\\. ]+)*[ ]*", message = "{tags}", flags = {
-      Flag.CASE_INSENSITIVE})
+  @Pattern(regexp = "|[ ]*([a-zäöüß0-9\\-_\\. ])+(,[ ]*[a-zäöüß0-9\\-_\\. ]+)*[ ]*",
+      message = "{tags}", flags = {Flag.CASE_INSENSITIVE})
   private String tags;
 
   @Size(max = DEFAULT_COLUMN_SIZE_STRING, message = "{javax.validation.constraints.Size.max.message}")

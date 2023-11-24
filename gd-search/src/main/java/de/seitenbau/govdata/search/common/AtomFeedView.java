@@ -37,6 +37,11 @@ public class AtomFeedView extends AbstractAtomFeedView
 
   private PortletURL selfurl;
 
+  /**
+   * Constructor.
+   * @param entries
+   * @param selfurl
+   */
   public AtomFeedView(List<HitViewModel> entries, PortletURL selfurl)
   {
     this.entries = GovDataCollectionUtils.getCopyOfList(entries);

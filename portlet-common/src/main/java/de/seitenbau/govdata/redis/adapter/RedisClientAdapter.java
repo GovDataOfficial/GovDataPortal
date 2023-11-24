@@ -34,6 +34,9 @@ public class RedisClientAdapter
 
   private StatefulRedisConnection<String, String> connection;
 
+  /**
+   * Initialize client connection.
+   */
   @PostConstruct
   public void init()
   {
@@ -47,6 +50,9 @@ public class RedisClientAdapter
     log.trace(method + "End");
   }
 
+  /**
+   * Shutdown client connection.
+   */
   @PreDestroy
   public void destroy()
   {

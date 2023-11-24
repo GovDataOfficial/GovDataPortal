@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.4.3 2023-11-21
+
+* Updates to Elasticsearch 7.17.15
+* Fixes some checkstyle violations
+
 ## v6.4.1 2023-10-24
 
 * Internal: Updates deployment configuration files

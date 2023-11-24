@@ -1,30 +1,6 @@
-/**
- * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS | 2017 SEITENBAU GmbH
- *
- * This file is part of Open Data Platform.
- *
- * Open Data Platform is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.
- * 
- * Open Data Plaform is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License along with Open Data
- * Platform. If not, see <http://www.gnu.org/licenses/agpl-3.0>.
- */
-
 package de.seitenbau.govdata.odp.registry.ckan;
 
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_DATETIME_PATTERN;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_ALL_FIELDS;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.PROPERTIES_FILENAME;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.PROPERTY_NAME_CKAN_AUTHORIZATION_KEY;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.PROPERTY_NAME_CKAN_URL;
-
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -125,7 +101,7 @@ public class ODRClientImpl implements ODRClient
     try
     {
       props.load(Thread.currentThread().getContextClassLoader()
-          .getResourceAsStream(PROPERTIES_FILENAME));
+          .getResourceAsStream(Constants.PROPERTIES_FILENAME));
     }
     catch (IOException e)
     {
@@ -146,8 +122,8 @@ public class ODRClientImpl implements ODRClient
   {
 
     authorizationToken = props
-        .getProperty(PROPERTY_NAME_CKAN_AUTHORIZATION_KEY);
-    String url = props.getProperty(PROPERTY_NAME_CKAN_URL);
+        .getProperty(Constants.PROPERTY_NAME_CKAN_AUTHORIZATION_KEY);
+    String url = props.getProperty(Constants.PROPERTY_NAME_CKAN_URL);
     LOG.info("Start initialize CKAN client with URL {} ...", url);
     RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 
@@ -165,7 +141,7 @@ public class ODRClientImpl implements ODRClient
 
     action = target.proxy(CKANClientAction.class);
 
-    ALL_FIELDS.put(JSON_FIELD_ALL_FIELDS, true);
+    ALL_FIELDS.put(Constants.JSON_FIELD_ALL_FIELDS, true);
 
     getStatus();
     LOG.info("CKAN client sucessfully initialized.");
@@ -543,7 +519,6 @@ public class ODRClientImpl implements ODRClient
   public static <T> JsonNode convert(T obj)
   {
     ObjectMapper m = new ObjectMapper();
-    m.setDateFormat(new SimpleDateFormat(JSON_DATETIME_PATTERN));
 
     return m.valueToTree(obj);
   }

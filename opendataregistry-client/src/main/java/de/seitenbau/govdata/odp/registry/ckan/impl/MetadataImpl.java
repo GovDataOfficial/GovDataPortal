@@ -1,33 +1,4 @@
-/**
- * Copyright (c) 2012, 2013 Fraunhofer Institute FOKUS | 2017 SEITENBAU GmbH
- * <p>
- * This file is part of Open Data Platform.
- * <p>
- * Open Data Platform is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * Open Data Plaform is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with Open Data Platform.  If not, see <http://www.gnu.org/licenses/agpl-3.0>.
- */
-
 package de.seitenbau.govdata.odp.registry.ckan.impl;
-
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_DATETIME_PATTERN;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_CATEGORIES;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_COVERAGEFROM;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_COVERAGETO;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_EXTRAS;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_MODIFIED;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_PUBLISHED;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_RESOURCES;
-import static de.seitenbau.govdata.odp.registry.ckan.Constants.JSON_FIELD_TAGS;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -109,7 +80,7 @@ public class MetadataImpl implements Metadata, Serializable
     this.metadata = metadata;
     this.metadata.setType(MetadataEnumType.DATASET.toField());
 
-    formatter = new SimpleDateFormat(JSON_DATETIME_PATTERN);
+    formatter = new SimpleDateFormat(Constants.JSON_DATETIME_PATTERN);
 
     // fill map for faster access
     for (ExtraBean bean : metadata.getExtras())
@@ -196,7 +167,7 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public void setModified(Date modified)
   {
-    setExtraDate(JSON_FIELD_MODIFIED, modified);
+    setExtraDate(Constants.JSON_FIELD_MODIFIED, modified);
   }
 
   @Override
@@ -208,7 +179,7 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public void setPublished(Date published)
   {
-    setExtraDate(JSON_FIELD_PUBLISHED, published);
+    setExtraDate(Constants.JSON_FIELD_PUBLISHED, published);
   }
 
   @Override
@@ -348,13 +319,13 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public Date getTemporalCoverageFrom()
   {
-    return toDate(getExtra(JSON_FIELD_COVERAGEFROM));
+    return toDate(getExtra(Constants.JSON_FIELD_COVERAGEFROM));
   }
 
   @Override
   public void setTemporalCoverageFrom(Date temporalCoverageFrom)
   {
-    setExtraDate(JSON_FIELD_COVERAGEFROM, temporalCoverageFrom);
+    setExtraDate(Constants.JSON_FIELD_COVERAGEFROM, temporalCoverageFrom);
   }
 
   /**
@@ -377,13 +348,13 @@ public class MetadataImpl implements Metadata, Serializable
   @Override
   public Date getTemporalCoverageTo()
   {
-    return toDate(getExtra(JSON_FIELD_COVERAGETO));
+    return toDate(getExtra(Constants.JSON_FIELD_COVERAGETO));
   }
 
   @Override
   public void setTemporalCoverageTo(Date temporalCoverageTo)
   {
-    setExtraDate(JSON_FIELD_COVERAGETO, temporalCoverageTo);
+    setExtraDate(Constants.JSON_FIELD_COVERAGETO, temporalCoverageTo);
   }
 
   public boolean isNew()
@@ -413,20 +384,21 @@ public class MetadataImpl implements Metadata, Serializable
     }
 
     ArrayNode groups = OM.createArrayNode();
-    getCategories().forEach(category -> {
+    getCategories().forEach(category ->
+    {
       ObjectNode group = OM.createObjectNode();
       group.put("name", category.getName());
       groups.add(group);
     });
     if (groups.size() > 0)
     {
-      ((ObjectNode) node).set(JSON_FIELD_CATEGORIES, groups);
+      ((ObjectNode) node).set(Constants.JSON_FIELD_CATEGORIES, groups);
     }
     /* msg 10.04.2014 */
     if (clearResources)
     {
       ArrayNode resourcesNode = OM.createArrayNode();
-      ((ObjectNode) node).set(JSON_FIELD_RESOURCES, resourcesNode);
+      ((ObjectNode) node).set(Constants.JSON_FIELD_RESOURCES, resourcesNode);
     }
 
     ArrayNode tagsNode = OM.createArrayNode();
@@ -438,7 +410,7 @@ public class MetadataImpl implements Metadata, Serializable
     }
     if (tagsNode.size() > 0)
     {
-      ((ObjectNode) node).set(JSON_FIELD_TAGS, tagsNode);
+      ((ObjectNode) node).set(Constants.JSON_FIELD_TAGS, tagsNode);
     }
 
     ArrayNode extrasNode = OM.createArrayNode();
@@ -454,7 +426,7 @@ public class MetadataImpl implements Metadata, Serializable
 
     if (extrasNode.size() > 0)
     {
-      ((ObjectNode) node).set(JSON_FIELD_EXTRAS, extrasNode);
+      ((ObjectNode) node).set(Constants.JSON_FIELD_EXTRAS, extrasNode);
     }
 
     return node;

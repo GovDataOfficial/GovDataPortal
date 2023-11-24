@@ -42,7 +42,8 @@ public class EditForm implements Serializable
   @NotEmpty
   private String notes;
 
-  @Pattern(regexp = "|[ ]*([a-zäöüß0-9\\-_\\. ])+(,[ ]*[a-zäöüß0-9\\-_\\. ]+)*[ ]*", message = "{tags}", flags = {Flag.CASE_INSENSITIVE})
+  @Pattern(regexp = "|[ ]*([a-zäöüß0-9\\-_\\. ])+(,[ ]*[a-zäöüß0-9\\-_\\. ]+)*[ ]*",
+      message = "{tags}", flags = {Flag.CASE_INSENSITIVE})
   private String tags;
 
   @URL

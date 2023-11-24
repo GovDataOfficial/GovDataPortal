@@ -65,31 +65,55 @@ public class ContactAddress
     return metadataImpl.getExtra(role.getField() + COUNTRY);
   }
 
+  /**
+   * Setter for addressee.
+   * @param s
+   */
   public void setAddressee(String s)
   {
     metadataImpl.setExtra(role.getField() + ADDRESSEE, s);
   }
 
+  /**
+   * Setter for details.
+   * @param s
+   */
   public void setDetails(String s)
   {
     metadataImpl.setExtra(role.getField() + DETAILS, s);
   }
 
+  /**
+   * Setter for street.
+   * @param s
+   */
   public void setStreet(String s)
   {
     metadataImpl.setExtra(role.getField() + STREET, s);
   }
 
+  /**
+   * setter for zip code.
+   * @param s
+   */
   public void setZIP(String s)
   {
     metadataImpl.setExtra(role.getField() + ZIP, s);
   }
 
+  /**
+   * Setter for city.
+   * @param s
+   */
   public void setCity(String s)
   {
     metadataImpl.setExtra(role.getField() + CITY, s);
   }
 
+  /**
+   * Setter for country.
+   * @param s
+   */
   public void setCountry(String s)
   {
     metadataImpl.setExtra(role.getField() + COUNTRY, s);

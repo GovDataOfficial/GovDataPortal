@@ -8,6 +8,10 @@ import com.liferay.portal.kernel.cache.MultiVMPool;
 public class MultiVMPoolServiceTracker extends ServiceTracker<MultiVMPool, MultiVMPool>
 {
 
+  /**
+   * Constructor.
+   * @param host
+   */
   public MultiVMPoolServiceTracker(Object host)
   {
     super(

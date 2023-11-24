@@ -236,7 +236,8 @@ public class SearchServiceElasticsearchImpl implements SearchService
     RestClientBuilder builder = RestClient.builder(
         httpHosts.toArray(new HttpHost[0]))
         .setHttpClientConfigCallback(
-            httpClientBuilder -> {
+            httpClientBuilder ->
+            {
               httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)
                   .setSSLContext(sslContext)
                   .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)

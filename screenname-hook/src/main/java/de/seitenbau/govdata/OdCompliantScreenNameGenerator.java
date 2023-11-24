@@ -51,7 +51,7 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
     // separate method, so copy it
     String[] reservedScreenNames = PrefsPropsUtil.getStringArray(
         companyId, PropsKeys.ADMIN_RESERVED_SCREEN_NAMES,
-        "\n", _ADMIN_RESERVED_SCREEN_NAMES);
+        "\n", ADMIN_RESERVED_SCREEN_NAMES_ARRAY);
 
     // if name is used, append a number to the name until a free name is found
     int suffix = 1;
@@ -110,7 +110,7 @@ public class OdCompliantScreenNameGenerator implements ScreenNameGenerator
   }
 
   // reserved screen names in properties (like in default generator)
-  private static final String[] _ADMIN_RESERVED_SCREEN_NAMES =
+  private static final String[] ADMIN_RESERVED_SCREEN_NAMES_ARRAY =
       StringUtil.splitLines(
           PropsUtil.get(PropsKeys.ADMIN_RESERVED_SCREEN_NAMES));
 
