@@ -1,7 +1,7 @@
 Bundle-Name: gd-captcha-fragment
 Bundle-SymbolicName: de.seitenbau.govdata.captcha.fragment
 Bundle-Version: 1.0.0
-Fragment-Host: com.liferay.captcha.taglib;bundle-version="5.1.1"
+Fragment-Host: com.liferay.captcha.taglib;bundle-version="5.1.3"
 -jsp: *.jsp,*.jspf
 -metatype: *
 -plugin.jsp: com.liferay.ant.bnd.jsp.JspAnalyzerPlugin

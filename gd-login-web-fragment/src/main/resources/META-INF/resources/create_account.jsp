@@ -183,7 +183,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 					<clay:col
 						md="6"
 					>
-						<liferay-ui:user-name-fields />
+						<liferay-user:user-name-fields />
 					</clay:col>
 
 					<clay:col
@@ -237,7 +237,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "create-account"));
 					<clay:col md="6">
       					<aui:input label="od.registration.privacy.agreement.label" name="privacy-agreement" type="checkbox">
         				<aui:validator name="required" />
-        				<liferay-ui:message arguments="<%= "datenschutz" %>" key="od.registration.privacy.agreement.link.text" translateArguments="<%= false %>" />
+						<liferay-ui:message arguments="<%= "datenschutz" %>" key="od.registration.privacy.agreement.link.text" translateArguments="<%= false %>" />
        				</aui:input>
     				</clay:col>
 					<clay:col

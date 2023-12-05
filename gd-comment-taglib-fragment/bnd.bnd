@@ -1,7 +1,7 @@
 Bundle-Name: gd-comment-taglib-fragment
 Bundle-SymbolicName: de.seitenbau.govdata.comment.taglib.fragment
 Bundle-Version: 1.0.0
-Fragment-Host: com.liferay.comment.taglib;bundle-version="4.0.45"
+Fragment-Host: com.liferay.comment.taglib;bundle-version="4.0.48"
 -jsp: *.jsp,*.jspf
 -metatype: *
 -plugin.jsp: com.liferay.ant.bnd.jsp.JspAnalyzerPlugin

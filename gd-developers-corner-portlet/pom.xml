@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.4.3</version>
+    <version>6.4.4</version>
   </parent>
   <artifactId>gd-developers-corner-portlet</artifactId>
   <packaging>war</packaging>

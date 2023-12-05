@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.4.4 2023-12-05
+
+* Supports Liferay version 7.4.3.103 GA103 now
+* Removes custom fix for displaying the next blog entry in the blog details view, as this is integrated in the
+  new Liferay version
+
 ## v6.4.3 2023-11-21
 
 * Updates to Elasticsearch 7.17.15

@@ -28,8 +28,6 @@ import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.util.DateFormatFactory;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactory;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.Props;
@@ -63,9 +61,6 @@ public class GovDataSearchIndexWriterTest
 
   @Mock
   private FastDateFormatFactory fastDateFormatFactoryMock;
-
-  @Mock
-  private DateFormatFactory dateFormatFactoryMock;
 
   @Mock
   private BeanLocator beanLocatorMock;
@@ -198,12 +193,10 @@ public class GovDataSearchIndexWriterTest
     when(propsMock.get(PropsKeys.INDEX_DATE_FORMAT_PATTERN))
         .thenReturn(LIFERAY_INDEX_DATE_FORMAT_PATTERN);
     new FastDateFormatFactoryUtil().setFastDateFormatFactory(fastDateFormatFactoryMock);
-    new DateFormatFactoryUtil().setDateFormatFactory(dateFormatFactoryMock);
     DateFormat df = new SimpleDateFormat(LIFERAY_INDEX_DATE_FORMAT_PATTERN);
     when(fastDateFormatFactoryMock.getSimpleDateFormat(LIFERAY_INDEX_DATE_FORMAT_PATTERN))
         .thenReturn(df);
-    when(dateFormatFactoryMock.getSimpleDateFormat(LIFERAY_INDEX_DATE_FORMAT_PATTERN))
-        .thenReturn(df);
+
     // Tags
     PortalBeanLocatorUtil.setBeanLocator(beanLocatorMock);
     when(beanLocatorMock.locate(AssetTagLocalService.class.getCanonicalName()))

@@ -24,7 +24,7 @@ DiscussionComment rootDiscussionComment = discussion.getRootDiscussionComment();
 
 CommentTreeDisplayContext commentTreeDisplayContext = CommentDisplayContextProviderUtil.getCommentTreeDisplayContext(request, response, DiscussionPermissionUtil.getDiscussionPermission(), discussionComment);
 
-Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
+Format dateTimeFormat = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
 %>
 
 <c:if test="<%= commentTreeDisplayContext.isDiscussionVisible() %>">
@@ -40,17 +40,15 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 				<clay:content-col>
 					<c:choose>
 						<c:when test="<%= (messageUser != null && messageUser.isActive()) %>">
-							<liferay-ui:user-portrait
-								cssClass="sticker-lg"
+							<liferay-user:user-portrait
+								size="lg"
 								userId="<%= discussionComment.getUserId() %>"
-								userName="<%= discussionComment.getUserName() %>"
 							/>
 						</c:when>
 						<c:otherwise>
-							<liferay-ui:user-portrait
-								cssClass="sticker-lg"
+							<liferay-user:user-portrait
+								size="lg"
 								userId="<%= -1 %>"
-								userName="<%= LanguageUtil.get(resourceBundle, \"anonymous\") %>"
 							/>
 						</c:otherwise>
 					</c:choose>
@@ -142,7 +140,7 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 							</div>
 
 							<div class="text-secondary">
-								<span class="lfr-portal-tooltip" title="<%= dateFormatDateTime.format(createDate) %>"><liferay-ui:message arguments="<%= createDateDescription %>" key="x-ago" translateArguments="<%= false %>" /></span>
+								<span class="lfr-portal-tooltip" title="<%= dateTimeFormat.format(createDate) %>"><liferay-ui:message arguments="<%= createDateDescription %>" key="x-ago" translateArguments="<%= false %>" /></span>
 
 								<%
 								Date modifiedDate = discussionComment.getModifiedDate();
@@ -150,7 +148,7 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 								<c:if test="<%= createDate.before(modifiedDate) %>">
 									-
-									<strong class="lfr-portal-tooltip" title="<%= dateFormatDateTime.format(modifiedDate) %>">
+									<strong class="lfr-portal-tooltip" title="<%= dateTimeFormat.format(modifiedDate) %>">
 										<liferay-ui:message key="edited" />
 									</strong>
 								</c:if>
@@ -274,8 +272,8 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 					<clay:content-col
 						cssClass="lfr-discussion-details"
 					>
-						<liferay-ui:user-portrait
-							cssClass="sticker-lg"
+						<liferay-user:user-portrait
+							size="lg"
 							user="<%= user %>"
 						/>
 					</clay:content-col>

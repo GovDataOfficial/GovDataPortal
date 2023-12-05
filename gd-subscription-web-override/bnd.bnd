@@ -1,11 +1,11 @@
 Bundle-Name: Liferay Subscription Web
 Bundle-SymbolicName: com.liferay.subscription.web
-Bundle-Version: 4.0.27
+Bundle-Version: 4.0.28
 Liferay-Service: true
 -dsannotations-options: inherit
 -plugin.metatype: com.liferay.ant.bnd.metatype.MetatypePlugin
 -includeresource: \
-    @com.liferay.subscription.web-4.0.27.jar!/!com/liferay/subscription/web/internal/util/UnsubscribeHooks.class
+    @com.liferay.subscription.web-4.0.28.jar!/!com/liferay/subscription/web/internal/util/UnsubscribeHooks.class
 Import-Package: \
     !org.apache.jasper.runtime, \
     !org.glassfish.jsp.api, \

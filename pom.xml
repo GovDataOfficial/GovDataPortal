@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>6.4.3</version>
+  <version>6.4.4</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -12,7 +12,7 @@
   </organization>
 
   <properties>
-    <liferay.version>7.4.3.95</liferay.version>
+    <liferay.version>7.4.3.103</liferay.version>
     <faces.api.version>2.3</faces.api.version>
     <liferay.faces.bridge.ext.version>6.0.0</liferay.faces.bridge.ext.version>
     <liferay.faces.bridge.version>4.1.4</liferay.faces.bridge.version>
@@ -301,7 +301,6 @@
     <module>gd-metadata-quality-portlet</module>
     <module>gd-user-menu</module>
     <module>gd-blogs-service-override</module>
-    <module>gd-blogs-web-override</module>
     <module>gd-subscription-web-override</module>
     <module>gd-users-admin-fragment</module>
     <module>gd-comment-taglib-fragment</module>
