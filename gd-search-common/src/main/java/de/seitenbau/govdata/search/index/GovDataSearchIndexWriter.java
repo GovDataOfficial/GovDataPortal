@@ -10,8 +10,6 @@ import javax.ws.rs.NotFoundException;
 
 import com.google.gson.Gson;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
@@ -57,16 +55,13 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   private FilterProxy filterProxy =
       ApplicationContextProvider.getApplicationContext().getBean(FilterProxy.class);
 
-  private static Log _log = LogFactoryUtil.getLog(GovDataSearchIndexWriter.class);
-
   @Override
   public void postProcessContextBooleanFilter(BooleanFilter booleanFilter, SearchContext searchContext)
       throws Exception
   {
-    log.info("postProcessContextBooleanFilter()");
-    if (_log.isDebugEnabled())
+    if (log.isDebugEnabled())
     {
-      _log.debug("postProcessContextBooleanFilter()");
+      log.debug("postProcessContextBooleanFilter()");
     }
   }
 
@@ -105,10 +100,9 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   @Override
   public void postProcessFullQuery(BooleanQuery fullQuery, SearchContext searchContext) throws Exception
   {
-    log.info("postProcessFullQuery()");
-    if (_log.isDebugEnabled())
+    if (log.isDebugEnabled())
     {
-      _log.debug(" postProcessFullQuery()");
+      log.debug(" postProcessFullQuery()");
     }
   }
 
@@ -116,20 +110,18 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   public void postProcessSearchQuery(BooleanQuery searchQuery, BooleanFilter booleanFilter,
       SearchContext searchContext) throws Exception
   {
-    log.info("postProcessSearchQuery()");
-    if (_log.isDebugEnabled())
+    if (log.isDebugEnabled())
     {
-      _log.debug(" postProcessSearchQuery()");
+      log.debug(" postProcessSearchQuery()");
     }
   }
 
   @Override
   public void postProcessSummary(Summary summary, Document document, Locale locale, String snippet)
   {
-    log.info("postProcessSummary()");
-    if (_log.isDebugEnabled())
+    if (log.isDebugEnabled())
     {
-      _log.debug("postProcessSummary()");
+      log.debug("postProcessSummary()");
     }
   }
 

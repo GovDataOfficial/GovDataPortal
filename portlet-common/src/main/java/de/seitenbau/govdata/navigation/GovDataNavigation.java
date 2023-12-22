@@ -1,6 +1,5 @@
 package de.seitenbau.govdata.navigation;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.portlet.PortletRequest;
@@ -9,12 +8,17 @@ import javax.portlet.PortletURL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
-import com.liferay.journal.service.JournalContentSearchLocalServiceUtil;
+import com.liferay.journal.model.JournalArticle;
+import com.liferay.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -203,29 +207,37 @@ public class GovDataNavigation
   }
 
   /**
-   * Returns the layout (page) url for an article. If the article is available on more then one layout, the
-   * url of the first layout found will be returned
-   * @param themeDisplay
+   * Returns the page url for an article.
    * @param articleId
    * @param groupId
-   * @return url of the layout the article is displayed on
-   * @throws SystemException
+   * @return url of the article
    * @throws PortalException
    */
-  public String getArticleLayoutUrl(ThemeDisplay themeDisplay, String articleId, Long groupId)
-      throws SystemException,
-      PortalException
+  public String getJournalArticleUrl(ThemeDisplay themeDisplay, String articleId, Long groupId)
+      throws PortalException
   {
-    List<Long> hitLayoutIds = JournalContentSearchLocalServiceUtil.getLayoutIds(groupId, false, articleId);
-    String layoutUrl = "";
-    if (hitLayoutIds.size() > 0)
+    PortletRequest request = liferayNavigation.getRequestFromContext();
+    AssetRendererFactory<JournalArticle> assetRendererFactory =
+        AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClass(JournalArticle.class);
+    JournalArticle article = JournalArticleLocalServiceUtil.getArticle(groupId, articleId);
+    AssetRenderer<JournalArticle> assetRenderer =
+        assetRendererFactory.getAssetRenderer(article.getResourcePrimKey());
+    String noSuchEntryRedirect = StringPool.BLANK;
+    AssetEntry assetEntry = assetRendererFactory.getAssetEntry(
+        JournalArticle.class.getName(), article.getResourcePrimKey());
+    if (assetEntry != null)
     {
-      Long hitLayoutId = hitLayoutIds.get(0);
-      Layout hitLayout = LayoutLocalServiceUtil.getLayout(
-          groupId, false, hitLayoutId.longValue());
-      layoutUrl = PortalUtil.getLayoutURL(hitLayout, themeDisplay);
+      noSuchEntryRedirect = PortalUtil.getPortalURL(request);
     }
-    return layoutUrl;
+
+    try
+    {
+      return assetRenderer.getURLViewInContext(themeDisplay, noSuchEntryRedirect);
+    }
+    catch (Exception e)
+    {
+      throw new PortalException(e);
+    }
   }
 
   /**

@@ -1,5 +1,9 @@
 # Changelog
 
+## v6.4.5 2023-12-21
+
+* Fixes the search for the layout URL of a newly added web content that is used on the search result page
+
 ## v6.4.4 2023-12-05
 
 * Supports Liferay version 7.4.3.103 GA103 now

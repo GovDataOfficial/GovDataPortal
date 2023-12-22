@@ -110,8 +110,7 @@ public class SearchResultsViewMapper
     String type = searchHit.getType();
     if (SearchConsts.TYPE_ARTICLE.equals(type))
     {
-      url = gdNavigation.getArticleLayoutUrl(
-          themeDisplay, searchHit.getArticleId(), searchHit.getGroupId());
+      url = gdNavigation.getJournalArticleUrl(themeDisplay, searchHit.getArticleId(), searchHit.getGroupId());
       source = SearchConsts.SOURCE_PORTAL;
     }
     else if (SearchConsts.TYPE_BLOG.equals(type))
