@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>6.4.5</version>
+  <version>6.6.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
     <name>SEITENBAU GmbH</name>
-    <url>http://www.seitenbau.com</url>
+    <url>https://www.seitenbau.com</url>
   </organization>
 
   <properties>
@@ -20,20 +20,20 @@
     <liferay.home.dir>/opt/app/portal-liferay/liferay-home</liferay.home.dir>
     <liferay.deploy.dir>${liferay.home.dir}/deploy</liferay.deploy.dir>
     <junit.version>4.13.2</junit.version>
-    <assertj.version>3.24.2</assertj.version>
+    <assertj.version>3.25.2</assertj.version>
     <portlet-api.version>3.0.1</portlet-api.version>
-    <portletmvc4spring.version>5.3.2</portletmvc4spring.version>
-    <spring.version>5.3.30</spring.version>
+    <portletmvc4spring.version>5.3.3</portletmvc4spring.version>
+    <spring.version>5.3.31</spring.version>
     <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
     <log4j.version>2.20.0</log4j.version>
     <slf4j.version>1.7.36</slf4j.version>
     <commons-lang3.version>3.13.0</commons-lang3.version>
     <commons-collections4.version>4.4</commons-collections4.version>
-    <commons-io.version>2.13.0</commons-io.version>
-    <joda-time.version>2.12.5</joda-time.version>
+    <commons-io.version>2.15.1</commons-io.version>
+    <joda-time.version>2.12.6</joda-time.version>
     <gson.version>2.10.1</gson.version>
-    <guava.version>32.1.2-jre</guava.version>
-    <jsoup.version>1.16.1</jsoup.version>
+    <guava.version>32.1.3-jre</guava.version>
+    <jsoup.version>1.17.1</jsoup.version>
     <httpclient.version>4.5.14</httpclient.version>
     <elasticsearch.version>7.17.15</elasticsearch.version>
     <jetty.version>7.6.21.v20160908</jetty.version>
@@ -41,16 +41,15 @@
     <apache.jena.version>4.9.0</apache.jena.version>
     <resteasy.version>3.15.6.Final</resteasy.version>
     <resteasy.jaxrs.api.version>3.0.12.Final</resteasy.jaxrs.api.version>
-    <jackson.version>2.15.3</jackson.version>
+    <jackson.version>2.16.0</jackson.version>
     <jts.version>1.19.0</jts.version>
-    <junit.jupiter.version>5.10.0</junit.jupiter.version>
-    <junit.platform.version>1.10.0</junit.platform.version>
-    <mockito.version>5.5.0</mockito.version>
+    <junit.jupiter.version>5.10.1</junit.jupiter.version>
+    <junit.platform.version>1.10.1</junit.platform.version>
+    <mockito.version>5.8.0</mockito.version>
     <sb-common.version>1.0.1</sb-common.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
     <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
-    <hibernate-jpa-2.1-api.version>1.0.2.Final</hibernate-jpa-2.1-api.version>
-    <gd-microservices.version>1.3.1</gd-microservices.version>
+    <gd-microservices.version>1.3.5</gd-microservices.version>
     <checkstyle.suppressions></checkstyle.suppressions>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- java -->
@@ -73,11 +72,11 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>3.3.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.11.0</version>
+          <version>3.12.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -87,17 +86,22 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.2.5</version>
+          <configuration>
+            <classpathDependencyExcludes>
+              <classpathDependencyExclude>com.liferay.portal:com.liferay.util.slf4j</classpathDependencyExclude>
+            </classpathDependencyExcludes>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.2.5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
           <!-- Update checkstyle to latest version, e.g. be compatible with the IDE checkstyle plugin -->
           <dependencies>
             <dependency>
@@ -127,7 +131,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.3</version>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
@@ -136,7 +140,7 @@
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>4.7.3.6</version>
+          <version>4.8.3.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-eclipse-plugin</artifactId>
@@ -177,7 +181,12 @@
         <plugin>
           <groupId>org.owasp</groupId>
           <artifactId>dependency-check-maven</artifactId>
-          <version>8.4.0</version>
+          <version>9.0.8</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.6.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -242,7 +251,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.10</version>
+        <version>0.8.11</version>
         <executions>
           <execution>
             <goals>
@@ -269,6 +278,7 @@
               </execution>
             </executions>
             <configuration>
+              <formats>HTML,XML</formats>
               <suppressionFiles>
                   <suppressionFile>${owasp.suppressions}</suppressionFile>
               </suppressionFiles>
@@ -277,6 +287,33 @@
               </excludes>
               <failBuildOnCVSS>8</failBuildOnCVSS>
               <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>dependency-analyze</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>analyze-only</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <failOnWarning>true</failOnWarning>
+              <ignoreNonCompile>true</ignoreNonCompile>
+              <ignoredUnusedDeclaredDependencies>
+                <ignoredUnusedDeclaredDependency>org.thymeleaf:thymeleaf-spring5*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>com.liferay.portal:com.liferay.util.slf4j*</ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>org.apache.logging.log4j:log4j-core*</ignoredUnusedDeclaredDependency>
+              </ignoredUnusedDeclaredDependencies>
             </configuration>
           </plugin>
         </plugins>
@@ -338,11 +375,6 @@
         <version>2.2</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jstl</artifactId>
-        <version>1.2</version>
-      </dependency>
 
       <dependency>
         <groupId>de.seitenbau.govdata.odp</groupId>
@@ -384,6 +416,16 @@
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
         <artifactId>index-queue-adapter</artifactId>
+        <version>${gd-microservices.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.seitenbau.govdata</groupId>
+        <artifactId>api-common</artifactId>
+        <version>${gd-microservices.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.seitenbau.govdata</groupId>
+        <artifactId>serviceportal-common</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
 
@@ -453,9 +495,9 @@
         <version>${resteasy.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>jaxrs-api</artifactId>
-        <version>${resteasy.jaxrs.api.version}</version>
+        <groupId>org.jboss.spec.javax.ws.rs</groupId>
+        <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+        <version>2.0.2.Final</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.resteasy</groupId>
@@ -468,11 +510,20 @@
         <version>${resteasy.validator.version}</version>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.3.1</version>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxrs</artifactId>
+        <version>${resteasy.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.jboss.spec.javax.annotation</groupId>
+        <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+        <version>2.0.1.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>2.0.2</version>
+      </dependency>
       <!-- Elasticsearch -->
       <dependency>
         <groupId>org.elasticsearch</groupId>
@@ -482,6 +533,21 @@
       <dependency>
         <groupId>org.elasticsearch.client</groupId>
         <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        <version>${elasticsearch.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch-geo</artifactId>
+        <version>${elasticsearch.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch-core</artifactId>
+        <version>${elasticsearch.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>elasticsearch-rest-client</artifactId>
         <version>${elasticsearch.version}</version>
       </dependency>
 
@@ -516,13 +582,6 @@
         <version>1.14</version>
       </dependency>
 
-      <!-- db, jpa, hibernate -->
-      <dependency>
-        <groupId>org.hibernate.javax.persistence</groupId>
-        <artifactId>hibernate-jpa-2.1-api</artifactId>
-        <version>${hibernate-jpa-2.1-api.version}</version>
-      </dependency>
-
       <!-- time -->
       <dependency>
         <groupId>joda-time</groupId>
@@ -548,6 +607,11 @@
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
         <version>${httpclient.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>4.4.16</version>
       </dependency>
 
       <dependency>
@@ -636,13 +700,18 @@
       </dependency>
       <dependency>
         <groupId>org.locationtech.jts.io</groupId>
-        <artifactId>jts-io-common </artifactId>
+        <artifactId>jts-io-common</artifactId>
         <version>${jts.version}</version>
       </dependency>
       <dependency>
         <groupId>com.rometools</groupId>
         <artifactId>rome</artifactId>
         <version>2.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>1.1.1</version>
       </dependency>
 
       <!--  OSGI -->
@@ -774,12 +843,6 @@
         <groupId>org.junit.platform</groupId>
         <artifactId>junit-platform-commons</artifactId>
         <version>${junit.platform.version}</version>
-      </dependency>
-      <!-- com.liferay.portal.impl/META-INF/services/javax.imageio.spi.ImageReaderSpi -->
-      <dependency>
-        <groupId>ch.randelshofer</groupId>
-        <artifactId>monte-cc</artifactId>
-        <version>0.7.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -57,7 +57,7 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
   private static final Logger LOG = LoggerFactory.getLogger(Datasets.class);
 
   /** The maximum number of the latest datasets to show. */
-  private final int maximumNumberOfDatasets = 4;
+  private static final int MAXIMUM_NUMBER_OF_DATASETS = 4;
 
   @Inject
   private SearchService searchService;
@@ -79,7 +79,7 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
     if (datasets == null)
     {
       LOG.info("Empty {} cache, fetching datasets from search index.", CacheKey.DATASETS);
-      datasets = getLatestDatasets(maximumNumberOfDatasets);
+      datasets = getLatestDatasets(MAXIMUM_NUMBER_OF_DATASETS);
       if (CollectionUtils.isNotEmpty(datasets))
       {
         updateCache(datasets, CacheKey.DATASETS);

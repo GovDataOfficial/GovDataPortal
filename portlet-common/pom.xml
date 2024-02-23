@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.4.5</version>
+    <version>6.6.0</version>
   </parent>
   <properties>
     <checkstyle.suppressions>${basedir}/src/main/plugin-config/checkstyle-suppressions.xml</checkstyle.suppressions>
@@ -19,6 +19,10 @@
       <artifactId>opendataregistry-client</artifactId>
     </dependency>
     <dependency>
+      <groupId>de.seitenbau.govdata.odp</groupId>
+      <artifactId>odp-common</artifactId>
+    </dependency>
+    <dependency>
       <groupId>de.seitenbau.govdata</groupId>
       <artifactId>govdata-db-api</artifactId>
     </dependency>
@@ -27,11 +31,6 @@
     <dependency>
       <groupId>com.liferay.portal</groupId>
       <artifactId>com.liferay.portal.kernel</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>com.liferay.portal.impl</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -70,6 +69,15 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+       <artifactId>jakarta.validation-api</artifactId>
+    </dependency>
+
     <!-- Portlet -->
     <dependency>
       <groupId>javax.portlet</groupId>
@@ -88,10 +96,6 @@
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-    </dependency>
 
     <!-- DI -->
     <dependency>
@@ -105,6 +109,14 @@
       <artifactId>spring-context</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.liferay.portletmvc4spring</groupId>
       <artifactId>com.liferay.portletmvc4spring.framework</artifactId>
     </dependency>
@@ -116,10 +128,6 @@
     </dependency>
 
     <!-- Validation -->
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
     <dependency>
       <groupId>de.grundid.opendatalab</groupId>
       <artifactId>geojson-jackson</artifactId>
@@ -140,11 +148,8 @@
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-1.2-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- Tools -->
@@ -162,8 +167,34 @@
       <artifactId>commons-collections4</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- Testing -->
@@ -190,12 +221,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- com.liferay.portal.impl/META-INF/services/javax.imageio.spi.ImageReaderSpi -->
-    <dependency>
-      <groupId>ch.randelshofer</groupId>
-      <artifactId>monte-cc</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

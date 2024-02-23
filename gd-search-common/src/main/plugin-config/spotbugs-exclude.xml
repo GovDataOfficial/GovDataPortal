@@ -37,4 +37,15 @@
       </And>
     </Or>
   </Match>
+  <Match>
+    <Bug pattern="CT_CONSTRUCTOR_THROW" />
+    <Or>
+      <And>
+        <Class name="de.seitenbau.govdata.search.filter.BoundingBox" />
+      </And>
+      <And>
+        <Class name="de.seitenbau.govdata.search.index.GovDataSearchIndexWriter" />
+      </And>
+    </Or>
+  </Match>
 </FindBugsFilter>

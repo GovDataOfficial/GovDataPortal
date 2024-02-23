@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.4.5</version>
+    <version>6.6.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -29,16 +29,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>com.liferay.portal.impl</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay.portal</groupId>
-      <artifactId>com.liferay.util.taglib</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
     </dependency>
@@ -48,6 +38,14 @@
     </dependency>
 
     <!-- ODP -->
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-db-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata.odp</groupId>
+      <artifactId>opendataregistry-client</artifactId>
+    </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>odp-common</artifactId>
@@ -66,6 +64,18 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>index-queue-adapter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>api-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>serviceportal-common</artifactId>
+    </dependency>
 
     <!-- Apache Jena -->
     <dependency>
@@ -78,17 +88,10 @@
       <artifactId>jena-rdfconnection</artifactId>
       <version>${apache.jena.version}</version>
     </dependency>
-
     <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-    </dependency>
-
-    <!-- Mailing -->
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <scope>provided</scope>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-core</artifactId>
+      <version>${apache.jena.version}</version>
     </dependency>
 
     <!-- DI -->
@@ -103,25 +106,25 @@
       <artifactId>com.liferay.portletmvc4spring.framework</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.liferay.portletmvc4spring</groupId>
-      <artifactId>com.liferay.portletmvc4spring.test</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
     <!-- View Template -->
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf-spring5</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-    </dependency>
     
     <!-- Utils -->
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -132,8 +135,52 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+       <artifactId>jakarta.validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
+    <!-- HTTP Client-->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
     </dependency>
 
     <!-- Logging -->
@@ -141,20 +188,13 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-      <dependency>
-        <groupId>com.liferay.portal</groupId>
-        <artifactId>com.liferay.util.slf4j</artifactId>
-      </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-1.2-api</artifactId>
-    </dependency>
 
     <!-- Testing -->
+    <dependency>
+      <groupId>com.liferay.portletmvc4spring</groupId>
+      <artifactId>com.liferay.portletmvc4spring.test</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata</groupId>
       <artifactId>testing-common</artifactId>
@@ -173,17 +213,6 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!-- com.liferay.portal.impl/META-INF/services/javax.imageio.spi.ImageReaderSpi -->
-    <dependency>
-      <groupId>ch.randelshofer</groupId>
-      <artifactId>monte-cc</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

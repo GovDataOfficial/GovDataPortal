@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.6.0 2024-02-22
+
+* Updates maven dependencies to the latest bugfix / security fix version
+* Adds an option in the Jenkinsfile to choose the active Maven profiles when starting the build manually
+* Adds the plugin `dependencyCheckPublisher` in Jenkinsfile to publish a OWASP Dependency-Check report
+* Integrates Maven Dependency Plugin into build process with a maven profile `dependency-analyze` and the goal `analyze-only`
+
 ## v6.4.5 2023-12-21
 
 * Fixes the search for the layout URL of a newly added web content that is used on the search result page

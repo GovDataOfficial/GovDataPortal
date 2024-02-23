@@ -56,7 +56,7 @@ public class Blogs extends BaseBoxesBean<BlogsEntry>
   private static final Logger LOG = LoggerFactory.getLogger(Blogs.class);
 
   /** The maximum number of latest blogs to show. */
-  private final int maximumNumberOfBlogs = 2;
+  private static final int MAXIMUM_NUMBER_OF_BLOGS = 2;
 
   private BlogsEntryServiceTracker blogsEntryTracker;
 
@@ -77,7 +77,7 @@ public class Blogs extends BaseBoxesBean<BlogsEntry>
     if (blogs == null)
     {
       LOG.info("Empty {} cache, fetching blogs from liferay.", CacheKey.BLOGS);
-      blogs = getLatestBlogs(maximumNumberOfBlogs);
+      blogs = getLatestBlogs(MAXIMUM_NUMBER_OF_BLOGS);
       // safe cast: LinkedList
       updateCache(blogs, CacheKey.BLOGS);
     }

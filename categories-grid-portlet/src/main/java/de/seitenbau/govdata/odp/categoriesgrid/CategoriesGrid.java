@@ -53,7 +53,7 @@ public class CategoriesGrid
   private static final int CLUSTERED_CACHE_TTL_IN_SECONDS = 7200;
 
   /** The cache categories key. */
-  private final String CACHE_CATEGORIES_KEY = "categories";
+  private static final String CACHE_CATEGORIES_KEY = "categories";
 
   private MultiVMPool multiVMPool;
 

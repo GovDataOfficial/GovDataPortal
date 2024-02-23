@@ -12,6 +12,7 @@
 <suppressions>
   <!-- Do not check properties files -->
   <suppress files="statesearchcriteria.properties" checks="LineLength"/>
+  <suppress files="search.properties" checks="LineLength"/>
   <!-- Do not check boolean complexity in ParameterProcessing.java -->
   <suppress files="ParameterProcessing.java" checks="BooleanExpressionComplexity"/>
 </suppressions>

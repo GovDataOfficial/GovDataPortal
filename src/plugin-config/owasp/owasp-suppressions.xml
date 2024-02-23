@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-  <suppress until="2024-01-01Z">
+  <suppress until="2024-04-01Z">
     <notes><![CDATA[
-    snakeyaml-1.33: Requires an update to version 2.0 or newer. And this requires Spring Boot 3.
+    snakeyaml: Requires an update to version 2.0 or newer. And this requires Spring Boot 3.
     ]]></notes>
     <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
     <vulnerabilityName>CVE-2022-1471</vulnerabilityName>
   </suppress>
   <suppress>
     <notes><![CDATA[
-    dozer-5.5.1: Deserialization of Untrusted Data. This is a third-party dependency that is not used.
+    dozer: Deserialization of Untrusted Data. This is a third-party dependency that is not used.
     ]]></notes>
     <packageUrl regex="true">^pkg:maven/net\.sf\.dozer/dozer@.*$</packageUrl>
     <vulnerabilityName>CVE-2014-9515</vulnerabilityName>
   </suppress>
-  <suppress until="2024-01-01Z">
+  <suppress until="2024-04-01Z">
     <notes><![CDATA[
-    spring-web-5.3.27: Deserialization of Untrusted Data. Requires an update to Spring 6. And this is in
-                       conflict with Liferay Spring MVC.
+    spring-web: Deserialization of Untrusted Data. Requires an update to Spring 6. And this is in
+                conflict with Liferay Spring MVC.
     ]]></notes>
     <packageUrl regex="true">^pkg:maven/org\.springframework/spring-web@.*$</packageUrl>
     <vulnerabilityName>CVE-2016-1000027</vulnerabilityName>

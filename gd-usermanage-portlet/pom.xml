@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.4.5</version>
+    <version>6.6.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -40,21 +40,7 @@
     </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata.odp</groupId>
-      <artifactId>odp-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>portlet-common</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.servlet.jsp</groupId>
-      <artifactId>jsp-api</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
     </dependency>
 
     <!-- Mailing -->
@@ -75,6 +61,18 @@
       <groupId>com.liferay.portletmvc4spring</groupId>
       <artifactId>com.liferay.portletmvc4spring.framework</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
 
     <!-- View Template -->
     <dependency>
@@ -82,16 +80,7 @@
       <artifactId>thymeleaf-spring5</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-    </dependency>
-    
     <!-- Utils -->
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -102,8 +91,9 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
+      <groupId>com.liferay</groupId>
+      <artifactId>com.liferay.petra.string</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Logging -->
@@ -111,57 +101,11 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-      <dependency>
-        <groupId>com.liferay.portal</groupId>
-        <artifactId>com.liferay.util.slf4j</artifactId>
-      </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-1.2-api</artifactId>
-    </dependency>
-
-    <!-- Validation -->
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-    </dependency>
-
-    <!-- Testing -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.liferay</groupId>
-      <artifactId>com.liferay.petra.string</artifactId>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
 
 
   <build>
     <finalName>${project.artifactId}-${project.version}</finalName>
-
     <plugins>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
