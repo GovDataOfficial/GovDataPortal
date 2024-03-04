@@ -1,5 +1,9 @@
 # Changelog
 
+## v6.6.1 2024-02-29
+
+* Updates maven dependencies with important security fixes
+
 ## v6.6.0 2024-02-22
 
 * Updates maven dependencies to the latest bugfix / security fix version

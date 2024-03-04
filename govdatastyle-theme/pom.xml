@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.6.0</version>
+    <version>6.6.1</version>
   </parent>
   <groupId>com.seitenbau.govdata.theme</groupId>
   <artifactId>govdatastyle-theme</artifactId>

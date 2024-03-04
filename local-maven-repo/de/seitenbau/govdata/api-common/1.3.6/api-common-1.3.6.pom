@@ -11,7 +11,7 @@
   <parent>
     <artifactId>api-parent</artifactId>
     <groupId>de.seitenbau.govdata</groupId>
-    <version>1.3.5</version>
+    <version>1.3.6</version>
     <relativePath>../api-parent</relativePath>
   </parent>
   <properties>
