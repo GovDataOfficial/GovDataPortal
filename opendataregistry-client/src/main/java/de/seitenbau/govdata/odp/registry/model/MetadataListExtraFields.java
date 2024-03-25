@@ -18,7 +18,9 @@ public enum MetadataListExtraFields
   GEOCODING_TEXT("geocodingText"),
   LEGALBASIS_TEXT("legalbasisText"),
   POLITICAL_GEOCODING_URI("politicalGeocodingURI"),
-  USED_DATASETS("used_datasets");
+  USED_DATASETS("used_datasets"),
+  APPLICABLE_LEGISLATION("applicable_legislation"),
+  HVD_CATEGORY("hvd_category");
 
   @Getter
   private String field;

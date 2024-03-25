@@ -135,6 +135,7 @@ public class SearchHitMapper
         .platforms(getFieldValueAsStringList(metadata, "platforms"))
         .usedDatasets(getFieldValueAsStringList(metadata, "used_datasets"))
         .allShowcaseTypes(showcaseTypes)
+        .hasHvd((Boolean) metadata.get("has_hvd"))
         .build();
 
     logger.trace(method + "End");

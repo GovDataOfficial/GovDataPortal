@@ -68,4 +68,8 @@ public interface Resource
 
   List<AccessService> getAccessServices();
 
+  List<String> getApplicableLegislation();
+
+  Boolean isHvd();
+
 }

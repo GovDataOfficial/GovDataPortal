@@ -144,6 +144,10 @@
         <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('hvd')}, 'hvd', #{'od.gdsearch.searchresult.facet.hvd'}, false)}"></dl>
       </th:block>
 
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('hvd_categories'))}">
+        <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('hvd_categories')}, 'hvd_categories', #{'od.datasets_metadata_hvd_categories'}, false)}"></dl>
+      </th:block>
+
       <dl class="filtergroup spatial-filter" th:if="${searchResult.canContainSpatialData}">
         <dt class="filtergroup-title" th:text="#{'od.gdsearch.filter.spatial.title'}"></dt>
         <dd><a th:href="${searchResult.searchMapUrl}" class="spatial-edit-link" th:text="#{'od.gdsearch.filter.spatial.linktext'}"></a></dd>

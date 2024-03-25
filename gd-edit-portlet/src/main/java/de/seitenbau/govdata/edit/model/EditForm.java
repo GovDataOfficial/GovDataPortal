@@ -82,6 +82,8 @@ public class EditForm implements Serializable
   @Categories(message="{categories}")
   private List<String> categories;
 
+  private List<String> hvd_categories;
+
   @NotEmpty(message="{resources}")
   @Valid
   private List<Resource> resources;

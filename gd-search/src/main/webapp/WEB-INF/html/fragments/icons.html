@@ -31,4 +31,12 @@
          width="20" height="20"/>
     <span th:text="${category.displayName}"></span>
   </dd>
+
+  <!--/* Template for displaying HVD categories - as DD-element */-->
+  <dd th:fragment="hvdCategorydd(imagepath, hvdCategory)" class="category-item">
+  <img th:alt="#{'od.hvd.category.label.' + ${#strings.toLowerCase(hvdCategory)}}"
+         th:src="@{${imagepath} + '/hvdcategories/icon_hvdkat_' + ${#strings.toLowerCase(hvdCategory)} + '.svg'}"
+         width="20" height="20"/>
+    <span th:text="#{'od.hvd.category.label.' + ${#strings.toLowerCase(hvdCategory)}}"></span>
+  </dd>
 </div>

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -16,8 +15,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.common.geo.ShapeRelation;
 import org.springframework.stereotype.Component;
-
-import com.liferay.portal.kernel.util.PropsUtil;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
@@ -310,7 +307,8 @@ public class ParameterProcessing
             bundle.addFilter(new QueryFilter(ESFieldConsts.EXT_SEARCH_MAP.get(key), key, filter));
           }
           else if (StringUtils.equals(key, SearchConsts.FACET_OPENNESS)
-              || StringUtils.equals(key, SearchConsts.FACET_DATASERVICE))
+              || StringUtils.equals(key, SearchConsts.FACET_DATASERVICE)
+              || StringUtils.equals(key, SearchConsts.FACET_HIGH_VALUE_DATASET))
           {
             // use the "key" as grouping mechanism, effectively the "filter" is the key for this filter.
             // this can be done since the "value" of this filter is always "true".
@@ -318,24 +316,6 @@ public class ParameterProcessing
             if (ESFieldConsts.BOOL_FACET_MAP.containsKey(filter))
             {
               bundle.addFilter(new BooleanFilter(ESFieldConsts.BOOL_FACET_MAP.get(filter), key, true));
-            }
-            else
-            {
-              marksFilterToRemove(filterToRemove, key, filter);
-            }
-          }
-          else if (StringUtils.equals(key, SearchConsts.FACET_HIGH_VALUE_DATASET))
-          {
-            if (StringUtils.equals(filter, SearchConsts.FACET_IS_HIGH_VALUE_DATASET))
-            {
-              List<String> highValueDatasetTags = GovDataCollectionUtils.convertStringListToLowerCase(
-                  GovDataCollectionUtils.arrayToStream(StringUtils.stripAll(StringUtils.splitByWholeSeparator(
-                      PropsUtil.get("elasticsearch.high.value.dataset.tags"), ",")))
-                      .collect(Collectors.toUnmodifiableList()));
-              if (CollectionUtils.isNotEmpty(highValueDatasetTags))
-              {
-                bundle.addFilter(new TermsFilter(ESFieldConsts.FIELD_TAGS_SEARCH, key, highValueDatasetTags));
-              }
             }
             else
             {

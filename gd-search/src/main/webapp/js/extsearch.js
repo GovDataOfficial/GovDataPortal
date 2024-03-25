@@ -121,7 +121,8 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
     {name: 'groups', data: categoryList},
     {name: 'format', data: formatList},
     {name: 'dataservice', data: dataserviceList},
-    {name: 'hvd', data: highValueDatasetList}
+    {name: 'hvd', data: highValueDatasetList},
+    {name: 'hvd_categories', data: highValueDatasetCategoryList}
   ]
   // add multibox view of 'showcase' if the filter is not disabled
   if (!filterdisabledList.includes('showcase')) {
@@ -500,7 +501,7 @@ AUI({lang: 'de'}).use('node', 'model', 'model-list', 'view', 'template-micro', '
     }
 
     // Dropdown-Fields / Multiselect (same Model-Structure)
-    var dropdownFields = ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format', 'dataservice', 'hvd']
+    var dropdownFields = ['groups', 'type', 'licence', 'sourceportal', 'openness', 'format', 'dataservice', 'hvd', 'hvd_categories']
     // add additional dropdown fields if corresponding filter is not disabled
     if (!filterdisabledList.includes('showcase')) {
       dropdownFields.push('showcase_types')

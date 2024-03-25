@@ -44,7 +44,9 @@
 
   @media #{$medium-up} {
     float: right;
+  }
 
+  @media #{$large-up} {
     a {
       padding: 2em 0;
     }
@@ -52,12 +54,21 @@
 
   li {
     display: inline;
-    line-height: 75px;
     margin-right: 1em;
+    @media #{$large-up} {
+      line-height: 75px;
+    }
+    @media #{$medium-only} {
+      line-height: 35px;
+    }
 
     @media #{$small-only} {
       display: block;
       line-height: 2em;
+    }
+
+    a {
+      white-space: nowrap;
     }
   }
 }

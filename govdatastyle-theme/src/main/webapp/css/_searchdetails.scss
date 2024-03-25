@@ -132,6 +132,12 @@
   overflow: hidden;
 }
 
+.resource-icon.hvd-icon {
+  background-color: $hvd-gold;
+  float: none;
+  font-weight: bold;
+}
+
 .ckan-link .resource-item {
   word-break: break-all;
 }

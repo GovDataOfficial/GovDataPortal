@@ -204,5 +204,4 @@ public class MetadataBean implements Serializable
     }
     return groups;
   }
-
 }

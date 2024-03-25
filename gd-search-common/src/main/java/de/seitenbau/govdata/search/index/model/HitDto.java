@@ -55,6 +55,8 @@ public class HitDto
 
   private Boolean hasDataService;
 
+  private Boolean hasHvd;
+
   private String ownerOrg;
 
   private List<ResourceDto> resources;

@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.6.1</version>
+    <version>6.7.0</version>
   </parent>
   <properties>
     <checkstyle.suppressions>${basedir}/src/main/plugin-config/checkstyle-suppressions.xml</checkstyle.suppressions>

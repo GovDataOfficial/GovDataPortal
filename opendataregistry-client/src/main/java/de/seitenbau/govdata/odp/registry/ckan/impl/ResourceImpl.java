@@ -230,6 +230,7 @@ public class ResourceImpl implements Resource, Serializable
     addIfNotNull(extras, "plannedAvailability", resource.getPlannedAvailability());
     addIfNotNull(extras, "availability", resource.getAvailability());
     addIfNotNull(extras, "licenseAttributionByText", resource.getLicenseAttributionByText());
+    addIfNotNull(extras, "applicable_legislation", resource.getApplicableLegislation());
     bean.set__extras(extras);
 
     return ODRClientImpl.convert(bean);
@@ -542,6 +543,35 @@ public class ResourceImpl implements Resource, Serializable
       log.error("Resource: Could not write access_services: ", e);
     }
 
+  }
+
+  @Override
+  public List<String> getApplicableLegislation()
+  {
+    return Util.readJsonList(new TextNode(resource.getApplicableLegislation()));
+  }
+
+  /**
+   * Sets the value for the field applicableLegislation.
+   *
+   * @param applicableLegislation
+   */
+  public void setApplicableLegislation(List<String> applicableLegislation)
+  {
+    try
+    {
+      resource.setApplicableLegislation(Util.writeJsonList(applicableLegislation));
+    }
+    catch (JsonProcessingException e)
+    {
+      log.error("Resource: Could not write applicableLegislation: ", e);
+    }
+  }
+
+  @Override
+  public Boolean isHvd()
+  {
+    return StringUtils.isNotEmpty(resource.getApplicableLegislation());
   }
 
 }

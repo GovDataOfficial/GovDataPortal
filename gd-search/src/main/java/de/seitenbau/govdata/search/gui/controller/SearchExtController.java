@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
@@ -34,6 +35,7 @@ import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.odp.registry.ckan.HVDCategory;
 import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Organization;
@@ -139,6 +141,7 @@ public class SearchExtController extends AbstractBaseController
         .stateList(prepareStateList())
         .dataserviceList(prepareDataserviceList(locale))
         .highValueDatasetList(prepareHighValueDatasetList(locale))
+        .highValueDatasetCategoryList(prepareHighValueDatasetCategoryList(locale))
         .passthroughParams(passthroughParams)
         .hiddenFields(hiddenFields)
         .actionUrl(actionUrl.toString())
@@ -257,8 +260,23 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareHighValueDatasetList(Locale locale)
   {
     return translateList(locale, "od.dataset.", new String[] {
-        SearchConsts.FACET_IS_HIGH_VALUE_DATASET
+        SearchConsts.FACET_HAS_HIGH_VALUE_DATASET
     });
+  }
+
+  private List<Map<String, String>> prepareHighValueDatasetCategoryList(Locale locale)
+  {
+    List<Map<String, String>> options = new ArrayList<>();
+    for (HVDCategory hvdCat : HVDCategory.values())
+    {
+      String label =
+          LanguageUtil.get(locale, "od.hvd.category.label." + StringUtil.toLowerCase(hvdCat.toString()));
+      HashMap<String, String> hashMap = new HashMap<>();
+      hashMap.put("key", hvdCat.getUri());
+      hashMap.put("label", label);
+      options.add(hashMap);
+    }
+    return options;
   }
 
   private List<Map<String, String>> prepareStateList()

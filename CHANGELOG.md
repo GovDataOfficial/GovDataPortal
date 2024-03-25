@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.7.0 2024-03-26
+
+* Improvements to CSS
+* The search filter for high-value datasets now is based on a boolean flag `has_hvd`
+  from the Elasticsearch index
+* Updates spring dependency with important security fix
+
 ## v6.6.1 2024-02-29
 
 * Updates maven dependencies with important security fixes

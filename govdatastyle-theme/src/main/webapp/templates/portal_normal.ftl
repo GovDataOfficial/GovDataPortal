@@ -152,6 +152,14 @@
               <li>
                 <a href="/web/guest/datenschutz">Datenschutzerklärung</a>
               </li>
+              <#assign
+                barrierefreiheitLayout = (layoutService.fetchLayoutByFriendlyURL(theme_display.getSiteGroupId(), false, "/erklaerung-zur-barrierefreiheit"))!""
+              />
+              <#if barrierefreiheitLayout?has_content && layoutPermission.contains(permissionChecker, barrierefreiheitLayout, "VIEW")>
+              <li>
+                <a href="/web/guest/erklaerung-zur-barrierefreiheit">Erklärung zur Barrierefreiheit</a>
+              </li>
+              </#if>
               <li>
                 <a href="/web/guest/impressum">Impressum</a>
               </li>

@@ -457,6 +457,10 @@
     margin-bottom: 1em;
   }
 
+  .hvd-designation {
+    margin-top: 1em;
+  }
+
   .h2-metainfo dl dd {
     word-wrap: break-word;
   }
@@ -473,6 +477,10 @@
   .category-list > * {
     margin: 5px 0;
   }
+}
+
+.aui .resultentry.hvd, .searchdetails-infobox.hvd {
+    border: 2px dashed $hvd-gold;
 }
 
 .aui .resultentry .resource-icon {

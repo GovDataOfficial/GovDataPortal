@@ -440,6 +440,16 @@
           </div>
         </div>
 
+        <div class="css-row">
+          <label th:id="${idp}+'_hvd_label'" th:for="${idp}+'.hvd'">[[#{'od.hvd.checkboxlabel'}]]</label>
+          <div class="multiboxarea">
+              <div class="checkboxitem singleitem">
+              <input class="offscreen" type="checkbox" th:field="*{hvd}" th:id="${idp}+'.hvd'"/>
+              <label class="checkbox" th:for="${idp}+'.hvd'" th:text="#{'od.hvd.checkboxlabel'}"></label>
+            </div>
+          </div>
+        </div>
+
         <!--/* [hidden] fields */-->
         <!--/* id */-->
         <input type="hidden" th:field="*{id}"/>

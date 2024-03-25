@@ -101,4 +101,6 @@ public class ResourceBean implements Serializable
     @JsonProperty(value = "access_services")
     private String accessServices;
 
+    @JsonProperty(value = "applicable_legislation")
+    private String applicableLegislation;
 }

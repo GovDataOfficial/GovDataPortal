@@ -52,4 +52,6 @@ public class Resource implements Serializable
 
   @URL
   private String availability;
+
+  private boolean isHvd;
 }

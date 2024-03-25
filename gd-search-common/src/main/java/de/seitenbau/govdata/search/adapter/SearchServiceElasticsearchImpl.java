@@ -169,8 +169,6 @@ public class SearchServiceElasticsearchImpl implements SearchService
   @Inject
   private FilterUtil filterUtil;
 
-  private String[] highValueDatasetTags;
-
   @Autowired
   private SearchHitMapper searchHitMapper;
 
@@ -460,7 +458,11 @@ public class SearchServiceElasticsearchImpl implements SearchService
         buildBoolFilterFacet(agsResult, SearchConsts.FACET_HAS_DATA_SERVICE));
 
     activeFilterMap.put(SearchConsts.FACET_HIGH_VALUE_DATASET,
-        buildBoolFilterFacet(agsResult, SearchConsts.FACET_IS_HIGH_VALUE_DATASET));
+        buildBoolFilterFacet(agsResult, SearchConsts.FACET_HAS_HIGH_VALUE_DATASET));
+
+    activeFilterMap.put(SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES,
+        buildListFacet(SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES,
+            agsResult.get(SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES)));
 
     activeFilterMap.put(
         SearchConsts.FACET_SOURCEPORTAL,
@@ -1053,12 +1055,15 @@ public class SearchServiceElasticsearchImpl implements SearchService
             QueryBuilders.termQuery(ESFieldConsts.BOOL_FACET_MAP.get(SearchConsts.FACET_HAS_DATA_SERVICE),
                 "true"))));
 
-    if (ArrayUtils.isNotEmpty(highValueDatasetTags))
-    {
-      aggregations.add(AggregationBuilders.filter(SearchConsts.FACET_IS_HIGH_VALUE_DATASET,
-          QueryBuilders.termsQuery(ESFieldConsts.FACET_MAP.get(SearchConsts.FACET_TAGS),
-              highValueDatasetTags)));
-    }
+    aggregations.add(AggregationBuilders
+        .filter(SearchConsts.FACET_HAS_HIGH_VALUE_DATASET, QueryBuilders.boolQuery().must(
+            QueryBuilders.termQuery(
+                ESFieldConsts.BOOL_FACET_MAP.get(SearchConsts.FACET_HAS_HIGH_VALUE_DATASET),
+                "true"))));
+
+    aggregations.add(AggregationBuilders
+        .terms(SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES)
+        .field(ESFieldConsts.FACET_MAP.get(SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES)));
 
     aggregations.add(AggregationBuilders
         .terms(SearchConsts.FACET_LICENCE)
@@ -1396,17 +1401,5 @@ public class SearchServiceElasticsearchImpl implements SearchService
   public void setMinutesKeepAliveScroll(int minutesKeepAliveScroll)
   {
     this.minutesKeepAliveScroll = minutesKeepAliveScroll;
-  }
-
-  /**
-   * Setzt welche Tags einen Datensatz als High-Value-Dataset beschreiben.
-   *
-   * @param highValueDatasetTags die Tags, z.B. "hvd,highvaluedataset".
-   */
-  @Value("${elasticsearch.high.value.dataset.tags}")
-  public void setHighValueDatasetTags(String highValueDatasetTags)
-  {
-    this.highValueDatasetTags =
-        StringUtils.stripAll(StringUtils.splitByWholeSeparator(highValueDatasetTags, ","));
   }
 }

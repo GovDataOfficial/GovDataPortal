@@ -3,27 +3,18 @@ package de.seitenbau.govdata.search.common.searchresult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.liferay.portal.kernel.util.Props;
-import com.liferay.portal.kernel.util.PropsUtil;
-
-import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
 import de.seitenbau.govdata.search.common.ESFieldConsts;
 import de.seitenbau.govdata.search.common.SearchFilterBundle;
 import de.seitenbau.govdata.search.filter.BaseFilter;
@@ -43,27 +34,8 @@ public class ParameterProcessingTest
 
   final String DATA_PAGE = "/daten";
 
-  final String HIGH_VALUE_DATASET_TAGS = "hvd,highvaluedataset,highvaluedatasets";
-
-  @Mock
-  private Props propsMock;
-
   @Mock
   private FilterUtil filterUtil;
-
-  @Before
-  public void setUp()
-  {
-    PropsUtil.setProps(propsMock);
-    Mockito.when(propsMock.get("elasticsearch.high.value.dataset.tags"))
-        .thenReturn(HIGH_VALUE_DATASET_TAGS);
-  }
-
-  @After
-  public void tearDown()
-  {
-    PropsUtil.setProps(null);
-  }
 
   /**
    * Prepare params without any active filters.
@@ -112,7 +84,7 @@ public class ParameterProcessingTest
     Assertions.assertThat(result.getActiveFilters().get("sourceportal")).hasSize(1).contains("testSourceportal");
     Assertions.assertThat(result.getActiveFilters().get("maintainer")).hasSize(1).contains("testMaintainer");
     Assertions.assertThat(result.getActiveFilters().get("publisher")).hasSize(1).contains("testPublisher");
-    Assertions.assertThat(result.getActiveFilters().get("hvd")).hasSize(1).contains("is_hvd");
+    Assertions.assertThat(result.getActiveFilters().get("hvd")).hasSize(1).contains("has_hvd");
     Assertions.assertThat(result.getActiveFilters().get("dataservice")).hasSize(1).contains("has_data_service");
     Assertions.assertThat(result.getActiveFilters().get("state")).hasSize(1).contains("08");
     Assertions.assertThat(result.getActiveFilters().get("platforms")).hasSize(1).contains("web");
@@ -195,65 +167,6 @@ public class ParameterProcessingTest
   }
 
   /**
-   * Create FilterBundle with all available filters, but the hvd tags config is null.
-   */
-  @Test
-  public void createFilterBundle_hvd_tags_null() throws Exception
-  {
-    /* prepare */
-    Mockito.reset(propsMock);
-
-    Map<String, String[]> parameterMapInput = prepareParameterInputMap();
-    PreparedParameters preparedParameters =
-        sut.prepareParameters(parameterMapInput, DATA_PAGE);
-
-    /* execute */
-    SearchFilterBundle bundle =
-        sut.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"));
-
-    /* verify */
-    Assertions.assertThat(bundle).isNotNull();
-    Assertions.assertThat(bundle.getFilters()).hasSize(19);
-    Assertions.assertThat(bundle.getBoostSpatialRelevance()).isTrue();
-    Assertions.assertThat(bundle.getHidePrivateDatasets()).isFalse();
-    Assertions.assertThat(bundle.getShowOnlyPrivateShowcases()).isTrue();
-    Assertions.assertThat(bundle.getFilters()).extracting("fragmentName")
-        .containsExactlyInAnyOrder(getDefaultFilterFragmentNameList("hvd"));
-    Assertions.assertThat(bundle.getFilters()).extracting("label")
-        .containsExactlyInAnyOrder(getDefaultFilterLabelList(prepareHighValueDatasetTags().toString()));
-  }
-
-  /**
-   * Create FilterBundle with all available filters, but the hvd tags config is null.
-   */
-  @Test
-  public void createFilterBundle_hvd_tags_empty() throws Exception
-  {
-    /* prepare */
-    Mockito.reset(propsMock);
-    Mockito.when(propsMock.get("elasticsearch.high.value.dataset.tags")).thenReturn("");
-
-    Map<String, String[]> parameterMapInput = prepareParameterInputMap();
-    PreparedParameters preparedParameters =
-        sut.prepareParameters(parameterMapInput, DATA_PAGE);
-
-    /* execute */
-    SearchFilterBundle bundle =
-        sut.createFilterBundle(preparedParameters, Arrays.asList("testOrganizationId"));
-
-    /* verify */
-    Assertions.assertThat(bundle).isNotNull();
-    Assertions.assertThat(bundle.getFilters()).hasSize(19);
-    Assertions.assertThat(bundle.getBoostSpatialRelevance()).isTrue();
-    Assertions.assertThat(bundle.getHidePrivateDatasets()).isFalse();
-    Assertions.assertThat(bundle.getShowOnlyPrivateShowcases()).isTrue();
-    Assertions.assertThat(bundle.getFilters()).extracting("fragmentName")
-        .containsExactlyInAnyOrder(getDefaultFilterFragmentNameList("hvd"));
-    Assertions.assertThat(bundle.getFilters()).extracting("label")
-        .containsExactlyInAnyOrder(getDefaultFilterLabelList(prepareHighValueDatasetTags().toString()));
-  }
-
-  /**
    * Check if filters are removed from the bundle if they contain an invalid value.
    */
   @Test
@@ -291,7 +204,7 @@ public class ParameterProcessingTest
     Map<String, String[]> parameterMapInput = new HashMap<>();
     parameterMapInput.put("f", new String[] {
         "openness:invalidOpennessFilter,hvd:invalidHvdFilter,dataservice:invalidDataserviceFilter,"
-            + "openness:has_open,hvd:is_hvd,dataservice:has_data_service"});
+            + "openness:has_open,hvd:has_hvd,dataservice:has_data_service"});
     PreparedParameters preparedParameters =
         sut.prepareParameters(parameterMapInput, DATA_PAGE);
 
@@ -307,8 +220,6 @@ public class ParameterProcessingTest
     Assertions.assertThat(bundle.getShowOnlyPrivateShowcases()).isFalse();
     Assertions.assertThat(bundle.getFilters()).extracting("fragmentName").containsExactlyInAnyOrder("hvd",
         "openness", "dataservice");
-    Assertions.assertThat(bundle.getFilters()).extracting("label")
-        .containsExactlyInAnyOrder(prepareHighValueDatasetTags().toString(), "true", "true");
   }
 
   private Object[] getDefaultFilterFragmentNameList(String... remove)
@@ -322,7 +233,7 @@ public class ParameterProcessingTest
 
   private Object[] getDefaultFilterLabelList(String... remove)
   {
-    return Stream.of(prepareHighValueDatasetTags().toString(), "true", "true", "educ", "testTag", "testTag2",
+    return Stream.of("true", "true", "true", "educ", "testTag", "testTag2",
         "testSourceportal", "web", "testLicence", "testMaintainer", "testPublisher", "testTitle", "testNotes",
         "json", "01.01.2015", "02.02.2025", "OrFilterPhrase", "OrFilterPhrase", "[testOrganizationId]",
         "1.0,3.0,2.0,4.0")
@@ -340,17 +251,10 @@ public class ParameterProcessingTest
     parameterMapInput.put("boundingbox", new String[] {"1.0,3.0,2.0,4.0"});
     parameterMapInput.put("f", new String[] {
         "openness:has_open,format:json,groups:educ,type:dataset,sourceportal:testSourceportal,"
-            + "tags:testTag,tags:testTag2,licence:testLicence,hvd:is_hvd,dataservice:has_data_service,"
+            + "tags:testTag,tags:testTag2,licence:testLicence,hvd:has_hvd,dataservice:has_data_service,"
             + "maintainer:testMaintainer,publisher:testPublisher,platforms:web,title:testTitle,"
             + "notes:testNotes,state:08,showcase_types:concept,onlyEditorMetadata:onlyEditorMetadata,"
             + "onlyPrivateShowcases:onlyPrivateShowcases"});
     return parameterMapInput;
-  }
-
-  private List<String> prepareHighValueDatasetTags()
-  {
-    return GovDataCollectionUtils.convertStringListToLowerCase(
-        Arrays.asList(StringUtils.stripAll(StringUtils.splitByWholeSeparator(
-            HIGH_VALUE_DATASET_TAGS, ","))));
   }
 }

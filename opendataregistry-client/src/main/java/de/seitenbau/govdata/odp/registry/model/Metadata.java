@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import de.seitenbau.govdata.odp.registry.ckan.HVDCategory;
+
 /**
  * The Interface Metadata.
  *
@@ -106,6 +108,12 @@ public interface Metadata extends Serializable
   MetadataEnumType getType();
 
   String getUrl();
+
+  List<HVDCategory> getHvdCategories();
+
+  List<String> getApplicableLegislation();
+
+  boolean isHvd();
 
   /**
    * Openness of all licenses of resources of this metadata.

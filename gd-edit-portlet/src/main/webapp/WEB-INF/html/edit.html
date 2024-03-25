@@ -102,6 +102,21 @@
             </td>
           </tr>
 
+          <tr class="highfield">
+            <th th:text="#{'od.datasets_metadata_hvd_categories'}"></th>
+            <td>
+              <fieldset class="multiboxarea">
+                <legend class="offscreen" aria-labelledby="hvd_categories_error">[[#{'od.datasets_metadata_hvd_categories'}]]</legend>
+                <div class="checkboxitem" th:each="hvdCat : ${T(de.seitenbau.govdata.odp.registry.ckan.HVDCategory).values()}">
+                  <input class="offscreen" type="checkbox" th:field="*{hvd_categories}" th:value="${hvdCat.uri}" />
+                  <label class="checkbox" th:for="${#ids.prev('hvd_categories')}" th:text="#{'od.hvd.category.label.' + ${#strings.toLowerCase(hvdCat)}}"></label>
+                </div>
+              </fieldset>
+              <div id="hvd_categories_error" class="validation-error" th:if="${#fields.hasErrors('categories')}" th:errors="*{hvd_categories}"></div>
+              <div id="hvd_categories_error" th:unless="${#fields.hasErrors('hvd_categories')}"></div>
+            </td>
+          </tr>
+
           <tr>
             <th><label for="tags" id="tags_label">[[#{'od.tags.name'}]]</label></th>
             <td>

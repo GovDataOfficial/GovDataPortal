@@ -41,6 +41,8 @@ public class SearchExtViewModel
 
   private List<Map<String, String>> highValueDatasetList;
 
+  private List<Map<String, String>> highValueDatasetCategoryList;
+
   private Map<String, String> translationMap;
 
   private List<KeyValuePair> passthroughParams;

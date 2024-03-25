@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.odp.registry.ODRClient;
 import de.seitenbau.govdata.odp.registry.ckan.Constants;
+import de.seitenbau.govdata.odp.registry.ckan.HVDCategory;
 import de.seitenbau.govdata.odp.registry.ckan.ODRClientImpl;
 import de.seitenbau.govdata.odp.registry.ckan.Util;
 import de.seitenbau.govdata.odp.registry.ckan.json.ExtraBean;
@@ -53,6 +54,9 @@ public class MetadataImpl implements Metadata, Serializable
   private static final long serialVersionUID = -374425005119368545L;
 
   private static final ObjectMapper OM = new ObjectMapper();
+
+  /** The value which identifies a high value dataset (HVD) */
+  public static final String HVD_APPLICABLE_LEGISLATION = "http://data.europa.eu/eli/reg_impl/2023/138/oj";
 
   private MetadataBean metadata;
 
@@ -699,6 +703,26 @@ public class MetadataImpl implements Metadata, Serializable
       result = getId();
     }
     return result;
+  }
+
+  @Override
+  public List<HVDCategory> getHvdCategories()
+  {
+    return HVDCategory.fromUris(getExtraList(MetadataListExtraFields.HVD_CATEGORY));
+  }
+
+  @Override
+  public List<String> getApplicableLegislation()
+  {
+    return getExtraList(MetadataListExtraFields.APPLICABLE_LEGISLATION);
+  }
+
+  @Override
+  public boolean isHvd()
+  {
+    List<String> applicableLegislation = getApplicableLegislation();
+
+    return applicableLegislation != null && applicableLegislation.contains(HVD_APPLICABLE_LEGISLATION);
   }
 
   /**

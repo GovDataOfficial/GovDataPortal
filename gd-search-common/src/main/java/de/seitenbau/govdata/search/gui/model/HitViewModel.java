@@ -75,6 +75,8 @@ public class HitViewModel
 
   private List<ShowcaseTypeEnum> allShowcaseTypes;
 
+  private Boolean hasHvd;
+
   public boolean isCkanMetadata()
   {
     return StringUtils.equals(source, SearchConsts.SOURCE_CKAN);

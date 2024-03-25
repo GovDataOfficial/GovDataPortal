@@ -75,6 +75,66 @@ public class MetadataImplTest {
   }
 
   @Test
+  public void isHvd_true() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+    metadataBean.getExtras().add(createExtraBean(MetadataListExtraFields.APPLICABLE_LEGISLATION.getField(),
+        "[\"" + MetadataImpl.HVD_APPLICABLE_LEGISLATION + "\"]"));
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.isHvd()).isTrue();
+  }
+
+  @Test
+  public void isHvd_false() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+    metadataBean.getExtras().add(createExtraBean(MetadataListExtraFields.APPLICABLE_LEGISLATION.getField(),
+        "[\"other value\"]"));
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.isHvd()).isFalse();
+  }
+
+  @Test
+  public void isHvd_empty() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+    metadataBean.getExtras().add(createExtraBean(MetadataListExtraFields.APPLICABLE_LEGISLATION.getField(),
+        "[]"));
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.isHvd()).isFalse();
+  }
+
+  @Test
+  public void getApplicableLegislation() throws Exception
+  {
+    /* prepare */
+    MetadataBean metadataBean = createDefaultMetadataBean();
+    metadataBean.getExtras().add(createExtraBean(MetadataListExtraFields.APPLICABLE_LEGISLATION.getField(),
+        "[\"" + MetadataImpl.HVD_APPLICABLE_LEGISLATION + "\"]"));
+
+    /* execute */
+    target = new MetadataImpl(metadataBean, odrClient);
+
+    /* verify */
+    assertThat(target.getApplicableLegislation()).containsOnly(MetadataImpl.HVD_APPLICABLE_LEGISLATION);
+  }
+
+  @Test
   public void getIdentifierWithFallback_null() throws Exception
   {
     /* prepare */

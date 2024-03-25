@@ -184,6 +184,7 @@ public class SearchResultsViewMapper
             .usedDatasets(searchHit.getUsedDatasets())
             .releaseDate(searchHit.getReleaseDate())
             .allShowcaseTypes(mapShowcaseTypes(searchHit.getAllShowcaseTypes()))
+            .hasHvd(searchHit.getHasHvd())
             .build();
 
     return hitViewModel;

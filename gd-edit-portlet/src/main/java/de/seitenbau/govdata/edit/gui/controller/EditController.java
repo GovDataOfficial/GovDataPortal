@@ -97,6 +97,8 @@ public class EditController
 
   private static final String DEFAULT_LICENCE = "http://dcat-ap.de/def/licenses/dl-by-de/2.0";
 
+  private static final String HVD_APPLICABLE_LEGISLATION = "http://data.europa.eu/eli/reg_impl/2023/138/oj";
+
   private static final String MESSAGE = "message";
 
   private static final String MESSAGE_TYPE = "messageType";
@@ -515,7 +517,8 @@ public class EditController
           formatDate(resource.getIssued()),
           formatDate(resource.getModified()),
           resource.getPlannedAvailability(),
-          resource.getAvailability()));
+          resource.getAvailability(),
+          resource.isHvd()));
     }
     if (resources.isEmpty()) // make sure there is at least one row!
     {
@@ -532,6 +535,8 @@ public class EditController
     form.setPoliciticalGeocodingURI(listToString(metadata, MetadataListExtraFields.POLITICAL_GEOCODING_URI));
     form.setGeocodingText(listToString(metadata, MetadataListExtraFields.GEOCODING_TEXT));
     form.setLegalbasisText(listToString(metadata, MetadataListExtraFields.LEGALBASIS_TEXT));
+
+    form.setHvd_categories(metadata.getExtraList(MetadataListExtraFields.HVD_CATEGORY));
 
     form.setTitle(metadata.getTitle());
 
@@ -690,6 +695,19 @@ public class EditController
     metadata.setExtraList(MetadataListExtraFields.LEGALBASIS_TEXT,
         listFromString(form.getLegalbasisText()));
 
+    List<String> hvdcategories = form.getHvd_categories();
+    if (hvdcategories != null && !hvdcategories.isEmpty())
+    {
+      metadata.setExtraList(MetadataListExtraFields.HVD_CATEGORY, hvdcategories);
+      metadata.setExtraList(MetadataListExtraFields.APPLICABLE_LEGISLATION,
+          listFromString(HVD_APPLICABLE_LEGISLATION));
+    }
+    else if (metadata.isHvd())
+    {
+      metadata.setExtraList(MetadataListExtraFields.HVD_CATEGORY, Collections.emptyList());
+      metadata.setExtraList(MetadataListExtraFields.APPLICABLE_LEGISLATION, Collections.emptyList());
+    }
+
     Date fromDate = DateUtil.parseDateString(form.getTemporalCoverageFrom());
     Date untilDate = DateUtil.parseDateString(form.getTemporalCoverageUntil());
     metadata.setTemporalCoverageFrom(fromDate);
@@ -729,7 +747,11 @@ public class EditController
         resourceImpl.setLicenseAttributionByText(res.getLicenseAttributionByText());
         resourceImpl.setPlannedAvailability(convertBlankStringToNull(res.getPlannedAvailability()));
         resourceImpl.setAvailability(convertBlankStringToNull(res.getAvailability()));
-
+        if (res.isHvd())
+        {
+          resourceImpl
+              .setApplicableLegislation(listFromString(HVD_APPLICABLE_LEGISLATION));
+        }
         if (form.isNewDataset() && resourceImpl.getIssued() == null)
         {
           // set creation date for new resources

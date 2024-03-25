@@ -152,7 +152,7 @@
     </div>
 
     <div class="column small-12 large-4 floatcontainer-right">
-      <div class="design-box design-box-padding h2-metainfo searchdetails-infobox">
+      <div class="design-box design-box-padding h2-metainfo searchdetails-infobox" th:classappend="${selectedMetadata.metadata.hvd} ? 'hvd' : ''">
         <dl class="licence inline-list"
             th:if="${selectedMetadata.singleLicense != null}">
           <dt>[[#{od.datasets_open_licence}]]:</dt>
@@ -227,6 +227,22 @@
             <dd th:replace="~{fragments/icons :: categorydd(${themeDisplay.pathThemeImages}, ${category})}"></dd>
           </th:block>
           <dd th:if="${#lists.isEmpty(selectedMetadata.metadata.categories)}">-</dd>
+        </dl>
+
+        <dl th:unless="${not selectedMetadata.metadata.hvd}" class="categories h2-tags space-bottom">
+          <dt>[[#{od.datasets_metadata_designation}]]:</dt>
+            <dd>
+              <span class="resource-icon hvd-icon" th:title="#{od.datasets_metadata_hvd_designation}">
+                <th:block>[[#{od.datasets_metadata_hvd_designation}]]</th:block>
+             </span>
+           </dd>
+        </dl>
+
+        <dl th:unless="${not selectedMetadata.metadata.hvd}" class="categories h2-tags space-bottom">
+          <dt>[[#{od.datasets_metadata_hvd_categories}]]:</dt>
+          <th:block th:each="hvdCategory : ${selectedMetadata.metadata.hvdCategories}">
+            <dd th:replace="~{fragments/icons :: hvdCategorydd(${themeDisplay.pathThemeImages}, ${hvdCategory})}"></dd>
+          </th:block>
         </dl>
 
         <dl th:replace="~{fragments/display_widgets :: temporalCoverage(${selectedMetadata.metadata.temporalCoverageFrom}, ${selectedMetadata.metadata.temporalCoverageTo}, true)}"></dl>

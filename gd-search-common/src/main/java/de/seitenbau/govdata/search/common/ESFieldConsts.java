@@ -34,6 +34,16 @@ public abstract class ESFieldConsts
   public static final String HAS_DATASERVICE = "metadata.has_data_service";
 
   /**
+   * Key for field HAS_HVD in search index.
+   */
+  public static final String HAS_HVD = "metadata.has_hvd";
+
+  /**
+   * Key for field HVD_CATEGORY_LIST in search index..
+   */
+  public static final String HVD_CATEGORIES = "metadata.hvd_categories.keyword";
+
+  /**
    * Key for field TEMPORAL_START in search index.
    */
   public static final String TEMPORAL_START = "metadata.temporal_start";
@@ -202,6 +212,7 @@ public abstract class ESFieldConsts
     facetMapBuilder.put(SearchConsts.FACET_SHOWCASE_TYPE, FIELD_SHOWCASE_TYPES_VALUE);
     facetMapBuilder.put(SearchConsts.FACET_LICENCE, FIELD_METADATA_RESOURCES_LICENSES);
     facetMapBuilder.put(SearchConsts.FACET_SOURCEPORTAL, SearchConsts.FIELD_OWNER_ORG);
+    facetMapBuilder.put(SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES, HVD_CATEGORIES);
     FACET_MAP = Collections.unmodifiableMap(facetMapBuilder);
 
     Map<String, String> extSearchMapBuilder = new HashMap<>();
@@ -215,6 +226,7 @@ public abstract class ESFieldConsts
     boolFacetMapBuilder.put(SearchConsts.FACET_HAS_OPEN, HAS_OPEN);
     boolFacetMapBuilder.put(SearchConsts.FACET_HAS_CLOSED, HAS_CLOSED);
     boolFacetMapBuilder.put(SearchConsts.FACET_HAS_DATA_SERVICE, HAS_DATASERVICE);
+    boolFacetMapBuilder.put(SearchConsts.FACET_HAS_HIGH_VALUE_DATASET, HAS_HVD);
     BOOL_FACET_MAP = Collections.unmodifiableMap(boolFacetMapBuilder);
   }
 }

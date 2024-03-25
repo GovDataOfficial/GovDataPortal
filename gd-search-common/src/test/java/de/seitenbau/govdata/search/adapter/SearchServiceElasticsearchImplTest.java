@@ -81,7 +81,6 @@ public class SearchServiceElasticsearchImplTest
     ReflectionTestUtils.setField(sut, "metricIndexName", IndexName.METRICS.getIndex());
     ReflectionTestUtils.setField(sut, "indexNames", new String[] {IndexName.LIFERAY.getIndex(),
         IndexName.CKAN.getIndex(), IndexName.SHOWCASES.getIndex()});
-    sut.setHighValueDatasetTags("hvd,highvaluedataset,highvaluedatasets");
     Mockito.when(filterUtilMock.getDefaultTypeFilterValues())
         .thenReturn(Lists.newArrayList("article", "blog", "dataset", "showcase"));
   }
@@ -268,50 +267,6 @@ public class SearchServiceElasticsearchImplTest
     Mockito.when(searchHitsMock.getHits()).thenReturn(hitResponses);
     Mockito.when(searchResponseMock.getHits()).thenReturn(searchHitsMock);
     Mockito.when(clientMock.search(Mockito.any(), Mockito.any())).thenReturn(searchResponseMock);
-
-    /* execute */
-    SearchResultContainer result =
-        sut.search(new SearchQuery(""), null, new SearchFilterBundle(), new Sort(SortType.RELEVANCE, false));
-
-    /* verify */
-    Assertions.assertThat(result).isNotNull();
-  }
-
-  @Test
-  public void search_empty_on_empty_datastore_hvd_tags_null() throws Exception
-  {
-    /* prepare */
-    SearchHit[] hitResponses = new SearchHit[] {};
-    SearchHits searchHitsMock = Mockito.mock(SearchHits.class);
-    SearchResponse searchResponseMock = Mockito.mock(SearchResponse.class);
-
-    Mockito.when(searchHitsMock.getHits()).thenReturn(hitResponses);
-    Mockito.when(searchResponseMock.getHits()).thenReturn(searchHitsMock);
-    Mockito.when(clientMock.search(Mockito.any(), Mockito.any())).thenReturn(searchResponseMock);
-
-    sut.setHighValueDatasetTags(null);
-
-    /* execute */
-    SearchResultContainer result =
-        sut.search(new SearchQuery(""), null, new SearchFilterBundle(), new Sort(SortType.RELEVANCE, false));
-
-    /* verify */
-    Assertions.assertThat(result).isNotNull();
-  }
-
-  @Test
-  public void search_empty_on_empty_datastore_hvd_tags_empty() throws Exception
-  {
-    /* prepare */
-    SearchHit[] hitResponses = new SearchHit[] {};
-    SearchHits searchHitsMock = Mockito.mock(SearchHits.class);
-    SearchResponse searchResponseMock = Mockito.mock(SearchResponse.class);
-
-    Mockito.when(searchHitsMock.getHits()).thenReturn(hitResponses);
-    Mockito.when(searchResponseMock.getHits()).thenReturn(searchHitsMock);
-    Mockito.when(clientMock.search(Mockito.any(), Mockito.any())).thenReturn(searchResponseMock);
-
-    sut.setHighValueDatasetTags("");
 
     /* execute */
     SearchResultContainer result =

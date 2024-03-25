@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
@@ -50,6 +51,7 @@ import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.navigation.PortletUtil;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.odp.registry.ckan.HVDCategory;
 import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.User;
@@ -717,7 +719,13 @@ public class SearchresultController extends AbstractBaseController
 
     if (StringUtils.equals(filterType, SearchConsts.FACET_HIGH_VALUE_DATASET))
     {
-      return LanguageUtil.get(locale, "od.dataset.is_hvd");
+      return LanguageUtil.get(locale, "od.dataset.has_hvd");
+    }
+
+    if (StringUtils.equals(filterType, SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES))
+    {
+      return LanguageUtil.get(locale,
+          "od.hvd.category.label." + StringUtil.toLowerCase(HVDCategory.fromUri(filterName).toString()));
     }
 
     if (StringUtils.equals(filterType, QueryParamNames.PARAM_SHOW_ONLY_EDITOR_METADATA))

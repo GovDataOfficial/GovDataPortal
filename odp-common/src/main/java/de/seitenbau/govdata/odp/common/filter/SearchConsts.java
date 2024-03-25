@@ -208,7 +208,12 @@ public abstract class SearchConsts
   /**
    * Facet filter value for the high value dataset.
    */
-  public static final String FACET_IS_HIGH_VALUE_DATASET = "is_hvd";
+  public static final String FACET_HAS_HIGH_VALUE_DATASET = "has_hvd";
+
+  /**
+   * Facet key for the high value dataset categories.
+   */
+  public static final String FACET_HIGH_VALUE_DATASET_CATEGORIES = "hvd_categories";
 
   // fields used in extended search
   /**

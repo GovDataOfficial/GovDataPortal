@@ -1,6 +1,7 @@
 <div xmlns:th="http://www.thymeleaf.org">
 
-  <li th:fragment="resultTile (hit, themeDisplay)" class="resultentry design-box design-box-padding">
+  <li th:fragment="resultTile (hit, themeDisplay)" class="resultentry design-box design-box-padding" 
+          th:classappend="${hit.hasHvd} ? 'hvd' : ''">
 
     <!-- Type Dataset & Blog -->
     <div th:unless="${hit.type}=='showcase'">
@@ -71,6 +72,14 @@
 
           <dl th:replace="~{fragments/display_widgets :: temporalCoverage(${hit.temporalCoverageFrom}, ${hit.temporalCoverageTo}, false)}"></dl>
 
+        <dl th:if="${hit.hasHvd}" class="hvd-designation">
+          <dt>[[#{od.datasets_metadata_designation}]]:</dt>
+            <dd>
+              <span class="resource-icon hvd-icon" th:title="#{od.datasets_metadata_hvd_designation}">
+                <th:block>[[#{od.datasets_metadata_hvd_designation}]]</th:block>
+             </span>
+           </dd>
+        </dl>
           <a th:title="#{${linkTextKey}}" th:href="${hit.linkToDetailPage}"
             th:with="linkTextKey = 'od.goto.' + ${hit.type}" class="goto-entry h2-metainfo">
             <div>[[#{${linkTextKey}}]] <span class="offscreen">"[[${hit.title}]]"</span></div>
