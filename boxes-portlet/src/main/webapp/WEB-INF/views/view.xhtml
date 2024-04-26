@@ -39,49 +39,23 @@
       </div>
 
       <div class="column small-12 large-4">
-        <h2 class="boxesportlet-title">
-          <a  href="/web/guest/neues/">
-            #{i18n['od.home.recent_blogs']}
-            <span class="label label-inverse more-linklabel">#{i18n['od.more']}</span>
-          </a>
-        </h2>
-        
-        <ul class="row">
-          <ui:repeat value="#{blogs.blogs}" var="blog">
-            <li class="column small-12 medium-6 large-12">
-              <a href="/web/guest/neues/-/blogs/#{blog.urlTitle}" title="#{blog.title}" class="box-title">
-                <div class="boxesportlet-box design-box">
-                  <div class="metainfo h2-metainfo">
-                    <div class="mediatype-icon mediatype-blog">
-                      <img src="#{blogs.themeDisplay.pathThemeImages}/mediatypes/typ_blog_inverted.svg" alt="typ blog icon"/>
-                    </div>
-                    <strong>#{i18n['od.blog']}</strong>
-                    <span>
-                      <h:outputText value="#{blog.displayDate}">
-                        <f:convertDateTime pattern="dd.MM.yyyy" timeZone="Europe/Berlin" />
-                      </h:outputText>
-                    </span>
-                  </div>
-                  
-                  <h3>#{blog.title}</h3>
-                  <p class="boxtext h2-teaser">
-                    <c:if test="#{not empty blog.description}">
-                      <h:outputText value="#{blog.description}" />
-                    </c:if>
-                    <c:if test="#{empty blog.description}">
-                      <h:outputText value="#{blog.content.length() gt 120 ? blog.content.substring(0,117).concat('...') : blog.content}" />
-                    </c:if>
-                  </p>
-                  
-                  <div class="goto-entry h2-metainfo">
-                    <div>#{i18n['od.goto.blog']}</div>
-                  </div>
-                  <div class="goto-entry-spacer"></div>
-                </div>
-              </a>
-            </li>
-          </ui:repeat>
-        </ul>
+        <ui:fragment rendered="#{not empty blogs.blogs}">
+          <h2 class="boxesportlet-title">
+            <a  href="/web/guest/neues/">
+              #{i18n['od.home.recent_blogs']}
+              <span class="label label-inverse more-linklabel">#{i18n['od.more']}</span>
+            </a>
+          </h2>
+
+          <ul class="row">
+            <ui:repeat value="#{blogs.blogs}" var="blog">
+              <ui:include src="blog.xhtml">
+                <ui:param name="blog" value="#{blog}" />
+                <ui:param name="themeDisplay" value="#{blogs.themeDisplay}" />
+              </ui:include>
+            </ui:repeat>
+          </ul>
+        </ui:fragment>
       </div>
     </div>
   </h:body>

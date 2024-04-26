@@ -17,21 +17,20 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 
-import de.seitenbau.govdata.cache.CategoryCache;
-import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.common.model.exception.UnknownShowcaseTypeException;
 import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.LicenceDto;
+import de.seitenbau.govdata.data.api.dto.CategoryDto;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
-import de.seitenbau.govdata.odp.registry.model.Category;
-import de.seitenbau.govdata.odp.registry.model.Licence;
 import de.seitenbau.govdata.odp.registry.model.MetadataEnumType;
+import de.seitenbau.govdata.search.api.model.search.dto.HitDto;
+import de.seitenbau.govdata.search.api.model.search.dto.ResourceDto;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
 import de.seitenbau.govdata.search.gui.model.LicenseViewModel;
 import de.seitenbau.govdata.search.gui.model.ResourceViewModel;
-import de.seitenbau.govdata.search.index.model.HitDto;
-import de.seitenbau.govdata.search.index.model.ResourceDto;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,10 +47,7 @@ public class SearchResultsViewMapper
   private GovDataNavigation gdNavigation;
 
   @Inject
-  private CategoryCache categoryCache;
-
-  @Inject
-  private LicenceCache licenceCache;
+  private GovdataResource govdataResource;
 
   /**
    * Mappt eine Liste von {@link HitDto} zu einer Liste von {@link HitViewModel}.
@@ -215,7 +211,7 @@ public class SearchResultsViewMapper
   private LicenseViewModel mapLicense(String licenseId)
   {
     LicenseViewModel result = null;
-    Licence licence = licenceCache.getLicenceMap().get(licenseId);
+    LicenceDto licence = govdataResource.getLicenceMap().get(licenseId);
     if (Objects.nonNull(licence))
     {
       result =
@@ -224,13 +220,13 @@ public class SearchResultsViewMapper
     return result;
   }
 
-  private List<Category> mapCategories(List<String> groups)
+  private List<CategoryDto> mapCategories(List<String> groups)
   {
-    List<Category> result = new ArrayList<Category>();
+    List<CategoryDto> result = new ArrayList<CategoryDto>();
     if (CollectionUtils.isNotEmpty(groups))
     {
-      List<Category> categoryList = categoryCache.getCategoriesSortedByTitle();
-      for (Category cat : categoryList)
+      List<CategoryDto> categoryList = govdataResource.getCategoriesSortedByTitle();
+      for (CategoryDto cat : categoryList)
       {
         if (groups.contains(cat.getName()))
         {

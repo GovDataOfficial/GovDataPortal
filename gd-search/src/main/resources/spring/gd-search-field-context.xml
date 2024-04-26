@@ -16,4 +16,6 @@
       
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchfieldController" /> 
 
+    <bean id="searchClientFactory" class="de.seitenbau.govdata.search.api.SearchClientFactory" />
+    <bean id="searchResource" factory-bean="searchClientFactory" factory-method="createSearchClient" />
 </beans>

@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
   <properties>
@@ -48,17 +48,13 @@
 
     <!-- ODP -->
     <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
-      <artifactId>opendataregistry-client</artifactId>
-    </dependency>
-    <dependency>
       <groupId>de.fhg.fokus.odp</groupId>
       <artifactId>entities-api</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
+      <groupId>de.seitenbau.govdata</groupId>
       <artifactId>odp-common</artifactId>
     </dependency>
     <dependency>
@@ -68,6 +64,12 @@
     <dependency>
       <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>gd-search-common</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata</groupId>
@@ -76,6 +78,18 @@
     <dependency>
       <groupId>de.seitenbau.govdata</groupId>
       <artifactId>api-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>opendataregistry-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-data-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>search-api</artifactId>
     </dependency>
 
     <dependency>
@@ -124,16 +138,6 @@
       <artifactId>thymeleaf-spring5</artifactId>
     </dependency>
 
-    <!-- Http-Client -->
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
-    </dependency>
-
     <!-- Utils -->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -161,34 +165,12 @@
       <artifactId>jsoup</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.locationtech.jts</groupId>
-      <artifactId>jts-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.locationtech.jts.io</groupId>
-      <artifactId>jts-io-common</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.googlecode.json-simple</groupId>
-      <artifactId>json-simple</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-
-    <!-- Elasticsearch -->
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
     </dependency>
 
     <!-- Logging -->

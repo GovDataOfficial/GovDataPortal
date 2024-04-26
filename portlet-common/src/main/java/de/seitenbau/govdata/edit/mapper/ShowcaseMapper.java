@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import de.seitenbau.govdata.common.json.DateUtil;
 import de.seitenbau.govdata.constants.CommonConstants;
-import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.db.api.model.Showcase;
 import de.seitenbau.govdata.db.api.model.ShowcaseCategory;
 import de.seitenbau.govdata.db.api.model.ShowcaseContact;

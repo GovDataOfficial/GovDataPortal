@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+
+ <artifactId>search-api</artifactId>
+ <packaging>jar</packaging>
+
+ <name>search-api</name>
+ <description>search-api</description>
+
+ <parent>
+  <groupId>de.seitenbau.govdata</groupId>
+  <artifactId>api-parent</artifactId>
+  <version>2.0.1</version>
+  <relativePath>../api-parent</relativePath>
+ </parent>
+
+ <properties>
+   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   <banTransitiveHibernateDependencies>false</banTransitiveHibernateDependencies>
+   <spotbugs.excludeFilterFile>${basedir}/src/main/plugin-config/findbugs-exclude.xml</spotbugs.excludeFilterFile>
+ </properties>
+
+ <dependencies>
+  <dependency>
+   <groupId>de.seitenbau.govdata</groupId>
+   <artifactId>api-common</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>de.seitenbau.govdata</groupId>
+   <artifactId>serviceportal-common</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>de.seitenbau.govdata</groupId>
+    <artifactId>odp-common</artifactId>
+  </dependency>
+
+  <dependency>
+   <groupId>com.fasterxml.jackson.core</groupId>
+   <artifactId>jackson-databind</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>com.fasterxml.jackson.core</groupId>
+   <artifactId>jackson-annotations</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>io.swagger.core.v3</groupId>
+   <artifactId>swagger-annotations</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>io.github.benas</groupId>
+    <artifactId>random-beans</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+  </dependency>
+
+  <dependency>
+    <groupId>org.jboss.spec.javax.ws.rs</groupId>
+    <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+  </dependency>
+
+  <!-- Testing -->
+  <dependency>
+    <groupId>de.seitenbau.govdata</groupId>
+    <artifactId>testing-common</artifactId>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+    <groupId>org.assertj</groupId>
+    <artifactId>assertj-core</artifactId>
+    <scope>test</scope>
+  </dependency>
+  <dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <scope>test</scope>
+  </dependency>
+ </dependencies>
+
+ <build>
+  <pluginManagement>
+   <plugins>
+    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven
+     build itself. -->
+    <plugin>
+     <groupId>org.eclipse.m2e</groupId>
+     <artifactId>lifecycle-mapping</artifactId>
+     <version>1.0.0</version>
+     <configuration>
+      <lifecycleMappingMetadata>
+       <pluginExecutions>
+        <pluginExecution>
+         <pluginExecutionFilter>
+          <groupId>com.seitenbau.maven.plugins</groupId>
+          <artifactId>
+           maven-messageclass-plugin
+          </artifactId>
+          <versionRange>[1.1.1,)</versionRange>
+          <goals>
+           <goal>generate</goal>
+          </goals>
+         </pluginExecutionFilter>
+         <action>
+          <execute>
+           <runOnIncremental>false</runOnIncremental>
+          </execute>
+         </action>
+        </pluginExecution>
+       </pluginExecutions>
+      </lifecycleMappingMetadata>
+     </configuration>
+    </plugin>
+   </plugins>
+  </pluginManagement>
+ </build>
+
+</project>

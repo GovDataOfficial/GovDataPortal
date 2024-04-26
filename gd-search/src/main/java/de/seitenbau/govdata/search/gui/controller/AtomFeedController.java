@@ -21,21 +21,20 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.OrganizationDto;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
-import de.seitenbau.govdata.odp.registry.model.Organization;
-import de.seitenbau.govdata.odp.registry.model.User;
-import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.odr.ODRTools;
-import de.seitenbau.govdata.odr.RegistryClient;
-import de.seitenbau.govdata.search.adapter.SearchService;
+import de.seitenbau.govdata.search.api.SearchResource;
+import de.seitenbau.govdata.search.api.model.search.dto.PreparedParametersDto;
+import de.seitenbau.govdata.search.api.model.search.dto.SearchResultContainer;
 import de.seitenbau.govdata.search.common.AtomFeedView;
-import de.seitenbau.govdata.search.common.SearchFilterBundle;
+import de.seitenbau.govdata.search.common.PreparedParametersMapper;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
-import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import de.seitenbau.govdata.search.sort.Sort;
 import de.seitenbau.govdata.search.sort.SortType;
 
@@ -47,16 +46,15 @@ public class AtomFeedController
   private static final Sort FEED_SORTING = new Sort(SortType.LASTMODIFICATION, false);
 
   @Inject
-  private SearchService indexService;
+  private SearchResource searchResource;
   
+  @Inject
+  private GovdataResource govdataResource;
   @Inject
   private SearchResultsViewMapper searchResultsMapper;
   
   @Inject
   private GovDataNavigation navigationHelper;
-  
-  @Inject
-  private RegistryClient registryClient;
 
   @Inject
   private ParameterProcessing parameterProcessing;
@@ -81,32 +79,38 @@ public class AtomFeedController
     PreparedParameters preparm = parameterProcessing.prepareParameters(request.getParameterMap(), null);
 
     // Get Organizations for this user from CKAN - or fail / get an empty list. 
-    List<Organization> editorOrganizationList = new ArrayList<Organization>();
+    List<OrganizationDto> editorOrganizationList = new ArrayList<OrganizationDto>();
     try
     {
-      User ckanUser = new ODRTools().getCkanuserFromRequest(request, registryClient.getInstance());
-      if (ckanUser != null)
+      String userScreenName = new ODRTools().getLiferayUserfromRequest(request);
+      if (userScreenName != null)
       {
+        // die zwei funktionen kombinieren ? Exception OpenDataRegistryException
+        String ckanUser = govdataResource.findOrCreateCkanUser(userScreenName);
         editorOrganizationList =
-            registryClient.getInstance().getOrganizationsForUser(ckanUser, "create_dataset");
+            govdataResource.getOrganizationsForUser(ckanUser, "create_dataset");
       }
     }
-    catch (PortalException | OpenDataRegistryException e1)
+    catch (PortalException e1)
     {
       // we seem to have a problem, so no organizations this time.
     }
-    
+
+    PreparedParametersDto preparedParametersDto =
+        PreparedParametersMapper.mapToPreparedParametersDto(preparm);
+
+    List<String> editorOrganizationdList =
+        new ODRTools().extractIDsFromOrganizations(editorOrganizationList);
+
     // execute search
-    SearchFilterBundle searchFilterBundle = parameterProcessing.createFilterBundle(
-        preparm,
-        new ODRTools().extractIDsFromOrganizations(editorOrganizationList));
-    
-    SearchResultContainer result = indexService.search(
-        preparm.getQuery(),
+    SearchResultContainer result = searchResource.search(
         30,
-        searchFilterBundle,
-        FEED_SORTING);
+        preparedParametersDto,
+        editorOrganizationdList);
     
+    // Set cleaned active filter list
+    preparm.setActiveFilters(result.getCleanedActiveFilters());
+
     ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
     
     List<HitViewModel> hitViewModelList =

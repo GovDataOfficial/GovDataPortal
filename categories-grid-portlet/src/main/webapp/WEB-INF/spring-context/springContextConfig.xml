@@ -12,8 +12,7 @@
 
   <import resource="properties-context.xml" />
 
-  <context:component-scan base-package="de.seitenbau.govdata.navigation, de.seitenbau.govdata.odr,
-    de.seitenbau.govdata.cache" />
+  <context:component-scan base-package="de.seitenbau.govdata.navigation" />
   <context:annotation-config />
 
   <bean class="de.seitenbau.govdata.odp.categoriesgrid.CategoriesGrid" />
@@ -31,4 +30,7 @@
     <property name="prefix" value="/WEB-INF/views/" />
     <property name="suffix" value=".jsp" />
   </bean>
+
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
 </beans>

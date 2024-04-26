@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.8.0 2024-04-25
+
+* Updates spring dependency with important security fix (CVE-2024-22262)
+* Move most of the code in the portlets to microservices
+
 ## v6.7.0 2024-03-26
 
 * Improvements to CSS

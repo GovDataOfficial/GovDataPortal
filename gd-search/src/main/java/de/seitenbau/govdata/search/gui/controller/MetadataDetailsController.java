@@ -59,8 +59,6 @@ import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.fhg.fokus.odp.entities.service.MetadataCommentLocalServiceUtil;
-import de.seitenbau.govdata.cache.CategoryCache;
-import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.common.api.PageableRequest;
 import de.seitenbau.govdata.common.api.PagedList;
@@ -68,6 +66,9 @@ import de.seitenbau.govdata.common.api.SearchFilter;
 import de.seitenbau.govdata.common.client.impl.EntityNotFoundException;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
 import de.seitenbau.govdata.constants.QueryParamNames;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.MetadataDto;
+import de.seitenbau.govdata.data.api.ckan.dto.OrganizationDto;
 import de.seitenbau.govdata.dataset.details.beans.CurrentMetadataContact;
 import de.seitenbau.govdata.dataset.details.beans.CurrentUser;
 import de.seitenbau.govdata.dataset.details.beans.ISelectedObject;
@@ -84,13 +85,9 @@ import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.cache.BaseCache;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
-import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.odr.ODRTools;
-import de.seitenbau.govdata.odr.RegistryClient;
 import de.seitenbau.govdata.permission.PermissionUtil;
-import de.seitenbau.govdata.redis.adapter.RedisClientAdapter;
-import de.seitenbau.govdata.redis.util.RedisReportUtil;
 import de.seitenbau.govdata.search.common.NotificationMailSender;
 import de.seitenbau.govdata.search.common.NotificationMailSender.EventType;
 import de.seitenbau.govdata.search.util.RequestUtil;
@@ -150,12 +147,6 @@ public class MetadataDetailsController
   private static final String USED_DATASETS_URL_COLUMN = "usedDatasets.url";
 
   @Inject
-  private RegistryClient registryClient;
-
-  @Inject
-  private RedisClientAdapter redisClientAdapter;
-
-  @Inject
   private NotificationMailSender notificationMailSender;
 
   @Inject
@@ -165,10 +156,7 @@ public class MetadataDetailsController
   private ShowcaseResource showcaseResource;
 
   @Inject
-  private CategoryCache categoryCache;
-
-  @Inject
-  private OrganizationCache organizationCache;
+  private GovdataResource govdataResource;
 
   private ShowcaseDatabaseAvailabileCache showcaseDbAvailableCache = new ShowcaseDatabaseAvailabileCache();
 
@@ -264,10 +252,11 @@ public class MetadataDetailsController
       if (currentUser.getCkanUser() != null)
       {
         // we have a ckan-user, so see if the user has the organisation this metadata belongs to.
-        List<Organization> organizationsForUser =
-            registryClient.getInstance().getOrganizationsForUser(currentUser.getCkanUser(), "create_dataset");
+        List<OrganizationDto> organizationsForUser =
+            govdataResource.getOrganizationsForUser(currentUser.getCkanUser(), "create_dataset");
+
         if (new ODRTools().containsOrganization(
-            organizationsForUser, selectedMetadata.getMetadata().getOwnerOrg()))
+            organizationsForUser, selectedMetadata.getMetadata().getOwner_org(), OrganizationDto::getId))
         {
           userCanEditDataset = true;
 
@@ -283,8 +272,8 @@ public class MetadataDetailsController
           "gdsearchdetails", metadataIdOrName, FRIENDLY_URL_NAME_DATASET_PAGE).toString();
       final String catalogUrl = gdNavigation.createLinkForSearchResults(FRIENDLY_URL_NAME_DATASET_PAGE,
           PORTLET_NAME_SEARCHRESULT, "").toString();
-      String jsonLd = registryClient.getInstance().getJsonLdMetadata(currentUser.getCkanUser(),
-          metadataIdOrName, currentUrl, catalogUrl);
+      String jsonLd = govdataResource.getJsonLdMetadata(currentUser.getCkanUser(), metadataName,
+          currentUrl, catalogUrl);
       if (jsonLd == null)
       {
         // output empty node if something went wrong
@@ -294,7 +283,8 @@ public class MetadataDetailsController
       jsonLd = StringCleaner.trimAndFilterString(jsonLd);
       model.addAttribute(MODEL_KEY_METADATA_JSON_LD, jsonLd);
       // set organization
-      selectedMetadata.setOrganizationName(getOrganizationName(selectedMetadata.getMetadata().getOwnerOrg()));
+      selectedMetadata
+          .setOrganizationName(getOrganizationName(selectedMetadata.getMetadata().getOwner_org()));
 
       // Get all Apps with the dataset
       List<Link> showcaseListForDataset = readShowcaseListForDataset(metadataIdOrName);
@@ -415,7 +405,7 @@ public class MetadataDetailsController
           model.addAttribute(MODEL_KEY_SELECTED_METADATA, selectedMetadata);
 
           long companyId = PortalUtil.getCompanyId(request);
-          Metadata metadata = getMetadataFromCkan(currentUser.getCkanUser(), metadataName);
+          MetadataDto metadata = getMetadataFromCkan(currentUser.getCkanUser(), metadataName);
           notificationMailSender.notifyCommentEvent(companyId, newComment,
               EventType.NEW, liferayUser, metadata,
               themeDisplay.getLocale());
@@ -490,7 +480,7 @@ public class MetadataDetailsController
 
             long companyId = PortalUtil.getCompanyId(request);
             ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-            Metadata metadata =
+            MetadataDto metadata =
                 getMetadataFromCkan(currentUser.getCkanUser(), metadataComment.getMetadataName());
             notificationMailSender.notifyCommentEvent(companyId, newComment,
                 EventType.CHANGED, liferayUser, metadata,
@@ -633,8 +623,8 @@ public class MetadataDetailsController
 
       // submit rating to ckan
       log.debug(method
-          + "rateMetadata({}, {}, {})", currentUser.getCkanUser().getDisplayName(), dataset, ratingInt);
-      registryClient.getInstance().rateMetadata(currentUser.getCkanUser(), dataset, ratingInt);
+          + "rateMetadata({}, {}, {})", currentUser.getCkanUser(), dataset, ratingInt);
+      govdataResource.rateMetadata(rating, dataset, ratingInt);
 
       // get updated metadata
       // next three lines commented out, because the information about the rating is no more
@@ -671,7 +661,7 @@ public class MetadataDetailsController
         Showcase showcase = showcaseResource.read(appId);
         Objects.requireNonNull(showcase);
         ShowcaseViewModel showcaseModel = ShowcaseMapper.mapShowcaseEntityToViewModel(showcase);
-        selectedShowcase = new SelectedShowcase(showcaseModel, currentUser, categoryCache.getCategoryMap());
+        selectedShowcase = new SelectedShowcase(showcaseModel, currentUser, govdataResource.getCategoryMap());
       }
       catch (NumberFormatException ex)
       {
@@ -763,7 +753,7 @@ public class MetadataDetailsController
 
   private SelectedMetadata createMetadata(
       String metadataIdOrName, ThemeDisplay themeDisplay,
-      de.seitenbau.govdata.odp.registry.model.User ckanuser,
+      String ckanuser,
       boolean showBrokenLinkHint)
   {
     final String method = "createMetadata() : ";
@@ -771,7 +761,7 @@ public class MetadataDetailsController
 
     SelectedMetadata result = new SelectedMetadata();
     // get metadata
-    Metadata metadata = getMetadataFromCkan(ckanuser, metadataIdOrName);
+    MetadataDto metadata = getMetadataFromCkan(ckanuser, metadataIdOrName);
     result.setMetadata(metadata);
     // set contact information
     result.setContact(new CurrentMetadataContact(metadata));
@@ -806,7 +796,7 @@ public class MetadataDetailsController
       if (showBrokenLinkHint)
       {
         result.setNotAvailableResourceLinks(
-            RedisReportUtil.readUnavailableResourceLinks(metadata.getId(), redisClientAdapter));
+            govdataResource.readUnavailableResourceLinks(metadata.getId()));
       }
       else
       {
@@ -823,16 +813,15 @@ public class MetadataDetailsController
     return result;
   }
 
-  private Metadata getMetadataFromCkan(de.seitenbau.govdata.odp.registry.model.User ckanuser,
-      String metadataId)
+  private MetadataDto getMetadataFromCkan(String ckanuser, String metadataId)
   {
     final String method = "getMetadataFromCkan() : ";
     log.trace(method + "Start");
 
-    Metadata metadata = null;
+    MetadataDto metadata = null;
     try
     {
-      metadata = registryClient.getInstance().getMetadata(ckanuser, metadataId);
+      metadata = govdataResource.getMetadata(ckanuser, metadataId);
       if (metadata != null)
       {
         log.debug(method + "metadata found: " + metadata);
@@ -902,8 +891,8 @@ public class MetadataDetailsController
 
       if (screenName != null)
       {
-        currentUser.setCkanUser(
-            new ODRTools().findOrCreateCkanUser(screenName, registryClient.getInstance()));
+        String ckanUser = govdataResource.findOrCreateCkanUser(screenName);
+        currentUser.setCkanUser(ckanUser);
       }
     }
     else
@@ -917,7 +906,7 @@ public class MetadataDetailsController
   private String getOrganizationName(String id)
   {
     String orgName = "";
-    Organization organization = organizationCache.getOrganizationMap().get(id);
+    OrganizationDto organization = govdataResource.getOrganizationMap().get(id);
     if (Objects.nonNull(organization))
     {
       orgName = organization.getDisplayName();

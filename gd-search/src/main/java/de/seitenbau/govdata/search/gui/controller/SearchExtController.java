@@ -27,44 +27,28 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
-import de.seitenbau.govdata.cache.CategoryCache;
-import de.seitenbau.govdata.cache.LicenceCache;
-import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.common.showcase.model.ShowcasePlatformEnum;
 import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
 import de.seitenbau.govdata.constants.QueryParamNames;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.LicenceDto;
+import de.seitenbau.govdata.data.api.ckan.dto.OrganizationDto;
+import de.seitenbau.govdata.data.api.dto.CategoryDto;
+import de.seitenbau.govdata.data.api.dto.StateDto;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.ckan.HVDCategory;
-import de.seitenbau.govdata.odp.registry.model.Category;
-import de.seitenbau.govdata.odp.registry.model.Licence;
-import de.seitenbau.govdata.odp.registry.model.Organization;
-import de.seitenbau.govdata.search.cache.ResourceFormatCache;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
 import de.seitenbau.govdata.search.filter.util.FilterUtil;
-import de.seitenbau.govdata.search.geostate.cache.GeoStateCache;
 import de.seitenbau.govdata.search.gui.model.SearchExtViewModel;
-import de.seitenbau.govdata.search.util.states.StateContainer;
 
 @RequestMapping("VIEW")
 public class SearchExtController extends AbstractBaseController
 {
   @Inject
-  private LicenceCache licenceCache;
-  
-  @Inject
-  private OrganizationCache organizationCache;
-  
-  @Inject
-  private CategoryCache categoryCache;
-  
-  @Inject
-  private ResourceFormatCache resourceFormatCache;
-
-  @Inject
-  private GeoStateCache geoStateCache;
+  private GovdataResource govdataResource;
 
   @Inject
   private FilterUtil filterUtil;
@@ -156,7 +140,7 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareCategoryList()
   {
     List<Map<String, String>> options = new ArrayList<>();
-    for (Category cat : categoryCache.getCategoriesSortedByTitle())
+    for (CategoryDto cat : govdataResource.getCategoriesSortedByTitle())
     {
       HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", cat.getName());
@@ -169,7 +153,7 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareLicenceList()
   {
     List<Map<String, String>> options = new ArrayList<>();
-    for (Licence licence : licenceCache.getActiveLicenceListSortedByTitle())
+    for (LicenceDto licence : govdataResource.getActiveLicenceListSortedByTitle())
     {
       HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", licence.getId());
@@ -182,7 +166,7 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareOrganizationList()
   {
     List<Map<String, String>> options = new ArrayList<>();
-    for (Organization item : organizationCache.getOrganizationsSorted())
+    for (OrganizationDto item : govdataResource.getOrganizationsSorted())
     {
       HashMap<String, String> hashMap = new HashMap<>();
       hashMap.put("key", item.getId());
@@ -194,7 +178,7 @@ public class SearchExtController extends AbstractBaseController
 
   private List<Map<String, String>> prepareFormatList()
   {
-    List<String> formats = resourceFormatCache.getFormatsSorted();
+    List<String> formats = govdataResource.getResourceFormatsSorted();
     
     List<Map<String, String>> options = new ArrayList<>();
     for (String format : formats)
@@ -282,8 +266,8 @@ public class SearchExtController extends AbstractBaseController
   private List<Map<String, String>> prepareStateList()
   {
     List<Map<String, String>> options = new ArrayList<>();
-    List<StateContainer> stateList = geoStateCache.getStateList();
-    for (StateContainer state : stateList)
+    List<StateDto> stateList = govdataResource.getStateList();
+    for (StateDto state : stateList)
     {
       // Don't add blocked states
       if (!blockedStates.contains(state.getName().toLowerCase()))

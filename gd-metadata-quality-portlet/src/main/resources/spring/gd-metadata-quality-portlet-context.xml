@@ -10,13 +10,11 @@
   
   <context:component-scan 
       base-package="de.seitenbau.govdata.navigation,
-      de.seitenbau.govdata.search.adapter,
-      de.seitenbau.govdata.search.index.mapper,
-      de.seitenbau.govdata.odr,
-      de.seitenbau.govdata.cache,
-      de.seitenbau.govdata.metadataquality.cache,
-      de.seitenbau.govdata.search.filter.util" />
+      de.seitenbau.govdata.search.index.mapper" />
   
   <bean class="de.seitenbau.govdata.metadataquality.controller.MetadataQualityController" />
+
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
 
 </beans>

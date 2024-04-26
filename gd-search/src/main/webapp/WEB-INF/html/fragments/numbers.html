@@ -48,7 +48,7 @@
         <span th:text="${latestPost.name}" class="post-user"></span>
         <span th:text="${latestPost.isRetweet()} ? ${hasSharedText} : '@' + ${latestPost.username}" class="post-user post-username"></span>
       </div>
-      <span th:text="${#temporals.format(latestPost.timestamp, 'dd. MMM. yyyy')}" class="post-date"></span>
+      <span th:text="${#dates.format(latestPost.timestamp, 'dd. MMM. yyyy')}" th:title="${#dates.format(latestPost.timestamp, 'dd. MMM. yyyy HH:mm')}" class="post-date"></span>
     </div>
     <span class="post-body" th:text="${#strings.abbreviate(latestPost.text, textLength)}"></span>
   </div>

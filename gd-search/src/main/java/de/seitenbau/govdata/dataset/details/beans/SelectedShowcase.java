@@ -15,12 +15,12 @@ import de.seitenbau.govdata.common.model.exception.UnknownShowcasePlatformExcept
 import de.seitenbau.govdata.common.model.exception.UnknownShowcaseTypeException;
 import de.seitenbau.govdata.common.showcase.model.ShowcasePlatformEnum;
 import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
+import de.seitenbau.govdata.data.api.dto.CategoryDto;
 import de.seitenbau.govdata.edit.model.Image;
 import de.seitenbau.govdata.edit.model.Keyword;
 import de.seitenbau.govdata.edit.model.Platform;
 import de.seitenbau.govdata.edit.model.ShowcaseViewModel;
 import de.seitenbau.govdata.edit.model.Type;
-import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.permission.PermissionUtil;
 import lombok.Data;
 
@@ -51,19 +51,19 @@ public class SelectedShowcase implements ISelectedObject
 
   private List<String> showcasePlatformsDisplayNames;
 
-  private Map<String, Category> categoryMap;
+  private Map<String, CategoryDto> categoryMap;
 
   /**
    * Constructor
    * @param showcase
-   * @param categoryMap
+   * @param map
    */
   public SelectedShowcase(ShowcaseViewModel showcase, CurrentUser currentUser,
-      Map<String, Category> categoryMap)
+      Map<String, CategoryDto> map)
   {
     this.showcase = showcase;
     this.currentUser = currentUser;
-    this.categoryMap = categoryMap;
+    this.categoryMap = map;
     init();
   }
 
@@ -299,16 +299,16 @@ public class SelectedShowcase implements ISelectedObject
    * 
    * @return
    */
-  public List<Category> getCategories()
+  public List<CategoryDto> getCategories()
   {
-    List<Category> result = new ArrayList<>();
+    List<CategoryDto> result = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(showcase.getCategories()))
     {
       for (de.seitenbau.govdata.edit.model.Category cat : showcase.getCategories())
       {
         if (Objects.nonNull(categoryMap))
         {
-          Category category = categoryMap.get(cat.getName());
+          CategoryDto category = categoryMap.get(cat.getName());
           if (Objects.nonNull(category))
           {
             result.add(category);

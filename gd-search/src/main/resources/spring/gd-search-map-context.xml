@@ -17,4 +17,7 @@
       
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchMapController" /> 
 
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
+
 </beans>

@@ -3,25 +3,23 @@ package de.seitenbau.govdata.metadataquality.util;
 import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstants.DATA;
 import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstants.LABELS;
 import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstants.PERCENTAGE;
-import static de.seitenbau.govdata.metadataquality.common.MetadataQualityConstants.PUBLISHER;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.seitenbau.govdata.odp.common.cache.BaseCache;
+import de.seitenbau.govdata.search.api.model.metrics.dto.MetricsHitDto;
 
 public class MetricsParser extends BaseCache
 {
   private static final String PUBLISHERS_CACHE_KEY = "publishers";
 
-  private SearchHits metricData;
+  private List<MetricsHitDto> metricData;
 
   private Map<String, Map<String, Map<String, List<?>>>> valuesByTypeCache = new HashMap<>();
 
@@ -52,16 +50,13 @@ public class MetricsParser extends BaseCache
     if (valuesByTypeCache.get(type) == null || isCacheExpired(type))
     {
       LOG.info("{}Empty or expired metric values cache for type '{}', refreshing data.", method, type);
-      SearchHit[] hitArray = this.metricData.getHits();
 
-      for (SearchHit searchHit : hitArray)
+      for (MetricsHitDto metricsHitDto : metricData)
       {
-        Map<String, Object> hit = searchHit.getSourceAsMap();
-
-        if (hit.get("name").equals(type))
+        if (metricsHitDto.getName().equals(type))
         {
-          String publisher = Objects.toString(hit.get(PUBLISHER));
-          Map<String, List<?>> valuesDict = createValuesDict(hit);
+          String publisher = Objects.toString(metricsHitDto.getPublisher());
+          Map<String, List<?>> valuesDict = createValuesDict(metricsHitDto);
           if (valuesPerPublisherDict.containsKey(publisher))
           {
             LOG.warn("The metrics map already contains a key with the value {}. Overriding existent values!",
@@ -79,16 +74,16 @@ public class MetricsParser extends BaseCache
   }
 
   @SuppressWarnings("unchecked")
-  private Map<String, List<?>> createValuesDict(Map<String, Object> hit)
+  private Map<String, List<?>> createValuesDict(MetricsHitDto metricsHitDto)
   {
 
     Map<String, List<?>> valuesDict = new HashMap<>();
 
-    List<String> labelList = (List<String>) hit.get(LABELS);
+    List<String> labelList = metricsHitDto.getLabels();
     valuesDict.put(LABELS, labelList);
-    List<Integer> dataList = (List<Integer>) hit.get(DATA);
+    List<Integer> dataList = metricsHitDto.getData();
     valuesDict.put(DATA, dataList);
-    List<Double> percentageList = (List<Double>) hit.get(PERCENTAGE);
+    List<Double> percentageList = metricsHitDto.getData_percent();
     valuesDict.put(PERCENTAGE, percentageList);
 
     return valuesDict;
@@ -107,15 +102,13 @@ public class MetricsParser extends BaseCache
     if (publishersCache == null || isCacheExpired(PUBLISHERS_CACHE_KEY))
     {
       LOG.info("{}Empty or expired metric publishers cache, refreshing data.", method);
-      SearchHit[] hitArray = this.metricData.getHits();
-      LOG.info("{}Get {} hits.", method, hitArray.length);
+      LOG.info("{}Get {} hits.", method, metricData.size());
 
-      for (SearchHit searchHit : hitArray)
+      for (MetricsHitDto metricsHitDto : metricData)
       {
-        Map<String, Object> hit = searchHit.getSourceAsMap();
         // Get the publisher max doc count value
-        Long hitValue = Long.parseLong(Objects.toString(hit.getOrDefault("total_count", 0)));
-        String publisherKey = (String) hit.get(PUBLISHER);
+        Long hitValue = Long.parseLong(Objects.toString(metricsHitDto.getTotal_count()));
+        String publisherKey = metricsHitDto.getPublisher();
         LOG.debug("{}Process publisher {}", method, publisherKey);
         if (!publishers.containsKey(publisherKey) || publishers.get(publisherKey) < hitValue)
         {
@@ -135,7 +128,7 @@ public class MetricsParser extends BaseCache
    * Set the data for parsing
    * @param metricData
    */
-  public void setData(SearchHits metricData)
+  public void setData(List<MetricsHitDto> metricData)
   {
     this.metricData = metricData;
   }

@@ -20,8 +20,8 @@ import com.rometools.rome.feed.atom.Link;
 import com.rometools.rome.feed.synd.SyndPerson;
 import com.rometools.rome.feed.synd.SyndPersonImpl;
 
+import de.seitenbau.govdata.data.api.dto.CategoryDto;
 import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
-import de.seitenbau.govdata.odp.registry.model.Category;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
 
 public class AtomFeedView extends AbstractAtomFeedView
@@ -119,7 +119,7 @@ public class AtomFeedView extends AbstractAtomFeedView
 
       // Set Categories
       List<com.rometools.rome.feed.atom.Category> categories = new ArrayList<>();
-      for (Category cat : hit.getCategories())
+      for (CategoryDto cat : hit.getCategories())
       {
         categories.add(createCategory(cat.getName(), cat.getDisplayName()));
       }

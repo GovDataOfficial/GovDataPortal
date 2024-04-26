@@ -4,11 +4,6 @@
     <Package name="~com\.liferay\.portal\.kernel\.search\.suggest.*" />
   </Match>
   <Match>
-    <Bug pattern="EI_EXPOSE_REP2" />
-    <Class name="de.seitenbau.govdata.search.filter.BoundingBox" />
-    <Field name="shapeRelation" />
-  </Match>
-  <Match>
     <Or>
       <Bug pattern="EI_EXPOSE_REP" />
       <Bug pattern="EI_EXPOSE_REP2" />
@@ -16,36 +11,13 @@
     <Or>
       <Class name="~.*\.[a-zA-Z]*Bean.*" />
       <Class name="~.*\.[a-zA-Z]*Container.*" />
-      <Class name="de.seitenbau.govdata.search.common.SearchFilterBundle" />
       <Package name="~de\.seitenbau\.govdata\.search\..*\.model.*" />
-    </Or>
-  </Match>
-  <Match>
-    <Bug pattern="EI_EXPOSE_REP" />
-    <Or>
-      <And>
-        <Class name="de.seitenbau.govdata.search.common.cache.NumberCache" />
-        <Method name="~getRaw(.*)Data" />
-      </And>
-      <And>
-        <Class name="de.seitenbau.govdata.search.common.cache.TweetCache" />
-        <Method name="getTweetData" />
-      </And>
-      <And>
-        <Class name="de.seitenbau.govdata.search.common.cache.MastodonCache" />
-        <Method name="getPostData" />
-      </And>
     </Or>
   </Match>
   <Match>
     <Bug pattern="CT_CONSTRUCTOR_THROW" />
     <Or>
-      <And>
-        <Class name="de.seitenbau.govdata.search.filter.BoundingBox" />
-      </And>
-      <And>
-        <Class name="de.seitenbau.govdata.search.index.GovDataSearchIndexWriter" />
-      </And>
+      <Class name="de.seitenbau.govdata.search.index.GovDataSearchIndexWriter" />
     </Or>
   </Match>
 </FindBugsFilter>

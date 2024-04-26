@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>6.7.0</version>
+  <version>6.8.0</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -23,7 +23,7 @@
     <assertj.version>3.25.2</assertj.version>
     <portlet-api.version>3.0.1</portlet-api.version>
     <portletmvc4spring.version>5.3.3</portletmvc4spring.version>
-    <spring.version>5.3.33</spring.version>
+    <spring.version>5.3.34</spring.version>
     <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
     <log4j.version>2.20.0</log4j.version>
     <slf4j.version>1.7.36</slf4j.version>
@@ -49,7 +49,7 @@
     <sb-common.version>1.0.1</sb-common.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
     <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
-    <gd-microservices.version>1.3.7</gd-microservices.version>
+    <gd-microservices.version>2.0.1</gd-microservices.version>
     <checkstyle.suppressions></checkstyle.suppressions>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- java -->
@@ -278,6 +278,7 @@
               </execution>
             </executions>
             <configuration>
+              <nvdApiKey>df0cae14-f212-40af-9b9e-c5a62d768014</nvdApiKey>
               <formats>HTML,XML</formats>
               <suppressionFiles>
                   <suppressionFile>${owasp.suppressions}</suppressionFile>
@@ -321,12 +322,10 @@
     </profile>
   </profiles>
   <modules>
-    <module>odp-common</module>
     <module>portlet-common</module>
     <module>gd-search-common</module>
     <module>entities</module>
     <module>language-hook</module>
-    <module>opendataregistry-client</module>
     <module>govdatastyle-theme</module>
     <module>boxes-portlet</module>
     <module>screenname-hook</module>
@@ -378,16 +377,6 @@
 
       <dependency>
         <groupId>de.seitenbau.govdata.odp</groupId>
-        <artifactId>opendataregistry-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>de.seitenbau.govdata.odp</groupId>
-        <artifactId>odp-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>de.seitenbau.govdata.odp</groupId>
         <artifactId>portlet-common</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -415,6 +404,11 @@
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
+        <artifactId>govdata-data-api</artifactId>
+        <version>${gd-microservices.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.seitenbau.govdata</groupId>
         <artifactId>index-queue-adapter</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
@@ -428,6 +422,22 @@
         <artifactId>serviceportal-common</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
+      <dependency>
+        <groupId>de.seitenbau.govdata</groupId>
+        <artifactId>search-api</artifactId>
+        <version>${gd-microservices.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.seitenbau.govdata</groupId>
+        <artifactId>opendataregistry-client</artifactId>
+        <version>${gd-microservices.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.seitenbau.govdata</groupId>
+        <artifactId>odp-common</artifactId>
+        <version>${gd-microservices.version}</version>
+      </dependency>
+
 
       <!-- sb-common -->
       <dependency>

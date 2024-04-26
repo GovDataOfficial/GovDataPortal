@@ -14,8 +14,8 @@ import org.locationtech.jts.io.geojson.GeoJsonWriter;
 
 import com.google.gson.Gson;
 
+import de.seitenbau.govdata.common.json.DateUtil;
 import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
-import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.db.api.model.Showcase;
 import de.seitenbau.govdata.db.api.model.ShowcaseImage;
 import de.seitenbau.govdata.odp.common.util.ImageUtil;

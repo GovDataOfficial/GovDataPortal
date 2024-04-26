@@ -27,8 +27,4 @@
       </And>
     </Or>
   </Match>
-  <Match>
-    <Bug pattern="CT_CONSTRUCTOR_THROW" />
-    <Class name="de.seitenbau.govdata.search.util.GeoStateParser" />
-  </Match>
 </FindBugsFilter>

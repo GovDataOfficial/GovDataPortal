@@ -2,7 +2,9 @@ package de.seitenbau.govdata.odr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
+import javax.inject.Inject;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -13,8 +15,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.PortalUtil;
 
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.OrganizationDto;
 import de.seitenbau.govdata.odp.registry.ODRClient;
-import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ODRTools
 {
+  @Inject
+  private GovdataResource govdataResource;
+
   /**
    * Tries to find the matching ckanUser for the currently logged in Liferay user (if somebody is
    * logged in...). If no user exists, a new one will be created.
@@ -94,15 +100,34 @@ public class ODRTools
   public User getCkanuserFromRequest(PortletRequest request, ODRClient client)
       throws OpenDataRegistryException, PortalException, SystemException
   {
-    com.liferay.portal.kernel.model.User liferayUser = PortalUtil.getUser(request);
-    if (liferayUser != null && liferayUser.getScreenName() != null)
+    String liferayUser = getLiferayUserfromRequest(request);
+    if (liferayUser != null)
     {
-      return findOrCreateCkanUser(liferayUser.getScreenName(), client);
+      return findOrCreateCkanUser(liferayUser, client);
     }
     else
     {
       throw new OpenDataRegistryException("Could not find ckan user, you are liferay guest.");
     }
+  }
+
+  /**
+   * Reads the liferay user from the request
+   * 
+   * @param request
+   * @return
+   * @throws PortalException
+   */
+  public String getLiferayUserfromRequest(PortletRequest request)
+      throws PortalException
+  {
+    com.liferay.portal.kernel.model.User liferayUser = PortalUtil.getUser(request);
+    if (liferayUser != null && liferayUser.getScreenName() != null)
+    {
+      return liferayUser.getScreenName();
+    }
+    
+    return null;
   }
   
   /**
@@ -110,13 +135,15 @@ public class ODRTools
    * 
    * @param organizationsForUser
    * @param organizationId
+   * @param idExtractor The function to extract the ID from the organization.
    * @return
    */
-  public boolean containsOrganization(List<Organization> organizationsForUser, String organizationId)
+  public <T> boolean containsOrganization(List<T> organizationsForUser, String organizationId,
+      Function<T, String> idExtractor)
   {
-    for (Organization org : organizationsForUser)
+    for (T org : organizationsForUser)
     {
-      if (StringUtils.equals(org.getId(), organizationId))
+      if (StringUtils.equals(idExtractor.apply(org), organizationId))
       {
         return true;
       }
@@ -130,12 +157,12 @@ public class ODRTools
    * @param organizationList list with organization objects.
    * @return
    */
-  public List<String> extractIDsFromOrganizations(List<Organization> organizationList)
+  public List<String> extractIDsFromOrganizations(List<OrganizationDto> organizationList)
   {
     List<String> result = new ArrayList<String>();
     if (CollectionUtils.isNotEmpty(organizationList))
     {
-      for (Organization org : organizationList)
+      for (OrganizationDto org : organizationList)
       {
         if (org != null && org.getId() != null)
         {
@@ -143,8 +170,6 @@ public class ODRTools
         }
       }
     }
-
     return result;
   }
-
 }

@@ -17,28 +17,24 @@
 
 package de.seitenbau.govdata.odp.boxes;
 
-// imports
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.liferay.blogs.model.BlogsEntry;
-import com.liferay.portal.kernel.exception.SystemException;
-
-import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.odp.boxes.mapper.ViewModelMapper;
+import de.seitenbau.govdata.odp.boxes.model.ViewModel;
 import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
-import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
+import de.seitenbau.govdata.search.api.model.search.dto.HitDto;
 
 /**
  * The class constitutes a bean that serves as a source for the latest blogs on the start page
@@ -49,7 +45,7 @@ import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
  */
 @Component
 @Scope("request")
-public class Blogs extends BaseBoxesBean<BlogsEntry>
+public class Blogs extends BaseBoxesBean<ViewModel>
 {
 
   /** The log. */
@@ -58,10 +54,14 @@ public class Blogs extends BaseBoxesBean<BlogsEntry>
   /** The maximum number of latest blogs to show. */
   private static final int MAXIMUM_NUMBER_OF_BLOGS = 2;
 
-  private BlogsEntryServiceTracker blogsEntryTracker;
-
   /** The blogs. */
-  private List<BlogsEntry> blogs;
+  private List<ViewModel> blogs;
+
+  @Inject
+  private GovdataResource govdataResource;
+
+  @Inject
+  private ViewModelMapper viewModelMapper;
 
   /**
    * An init method for the bean.
@@ -69,84 +69,22 @@ public class Blogs extends BaseBoxesBean<BlogsEntry>
   @PostConstruct
   public void init()
   {
-    // initialize BlogsEntry ServiceTracker
-    initializeBlogsEntryServiceTracker();
-    // read clustered cache service
-    blogs = readItemsFromClusteredCache(CacheKey.BLOGS);
+    blogs = getLatestBlogs(MAXIMUM_NUMBER_OF_BLOGS);
 
-    if (blogs == null)
-    {
-      LOG.info("Empty {} cache, fetching blogs from liferay.", CacheKey.BLOGS);
-      blogs = getLatestBlogs(MAXIMUM_NUMBER_OF_BLOGS);
-      // safe cast: LinkedList
-      updateCache(blogs, CacheKey.BLOGS);
-    }
     LOG.debug("Initialize complete");
   }
 
-  /**
-   * Closes all open resources.
-   */
-  @PreDestroy
-  public void close()
+  private List<ViewModel> getLatestBlogs(int maximumnumberofblogs)
   {
-    blogsEntryTracker.close();
-  }
+    List<HitDto> hits = govdataResource.getLatestBlogs(maximumnumberofblogs);
 
-  private void initializeBlogsEntryServiceTracker()
-  {
-    if (blogsEntryTracker == null)
+    if (hits != null)
     {
-      // The if statement is only for testing. The tracker will be injected by the mocking framework
-      // before.
-      blogsEntryTracker = new BlogsEntryServiceTracker(this);
-    }
-    blogsEntryTracker.open();
-  }
-
-  private List<BlogsEntry> getLatestBlogs(int maximumnumberofblogs)
-  {
-    try
-    {
-      blogs = new ArrayList<BlogsEntry>();
-      // Getting the total blogs
-      int count = blogsEntryTracker.getService().getBlogsEntriesCount();
-      List<BlogsEntry> blogsList = blogsEntryTracker.getService().getBlogsEntries(0, count);
-      // Adding the non draft blogs in list
-      Optional.ofNullable(blogsList)
-          .orElseGet(Collections::emptyList)
-          .stream()
-          .filter(b -> Objects.nonNull(b))
-          .filter(b -> (!b.isDraft() && !b.isInTrash()))
-          .forEach(b ->
-            {
-              // strip content of html-tags
-              String content = b.getContent();
-              b.setContent(StringCleaner.trimAndFilterString(content));
-              blogs.add(b);
-            });
-
-      Collections.sort(blogs, new Comparator<BlogsEntry>()
-      {
-        @Override
-        public int compare(BlogsEntry a, BlogsEntry b)
-        {
-          // create date ascending (newest on top)
-          return b.getCreateDate().compareTo(a.getCreateDate());
-        }
-      });
-
-      if (blogs.size() > maximumnumberofblogs)
-      {
-        blogs = new ArrayList<BlogsEntry>(blogs.subList(0, maximumnumberofblogs));
-      }
-    }
-    catch (SystemException e)
-    {
-      LOG.error("Fehler beim Lesen der Blogeinträge.", e);
+      return hits.stream().map(viewModelMapper::toModel).filter(m -> Objects.nonNull(m))
+          .collect(Collectors.toList());
     }
 
-    return blogs;
+    return Collections.emptyList();
   }
 
   /**
@@ -154,7 +92,7 @@ public class Blogs extends BaseBoxesBean<BlogsEntry>
    * 
    * @return the blogs.
    */
-  public List<BlogsEntry> getBlogs()
+  public List<ViewModel> getBlogs()
   {
     return GovDataCollectionUtils.getCopyOfList(blogs);
   }

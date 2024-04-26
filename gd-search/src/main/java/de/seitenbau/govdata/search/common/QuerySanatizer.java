@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import de.seitenbau.govdata.clean.StringCleaner;
-import de.seitenbau.govdata.date.DateUtil;
+import de.seitenbau.govdata.common.json.DateUtil;
 
 /**
  * Stellt Methoden bereits, um die Parameter in der Suchanfrage zu säubern.

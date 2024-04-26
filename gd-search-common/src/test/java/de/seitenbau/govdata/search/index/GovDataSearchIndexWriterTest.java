@@ -38,7 +38,6 @@ import de.seitenbau.govdata.common.api.RestUserMetadata;
 import de.seitenbau.govdata.common.messaging.Document;
 import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
 import de.seitenbau.govdata.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
-import de.seitenbau.govdata.search.adapter.SearchService;
 import de.seitenbau.govdata.search.index.filter.FilterProxy;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -70,9 +69,6 @@ public class GovDataSearchIndexWriterTest
 
   @Mock
   private IndexQueueAdapterServiceRESTResource indexQueueServiceMock;
-
-  @Mock
-  private SearchService searchServiceMock;
 
   @Mock
   private FilterProxy filterProxyMock;

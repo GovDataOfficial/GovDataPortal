@@ -30,7 +30,7 @@ import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
-import de.seitenbau.govdata.search.adapter.SearchService;
+import de.seitenbau.govdata.search.api.SearchResource;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
@@ -47,7 +47,7 @@ public class SearchfieldController extends AbstractBaseController
   private GovDataNavigation navigationHelper;
 
   @Inject
-  private SearchService indexService;
+  private SearchResource searchResource;
 
   @Inject
   private ParameterProcessing parameterProcessing;
@@ -157,7 +157,7 @@ public class SearchfieldController extends AbstractBaseController
     }
 
     // fetch completion
-    List<String> findSearchAsYouTypeSuggestions = indexService.findSearchAsYouTypeSuggestions(suffix);
+    List<String> findSearchAsYouTypeSuggestions = searchResource.findSearchAsYouTypeSuggestions(suffix);
 
     // add prefix to all results
     for (int i = 0; i < findSearchAsYouTypeSuggestions.size(); i++)

@@ -5,7 +5,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.seitenbau.govdata.odp.registry.model.Contact;
+import de.seitenbau.govdata.data.api.ckan.dto.ContactDto;
+import de.seitenbau.govdata.data.api.ckan.dto.MetadataDto;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 
@@ -29,7 +30,7 @@ public class CurrentMetadataContact
    * 
    * @param metadata das {@link Metadata}-Objekt, aus dem die Kontakte gelesen werden sollen.
    */
-  public CurrentMetadataContact(Metadata metadata)
+  public CurrentMetadataContact(MetadataDto metadata)
   {
     if (metadata != null)
     {
@@ -43,9 +44,9 @@ public class CurrentMetadataContact
     }
   }
 
-  private boolean tryFetchContact(List<Contact> contacts, RoleEnumType role)
+  private boolean tryFetchContact(List<ContactDto> contacts, RoleEnumType role)
   {
-    for (Contact contact : contacts)
+    for (ContactDto contact : contacts)
     {
       if (Objects.nonNull(role) && Objects.equals(contact.getRole(), role))
       {

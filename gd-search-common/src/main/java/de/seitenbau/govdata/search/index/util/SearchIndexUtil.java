@@ -23,10 +23,10 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import de.seitenbau.govdata.common.json.DateUtil;
 import de.seitenbau.govdata.common.messaging.Document;
 import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
 import de.seitenbau.govdata.common.messaging.Section;
-import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.db.api.model.Showcase;
 import de.seitenbau.govdata.db.api.model.ShowcaseImage;
 import de.seitenbau.govdata.db.api.model.ShowcaseType;

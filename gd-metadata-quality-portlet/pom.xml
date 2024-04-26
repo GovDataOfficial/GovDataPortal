@@ -5,7 +5,7 @@
   <parent>
     <artifactId>od-platform</artifactId>
     <groupId>de.seitenbau.govdata.odp</groupId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
   </parent>
   <artifactId>gd-metadata-quality-portlet</artifactId>
   <packaging>war</packaging>
@@ -45,20 +45,20 @@
     </dependency>
 
     <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
+      <groupId>de.seitenbau.govdata</groupId>
       <artifactId>odp-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
-      <artifactId>portlet-common</artifactId>
     </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>gd-search-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
-      <artifactId>opendataregistry-client</artifactId>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-data-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>search-api</artifactId>
     </dependency>
 
     <dependency>
@@ -74,17 +74,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.spec.javax.annotation</groupId>
-      <artifactId>jboss-annotations-api_1.3_spec</artifactId>
-    </dependency>
-
-    <!-- Elasticsearch -->
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
     </dependency>
 
     <!-- Spring -->

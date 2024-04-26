@@ -42,7 +42,7 @@ import com.liferay.portletmvc4spring.test.mock.web.portlet.MockRenderResponse;
 import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
-import de.seitenbau.govdata.date.DateUtil;
+import de.seitenbau.govdata.common.json.DateUtil;
 import de.seitenbau.govdata.edit.model.EditForm;
 import de.seitenbau.govdata.edit.model.Resource;
 import de.seitenbau.govdata.fuseki.FusekiClient;

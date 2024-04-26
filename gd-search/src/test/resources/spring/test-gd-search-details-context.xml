@@ -10,11 +10,8 @@
   
   <context:component-scan base-package="de.seitenbau.govdata.odr, de.seitenbau.govdata.navigation" />
   
-  <bean class="de.seitenbau.govdata.search.gui.controller.MetadataDetailsController"
-      depends-on="registryClient,redisClientAdapter" />
+  <bean class="de.seitenbau.govdata.search.gui.controller.MetadataDetailsController" />
   
   <bean class="de.seitenbau.govdata.search.common.NotificationMailSender" />
-  
-  <bean id="redisClientAdapter" class="de.seitenbau.govdata.redis.adapter.RedisClientAdapter" />
 
 </beans>

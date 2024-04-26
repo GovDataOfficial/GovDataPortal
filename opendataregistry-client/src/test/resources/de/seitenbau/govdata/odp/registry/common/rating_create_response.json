@@ -1,8 +1,0 @@
-{
-  "help": "http://mtest3.gd.swe.seitenbau.net:5000/api/3/action/help_show?name=rating_create",
-  "success": true,
-  "result": {
-    "rating average": 3,
-    "rating count": 1
-  }
-}

@@ -4,6 +4,7 @@ import static de.seitenbau.govdata.navigation.GovDataNavigation.FRIENDLY_URL_NAM
 import static de.seitenbau.govdata.navigation.GovDataNavigation.PORTLET_NAME_SEARCHRESULT;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,10 +26,10 @@ import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
-import de.seitenbau.govdata.search.adapter.SearchService;
+import de.seitenbau.govdata.search.api.SearchResource;
+import de.seitenbau.govdata.search.api.model.search.dto.SearchResultContainer;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.HitViewModel;
-import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -50,7 +51,7 @@ public class FeaturedDatasetsController extends AbstractBaseController
   private static final Integer NUMBER_OF_FALLBACK_DATASETS = 3;
 
   @Inject
-  private SearchService indexService;
+  private SearchResource searchResource;
 
   @Inject
   private GovDataNavigation gdNavigation;
@@ -105,7 +106,8 @@ public class FeaturedDatasetsController extends AbstractBaseController
     if (selectedIdList.size() > 0)
     {
       // elastic search for datasets
-      SearchResultContainer result = indexService.singleSearch(selectedIdList, SEARCH_INDEXES);
+      SearchResultContainer result =
+          searchResource.getSingleSearch(selectedIdList, Arrays.asList(SEARCH_INDEXES));
 
       // map results
       List<HitViewModel> hitViewModelListResult = searchResultsMapper.mapHitDtoListToHitsViewModelList(
@@ -135,7 +137,7 @@ public class FeaturedDatasetsController extends AbstractBaseController
 
       // search in index
       SearchResultContainer result =
-          indexService.searchLatest(NUMBER_OF_FALLBACK_DATASETS, SearchConsts.TYPE_DATASET);
+          searchResource.getSearchLatest(NUMBER_OF_FALLBACK_DATASETS, SearchConsts.TYPE_DATASET);
 
       // map result
       hitViewModelList = searchResultsMapper.mapHitDtoListToHitsViewModelList(

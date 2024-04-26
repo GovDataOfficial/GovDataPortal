@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<li class="column small-12 medium-6 large-12">
+  <a href="#{blog.hit.linkToDetailPage}" title="#{blog.hit.title}" class="box-title">
+    <div class="boxesportlet-box design-box">
+      <div class="metainfo h2-metainfo">
+         <div class="mediatype-icon mediatype-blog">
+          <img src="#{themeDisplay.pathThemeImages}/mediatypes/typ_blog_inverted.svg" alt="typ blog icon"/>
+        </div>
+        <strong>#{i18n['od.blog']}</strong>
+        <span>
+          <h:outputText value="#{blog.hit.lastModified}">
+            <f:convertDateTime pattern="dd.MM.yyyy" timeZone="Europe/Berlin" />
+          </h:outputText>
+         </span>
+      </div>
+                  
+      <h3>#{blog.hit.title}</h3>
+      <p class="boxtext h2-teaser">
+        <ui:param name="content" value="#{blog.hit.content}" />
+          <h:outputText value="#{content.length() gt 120 ? content.substring(0,117).concat('...') : content}" />
+      </p>
+                  
+      <div class="goto-entry h2-metainfo">
+        <div>#{i18n['od.goto.blog']}</div>
+      </div>
+      <div class="goto-entry-spacer"></div>
+    </div>
+   </a>
+</li>
+</ui:composition>

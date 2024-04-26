@@ -49,12 +49,10 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
-import de.seitenbau.govdata.cache.LicenceCache;
-import de.seitenbau.govdata.cache.OrganizationCache;
-import de.seitenbau.govdata.metadataquality.cache.MetricDataCache;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.LicenceDto;
+import de.seitenbau.govdata.data.api.ckan.dto.OrganizationDto;
 import de.seitenbau.govdata.metadataquality.util.MetricsParser;
-import de.seitenbau.govdata.odp.registry.model.Licence;
-import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.search.comparator.FilterViewModelDocCountDescComparator;
 import de.seitenbau.govdata.search.gui.model.FilterViewModel;
 import lombok.extern.slf4j.Slf4j;
@@ -69,13 +67,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MetadataQualityController
 {
   @Inject
-  private MetricDataCache metricDataCache;
-
-  @Inject
-  private OrganizationCache organizationCache;
-
-  @Inject
-  private LicenceCache licenceCache;
+  private GovdataResource govdataResource;
 
   private MetricsParser metricsParser = new MetricsParser();
 
@@ -137,7 +129,7 @@ public class MetadataQualityController
     }
 
     // get metrics data from cache
-    metricsParser.setData(metricDataCache.getRawMetricData());
+    metricsParser.setData(govdataResource.getMetrics());
 
     List<FilterViewModel> metadataOrganizationList =
         retrieveOrganizationFilterList(filterName, baseUrl, clearFilterUrl);
@@ -188,7 +180,7 @@ public class MetadataQualityController
   @SuppressWarnings("unchecked")
   Map<String, Map<String, List<?>>> createLicenceMapWithTranslatedLabels()
   {
-    Map<String, Licence> licenceMap = licenceCache.getLicenceMap();
+    Map<String, LicenceDto> licenceMap = govdataResource.getLicenceMap();
     Map<String, Map<String, List<?>>> resultMap = new HashMap<>();
     Map<String, Map<String, List<?>>> topLicences = metricsParser.getValuesForType(TOP_LICENSES);
     for (Map.Entry<String, Map<String, List<?>>> publisherEntry : topLicences.entrySet())
@@ -206,7 +198,7 @@ public class MetadataQualityController
             // Replace licence id with title as display name
             if (licenceMap.containsKey(licenceId))
             {
-              Licence licence = licenceMap.get(licenceId);
+              LicenceDto licence = licenceMap.get(licenceId);
               if (Objects.nonNull(licence))
               {
                 licenceLabelList.add(licence.getTitle());
@@ -240,9 +232,9 @@ public class MetadataQualityController
     Map<String, Long> availablePublishers = metricsParser.getAvailablePublishers();
 
     // get organizations for filter
-    List<Organization> organizationList = organizationCache.getOrganizationsSorted();
+    List<OrganizationDto> organizationList = govdataResource.getOrganizationsSorted();
     List<FilterViewModel> metadataOrganizationList = new ArrayList<>();
-    for (Organization orga : organizationList)
+    for (OrganizationDto orga : organizationList)
     {
       if (!availablePublishers.containsKey(orga.getId()) || orga.getName().equalsIgnoreCase(ALL_PUBLISHERS))
       {

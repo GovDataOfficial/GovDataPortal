@@ -20,27 +20,21 @@ package de.seitenbau.govdata.odp.boxes;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import de.seitenbau.govdata.odp.boxes.model.DatasetModel;
-import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.odp.boxes.mapper.ViewModelMapper;
+import de.seitenbau.govdata.odp.boxes.model.ViewModel;
 import de.seitenbau.govdata.odp.common.util.GovDataCollectionUtils;
-import de.seitenbau.govdata.search.adapter.SearchService;
-import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
-import de.seitenbau.govdata.search.gui.model.HitViewModel;
-import de.seitenbau.govdata.search.gui.model.LicenseViewModel;
-import de.seitenbau.govdata.search.index.model.HitDto;
-import de.seitenbau.govdata.search.index.model.SearchResultContainer;
+import de.seitenbau.govdata.search.api.model.search.dto.HitDto;
 
 /**
  * The class constitutes a bean that serves as a source for the latest datasets on the start page
@@ -51,7 +45,7 @@ import de.seitenbau.govdata.search.index.model.SearchResultContainer;
  */
 @Component
 @Scope("request")
-public class Datasets extends BaseBoxesBean<DatasetModel>
+public class Datasets extends BaseBoxesBean<ViewModel>
 {
   /** The log. */
   private static final Logger LOG = LoggerFactory.getLogger(Datasets.class);
@@ -59,14 +53,14 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
   /** The maximum number of the latest datasets to show. */
   private static final int MAXIMUM_NUMBER_OF_DATASETS = 4;
 
-  @Inject
-  private SearchService searchService;
-
-  @Inject
-  private SearchResultsViewMapper searchResultsMapper;
-
   /** The datasets. */
-  private List<DatasetModel> datasets;
+  private List<ViewModel> datasets;
+
+  @Inject
+  private GovdataResource govdataResource;
+
+  @Inject
+  private ViewModelMapper viewModelMapper;
 
   /**
    * An init method for the bean.
@@ -74,62 +68,21 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
   @PostConstruct
   public void init()
   {
-    datasets = readItemsFromClusteredCache(CacheKey.DATASETS);
+    datasets = getLatestDatasets(MAXIMUM_NUMBER_OF_DATASETS);
 
-    if (datasets == null)
-    {
-      LOG.info("Empty {} cache, fetching datasets from search index.", CacheKey.DATASETS);
-      datasets = getLatestDatasets(MAXIMUM_NUMBER_OF_DATASETS);
-      if (CollectionUtils.isNotEmpty(datasets))
-      {
-        updateCache(datasets, CacheKey.DATASETS);
-      }
-    }
     LOG.debug("Initialize complete");
   }
 
-  private List<DatasetModel> getLatestDatasets(int maximumNumberOfDatasets)
+  private List<ViewModel> getLatestDatasets(int maximumNumberOfDatasets)
   {
-    SearchResultContainer searchResult =
-        searchService.searchLatest(maximumNumberOfDatasets, SearchConsts.TYPE_DATASET);
-    List<HitDto> hits = searchResult.getHits();
+    List<HitDto> hits = govdataResource.getLatestDatasets(maximumNumberOfDatasets);
     if (hits != null)
     {
-      return hits.stream().map(this::toModel).filter(m -> Objects.nonNull(m)).collect(Collectors.toList());
+      return hits.stream().map(viewModelMapper::toModel).filter(m -> Objects.nonNull(m))
+          .collect(Collectors.toList());
     }
 
     return Collections.emptyList();
-  }
-
-  private DatasetModel toModel(HitDto hit)
-  {
-    HitViewModel hitViewModel;
-    try
-    {
-      hitViewModel = searchResultsMapper.mapHitDtoToHitsViewModel(hit, null, null, false);
-    }
-    catch (Exception e)
-    {
-      return null;
-    }
-
-    DatasetModel datasetModel = new DatasetModel();
-    datasetModel.setHit(hitViewModel);
-
-    if (hitViewModel.getResourcesLicenses().size() > 1)
-    {
-      datasetModel.setMultipleLicenses(true);
-    }
-    else
-    {
-      Optional<LicenseViewModel> licenceOptional = hitViewModel.getResourcesLicenses().stream().findFirst();
-      if (licenceOptional.isPresent())
-      {
-        datasetModel.setLicenseInfoText(licenceOptional.get().getTitle());
-      }
-    }
-
-    return datasetModel;
   }
 
   /**
@@ -139,7 +92,7 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
    */
   public int getFirstColumnLength()
   {
-    List<DatasetModel> datasets = this.getDatasets();
+    List<ViewModel> datasets = this.getDatasets();
     return Math.min(datasets.size(), 2);
   }
 
@@ -148,7 +101,7 @@ public class Datasets extends BaseBoxesBean<DatasetModel>
    * 
    * @return the datasets.
    */
-  public List<DatasetModel> getDatasets()
+  public List<ViewModel> getDatasets()
   {
     return GovDataCollectionUtils.getCopyOfList(datasets);
   }

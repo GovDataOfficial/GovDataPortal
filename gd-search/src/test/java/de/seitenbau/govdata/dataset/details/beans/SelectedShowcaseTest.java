@@ -16,12 +16,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.liferay.portal.kernel.model.User;
 
 import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
+import de.seitenbau.govdata.data.api.dto.CategoryDto;
 import de.seitenbau.govdata.edit.model.Keyword;
 import de.seitenbau.govdata.edit.model.ShowcaseViewModel;
 import de.seitenbau.govdata.edit.model.Type;
-import de.seitenbau.govdata.odp.registry.ckan.impl.CategoryImpl;
-import de.seitenbau.govdata.odp.registry.ckan.json.GroupBean;
-import de.seitenbau.govdata.odp.registry.model.Category;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SelectedShowcaseTest
@@ -35,7 +33,7 @@ public class SelectedShowcaseTest
   @Mock
   private User liferayUser;
 
-  private Map<String, Category> categoryMap;
+  private Map<String, CategoryDto> categoryMap;
 
   @Before
   public void setup()
@@ -354,7 +352,7 @@ public class SelectedShowcaseTest
     /* prepare */
 
     /* execute */
-    List<Category> result = sut.getCategories();
+    List<CategoryDto> result = sut.getCategories();
 
     /* assert */
     assertThat(result).isEmpty();
@@ -374,7 +372,7 @@ public class SelectedShowcaseTest
     int size = categories.size();
 
     /* execute */
-    List<Category> result = sut.getCategories();
+    List<CategoryDto> result = sut.getCategories();
 
     /* assert */
     assertThat(result).isEmpty();
@@ -398,7 +396,7 @@ public class SelectedShowcaseTest
     int size = categories.size();
 
     /* execute */
-    List<Category> result = sut.getCategories();
+    List<CategoryDto> result = sut.getCategories();
 
     /* assert */
     assertThat(result).hasSize(2);
@@ -441,11 +439,11 @@ public class SelectedShowcaseTest
     assertThat(result).containsExactly("testbold", "Test", "test3", "test3-2");
   }
 
-  private Category createCategory(String name, String displayName)
+  private CategoryDto createCategory(String name, String displayName)
   {
-    GroupBean bean = new GroupBean();
-    bean.setName(name);
-    bean.setDisplayName(displayName);
-    return new CategoryImpl(bean);
+    CategoryDto category = new CategoryDto();
+    category.setName(name);
+    category.setDisplayName(displayName);
+    return category;
   }
 }

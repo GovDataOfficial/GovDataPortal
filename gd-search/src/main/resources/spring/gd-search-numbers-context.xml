@@ -10,9 +10,11 @@
 
   <context:component-scan
     base-package="de.seitenbau.govdata.search.gui.model,
-      de.seitenbau.govdata.navigation,
-      de.seitenbau.govdata.search.common.cache" />
+      de.seitenbau.govdata.navigation" />
 
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchNumbersController" /> 
+
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
 
 </beans>

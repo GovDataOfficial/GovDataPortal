@@ -22,8 +22,8 @@ import com.liferay.portal.kernel.util.PropsUtil;
 
 import de.seitenbau.govdata.common.api.RestUserMetadata;
 import de.seitenbau.govdata.common.client.impl.RestCallFailedException;
+import de.seitenbau.govdata.common.json.DateUtil;
 import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
-import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.search.index.filter.FilterProxy;

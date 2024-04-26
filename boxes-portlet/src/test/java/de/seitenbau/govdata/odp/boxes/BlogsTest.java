@@ -19,34 +19,24 @@ package de.seitenbau.govdata.odp.boxes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.Serializable;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
-import com.liferay.blogs.model.BlogsEntry;
-import com.liferay.blogs.model.impl.BlogsEntryImpl;
-import com.liferay.blogs.service.BlogsEntryLocalService;
-import com.liferay.portal.kernel.bean.BeanLocator;
-import com.liferay.portal.kernel.cache.MultiVMPool;
-import com.liferay.portal.kernel.cache.PortalCache;
-
-import de.seitenbau.govdata.odp.common.cache.BaseCache;
-import de.seitenbau.govdata.servicetracker.BlogsEntryServiceTracker;
-import de.seitenbau.govdata.servicetracker.MultiVMPoolServiceTracker;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.odp.boxes.mapper.ViewModelMapper;
+import de.seitenbau.govdata.odp.boxes.model.ViewModel;
+import de.seitenbau.govdata.search.api.model.search.dto.HitDto;
+import de.seitenbau.govdata.search.gui.model.HitViewModel;
 
 /**
  * Tests für die Klasse {@link Blogs}.
@@ -61,153 +51,76 @@ public class BlogsTest
   private static final int maximumNumberOfBlogs = 2;
 
   @Mock
-  PortalCache<String, Serializable> portalCache;
+  ViewModelMapper viewModelMapper;
 
   @Mock
-  MultiVMPool multiVMPool;
-
-  @Mock
-  BlogsEntryLocalService blogsEntryLocalService;
-
-  @Mock
-  BeanLocator beanLocatorMock;
-
-  @Mock
-  MultiVMPoolServiceTracker multiVMPoolTracker;
-
-  @Mock
-  BlogsEntryServiceTracker blogsEntryTracker;
+  GovdataResource govdataResource;
 
   @InjectMocks
   Blogs target;
-
-  @Before
-  public void setup() throws Exception
-  {
-    Mockito.when(multiVMPoolTracker.getService()).thenReturn(multiVMPool);
-    Mockito.when(blogsEntryTracker.getService()).thenReturn(blogsEntryLocalService);
-
-    // return every time an empty cache
-    Mockito.when(multiVMPool.getPortalCache(BaseCache.CACHE_NAME_BOXES)).thenAnswer(
-        new Answer<PortalCache<String, Serializable>>()
-        {
-          @Override
-          public PortalCache<String, Serializable> answer(InvocationOnMock invocation) throws Throwable
-          {
-            return portalCache;
-          }
-        });
-  }
-
-  @After
-  public void resetMocks()
-  {
-    Mockito.reset(portalCache, multiVMPool, blogsEntryLocalService, beanLocatorMock, multiVMPoolTracker);
-  }
 
   @Test
   public void init_ListeIstNull() throws Exception
   {
     /* prepare */
-    int count = 0;
-    Mockito.when(blogsEntryLocalService.getBlogsEntriesCount()).thenReturn(count);
-    Mockito.when(blogsEntryLocalService.getBlogsEntries(0, count)).thenReturn(null);
+    Mockito.when(govdataResource.getLatestBlogs(maximumNumberOfBlogs)).thenReturn(null);
 
     /* execute */
     target.init();
 
     /* verify */
+    Mockito.verify(viewModelMapper, Mockito.times(0)).toModel(Mockito.any());
     assertThat(target.getBlogs()).isEmpty();
   }
 
   @Test
-  public void init_leereListe() throws Exception
+  public void init() throws Exception
   {
     /* prepare */
-    int count = 0;
-    Mockito.when(blogsEntryLocalService.getBlogsEntriesCount()).thenReturn(count);
-    Mockito.when(blogsEntryLocalService.getBlogsEntries(0, count)).thenReturn(new ArrayList<BlogsEntry>());
+    List<HitDto> blogEntryList = new ArrayList<HitDto>();
+    blogEntryList.add(createBlogEntry());
+    blogEntryList.add(createBlogEntry());
+    Mockito.when(govdataResource.getLatestBlogs(maximumNumberOfBlogs)).thenReturn(blogEntryList);
+
+    for (HitDto hit : blogEntryList)
+    {
+      Mockito.when(viewModelMapper.toModel(hit)).thenReturn(createViewModelFromHitDto(hit));
+    }
 
     /* execute */
     target.init();
 
     /* verify */
-    assertThat(target.getBlogs()).isEmpty();
-  }
-
-  @Test
-  public void init_ListengroesseGleichMaximumFuerAnzeige() throws Exception
-  {
-    /* prepare */
-    int count = maximumNumberOfBlogs;
-    Mockito.when(blogsEntryLocalService.getBlogsEntriesCount()).thenReturn(count);
-    ArrayList<BlogsEntry> blogEntryList = new ArrayList<BlogsEntry>();
-    blogEntryList.add(createBlogEntry());
-    blogEntryList.add(createBlogEntry());
-    Mockito.when(blogsEntryLocalService.getBlogsEntries(0, count)).thenReturn(blogEntryList);
-
-    /* execute */
-    target.init();
-
-    /* verify */
-    assertThat(target.getBlogs()).hasSize(count);
-  }
-
-  @Test
-  public void init_ListengroesseGroesserMaximumFueranzeige() throws Exception
-  {
-    /* prepare */
-    int count = maximumNumberOfBlogs + 1;
-    Mockito.when(blogsEntryLocalService.getBlogsEntriesCount()).thenReturn(count);
-    ArrayList<BlogsEntry> blogEntryList = new ArrayList<BlogsEntry>();
-    blogEntryList.add(createBlogEntry());
-    blogEntryList.add(createBlogEntry());
-    blogEntryList.add(createBlogEntry());
-    Mockito.when(blogsEntryLocalService.getBlogsEntries(0, count)).thenReturn(blogEntryList);
-
-    /* execute */
-    target.init();
-
-    /* verify */
+    Mockito.verify(viewModelMapper, Mockito.times(2)).toModel(Mockito.any());
+    for (HitDto hit : blogEntryList)
+    {
+      Mockito.verify(viewModelMapper, Mockito.times(1)).toModel(hit);
+    }
     assertThat(target.getBlogs()).hasSize(maximumNumberOfBlogs);
   }
 
-  @Test
-  public void init_sort() throws Exception
+  private HitDto createBlogEntry()
   {
-    /* prepare */
-    int count = maximumNumberOfBlogs;
-    Mockito.when(blogsEntryLocalService.getBlogsEntriesCount()).thenReturn(count);
-    ArrayList<BlogsEntry> blogEntryList = new ArrayList<BlogsEntry>();
-    Instant date4HoursInThePast = Instant.now().minus(Duration.ofHours(4));
-    Instant date2HoursInThePast = Instant.now().minus(Duration.ofHours(2));
-    blogEntryList.add(createBlogEntry(3L, date4HoursInThePast)); // The oldest and not recognized
-    blogEntryList.add(createBlogEntry(2L, date2HoursInThePast));
-    blogEntryList.add(createBlogEntry());
-    Mockito.when(blogsEntryLocalService.getBlogsEntries(0, count)).thenReturn(blogEntryList);
-
-    /* execute */
-    target.init();
-
-    /* verify */
-    List<BlogsEntry> blogs = target.getBlogs();
-    assertThat(blogs).hasSize(count);
-    assertThat(blogs.get(0).getEntryId()).isEqualTo(1L);
-    assertThat(blogs.get(0).getCreateDate()).isAfter(date2HoursInThePast);
-    assertThat(blogs.get(1).getEntryId()).isEqualTo(2L);
-    assertThat(blogs.get(1).getCreateDate()).isEqualTo(date2HoursInThePast);
+    return createBlogEntry(RandomStringUtils.randomAlphanumeric(8), Instant.now());
   }
 
-  private BlogsEntry createBlogEntry()
+  private HitDto createBlogEntry(String id, Instant instant)
   {
-    return createBlogEntry(1L, Instant.now());
+    HitDto hitDto = new HitDto();
+    hitDto.setId(id);
+    hitDto.setReleaseDate(Date.from(instant));
+    hitDto.setType("test type");
+    hitDto.setName("test name");
+    return hitDto;
   }
 
-  private BlogsEntry createBlogEntry(long id, Instant instant)
+  private ViewModel createViewModelFromHitDto(HitDto hit)
   {
-    BlogsEntry blogsEntryImpl = new BlogsEntryImpl();
-    blogsEntryImpl.setEntryId(id);
-    blogsEntryImpl.setCreateDate(Date.from(instant));
-    return blogsEntryImpl;
+    HitViewModel hitViewModel = new HitViewModel();
+    hit.setId(hit.getId());
+    hit.setReleaseDate(hit.getReleaseDate());
+    ViewModel viewModel = new ViewModel();
+    viewModel.setHit(hitViewModel);
+    return viewModel;
   }
 }

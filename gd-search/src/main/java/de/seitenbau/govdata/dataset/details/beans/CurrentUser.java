@@ -9,7 +9,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.seitenbau.govdata.odp.registry.model.Metadata;
 import de.seitenbau.govdata.odp.registry.model.Organization;
-import de.seitenbau.govdata.odp.registry.model.User;
 import de.seitenbau.govdata.permission.PermissionUtil;
 import lombok.Data;
 
@@ -22,7 +21,7 @@ import lombok.Data;
 public class CurrentUser
 {
   /** The ckanUser. */
-  private User ckanUser;
+  private String ckanUser;
 
   /** The Liferay-User. */
   private com.liferay.portal.kernel.model.User liferayUser;
@@ -73,24 +72,6 @@ public class CurrentUser
   public boolean isLoggedin()
   {
     return liferayUser != null;
-  }
-
-  /**
-   * Checks if is creator.
-   * 
-   * @param metadata the metadata
-   * @return true, if is creator
-   */
-  public boolean isCreator(Metadata metadata)
-  {
-    boolean result = false;
-
-    if (ckanUser != null && metadata != null)
-    {
-      result = ckanUser.isCreator(metadata);
-    }
-
-    return result;
   }
 
   /**

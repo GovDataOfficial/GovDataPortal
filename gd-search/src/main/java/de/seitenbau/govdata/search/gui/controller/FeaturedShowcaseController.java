@@ -24,10 +24,13 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
+import de.seitenbau.govdata.data.api.GovdataResource;
 import de.seitenbau.govdata.dataset.details.beans.SelectedShowcase;
+import de.seitenbau.govdata.db.api.model.Showcase;
+import de.seitenbau.govdata.edit.mapper.ShowcaseMapper;
+import de.seitenbau.govdata.edit.model.ShowcaseViewModel;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
-import de.seitenbau.govdata.search.showcase.cache.FeaturedShowcaseCache;
 import de.seitenbau.govdata.search.util.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +61,7 @@ public class FeaturedShowcaseController extends AbstractBaseController
   private GovDataNavigation gdNavigation;
 
   @Inject
-  private FeaturedShowcaseCache featuredShowcaseCache;
+  private GovdataResource govdataResource;
 
   /**
    * Display a selected featured showcase.
@@ -92,15 +95,18 @@ public class FeaturedShowcaseController extends AbstractBaseController
     boolean showShowroomButton =
         GetterUtil.getBoolean(portletPreferences.getValue("showShowroomButton", StringPool.TRUE));
 
-    SelectedShowcase selectedShowcase;
+    SelectedShowcase selectedShowcase = null;
     try
     {
       long appId = Long.parseLong(selectedFeaturedShowcaseId);
 
       // get showcase from cache
-      selectedShowcase =
-          featuredShowcaseCache.getShowcaseForKey(themeDisplay.getPortletDisplay().getResourcePK(), appId);
-      Objects.requireNonNull(selectedShowcase);
+      Showcase showcase =
+          govdataResource.getFeaturedShowcase(themeDisplay.getPortletDisplay().getResourcePK(), appId);
+      Objects.requireNonNull(showcase);
+
+      ShowcaseViewModel showcaseViewModel = ShowcaseMapper.mapShowcaseEntityToViewModel(showcase);
+      selectedShowcase = new SelectedShowcase(showcaseViewModel, null, null);
 
       // check if showcase is private
       if (selectedShowcase.getShowcase().isPrivate())

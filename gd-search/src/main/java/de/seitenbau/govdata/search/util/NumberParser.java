@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
+import de.seitenbau.govdata.search.api.model.search.dto.FacetDto;
+import de.seitenbau.govdata.search.api.model.search.dto.SearchResultContainer;
 import de.seitenbau.govdata.search.gui.model.NumberViewModel;
-import de.seitenbau.govdata.search.index.model.FacetDto;
-import de.seitenbau.govdata.search.index.model.SearchResultContainer;
 
 public class NumberParser
 {
@@ -24,7 +24,7 @@ public class NumberParser
   public List<NumberViewModel> getValues()
   {
     List<NumberViewModel> valueList = new ArrayList<>();
-    for (FacetDto filter : numberData.getFilterMap().get(SearchConsts.FILTER_KEY_TYPE))
+    for (FacetDto filter : numberData.getFilterMap().get(SearchConsts.FILTER_KEY_TYPE).getFacetList())
     {
       if (ArrayUtils.contains(TYPES, filter.getName()))
       {

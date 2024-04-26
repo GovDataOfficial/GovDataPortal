@@ -14,4 +14,9 @@
 
   <bean class="de.seitenbau.govdata.search.gui.controller.FeaturedDatasetsController" />
 
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
+
+    <bean id="searchClientFactory" class="de.seitenbau.govdata.search.api.SearchClientFactory" />
+    <bean id="searchResource" factory-bean="searchClientFactory" factory-method="createSearchClient" />
 </beans>

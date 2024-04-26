@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import javax.portlet.PortletURL;
 
 import org.assertj.core.api.Assertions;
-import org.elasticsearch.search.SearchHits;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,15 +25,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.liferay.portal.kernel.portlet.DummyPortletURL;
 
-import de.seitenbau.govdata.cache.LicenceCache;
-import de.seitenbau.govdata.cache.OrganizationCache;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.LicenceDto;
+import de.seitenbau.govdata.data.api.ckan.dto.OrganizationDto;
 import de.seitenbau.govdata.metadataquality.util.MetricsParser;
-import de.seitenbau.govdata.odp.registry.ckan.impl.LicenceImpl;
-import de.seitenbau.govdata.odp.registry.ckan.impl.OrganizationImpl;
-import de.seitenbau.govdata.odp.registry.ckan.json.LicenceBean;
-import de.seitenbau.govdata.odp.registry.ckan.json.OrganizationBean;
-import de.seitenbau.govdata.odp.registry.model.Licence;
-import de.seitenbau.govdata.odp.registry.model.Organization;
 import de.seitenbau.govdata.search.gui.model.FilterViewModel;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,16 +39,10 @@ public class MetadataQualityControllerTest
   private static final String ALL_PUBLISHERS = "govdata";
 
   @Mock
-  private LicenceCache licenceCache;
-
-  @Mock
-  private OrganizationCache organizationCache;
+  private GovdataResource govdataResource;
 
   @Mock
   private MetricsParser metricsParser;
-
-  @Mock
-  private SearchHits searchHits;
 
   @InjectMocks
   private MetadataQualityController sut;
@@ -134,7 +122,7 @@ public class MetadataQualityControllerTest
     Map<String, List<?>> topLicencesPublisher = createLicenceMap("licence-id-1", "licence-id-5");
     topLicences.put(ALL_PUBLISHERS, topLicencesGovData);
     topLicences.put("publisher", topLicencesPublisher);
-    Map<String, Licence> licenceMap = new HashMap<>();
+    Map<String, LicenceDto> licenceMap = new HashMap<>();
 
     Mockito.when(metricsParser.getValuesForType(TOP_LICENSES)).thenReturn(topLicences);
 
@@ -143,7 +131,7 @@ public class MetadataQualityControllerTest
       licenceMap.put(licenceId, createLicence(licenceId, "name-" + licenceId));
     }
 
-    Mockito.when(licenceCache.getLicenceMap()).thenReturn(licenceMap);
+    Mockito.when(govdataResource.getLicenceMap()).thenReturn(licenceMap);
 
     /* execute */
     Map<String, Map<String, List<?>>> result = this.sut.createLicenceMapWithTranslatedLabels();
@@ -154,23 +142,23 @@ public class MetadataQualityControllerTest
     assertLicenceLabels(result.get("publisher"), topLicencesPublisher, licenceMap);
   }
 
-  private Licence createLicence(String licenceId, String title)
+  private LicenceDto createLicence(String licenceId, String title)
   {
-    LicenceBean bean = new LicenceBean();
-    bean.setId(licenceId);
-    bean.setTitle(title);
-    Licence result = new LicenceImpl(bean);
-    return result;
+    LicenceDto licence = new LicenceDto();
+    licence.setId(licenceId);
+    licence.setTitle(title);
+
+    return licence;
   }
 
-  private Organization createOrg(String id, String name, String displayName)
+  private OrganizationDto createOrg(String id, String name, String displayName)
   {
-    OrganizationBean bean = new OrganizationBean();
-    bean.setId(id);
-    bean.setName(name);
-    bean.setDisplay_name(displayName);
-    Organization result = new OrganizationImpl(bean);
-    return result;
+    OrganizationDto organization = new OrganizationDto();
+    organization.setId(id);
+    organization.setName(name);
+    organization.setDisplayName(displayName);
+
+    return organization;
   }
 
   private Map<String, List<?>> createLicenceMap(String... licenceIds)
@@ -187,14 +175,14 @@ public class MetadataQualityControllerTest
 
   @SuppressWarnings("unchecked")
   private void assertLicenceLabels(Map<String, List<?>> actual, Map<String, List<?>> expected,
-      Map<String, Licence> licenceMap)
+      Map<String, LicenceDto> licenceMap)
   {
     Assertions.assertThat(actual).hasSize(expected.size());
     List<String> labelListActual = (List<String>) actual.get(LABELS);
     List<String> expectedLabels = new ArrayList<>();
     for (Object licenceId : expected.get(LABELS))
     {
-      Licence licence = licenceMap.get(licenceId);
+      LicenceDto licence = licenceMap.get(licenceId);
       if (Objects.nonNull(licence))
       {
         expectedLabels.add(licence.getTitle());
@@ -209,7 +197,7 @@ public class MetadataQualityControllerTest
 
   private void expectRetrieveOrgFilterList(int numberAvailablePublishers)
   {
-    List<Organization> organizationList = new ArrayList<>();
+    List<OrganizationDto> organizationList = new ArrayList<>();
     for (int i = 1; i <= numberAvailablePublishers; i++)
     {
       organizationList.add(createOrg("id-" + i, "name-" + i, "displayname-" + i));
@@ -217,7 +205,7 @@ public class MetadataQualityControllerTest
     organizationList.add(createOrg("id-all", ALL_PUBLISHERS, "displayname-govdata"));
     Map<String, Long> availablePublishers = new LinkedHashMap<>();
     long i = 1;
-    for (Organization org : organizationList)
+    for (OrganizationDto org : organizationList)
     {
       availablePublishers.put(org.getId(), i);
       i++;
@@ -226,7 +214,7 @@ public class MetadataQualityControllerTest
     organizationList.add(createOrg("id-not-available", "name-not-available", "displayname-not-available"));
 
     Mockito.when(metricsParser.getAvailablePublishers()).thenReturn(availablePublishers);
-    Mockito.when(organizationCache.getOrganizationsSorted()).thenReturn(organizationList);
+    Mockito.when(govdataResource.getOrganizationsSorted()).thenReturn(organizationList);
   }
 
   private void assertFilterViewModel(List<FilterViewModel> actual, String filterId, String displayName,

@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
   </parent>
   <properties>
     <checkstyle.suppressions>${basedir}/src/main/plugin-config/checkstyle-suppressions.xml</checkstyle.suppressions>
@@ -15,16 +15,30 @@
   <dependencies>
     <!-- ODP -->
     <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
-      <artifactId>opendataregistry-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
+      <groupId>de.seitenbau.govdata</groupId>
       <artifactId>odp-common</artifactId>
     </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata</groupId>
       <artifactId>govdata-db-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>opendataregistry-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-data-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>api-common</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Liferay -->
@@ -69,6 +83,10 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.jboss.spec.javax.annotation</groupId>
       <artifactId>jboss-annotations-api_1.3_spec</artifactId>
@@ -121,12 +139,6 @@
       <artifactId>com.liferay.portletmvc4spring.framework</artifactId>
     </dependency>
 
-    <!-- Redis -->
-    <dependency>
-      <groupId>io.lettuce</groupId>
-      <artifactId>lettuce-core</artifactId>
-    </dependency>
-
     <!-- Validation -->
     <dependency>
       <groupId>de.grundid.opendatalab</groupId>
@@ -165,10 +177,6 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

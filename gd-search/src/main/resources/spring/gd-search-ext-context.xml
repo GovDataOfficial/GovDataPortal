@@ -12,12 +12,11 @@
     base-package="de.seitenbau.govdata.search.gui.model,
       de.seitenbau.govdata.navigation,
       de.seitenbau.govdata.odr,
-      de.seitenbau.govdata.cache,
-      de.seitenbau.govdata.search.cache,
-      de.seitenbau.govdata.search.geostate.cache,
       de.seitenbau.govdata.search.filter.util,
       de.seitenbau.govdata.search.common.searchresult" />
       
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchExtController" /> 
 
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
 </beans>

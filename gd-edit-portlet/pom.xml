@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -43,11 +43,7 @@
       <artifactId>govdata-db-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
-      <artifactId>opendataregistry-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
+      <groupId>de.seitenbau.govdata</groupId>
       <artifactId>odp-common</artifactId>
     </dependency>
     <dependency>
@@ -75,6 +71,16 @@
     <dependency>
       <groupId>de.seitenbau.govdata</groupId>
       <artifactId>serviceportal-common</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>opendataregistry-client</artifactId>
     </dependency>
 
     <!-- Apache Jena -->

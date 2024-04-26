@@ -20,8 +20,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
 import de.seitenbau.govdata.constants.QueryParamNames;
+import de.seitenbau.govdata.data.api.GovdataResource;
 import de.seitenbau.govdata.search.gui.model.SearchMapViewModel;
-import de.seitenbau.govdata.search.searchmap.cache.SearchMapCache;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -48,7 +48,7 @@ public class SearchMapController extends AbstractBaseController
   private String layers;
 
   @Inject
-  private SearchMapCache searchMapCache;
+  private GovdataResource govdataResource;
 
   /**
    * Initializes required components and sets configuration parameters.
@@ -96,7 +96,7 @@ public class SearchMapController extends AbstractBaseController
     String geocodingUrlReplaced = geocodingUrl;
     if (geocodingUrl.contains(placeholder))
     {
-      String sessionId = searchMapCache.getSessionId();
+      String sessionId = govdataResource.getSessionId();
       geocodingUrlReplaced = null;
       if (Objects.nonNull(sessionId))
       {

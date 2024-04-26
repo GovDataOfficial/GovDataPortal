@@ -10,8 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import de.seitenbau.govdata.odp.registry.model.Contact;
-import de.seitenbau.govdata.odp.registry.model.Metadata;
+import de.seitenbau.govdata.data.api.ckan.dto.ContactDto;
+import de.seitenbau.govdata.data.api.ckan.dto.MetadataDto;
 import de.seitenbau.govdata.odp.registry.model.RoleEnumType;
 
 /**
@@ -28,13 +28,13 @@ public class CurrentMetadataContactTest
   private static final String PUBLISHER_TESTNAME = "publisherName";
 
   @Mock
-  private Metadata metadata;
+  private MetadataDto metadata;
 
   @Mock
-  private Contact creator;
+  private ContactDto creator;
 
   @Mock
-  private Contact publisher;
+  private ContactDto publisher;
 
   @Test
   public void creator_role_does_not_match() throws Exception
@@ -43,7 +43,7 @@ public class CurrentMetadataContactTest
     Mockito.when(creator.getRole()).thenReturn(RoleEnumType.CREATOR);
 
     Mockito.when(metadata.getContacts())
-        .thenReturn(Arrays.stream(new Contact[] {creator, publisher}).collect(Collectors.toList()));
+        .thenReturn(Arrays.stream(new ContactDto[] {creator, publisher}).collect(Collectors.toList()));
 
     /* execute */
     CurrentMetadataContact result = new CurrentMetadataContact(metadata);
@@ -63,7 +63,7 @@ public class CurrentMetadataContactTest
     Mockito.when(publisher.getEmail()).thenReturn(PUBLISHER_TEST_EMAIL);
 
     Mockito.when(metadata.getContacts())
-        .thenReturn(Arrays.stream(new Contact[] {creator, publisher}).collect(Collectors.toList()));
+        .thenReturn(Arrays.stream(new ContactDto[] {creator, publisher}).collect(Collectors.toList()));
     
     /* execute */
     CurrentMetadataContact result = new CurrentMetadataContact(metadata);

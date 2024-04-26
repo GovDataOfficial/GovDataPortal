@@ -18,14 +18,13 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import de.fhg.fokus.odp.entities.model.MetadataComment;
 import de.seitenbau.govdata.clean.StringCleaner;
 import de.seitenbau.govdata.constants.FileExtension;
+import de.seitenbau.govdata.data.api.ckan.dto.AccessServiceDto;
+import de.seitenbau.govdata.data.api.ckan.dto.LicenceDto;
+import de.seitenbau.govdata.data.api.ckan.dto.MetadataDto;
+import de.seitenbau.govdata.data.api.ckan.dto.ResourceDto;
+import de.seitenbau.govdata.data.api.ckan.dto.TagDto;
 import de.seitenbau.govdata.edit.model.Link;
 import de.seitenbau.govdata.navigation.PortletUtil;
-import de.seitenbau.govdata.odp.registry.model.AccessService;
-import de.seitenbau.govdata.odp.registry.model.Licence;
-import de.seitenbau.govdata.odp.registry.model.Metadata;
-import de.seitenbau.govdata.odp.registry.model.MetadataListExtraFields;
-import de.seitenbau.govdata.odp.registry.model.Resource;
-import de.seitenbau.govdata.odp.registry.model.Tag;
 import lombok.Data;
 
 /**
@@ -46,7 +45,7 @@ public class SelectedMetadata implements ISelectedObject
   /**
    * The metadata.
    */
-  private Metadata metadata;
+  private MetadataDto metadata;
 
   /**
    * The current user.
@@ -208,9 +207,9 @@ public class SelectedMetadata implements ISelectedObject
    * 
    * @return the resources
    */
-  public List<Resource> getResources()
+  public List<ResourceDto> getResources()
   {
-    List<Resource> result = new ArrayList<>();
+    List<ResourceDto> result = new ArrayList<>();
     if (metadata != null)
     {
       result = metadata.getResources();
@@ -223,10 +222,10 @@ public class SelectedMetadata implements ISelectedObject
    *
    * @return the data services
    */
-  public List<AccessService> getDataServices()
+  public List<AccessServiceDto> getDataServices()
   {
-    List<AccessService> result = new ArrayList<>();
-    for (Resource resource : this.getResources())
+    List<AccessServiceDto> result = new ArrayList<>();
+    for (ResourceDto resource : this.getResources())
     {
       result.addAll(resource.getAccessServices());
     }
@@ -340,10 +339,10 @@ public class SelectedMetadata implements ISelectedObject
     if (this.keywords == null)
     {
       List<String> result = new ArrayList<String>();
-      List<Tag> tags = metadata.getTags();
-      for (Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();)
+      List<TagDto> tags = metadata.getTags();
+      for (Iterator<TagDto> iterator = tags.iterator(); iterator.hasNext();)
       {
-        Tag tag = iterator.next();
+        TagDto tag = iterator.next();
         result.add(tag.getName());
       }
       setKeywords(StringUtils.join(result, ","));
@@ -365,10 +364,10 @@ public class SelectedMetadata implements ISelectedObject
       List<String> result = new ArrayList<String>();
       if (metadata != null)
       {
-        List<Tag> tagList = metadata.getTags();
+        List<TagDto> tagList = metadata.getTags();
         if (CollectionUtils.isNotEmpty(tagList))
         {
-          for (Tag tag : tagList)
+          for (TagDto tag : tagList)
           {
             String tagName = tag.getName();
             if (StringUtils.isNotEmpty(tagName))
@@ -385,12 +384,12 @@ public class SelectedMetadata implements ISelectedObject
   
   public List<String> getUsedDatasets()
   {
-    return metadata.getExtraList(MetadataListExtraFields.USED_DATASETS);
+    return metadata.getUsedDatasets();
   }
   
   public List<String> getGeocodingText()
   {
-    return metadata.getExtraList(MetadataListExtraFields.GEOCODING_TEXT);
+    return metadata.getGeocodingText();
   }
 
   /**
@@ -404,7 +403,7 @@ public class SelectedMetadata implements ISelectedObject
   /**
    * Returns the first license of this metadatas resources - or null if no license available.
    */
-  public Licence getSingleLicense()
+  public LicenceDto getSingleLicense()
   {
     return metadata.getResourcesLicenses().stream().findFirst().orElse(null);
   }

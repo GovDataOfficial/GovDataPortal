@@ -63,7 +63,7 @@ public class UrlBuilder
     }
     else
     {
-      parameters.put(QueryParamNames.PARAM_BOUNDINGBOX, preparm.getBoundingBox().toString());
+      parameters.put(QueryParamNames.PARAM_BOUNDINGBOX, preparm.getBoundingBox());
     }
 
     parameters.put(QueryParamNames.PARAM_FILTER,

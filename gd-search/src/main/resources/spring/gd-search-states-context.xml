@@ -9,12 +9,12 @@
   <import resource="mvc-context.xml" />
 
   <context:component-scan
-    base-package="de.seitenbau.govdata.search.gui.model,
-      de.seitenbau.govdata.navigation,
-      de.seitenbau.govdata.search.geostate.display.cache,
+    base-package="de.seitenbau.govdata.navigation,
       de.seitenbau.govdata.search.filter.util,
       de.seitenbau.govdata.search.common.searchresult" />
 
   <bean class="de.seitenbau.govdata.search.gui.controller.SearchStatesController" /> 
 
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
 </beans>

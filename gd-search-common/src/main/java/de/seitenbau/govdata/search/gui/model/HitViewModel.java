@@ -13,9 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import de.seitenbau.govdata.common.model.exception.UnknownShowcasePlatformException;
 import de.seitenbau.govdata.common.showcase.model.ShowcasePlatformEnum;
 import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
+import de.seitenbau.govdata.data.api.dto.CategoryDto;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
-import de.seitenbau.govdata.odp.registry.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -60,7 +60,7 @@ public class HitViewModel
 
   private String linkToCKan;
 
-  private List<Category> categories;
+  private List<CategoryDto> categories;
 
   // Showcase fields
   private String primaryShowcaseType;

@@ -50,9 +50,9 @@ import de.seitenbau.govdata.cache.CategoryCache;
 import de.seitenbau.govdata.cache.LicenceCache;
 import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.clean.StringCleaner;
+import de.seitenbau.govdata.common.json.DateUtil;
 import de.seitenbau.govdata.constants.CommonConstants;
 import de.seitenbau.govdata.constants.DetailsRequestParamNames;
-import de.seitenbau.govdata.date.DateUtil;
 import de.seitenbau.govdata.edit.gui.common.Constants;
 import de.seitenbau.govdata.edit.model.Contact;
 import de.seitenbau.govdata.edit.model.ContactAddress;
@@ -183,7 +183,8 @@ public class EditController
           editForm = loadDataset(ckanuserFromRequest, metadataName);
 
           // check if the user is part of the organization that this dataset belongs to
-          if (!new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId()))
+          if (!new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId(),
+              Organization::getId))
           {
             throw new OpenDataRegistryException("User does not belong to the datasets organisation");
           }
@@ -394,7 +395,8 @@ public class EditController
 
       List<Organization> organizationsForUser =
           registryClient.getInstance().getOrganizationsForUser(ckanuserFromRequest, "create_dataset");
-      if (new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId()))
+      if (new ODRTools().containsOrganization(organizationsForUser, editForm.getOrganizationId(),
+          Organization::getId))
       {
         if (registryClient.getInstance().deleteMetadata(ckanuserFromRequest, editForm.getName()))
         {

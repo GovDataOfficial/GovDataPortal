@@ -39,34 +39,37 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 import com.liferay.portletmvc4spring.bind.annotation.ResourceMapping;
 
-import de.seitenbau.govdata.cache.LicenceCache;
-import de.seitenbau.govdata.cache.OrganizationCache;
 import de.seitenbau.govdata.common.model.exception.UnknownShowcasePlatformException;
 import de.seitenbau.govdata.common.model.exception.UnknownShowcaseTypeException;
 import de.seitenbau.govdata.common.showcase.model.ShowcasePlatformEnum;
 import de.seitenbau.govdata.common.showcase.model.ShowcaseTypeEnum;
 import de.seitenbau.govdata.constants.QueryParamNames;
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.ckan.dto.LicenceDto;
+import de.seitenbau.govdata.data.api.ckan.dto.OrganizationDto;
+import de.seitenbau.govdata.data.api.dto.StateDto;
 import de.seitenbau.govdata.dcatde.ViewUtil;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.navigation.PortletUtil;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.odp.registry.ckan.HVDCategory;
-import de.seitenbau.govdata.odp.registry.model.Licence;
-import de.seitenbau.govdata.odp.registry.model.Organization;
-import de.seitenbau.govdata.odp.registry.model.User;
-import de.seitenbau.govdata.odp.registry.model.exception.OpenDataRegistryException;
 import de.seitenbau.govdata.odr.ODRTools;
-import de.seitenbau.govdata.odr.RegistryClient;
 import de.seitenbau.govdata.permission.PermissionUtil;
-import de.seitenbau.govdata.search.adapter.SearchService;
-import de.seitenbau.govdata.search.common.SearchFilterBundle;
-import de.seitenbau.govdata.search.common.SearchQuery;
+import de.seitenbau.govdata.search.api.SearchResource;
+import de.seitenbau.govdata.search.api.model.search.dto.FacetDto;
+import de.seitenbau.govdata.search.api.model.search.dto.FilterListDto;
+import de.seitenbau.govdata.search.api.model.search.dto.PreparedParametersDto;
+import de.seitenbau.govdata.search.api.model.search.dto.SearchQuery;
+import de.seitenbau.govdata.search.api.model.search.dto.SearchResultContainer;
+import de.seitenbau.govdata.search.api.model.search.dto.Sort;
+import de.seitenbau.govdata.search.api.model.search.dto.SortType;
+import de.seitenbau.govdata.search.api.model.search.dto.SuggestionOption;
+import de.seitenbau.govdata.search.common.PreparedParametersMapper;
 import de.seitenbau.govdata.search.common.searchresult.ParameterProcessing;
 import de.seitenbau.govdata.search.common.searchresult.PreparedParameters;
 import de.seitenbau.govdata.search.common.searchresult.UrlBuilder;
 import de.seitenbau.govdata.search.filter.util.FilterUtil;
-import de.seitenbau.govdata.search.geostate.cache.GeoStateCache;
 import de.seitenbau.govdata.search.gui.mapper.SearchResultsViewMapper;
 import de.seitenbau.govdata.search.gui.model.FilterViewListModel;
 import de.seitenbau.govdata.search.gui.model.FilterViewModel;
@@ -74,14 +77,7 @@ import de.seitenbau.govdata.search.gui.model.HitViewModel;
 import de.seitenbau.govdata.search.gui.model.SearchResultsViewModel;
 import de.seitenbau.govdata.search.gui.model.SortViewModel;
 import de.seitenbau.govdata.search.gui.model.SuggestionModel;
-import de.seitenbau.govdata.search.index.model.FacetDto;
-import de.seitenbau.govdata.search.index.model.FilterListDto;
-import de.seitenbau.govdata.search.index.model.SearchResultContainer;
-import de.seitenbau.govdata.search.index.model.SuggestionOption;
-import de.seitenbau.govdata.search.sort.Sort;
-import de.seitenbau.govdata.search.sort.SortType;
 import de.seitenbau.govdata.search.util.RequestUtil;
-import de.seitenbau.govdata.search.util.states.StateContainer;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -113,25 +109,16 @@ public class SearchresultController extends AbstractBaseController
   private static final String MODEL_KEY_SHOW_SHOWCASE_OPTIONS = "showShowcaseOptions";
 
   @Inject
-  private LicenceCache licenceCache;
-
-  @Inject
-  private OrganizationCache organizationCache;
-
-  @Inject
   private GovDataNavigation navigationHelper;
 
   @Inject
-  private SearchService indexService;
+  private SearchResource searchResource;
+
+  @Inject
+  private GovdataResource govdataResource;
 
   @Inject
   private SearchResultsViewMapper searchResultsMapper;
-
-  @Inject
-  private RegistryClient registryClient;
-
-  @Inject
-  private GeoStateCache geoStateCache;
 
   @Inject
   private ParameterProcessing parameterProcessing;
@@ -184,34 +171,40 @@ public class SearchresultController extends AbstractBaseController
     }
 
     // Get Organizations for this user from CKAN - or fail / get an empty list.
-    List<Organization> editorOrganizationList = new ArrayList<>();
+    List<OrganizationDto> editorOrganizationList = new ArrayList<>();
     try
     {
-      User ckanUser = new ODRTools().getCkanuserFromRequest(request, registryClient.getInstance());
-      if (ckanUser != null)
+      String userScreenName = new ODRTools().getLiferayUserfromRequest(request);
+      if (liferayUser != null)
       {
+        // die zwei funktionen kombinieren ? Exception OpenDataRegistryException
+        String ckanUser = govdataResource.findOrCreateCkanUser(userScreenName);
         editorOrganizationList =
-            registryClient.getInstance().getOrganizationsForUser(ckanUser, "create_dataset");
+            govdataResource.getOrganizationsForUser(ckanUser, "create_dataset");
       }
     }
-    catch (PortalException | OpenDataRegistryException e1)
+    catch (PortalException e1)
     {
       // we seem to have a problem, so no organizations this time.
     }
 
-    // execute search
-    SearchFilterBundle searchFilterBundle = parameterProcessing.createFilterBundle(
-        preparm,
-        new ODRTools().extractIDsFromOrganizations(editorOrganizationList));
+    PreparedParametersDto preparedParametersDto =
+        PreparedParametersMapper.mapToPreparedParametersDto(preparm);
 
-    SearchResultContainer result = indexService.search(
-        preparm.getQuery(),
+    List<String> editorOrganizationdList =
+        new ODRTools().extractIDsFromOrganizations(editorOrganizationList);
+
+    // execute search
+    SearchResultContainer result = searchResource.search(
         null, // default number of results
-        searchFilterBundle,
-        preparm.getSelectedSorting());
+        preparedParametersDto,
+        editorOrganizationdList);
+
+    // Set cleaned active filter list
+    preparm.setActiveFilters(result.getCleanedActiveFilters());
 
     // record Search Phrase
-    recordSearchPhrase(preparm.getQuery(), request.getPortletSession());
+    recordSearchPhrase(preparedParametersDto.getQuery(), request.getPortletSession());
 
     List<HitViewModel> hitViewModelList =
         searchResultsMapper.mapHitDtoListToHitsViewModelList(
@@ -270,7 +263,8 @@ public class SearchresultController extends AbstractBaseController
 
     // Prepare Models for Sorting
     List<SortViewModel> sortByList =
-        createSortByList(preparm.getSelectedSorting(), urlbuilder.createUrl(response, new String[] {}));
+        createSortByList(preparedParametersDto.getSort(),
+            urlbuilder.createUrl(response, new String[] {}));
 
     // Prepare BoundingBox-Clear-Url
     String clearBoundingBoxUrl =
@@ -417,7 +411,7 @@ public class SearchresultController extends AbstractBaseController
     if (!usedPhrases.contains(toSave))
     {
       // Save new phrase
-      indexService.recordSearchPhrase(toSave);
+      searchResource.recordSearchPhrase(toSave);
 
       // Store new phrase in history
       usedPhrases.add(toSave);
@@ -469,7 +463,7 @@ public class SearchresultController extends AbstractBaseController
     SearchResultContainer result;
     try
     {
-      result = indexService.scroll(scrollId);
+      result = searchResource.getScroll(scrollId);
     }
     catch (Exception e)
     {
@@ -691,7 +685,7 @@ public class SearchresultController extends AbstractBaseController
 
     if (StringUtils.equals(filterType, SearchConsts.FACET_LICENCE))
     {
-      Licence licence = licenceCache.getLicenceMap().get(filterName);
+      LicenceDto licence = govdataResource.getLicenceMap().get(filterName);
       if (licence != null)
       {
         return licence.getTitle();
@@ -700,7 +694,7 @@ public class SearchresultController extends AbstractBaseController
 
     if (StringUtils.equals(filterType, SearchConsts.FACET_SOURCEPORTAL))
     {
-      Organization organization = organizationCache.getOrganizationMap().get(filterName);
+      OrganizationDto organization = govdataResource.getOrganizationMap().get(filterName);
       if (organization != null)
       {
         return organization.getTitle();
@@ -764,8 +758,8 @@ public class SearchresultController extends AbstractBaseController
 
     if (StringUtils.equals(filterType, SearchConsts.FACET_STATE))
     {
-      List<StateContainer> stateList = geoStateCache.getStateList();
-      StateContainer state =
+      List<StateDto> stateList = govdataResource.getStateList();
+      StateDto state =
           stateList.stream().filter(s -> filterName.equals(s.getId())).findFirst().orElse(null);
       if (state != null)
       {
@@ -784,7 +778,7 @@ public class SearchresultController extends AbstractBaseController
     {
       FilterViewListModel filterViewList = new FilterViewListModel();
       filterViewList.setSingletonFiltergroup(entry.getValue().isSingletonFiltergroup());
-      for (FacetDto filterDto : entry.getValue())
+      for (FacetDto filterDto : entry.getValue().getFacetList())
       {
         filterViewList.add(new FilterViewModel(filterDto.getDocCount(), filterDto.getName()));
       }

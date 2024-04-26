@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.seitenbau.govdata.search.common.SearchQuery;
-import de.seitenbau.govdata.search.filter.BoundingBox;
 import de.seitenbau.govdata.search.sort.Sort;
 import lombok.Data;
 
@@ -30,7 +29,7 @@ public class PreparedParameters
   private Sort selectedSorting;
 
   // filter by Raumbezug
-  private BoundingBox boundingBox;
+  private String boundingBox;
 
   // filter by Zeitraum
   private Date dateFrom;

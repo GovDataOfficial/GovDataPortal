@@ -3,7 +3,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
   </parent>
   <artifactId>gd-search-common</artifactId>
   <name>GovData search common</name>
@@ -57,25 +57,21 @@
   <dependencies>
     <!-- ODP -->
     <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
+      <groupId>de.seitenbau.govdata</groupId>
       <artifactId>odp-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.seitenbau.govdata.odp</groupId>
-      <artifactId>opendataregistry-client</artifactId>
     </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata.odp</groupId>
       <artifactId>portlet-common</artifactId>
     </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>search-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
       <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.annotation</groupId>
-      <artifactId>jboss-annotations-api_1.3_spec</artifactId>
     </dependency>
 
     <!-- Microservices -->
@@ -95,27 +91,13 @@
       <groupId>de.seitenbau.govdata</groupId>
       <artifactId>serviceportal-common</artifactId>
     </dependency>
-
-    <!-- Elasticsearch -->
     <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>opendataregistry-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>elasticsearch-rest-high-level-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch-geo</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>elasticsearch-rest-client</artifactId>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-data-api</artifactId>
     </dependency>
 
     <!-- Liferay -->
@@ -161,16 +143,6 @@
       <artifactId>spring-context</artifactId>
     </dependency>
 
-    <!-- HTTP Client-->
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-    </dependency>
-
     <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -202,10 +174,6 @@
     <dependency>
       <groupId>org.locationtech.jts.io</groupId>
       <artifactId>jts-io-common </artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.googlecode.json-simple</groupId>
-      <artifactId>json-simple</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>

@@ -14,4 +14,10 @@ public class BoundingBoxContainer
   private double longitudeMax;
 
   private double longitudeMin;
+
+  @Override
+  public String toString()
+  {
+    return longitudeMax + "," + latitudeMin + "," + longitudeMin + "," + latitudeMax;
+  }
 }

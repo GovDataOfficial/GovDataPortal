@@ -25,13 +25,11 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portletmvc4spring.bind.annotation.RenderMapping;
 
+import de.seitenbau.govdata.data.api.GovdataResource;
+import de.seitenbau.govdata.data.api.dto.PostDto;
 import de.seitenbau.govdata.navigation.GovDataNavigation;
 import de.seitenbau.govdata.odp.common.filter.FilterPathUtils;
 import de.seitenbau.govdata.odp.common.filter.SearchConsts;
-import de.seitenbau.govdata.search.common.cache.MastodonCache;
-import de.seitenbau.govdata.search.common.cache.NumberCache;
-import de.seitenbau.govdata.search.common.cache.TweetCache;
-import de.seitenbau.govdata.search.common.cache.util.PostContainer;
 import de.seitenbau.govdata.search.common.cache.util.SocialMediaPlatformsConsts;
 import de.seitenbau.govdata.search.gui.model.NumberViewModel;
 import de.seitenbau.govdata.search.util.NumberParser;
@@ -41,16 +39,10 @@ public class SearchNumbersController
 {
 
   @Inject
-  private NumberCache numberCache;
-
-  @Inject
   private GovDataNavigation govDataNavigation;
 
   @Inject
-  private TweetCache tweetCache;
-
-  @Inject
-  private MastodonCache mastodonCache;
+  private GovdataResource govdataResource;
 
   private NumberParser numberParser = new NumberParser();
 
@@ -88,7 +80,7 @@ public class SearchNumbersController
     boolean showPlatform = false;
     if (GetterUtil.getBoolean(portletPreferences.getValue("showTwitter", StringPool.FALSE)))
     {
-      PostContainer twitterPost = tweetCache.getTweetData();
+      PostDto twitterPost = govdataResource.getTwitterPost();
       if (twitterPost != null)
       {
         model.addAttribute(SocialMediaPlatformsConsts.TWITTER, twitterPost);
@@ -97,7 +89,7 @@ public class SearchNumbersController
     }
     if (GetterUtil.getBoolean(portletPreferences.getValue("showMastodon", StringPool.FALSE)))
     {
-      PostContainer mastodonPost = mastodonCache.getPostData();
+      PostDto mastodonPost = govdataResource.getMastodonPost();
       if (mastodonPost != null)
       {
         model.addAttribute(SocialMediaPlatformsConsts.MASTODON, mastodonPost);
@@ -105,7 +97,7 @@ public class SearchNumbersController
       }
     }
 
-    numberParser.setData(numberCache.getRawNumberData());
+    numberParser.setData(govdataResource.getNumbers());
     List<NumberViewModel> numbers = numberParser.getValues();
 
     for (NumberViewModel nvm : numbers)

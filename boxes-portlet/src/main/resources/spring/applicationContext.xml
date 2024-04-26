@@ -22,11 +22,9 @@
     base-package="de.seitenbau.govdata.odp.boxes,
       de.seitenbau.govdata.search.gui.model,
       de.seitenbau.govdata.navigation,
-      de.seitenbau.govdata.search.gui.mapper,
-      de.seitenbau.govdata.search.adapter,
-      de.seitenbau.govdata.search.index.mapper,
-      de.seitenbau.govdata.odr,
-      de.seitenbau.govdata.cache,
-      de.seitenbau.govdata.search.filter.util" />
+      de.seitenbau.govdata.search.gui.mapper" />
 
+  <bean id="searchResultsMapper" class="de.seitenbau.govdata.odp.boxes.mapper.ViewModelMapper" />
+  <bean id="govdataClientFactory" class="de.seitenbau.govdata.data.api.GovdataClientFactory" />
+  <bean id="govdataResource" factory-bean="govdataClientFactory" factory-method="createGovdataClient" />
 </beans>
