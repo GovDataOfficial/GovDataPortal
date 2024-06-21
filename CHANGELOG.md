@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.8.1 2024-06-20
+
+* Fixes displaying HVD (High-Value Datasets) categories if one of them is unknown
+* Updates the microservice dependencies
+
 ## v6.8.0 2024-04-25
 
 * Updates spring dependency with important security fix (CVE-2024-22262)

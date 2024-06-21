@@ -7,7 +7,7 @@
   <parent>
     <groupId>de.seitenbau.govdata.odp</groupId>
     <artifactId>od-platform</artifactId>
-    <version>6.8.0</version>
+    <version>6.8.1</version>
     <!-- <relativePath>../GovData</relativePath> -->
   </parent>
 
@@ -40,7 +40,7 @@
     </dependency>
     <dependency>
       <groupId>de.seitenbau.govdata</groupId>
-      <artifactId>opendataregistry-client</artifactId>
+      <artifactId>opendataregistry-client-boot2</artifactId>
     </dependency>
 
     <!-- Mailing -->

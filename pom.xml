@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.seitenbau.govdata.odp</groupId>
   <artifactId>od-platform</artifactId>
-  <version>6.8.0</version>
+  <version>6.8.1</version>
   <packaging>pom</packaging>
   <name>Open Data Platform GovData</name>
   <organization>
@@ -49,7 +49,7 @@
     <sb-common.version>1.0.1</sb-common.version>
     <resteasy.validator.version>3.6.3.SP1</resteasy.validator.version>
     <hibernate.validator.version>6.2.5.Final</hibernate.validator.version>
-    <gd-microservices.version>2.0.1</gd-microservices.version>
+    <gd-microservices.version>2.1.1</gd-microservices.version>
     <checkstyle.suppressions></checkstyle.suppressions>
     <spotbugs.excludeFilterFile></spotbugs.excludeFilterFile>
     <!-- java -->
@@ -399,37 +399,43 @@
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
-        <artifactId>govdata-db-api</artifactId>
+        <artifactId>govdata-db-api-boot2</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
-        <artifactId>govdata-data-api</artifactId>
+        <artifactId>govdata-data-api-boot2</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
-        <artifactId>index-queue-adapter</artifactId>
+        <artifactId>index-queue-adapter-boot2</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
-        <artifactId>api-common</artifactId>
+        <artifactId>api-common-boot2</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
         <artifactId>serviceportal-common</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+          </exclusion>
+        </exclusions>
         <version>${gd-microservices.version}</version>
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
-        <artifactId>search-api</artifactId>
+        <artifactId>search-api-boot2</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
       <dependency>
         <groupId>de.seitenbau.govdata</groupId>
-        <artifactId>opendataregistry-client</artifactId>
+        <artifactId>opendataregistry-client-boot2</artifactId>
         <version>${gd-microservices.version}</version>
       </dependency>
       <dependency>

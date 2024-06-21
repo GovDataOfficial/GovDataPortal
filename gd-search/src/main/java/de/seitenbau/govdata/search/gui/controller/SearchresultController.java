@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -583,8 +584,10 @@ public class SearchresultController extends AbstractBaseController
           ? activeFiltersSerialized.replaceAll(FilterPathUtils.serializeFilterMatchAllRegex(key), "")
           : activeFiltersSerialized;
 
-      for (FilterViewModel filter : filterGroup.getValue())
+      for (Iterator<FilterViewModel> iterator = filterGroup.getValue().iterator(); iterator.hasNext();)
       {
+        FilterViewModel filter = iterator.next();
+
         // check if filter is active (is part of request filter map)
         String val = filter.getName();
         boolean isActive = groupList.contains(val);
@@ -600,8 +603,18 @@ public class SearchresultController extends AbstractBaseController
         }
 
         // i18n filter name
-        filter.setDisplayName(
-            ViewUtil.getShortenedFormatRef(translateFilterName(filter.getName(), key, locale)));
+        String filterName = translateFilterName(filter.getName(), key, locale);
+        if (filterName == null)
+        {
+          // Remove the filter if its displayName is null
+          iterator.remove();
+          continue; // Skip the rest of the loop body and move to the next filter
+        }
+        else
+        {
+          filter.setDisplayName(
+              ViewUtil.getShortenedFormatRef(filterName));
+        }
 
         // if this is a singleton-filter, remove all active filter instances
         String modifiedFilter;
@@ -718,8 +731,13 @@ public class SearchresultController extends AbstractBaseController
 
     if (StringUtils.equals(filterType, SearchConsts.FACET_HIGH_VALUE_DATASET_CATEGORIES))
     {
-      return LanguageUtil.get(locale,
-          "od.hvd.category.label." + StringUtil.toLowerCase(HVDCategory.fromUri(filterName).toString()));
+      HVDCategory hvdCategory = HVDCategory.fromUri(filterName);
+      if (hvdCategory != null)
+      {
+        return LanguageUtil.get(locale,
+            "od.hvd.category.label." + StringUtil.toLowerCase(hvdCategory.toString()), null);
+      }
+      return null;
     }
 
     if (StringUtils.equals(filterType, QueryParamNames.PARAM_SHOW_ONLY_EDITOR_METADATA))
