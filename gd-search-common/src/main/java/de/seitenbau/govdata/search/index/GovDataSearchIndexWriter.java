@@ -25,7 +25,6 @@ import de.seitenbau.govdata.common.client.impl.RestCallFailedException;
 import de.seitenbau.govdata.common.json.DateUtil;
 import de.seitenbau.govdata.common.messaging.SearchIndexEntry;
 import de.seitenbau.govdata.index.queue.adapter.IndexQueueAdapterServiceRESTResource;
-import de.seitenbau.govdata.odp.common.filter.SearchConsts;
 import de.seitenbau.govdata.search.index.filter.FilterProxy;
 import de.seitenbau.govdata.search.index.mapper.ClassToTypeMapper;
 import de.seitenbau.govdata.search.index.util.SearchIndexUtil;
@@ -47,7 +46,7 @@ public class GovDataSearchIndexWriter implements IndexerPostProcessor
   private IndexQueueAdapterServiceRESTResource indexClient =
       ApplicationContextProvider.getApplicationContext().getBean(IndexQueueAdapterServiceRESTResource.class);
   
-  private String indexName = PropsUtil.get(SearchConsts.PARAM_ELASTICSEARCH_LIFERAY_INDEX_NAME);
+  private String indexName = PropsUtil.get("elasticsearch.liferay.index.name");
 
   private SearchIndexUtil searchIndexUtil =
       ApplicationContextProvider.getApplicationContext().getBean(SearchIndexUtil.class);

@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.0 2024-09-13
+
+* Updates spring dependency with security fix (CVE-2024-38809)
+* Restricts CORS header of the Liferay API
+* Adapts the search result HTML template to new general filter facet list behavior
+* Updates the microservice dependencies
+
 ## 6.8.1 2024-06-20
 
 * Fixes displaying HVD (High-Value Datasets) categories if one of them is unknown

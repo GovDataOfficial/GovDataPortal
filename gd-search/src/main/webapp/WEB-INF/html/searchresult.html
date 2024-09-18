@@ -127,8 +127,7 @@
         <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('format')}, 'format', #{'od.datasets_metadata_format'}, true)}"></dl>
       </th:block>
 
-      <!--/* there are only two options. These are always in the list, so we have to check if any of them is > 0 */-->
-      <th:block th:if="${searchResult.filterMap.get('openness').get(0).docCount > 0 || searchResult.filterMap.get('openness').get(1).docCount > 0}">
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('openness'))}">
         <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('openness')}, 'openness', #{'od.gdsearch.searchresult.facet.openness'}, false)}"></dl>
       </th:block>
 
@@ -136,11 +135,11 @@
         <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('licence')}, 'licence', #{'od.datasets_metadata_license'}, true)}"></dl>
       </th:block>
 
-      <th:block th:if="${searchResult.filterMap.get('dataservice').get(0).docCount > 0}">
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('dataservice'))}">
         <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('dataservice')}, 'dataservice', #{'od.gdsearch.searchresult.facet.dataservice'}, false)}"></dl>
       </th:block>
 
-      <th:block th:if="${searchResult.filterMap.get('hvd').get(0).docCount > 0}">
+      <th:block th:unless="${#lists.isEmpty(searchResult.filterMap.get('hvd'))}">
         <dl th:replace="~{fragments/filter :: facetFilter(${searchResult.filterMap.get('hvd')}, 'hvd', #{'od.gdsearch.searchresult.facet.hvd'}, false)}"></dl>
       </th:block>
 

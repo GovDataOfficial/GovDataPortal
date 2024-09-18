@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>govdata-data-api-boot2</artifactId>
+  <packaging>jar</packaging>
+  <name>govdata-data-api-boot2</name>
+  <description>govdata-data-api-boot2</description>
+
+  <parent>
+    <groupId>de.seitenbau.govdata</groupId>
+    <artifactId>api-parent-boot2</artifactId>
+    <version>2.2.0</version>
+    <relativePath>../api-parent-boot2</relativePath>
+  </parent>
+
+  <properties>
+    <spotbugs.excludeFilterFile>${basedir}/src/main/plugin-config/findbugs-exclude.xml</spotbugs.excludeFilterFile>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>api-common-boot2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>search-api-boot2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>opendataregistry-client-boot2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>de.seitenbau.govdata</groupId>
+      <artifactId>govdata-db-api-boot2</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.ws.rs</groupId>
+      <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

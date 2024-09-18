@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.portlet.MimeResponse.Copy;
@@ -347,8 +348,8 @@ public class SearchresultController extends AbstractBaseController
         .clearDateUntilUrl(clearDateUntilUrl)
         .sortByList(sortByList)
         .activeSortLabel(preparm.getSelectedSorting().toString())
-        .moreNextHitsAvailable(result.isMoreNextHitsAvailable())
-        .pageSize(result.getPageSize())
+        .moreNextHitsAvailable(Optional.ofNullable(result.getMoreNextHitsAvailable()).orElse(false))
+        .pageSize(Optional.ofNullable(result.getPageSize()).orElse(0))
         .scrollId(result.getScrollId())
         .type(preparm.getType())
         .q(preparm.getQuery().getQueryString())

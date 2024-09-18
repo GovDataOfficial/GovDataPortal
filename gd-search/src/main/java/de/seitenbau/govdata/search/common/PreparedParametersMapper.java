@@ -40,7 +40,7 @@ public final class PreparedParametersMapper
 
 
     return PreparedParametersDto.builder()
-        .activeFilters(FilterPathUtils.serializeFilterMap(preparm.getActiveFilters()))
+        .activeFilters(FilterPathUtils.serializeFilterMap(preparm.getActiveFilters(), false))
         .dateFrom(preparm.getDateFrom())
         .dateUntil(preparm.getDateUntil())
         .type(preparm.getType())
